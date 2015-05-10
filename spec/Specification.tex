@@ -22,6 +22,7 @@ Defined types are the types of structures with fields. These fields can be thems
 \subsection{Compound types}
 Compound types are types that take other types as arguments, similar to Haskell's type constructors. A common example is \code{array} which can only be declared as \code{array of T}, where \code{T} is the type stored in the array. Compound types are always defined types, because types are fields.
 \section{Variables}
+Although variables without prefixes would normally be beneficial in a natural-like language like 41++, they could possibly cause ambiguity with Arbitrary Syntax Functions. Therefore, all variables must start with the underscore character \code{_}. The other restriction is that variable names cannot contain spaces or start with a number or \code{'}.
 \section{Expressions}
 \subsection{Literals}
 Literals are expressions that are hard-coded into the code. They take one of four forms.
