@@ -34,7 +34,8 @@ public class Parser {
 		return null;
 	}
 	public static List<String> tokenize42(String text) {
-		text = collapseWhitespace(text).trim() + " ";;
+		text = padOperators(text);
+		text = collapseWhitespace(text).trim() + " ";
 		boolean inString = false;
 		ArrayList<String> tokens = new ArrayList<>();
 		StringBuffer sbuff = new StringBuffer();
@@ -128,5 +129,9 @@ public class Parser {
 		if (inString) throw new RuntimeException(/* TODO */);
 		return tokens.stream().filter(s -> s.length() != 0)
 				.collect(Collectors.toList());
+	}
+	private static String padOperators(String text) {
+		return text.replaceAll("(?<op>(//)|((>|<)=?)|/?=|\\+|-|\\*|/)",
+				" ${op} ");
 	}
 }

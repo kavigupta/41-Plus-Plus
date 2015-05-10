@@ -29,11 +29,15 @@ public class ParserTest {
 				Arrays.asList("Define", "a", "number", "called", "_x", "."),
 				Parser.tokenize42("Define a [COMPILER ERROR HERE ''''''''''''] number called _x."));
 		assertEquals(Arrays.asList("Set", "the", "value", "of", "_x", "to",
-				"(1+2*3)", "."),
+				"(1 + 2 * 3)", "."),
 				Parser.tokenize42("Set the value of _x to (1+2*3)."));
 		assertEquals(
 				Arrays.asList("_technically_this_is_a_valid_variable_name'"),
 				Parser.tokenize42("_technically_this_is_a_valid_variable_name'"));
+		assertEquals(Arrays.asList("1", ">", "2", "+", "3", "<", "4", "-",
+				"5", ">=", "6", "*", "7", "<=", "8", "/", "9", "=", "10",
+				"//", "11", "/=", "12"),
+				Parser.tokenize42("1>2+3<4-5>=6*7<=8/9=10//11/=12"));
 	}
 	// @Test
 	// public void lineDefinitionTest() throws SyntaxMatchingError {
