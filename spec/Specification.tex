@@ -24,6 +24,62 @@ Defined types are the types of structures with fields. These fields can be thems
 Compound types are types that take other types as arguments, similar to Haskell's type constructors. A common example is \code{array} which can only be declared as \code{array of T}, where \code{T} is the type stored in the array. Compound types are always defined types, because types are fields.
 \section{Variables}
 Although variables without prefixes would normally be beneficial in a natural-like language like 41++, they could possibly cause ambiguity with Arbitrary Syntax Functions. Therefore, all variables must start with the underscore character \code{\_}. The other restriction is that variable names cannot contain spaces or start with a number or \code{'}. 
+\section{Functions}
+\subsection{Declaration}
+A function is declared as follows:
+
+\codeblock{Define a function called <function expression> that takes a[n] <type1> called <field1>, a[n] <type2> called <field2>, and a[n] <type3> called <field3>[ and outputs a <return type>].}
+
+Where, in the function expression, variable names are enumerated as they appear in the type declarations later. Note that the function expression doesn't actually have a defined syntax. For example, this is a valid declaration:
+
+\codeblock{Define a function is \_{}n prime that takes a number called \_{}n and outputs a bool.}
+
+Note that if \code{ and outputs a <return type>} is omitted, then the return type defaults to \code{void}.
+
+\subsection{Body}
+The body consists of statements, in which any variables that are made cannot be used outside the function.
+\subsection{Conclusion}
+A function return is declared as follows.
+
+\codeblock{Exit the function[ and output <output>].}
+
+Note that the output must be omitted if the return type is \code{void} because \code{void} has no values.
+
+\section{Structures}
+\subsection{Declaration}
+A structure is declared as follows:
+
+\codeblock{Define a structure called <structure expression>; which contains a[n] <type1> called <field1>, a[n] <type2> called <field2>, and a[n] <type3> called <field3>.}
+
+The structure expression may contain variables, whose \code{type} is automatically \code{type}. A concrete example is probably best in this situation.
+
+\codeblock{Define a structure called \_{}k mapped to \_{}v; which contains an \_{k} called key and a \_{v} called value.}
+
+This defines an entry structure that can be later defined as follows.
+
+\codeblock{Define a (number mapped to number) entry with a key of 2 and a value of 2.}
+
+Note the use of defined types to replace \code{\_{a}} and \code{\_{b}}.
+
+\subsection{Field Access}
+
+Field access is simple, taking the following syntax.
+
+\codeblock{the <field> of <structure>}
+
+\subsection{Arrays}
+Arrays are, in a sense, a primitive structure. To declare an array, the following syntax is used:
+
+\codeblock{Define a[n] array of <type> called <name> with a size of <size>.}
+
+Array access and definition are treated as if defined as such, with one definition for every type \code{<T>} in existence.
+
+\codeblock{Define a function called the \_{n} th element of \_{array} that takes a number called n and an (array of <T>) called array and outputs a <T>.}
+
+\codeblock{Define a function called Set the \_{n} th element of \_{array} to \_{value} that takes a number called n, an (array of <T>) called array, and a <T> called \_{}value.}
+
+Note: Technically, three different functions are defined, with two replacing \code{th} with \code{rd} and \code{st}, to prevent expressions such as \code{the 2 th element of \_{}array1}.
+
 \section{Expressions}
 \subsection{Literals}
 Literals are expressions that are hard-coded into the code. They take one of four forms.
@@ -73,7 +129,7 @@ Algebraic Expression & Type\\
 \hline
 \end{tabular}
 \subsection{Function Expressions}
-Any function call of a non-void returning function can be used as an expression.
+Any function call of a non-void returning function can be used as an expression. This includes structure and array access functions.
 \subsection{The Role of Parentheses}
 While 41++ is designed to be a English-like language, it is often very difficult to tease out syntactical ambiguity without parentheses. Therefore, in 41++, parentheses must surround any value that is not a single word or string literal.
 \section{Statements}
@@ -119,42 +175,5 @@ The syntax of While is as follows.
 \subsection{Statement Concatenation}
 Notice that control flow statements above only take a single statement as an argument. However, having to define a procedure for every small set of instructions would be difficult. Instead, we can use the following syntax to convert multiple statements into a single one:
 \codeblock{<First statement>; <Second statement>; <Third statement>.}
-
-\section{Functions}
-\subsection{Declaration}
-A function is declared as follows:
-
-\codeblock{Define a function called <function expression> that takes a[n] <type1> called <field1>, a[n] <type2> called <field2>, and a[n] <type3> called <field3>[ and outputs a <return type>].}
-
-Where, in the function expression, variable names are enumerated as they appear in the type declarations later. Note that the function expression doesn't actually have a defined syntax. For example, this is a valid declaration:
-
-\codeblock{Define a function is \_{}n prime that takes a number called \_{}n and outputs a bool.}
-
-Note that if \code{ and outputs a <return type>} is omitted, then the return type defaults to \code{void}.
-
-\subsection{Body}
-The body consists of statements, in which any variables that are made cannot be used outside the function.
-\subsection{Conclusion}
-A function return is declared as follows.
-
-\codeblock{Exit the function[ and output <output>].}
-
-Note that the output must be omitted if the return type is \code{void} because \code{void} has no values.
-
-\section{Structures}
-A structure is declared as follows:
-
-\codeblock{Define a structure called <structure expression>; which contains a[n] <type1> called <field1>, a[n] <type2> called <field2>, and a[n] <type3> called <field3>.}
-
-The structure expression may contain variables, whose \code{type} is automatically \code{type}. A concrete example is probably best in this situation.
-
-\codeblock{Define a structure called \_{}k maps to \_{}v; which contains an \_{k} called key and a \_{v} called value.}
-
-This defines an entry structure that can be later defined as follows.
-
-\codeblock{Define a (number maps to number) entry with a key of 2 and a value of 2.}
-
-Note the use of defined types to replace \code{\_{a}} and \code{\_{b}}.
-
 
 \end{document}
