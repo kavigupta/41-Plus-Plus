@@ -27,13 +27,13 @@ Defined types are the types of structures with fields. These fields can be thems
 Compound types are types that take other types as arguments, similar to Haskell's type constructors. A common example is \code{array} which can only be declared as \code{array of T}, where \code{T} is the type stored in the array. Compound types are always defined types, because types are fields.
 \section{Naming}
 \subsection{Forbidden Characters}
-Characters whose purpose is so specialized that they cannot be used anywhere else are called forbidden. Here is a complete list.
+Characters whose purpose is so specialized that they cannot be used anywhere else (except in string and character literals) are called forbidden. Here is a complete list.
 \begin{itemize}
 \item \code{(}
 \item \code{)}
 \item \code{[}
 \item \code{]}
-\item \code{\textbackslash}
+\item \code{\textbackslash}\footnote{Must be escaped in character and string literals}
 \end{itemize}
 \subsection{Literals}
 As seen above, literals start with a number or \code{'}. Collectively, these are called literal flags.
