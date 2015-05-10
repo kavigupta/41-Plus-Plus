@@ -22,7 +22,7 @@ Defined types are the types of structures with fields. These fields can be thems
 \subsection{Compound types}
 Compound types are types that take other types as arguments, similar to Haskell's type constructors. A common example is \code{array} which can only be declared as \code{array of T}, where \code{T} is the type stored in the array. Compound types are always defined types, because types are fields.
 \section{Variables}
-Although variables without prefixes would normally be beneficial in a natural-like language like 41++, they could possibly cause ambiguity with Arbitrary Syntax Functions. Therefore, all variables must start with the underscore character \code{_}. The other restriction is that variable names cannot contain spaces or start with a number or \code{'}.
+Although variables without prefixes would normally be beneficial in a natural-like language like 41++, they could possibly cause ambiguity with Arbitrary Syntax Functions. Therefore, all variables must start with the underscore character \code{\_}. The other restriction is that variable names cannot contain spaces or start with a number or \code{'}. 
 \section{Expressions}
 \subsection{Literals}
 Literals are expressions that are hard-coded into the code. They take one of four forms.
@@ -44,7 +44,7 @@ These must start and end with a single quote \code{'}. What is in between is int
 \item \code{''}, \code{'\textbackslash'\textbackslash''}, \code{'41++'}: String literals.
 \end{itemize}
 \subsection{Algebraic Expressions}
-\begin{tabular}{|l|l|p{8cm}|}
+\begin{tabular}{|l|p{10cm}|}
 \hline
 Algebraic Expression & Type\\
 \hline
@@ -67,6 +67,7 @@ Algebraic Expression & Type\\
 \code{/} & \code{number / number = number}\footnote{this is standard division. \code{11/2 = 5.5}}\\
 \hline
 \code{//} & \code{number // number = number}\footnote{this is floor division. \code{11/2 = 5, 1.5 / 1 = 1, -1.5 / 1.2 = -1}}\\
+\hline
 \code{\%} & \code{number \% number = number}\footnote{remainder}\\
 \hline
 \end{tabular}
@@ -90,10 +91,6 @@ A variable can also have its fields initialized. It can also be directly set to 
 \noindent Commas and \code{and} are all technically unnecessary, but included to insure readability. Similarly, \code{a} and \code{an} are equivalent but both are included to avoid statements like \code{Define a integer called x.}
 \subsubsection{Examples}
 
-\codeblock{Define an integer called x.}
-
-\codeblock{Define a string called name with a value of '41++'.}
-
-\codeblock{Define a matrix called M with a width of 3 and a height of 2. Define a matrix called M2 with a value of M.}
+\codeblock{Define an integer called \_{}x. Define a string called \_{}name with a value of '41++'. Define a matrix called \_{}M with a width of 3 and a height of 2. Define a matrix called \_{}M2 with a value of \_{}M.}
 
 \end{document}
