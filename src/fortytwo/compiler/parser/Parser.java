@@ -4,38 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import fortytwo.compiler.errors.SyntaxMatchingError;
-import fortytwo.compiler.struct.Statement42;
+import fortytwo.compiler.syntax.Literal;
+import fortytwo.compiler.syntax.SyntacticElement;
 
 public class Parser {
 	private Parser() {}
-	public static String collapseWhitespace(String line) {
-		return line.replaceAll("\\s+", " ");
-	}
-	public static Statement42 intepretLine(String line)
-			throws SyntaxMatchingError {
-		List<String> tokens = tokenize42(line);
-		switch (tokens.get(0)) {
-			case "Define":
-				return parseDefinition(tokens);
-			case "Set":
-				return parseAssignment(tokens);
-			default:
-				throw new SyntaxMatchingError(line);
+	public static List<SyntacticElement> parse42(List<String> tokens) {
+		List<SyntacticElement> elements = new ArrayList<>();
+		for (int i = 0; i < tokens.size(); i++) {
+			String token = tokens.get(i);
+			switch (token.charAt(0)) {
+				case '\'':
+					elements.add(Literal.charLiteral(token));
+					break;
+			}
 		}
-		// TODO more types of statements
-	}
-	private static Statement42 parseDefinition(List<String> tokens) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	private static Statement42 parseAssignment(List<String> tokens) {
-		// TODO Auto-generated method stub
+		// TODO implement
 		return null;
 	}
 	public static List<String> tokenize42(String text) {
-		text = padOperators(text);
-		text = collapseWhitespace(text).trim() + " ";
+		text = text
+				.replaceAll("(?<op>(//)|((>|<)=?)|/?=|\\+|-|\\*|/)",
+						" ${op} ").replaceAll("\\s+", " ").trim()
+				+ " ";
 		boolean inString = false;
 		ArrayList<String> tokens = new ArrayList<>();
 		StringBuffer sbuff = new StringBuffer();
@@ -129,9 +120,5 @@ public class Parser {
 		if (inString) throw new RuntimeException(/* TODO */);
 		return tokens.stream().filter(s -> s.length() != 0)
 				.collect(Collectors.toList());
-	}
-	private static String padOperators(String text) {
-		return text.replaceAll("(?<op>(//)|((>|<)=?)|/?=|\\+|-|\\*|/)",
-				" ${op} ");
 	}
 }
