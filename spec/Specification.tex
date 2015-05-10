@@ -25,8 +25,22 @@ Primitive types are types that do not have fields. Instead, they merely have val
 Defined types are the types of structures with fields. These fields can be themselves defined types or primitives.
 \subsection{Compound types}
 Compound types are types that take other types as arguments, similar to Haskell's type constructors. A common example is \code{array} which can only be declared as \code{array of T}, where \code{T} is the type stored in the array. Compound types are always defined types, because types are fields.
-\section{Variables}
-Although variables without prefixes would normally be beneficial in a natural-like language like 41++, they could possibly cause ambiguity with Arbitrary Syntax Functions. Therefore, all variables must start with the underscore character \code{\_}. The other restriction is that variable names cannot contain spaces or start with a number or \code{'}. 
+\section{Naming}
+\subsection{Forbidden Characters}
+Characters whose purpose is so specialized that they cannot be used anywhere else are called forbidden. Here is a complete list.
+\begin{itemize}
+\item \code{(}
+\item \code{)}
+\item \code{[}
+\item \code{]}
+\item \code{\textbackslash}
+\end{itemize}
+\subsection{Literals}
+As seen above, literals start with a number or \code{'}. Collectively, these are called literal flags.
+\subsection{Variables}
+Although variables without prefixes would normally be beneficial in a natural-like language like 41++, they could possibly cause ambiguity with Arbitrary Syntax Functions. Therefore, all variables must start with the underscore character \code{\_} and cannot contain whitespace.
+\subsection{Functions and Structures}
+Functions and structures cannot have any non-variable tokens in their name start with a parenthesis, underscore, or literal flag.
 \section{Functions}
 \subsection{Declaration}
 A function is declared as follows:
@@ -178,5 +192,7 @@ The syntax of While is as follows.
 \subsection{Statement Concatenation}
 Notice that control flow statements above only take a single statement as an argument. However, having to define a procedure for every small set of instructions would be difficult. Instead, we can use the following syntax to convert multiple statements into a single one:
 \codeblock{<First statement>; <Second statement>; <Third statement>.}
-
+\section{Comments}
+Comments are sections that are not to be interpreted as code. The syntax is as follows.
+\codeblock{[<Ignore whatever goes here>]}
 \end{document}
