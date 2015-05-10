@@ -12,6 +12,7 @@
 \subsection{Primitives}
 Primitive types are types that do not have fields. Instead, they merely have values. These can take the form:
 \begin{itemize}
+\item \code{void}: a type representing a the return type of a function that does not return a value. It has no enumerated values and variables of type \code{void} cannot be created.
 \item \code{number}: a numeric type. This includes both integers and floating point numbers. Calculations internally are handled using high precision, large numbers.
 \item \code{character}: a character type. This is basically an integer that will be shown as a character.
 \item \code{bool}: a boolean type. \code{true} or \code{false}.
@@ -118,4 +119,41 @@ The syntax of While is as follows.
 \subsection{Statement Concatenation}
 Notice that control flow statements above only take a single statement as an argument. However, having to define a procedure for every small set of instructions would be difficult. Instead, we can use the following syntax to convert multiple statements into a single one:
 \codeblock{<First statement>; <Second statement>; <Third statement>.}
+
+\section{Functions}
+\subsection{Declaration}
+A function is declared as follows:
+
+\codeblock{Define a function called <function expression> that takes a[n] <type1> called <field1>, a[n] <type2> called <field2>, and a[n] <type3> called <field3>[ and outputs a <return type>].}
+
+Where, in the function expression, variable names are enumerated as they appear in the type declarations later. Note that the function expression doesn't actually have a defined syntax. For example, this is a valid declaration:
+
+\codeblock{Define a function is \_{}n prime that takes a number called \_{}n and outputs a bool.}
+
+Note that if \code{ and outputs a <return type>} is omitted, then the return type defaults to \code{void}.
+
+\subsection{Body}
+The body consists of statements, in which any variables that are made cannot be used outside the function.
+\subsection{Conclusion}
+A function return is declared as follows.
+
+\codeblock{Exit the function[ and output <output>].}
+
+Note that the output must be omitted if the return type is \code{void} because \code{void} has no values.
+
+\section{Structures}
+A structure is declared as follows:
+
+\codeblock{Define a structure called <structure expression>; which contains a[n] <type1> called <field1>, a[n] <type2> called <field2>, and a[n] <type3> called <field3>.}
+
+The structure expression may contain variables, whose \code{type} is automatically \code{type}. A concrete example is probably best in this situation.
+
+\codeblock{Define a structure called \_{}k maps to \_{}v; which contains an \_{k} called key and a \_{v} called value.}
+
+This defines an entry structure that can be later defined as follows.
+
+\codeblock{Define a (number maps to number) entry with a key of 2 and a value of 2.}
+
+Note the use of types to replace \code{\_{a}} and \code{\_{b}}.
+
 \end{document}
