@@ -30,8 +30,11 @@ Compound types are types that take other types as arguments, similar to Haskell'
 Characters whose purpose is so specialized that they cannot be used anywhere else (except in string and character literals) are called forbidden. Here is a complete list.
 \begin{itemize}
 \item \code{(}, \code{)}, \code{[}, \code{]}
+\item Algebraic Expressions
 \item \code{\textbackslash}\footnote{Must be escaped in character and string literals}
 \end{itemize}
+\subsection{Punctuation}
+Punctuation in 41++ consists of \code{.}, \code{,}, \code{:}, and \code{;}. No identifier can contain punctuation at the end, although it is permissible internally.
 \subsection{Literals}
 As seen above, literals start with a number or \code{'}. Collectively, these are called literal flags.
 \subsection{Variables}
@@ -110,7 +113,7 @@ These must start and end with a single quote \code{'}. What is in between is int
 \end{itemize}
 \subsubsection{Examples}
 \begin{itemize}
-\item \code{2}, \code{-56543234565}, \code{41}, \code{-.02345654321}, \code{12.}: Numeric literals.
+\item \code{+2}, \code{-56543234565}, \code{41}, \code{-.02345654321}, \code{12.0}: Numeric literals.
 \item \code{'"'}, \code{'1'}, \code{'\textbackslash{}r'}, \code{'\textbackslash{}n'}, \code{'\textbackslash{}t'}, \code{'\textbackslash{}0123'}: Character literals
 \item \code{''}, \code{'\textbackslash'\textbackslash''}, \code{'41++'}: String literals.
 \end{itemize}
