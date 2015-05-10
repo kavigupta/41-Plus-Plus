@@ -34,7 +34,7 @@ public class Parser {
 		return null;
 	}
 	public static List<String> tokenize42(String text) {
-		text = collapseWhitespace(text).trim() + " ";
+		text = collapseWhitespace(text).trim() + " ";;
 		boolean inString = false;
 		ArrayList<String> tokens = new ArrayList<>();
 		StringBuffer sbuff = new StringBuffer();
