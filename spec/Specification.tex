@@ -1,6 +1,53 @@
 \documentclass{article}
+\usepackage{verbatim}
+\usepackage{listings}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\codeblock}[1]{\begin{quote}\code{#1}\end{quote}}
 
 \begin{document}
+\section{Values}
+\subsection{Literals}
+Literals are expressions that are hard-coded into the code. They take one of four forms.
+\subsection{Numeric Literals}
+These must start with a digit, a plus sign, a minus sign, or a period.
+\subsection{Boolean Literals}
+Either \code{true} or \code{false}.
+\subsection{Character and String Literals}
+These must start and end with a single quote \code{'}. What is in between is interpreted as a string. To use an actual single quote mark, use \code{\textbackslash'}. Standard escapes can also be used. Determining the type of a string falls into three cases.
+\begin{enumerate}
+\item \code{''}: This is automatically a string literal representing an empty string.
+\item A single character: depending on the context, this is interpreted as a string or character.
+\item Multiple characters: always a string.
+\end{enumerate}
+\subsection{Examples}
+\begin{itemize}
+\item \code{2}, \code{-56543234565}, \code{41}, \code{-.02345654321}, \code{12.}: Numeric literals.
+\item \code{'"'}, \code{'1'}, \code{'\r'}, \code{'\n'}, \code{'\t'}, \code{'\0123'}: Character literals
+\item \code{''}, \code{'\textbackslash'\textbackslash''}, \code{'41++'}: String literals.
+\end{itemize}
 \section{Statements}
-Statements are
+There are a limited number of valid statement forms. All start with a capital letter and end with a period.
+\subsection{Definition}
+\subsubsection{Declaration}
+A minimal declaration simply provides a variable with a name and associates it with a type.
+
+\codeblock{Define a[n] <type> called <name>.}
+
+\noindent This is equivalent to the Java \code{<type> <name>;} 
+
+\subsubsection{Field Initialization}
+A variable can also have its fields initialized, including the field \code{value}, which represents the value of the entire structure.
+
+\codeblock{Define a[n] <type> called <name> with a[n] <field1> of <value1>, a[n] <field2> of <value2>, and a[n] <field3> of <value3>.}
+
+\noindent Commas and \code{and} are all technically unnecessary, but included to insure readability. Similarly, \code{a} and \code{an} are equivalent but both are included to avoid statements like \code{Define a integer called x.}
+\subsubsection{Examples}
+
+\codeblock{Define an integer called x.}
+
+\codeblock{Define a string called name with a value of ``41++''.}
+
+\codeblock{Define a matrix called M with a width of 3 and a height of 2. Define a matrix called M2 with a value of M.}
+
 \end{document}
