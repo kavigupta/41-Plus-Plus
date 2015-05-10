@@ -72,7 +72,7 @@ Algebraic Expression & Type\\
 \hline
 \end{tabular}
 \subsection{Function Expressions}
-See the section on functions for more details.
+Any function call of a non-void returning function can be used as an expression.
 \subsection{The Role of Parentheses}
 While 41++ is designed to be a English-like language, it is often very difficult to tease out syntactical ambiguity without parentheses. Therefore, in 41++, parentheses must surround any value that is not a single word or string literal.
 \section{Statements}
@@ -93,4 +93,29 @@ A variable can also have its fields initialized. It can also be directly set to 
 
 \codeblock{Define an integer called \_{}x. Define a string called \_{}name with a value of '41++'. Define a matrix called \_{}M with a width of 3 and a height of 2. Define a matrix called \_{}M2 with a value of \_{}M.}
 
+\subsection{Assignment}
+Assignment comes in two forms, value assignment and field assignment.
+
+\codeblock{Set the <field> of <name> to <value>.}
+
+\subsection{Function Calls}
+Any function call can be a statement in one of these two ways.
+
+\begin{itemize}
+\item \codeblock {Run <non-void function expression>.}
+\item \codeblock {<Void expression>.}
+\end{itemize}
+
+\section{Control Flow}
+\subsection{If}
+The syntax of If is as follows.
+\codeblock{If <expression>: <Statement executed in case of expression>.}
+An Otherwise block can also be appended.
+\codeblock{If <expression>: <Statement executed in case of expression>; otherwise: <Statement executed otherwise>.}
+\subsection{While}
+The syntax of While is as follows.
+\codeblock{While <expression>: <Statement>.}
+\subsection{Statement Concatenation}
+Notice that control flow statements above only take a single statement as an argument. However, having to define a procedure for every small set of instructions would be difficult. Instead, we can use the following syntax to convert multiple statements into a single one:
+\codeblock{<First statement>; <Second statement>; <Third statement>.}
 \end{document}
