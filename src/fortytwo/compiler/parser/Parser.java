@@ -1,10 +1,21 @@
 package fortytwo.compiler.parser;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
-import fortytwo.compiler.language.*;
+import fortytwo.compiler.language.expressions.*;
+import fortytwo.compiler.language.expressions.calc.*;
+import fortytwo.compiler.language.functioncall.FunctionArgument;
+import fortytwo.compiler.language.functioncall.FunctionCall;
+import fortytwo.compiler.language.functioncall.FunctionComponent;
+import fortytwo.compiler.language.functioncall.FunctionToken;
+import fortytwo.compiler.language.statements.IfElse;
+import fortytwo.compiler.language.statements.Statement;
+import fortytwo.compiler.language.statements.StatementSeries;
+import fortytwo.compiler.language.statements.WhileLoop;
 
 public class Parser {
 	private Parser() {}
@@ -72,7 +83,7 @@ public class Parser {
 		switch (line.get(0)) {
 			case "Run":
 				line.remove(0);
-				return parseNonVoidFunctionCall(line);
+				return parseExpression(line);
 			case "Define":
 				return parseDefinition(line);
 			case "Set":
@@ -82,12 +93,163 @@ public class Parser {
 		}
 	}
 	private static Expression parseExpression(List<String> list) {
-		// TODO Auto-generated method sstub
-		return null;
+		List<FunctionComponent> function = new ArrayList<>();
+		List<String> currentExpression = new ArrayList<>();
+		for (String token : list) {
+			switch (token.charAt(0)) {
+				case 't':
+				case '(':
+				case '+':
+				case '-':
+				case '*':
+				case '/':
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
+				case '\'':
+				case '_':
+					currentExpression.add(token);
+				default:
+					if (token.equals("true") || token.equals("false"))
+						currentExpression.add(token);
+					else {
+						if (currentExpression.size() != 0) {
+							function.add(new FunctionArgument(
+									parsePureExpression(currentExpression)));
+							currentExpression.clear();
+						}
+						function.add(new FunctionToken(token));
+					}
+			}
+		}
+		if (currentExpression.size() != 0) {
+			function.add(new FunctionArgument(
+					parsePureExpression(currentExpression)));
+			currentExpression.clear();
+		}
+		if (function.size() == 1
+				&& function.get(0) instanceof FunctionArgument)
+			return ((FunctionArgument) function.get(0)).value;
+		return FunctionCall.getInstance(function);
 	}
-	private static Expression parseNonVoidFunctionCall(List<String> line) {
-		// TODO Auto-generated method stub
-		return null;
+	private static Expression parsePureExpression(List<String> list) {
+		boolean expectsValue = true;
+		class UnevaluatedOperator implements Expression {
+			public String operator;
+			public UnevaluatedOperator(String operator) {
+				this.operator = operator;
+			}
+		}
+		List<Expression> expressions = new ArrayList<>();
+		for (String token : list) {
+			switch (token.charAt(0)) {
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
+					if (!expectsValue)
+						throw new RuntimeException(/* TODO */);
+					try {
+						expressions.add(LiteralNumber
+								.getInstance(new BigDecimal(token)));
+						break;
+					} catch (NumberFormatException e) {
+						throw new RuntimeException(/* TODO */);
+					}
+				case '\'':
+					expressions.add(LiteralString.getInstance(token
+							.substring(1, token.length() - 1)));
+					break;
+				case 't':
+					expressions.add(LiteralBool.TRUE);
+					break;
+				case 'f':
+					expressions.add(LiteralBool.FALSE);
+					break;
+				case '+':
+				case '-':
+				case '*':
+				case '/':
+					expressions.add(new UnevaluatedOperator(token));
+					break;
+				case '_':
+					expressions.add(Variable.getInstance(token));
+			}
+		}
+		ArrayList<Expression> expressionsWoUO = new ArrayList<>();
+		for (int i = 0; i < expressions.size(); i++) {
+			if (expressions.get(i) instanceof UnevaluatedOperator) {
+				UnevaluatedOperator uneop = (UnevaluatedOperator) expressions
+						.get(i);
+				if (i == 0
+						|| expressions.get(i - 1) instanceof UnevaluatedOperator) {
+					if (uneop.operator.equals("+")) {
+						i++;
+						continue;
+					} else if (uneop.operator.equals("-")) {
+						i++;
+						Expression next = expressions.get(i);
+						expressionsWoUO.add(new Negation(next));
+					}
+				}
+			}
+		}
+		Stack<Expression> exp = new Stack<>();
+		for (int i = 0; i < expressionsWoUO.size(); i++) {
+			Expression token = expressionsWoUO.get(i);
+			if (token instanceof UnevaluatedOperator) {
+				if (exp.size() == 0) throw new RuntimeException(/* TODO */);
+				Expression first = exp.pop();
+				i++;
+				Expression second = expressionsWoUO.get(i);
+				UnevaluatedOperator op = (UnevaluatedOperator) token;
+				if (op.operator.equals("*")) {
+					exp.push(new Multiplication(first, second));
+				} else if (op.operator.equals("/")) {
+					exp.push(new Division(first, second));
+				} else if (op.operator.equals("//")) {
+					exp.push(new FloorDivision(first, second));
+				} else if (op.operator.equals("%")) {
+					exp.push(new Modulus(first, second));
+				}
+			} else {
+				exp.push(token);
+			}
+		}
+		ArrayList<Expression> expressionsApartfromPM = new ArrayList<>(exp);
+		exp = new Stack<>();
+		for (int i = 0; i < expressionsApartfromPM.size(); i++) {
+			Expression token = expressionsApartfromPM.get(i);
+			if (token instanceof UnevaluatedOperator) {
+				if (exp.size() == 0) throw new RuntimeException(/* TODO */);
+				Expression first = exp.pop();
+				i++;
+				Expression second = expressionsApartfromPM.get(i);
+				UnevaluatedOperator op = (UnevaluatedOperator) token;
+				if (op.operator.equals("+")) {
+					exp.push(new Addition(first, second));
+				} else if (op.operator.equals("-")) {
+					exp.push(new Subtraction(first, second));
+				}
+			} else {
+				exp.push(token);
+			}
+		}
+		if (exp.size() != 1) throw new RuntimeException(/* TODO */);
+		return exp.pop();
 	}
 	private static Statement parseVoidFunctionCall(List<String> line) {
 		// TODO Auto-generated method stub
