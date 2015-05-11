@@ -1,3 +1,3 @@
 package fortytwo.compiler.language;
 
-public class Statement {}
+public interface Statement {}

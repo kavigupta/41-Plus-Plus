@@ -4,12 +4,101 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import fortytwo.compiler.language.Statement;
+import fortytwo.compiler.language.*;
 
 public class Parser {
 	private Parser() {}
 	public static List<Statement> parse(String text) {
 		List<String> tokens = tokenize42(text);
+		List<List<String>> phrases = new ArrayList<>();
+		List<String> current = new ArrayList<>();
+		for (int i = 0; i < tokens.size(); i++) {
+			String token = tokens.get(i);
+			current.add(token);
+			if (token.equals(".") || token.equals(";") || token.equals(":")) {
+				phrases.add(current);
+				current = new ArrayList<>();
+			}
+		}
+		List<Statement> statements = new ArrayList<>();
+		List<List<String>> currentPhrases = new ArrayList<>();
+		for (int i = 0; i < phrases.size(); i++) {
+			currentPhrases.add(phrases.get(i));
+			if (phrases.get(i).get(phrases.get(i).size() - 1).equals(".")) {
+				statements.add(parseCompleteStatement(currentPhrases));
+				currentPhrases.clear();
+			}
+		}
+		return statements;
+	}
+	public static Statement parseCompleteStatement(
+			List<List<String>> currentPhrases) {
+		Expression condition;
+		switch (currentPhrases.get(0).get(0)) {
+			case "While":
+				currentPhrases.get(0).remove(0);
+				condition = parseExpression(currentPhrases.get(0));
+				List<Statement> statements = new ArrayList<>();
+				for (int i = 1; i < currentPhrases.size(); i++) {
+					statements.add(parseStatement(currentPhrases.get(i)));
+				}
+				return WhileLoop.getInstance(condition,
+						StatementSeries.getInstance(statements));
+			case "If":
+				currentPhrases.get(0).remove(0);
+				condition = parseExpression(currentPhrases.get(0));
+				List<Statement> ifso = new ArrayList<>();
+				int i = 1;
+				for (; i < currentPhrases.size()
+						&& !currentPhrases.get(i).get(0)
+								.equals("Otherwise"); i++) {
+					ifso.add(parseStatement(currentPhrases.get(i)));
+				}
+				List<Statement> ifelse = new ArrayList<>();
+				for (i++; i < currentPhrases.size(); i++) {
+					ifelse.add(parseStatement(currentPhrases.get(i)));
+				}
+				return IfElse.getInstance(condition,
+						StatementSeries.getInstance(ifso),
+						StatementSeries.getInstance(ifelse));
+		}
+		List<Statement> statements = new ArrayList<>();
+		for (int i = 0; i < currentPhrases.size(); i++) {
+			statements.add(parseStatement(currentPhrases.get(i)));
+		}
+		return StatementSeries.getInstance(statements);
+	}
+	private static Statement parseStatement(List<String> line) {
+		switch (line.get(0)) {
+			case "Run":
+				line.remove(0);
+				return parseNonVoidFunctionCall(line);
+			case "Define":
+				return parseDefinition(line);
+			case "Set":
+				return parseAssignment(line);
+			default:
+				return parseVoidFunctionCall(line);
+		}
+	}
+	private static Expression parseExpression(List<String> list) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	private static Expression parseNonVoidFunctionCall(List<String> line) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	private static Statement parseVoidFunctionCall(List<String> line) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	private static Statement parseAssignment(List<String> line) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	private static Statement parseDefinition(List<String> line) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 	public static List<String> tokenize42(String text) {
