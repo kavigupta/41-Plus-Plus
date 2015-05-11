@@ -4,22 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import fortytwo.compiler.syntax.Literal;
-import fortytwo.compiler.syntax.SyntacticElement;
+import fortytwo.compiler.language.Statement;
 
 public class Parser {
 	private Parser() {}
-	public static List<SyntacticElement> parse42(List<String> tokens) {
-		List<SyntacticElement> elements = new ArrayList<>();
-		for (int i = 0; i < tokens.size(); i++) {
-			String token = tokens.get(i);
-			switch (token.charAt(0)) {
-				case '\'':
-					elements.add(Literal.charLiteral(token));
-					break;
-			}
-		}
-		// TODO implement
+	public static List<Statement> parse(String text) {
+		List<String> tokens = tokenize42(text);
 		return null;
 	}
 	public static List<String> tokenize42(String text) {
