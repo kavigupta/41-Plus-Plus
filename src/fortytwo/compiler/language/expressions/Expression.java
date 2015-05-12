@@ -5,4 +5,5 @@ import fortytwo.vm.environment.Environment;
 
 public interface Expression extends Statement {
 	public String type(Environment environment);
+	public LiteralExpression evaluate(Environment environment);
 }

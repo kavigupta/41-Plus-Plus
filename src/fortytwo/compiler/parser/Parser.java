@@ -9,12 +9,13 @@ import java.util.stream.Collectors;
 import lib.standard.collections.Pair;
 import fortytwo.compiler.language.Language;
 import fortytwo.compiler.language.expressions.*;
-import fortytwo.compiler.language.expressions.calc.*;
+import fortytwo.compiler.language.expressions.calc.Negation;
 import fortytwo.compiler.language.functioncall.FunctionArgument;
 import fortytwo.compiler.language.functioncall.FunctionCall;
 import fortytwo.compiler.language.functioncall.FunctionComponent;
 import fortytwo.compiler.language.functioncall.FunctionToken;
 import fortytwo.compiler.language.statements.*;
+import fortytwo.vm.environment.Environment;
 
 public class Parser {
 	private Parser() {}
@@ -95,7 +96,7 @@ public class Parser {
 		if (function.size() == 1
 				&& function.get(0) instanceof FunctionArgument)
 			return ((FunctionArgument) function.get(0)).value;
-		return new FunctionCall(function);
+		return FunctionCall.getInstance(function);
 	}
 	private static Expression parsePureExpression(List<String> list) {
 		boolean expectsValue = true;
@@ -103,6 +104,14 @@ public class Parser {
 			public String operator;
 			public UnevaluatedOperator(String operator) {
 				this.operator = operator;
+			}
+			@Override
+			public String type(Environment environment) {
+				return null;
+			}
+			@Override
+			public LiteralExpression evaluate(Environment environment) {
+				return null;
 			}
 		}
 		List<Expression> expressions = new ArrayList<>();
@@ -145,7 +154,7 @@ public class Parser {
 					expressions.add(new UnevaluatedOperator(token));
 					break;
 				case '_':
-					expressions.add(Variable.getInstance(token));
+					expressions.add(new Variable(token));
 			}
 		}
 		ArrayList<Expression> expressionsWoUO = new ArrayList<>();
@@ -161,7 +170,7 @@ public class Parser {
 					} else if (uneop.operator.equals("-")) {
 						i++;
 						Expression next = expressions.get(i);
-						expressionsWoUO.add(new Negation(next));
+						expressionsWoUO.add(Negation.getInstance(next));
 					}
 				}
 			}

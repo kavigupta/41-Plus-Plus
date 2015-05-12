@@ -17,4 +17,8 @@ public class Variable implements Expression {
 	public String type(Environment environment) {
 		return environment.typeOf(this);
 	}
+	@Override
+	public LiteralExpression evaluate(Environment environment) {
+		return environment.valueOf(this);
+	}
 }

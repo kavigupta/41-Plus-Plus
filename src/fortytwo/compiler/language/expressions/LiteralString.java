@@ -2,7 +2,7 @@ package fortytwo.compiler.language.expressions;
 
 import fortytwo.vm.environment.Environment;
 
-public class LiteralString implements Expression {
+public class LiteralString extends LiteralExpression {
 	public final String contents;
 	public static LiteralString getInstance(String contents) {
 		return new LiteralString(contents);
