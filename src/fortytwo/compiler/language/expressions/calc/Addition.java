@@ -12,6 +12,7 @@ public class Addition implements Expression {
 		this.second = second;
 	}
 	public static Expression subtraction(Expression first, Expression second) {
+		;
 		return new Addition(first, new Negation(second));
 	}
 }
