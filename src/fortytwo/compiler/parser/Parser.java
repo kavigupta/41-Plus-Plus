@@ -9,10 +9,11 @@ import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
 import fortytwo.compiler.language.Language;
+import fortytwo.compiler.language.expressions.ParsedBinaryOperation;
 import fortytwo.compiler.language.expressions.ParsedExpression;
+import fortytwo.compiler.language.expressions.ParsedNegation;
 import fortytwo.compiler.language.expressions.ParsedVariable;
-import fortytwo.compiler.language.expressions.calc.Negation;
-import fortytwo.compiler.language.expressions.calc.ParsedBinaryOperation;
+import fortytwo.compiler.language.identifier.VariableIdentifier;
 import fortytwo.compiler.language.statements.*;
 import fortytwo.compiler.language.statements.constructions.*;
 import fortytwo.vm.environment.Environment;
@@ -57,8 +58,8 @@ public class Parser {
 				for (int i = 1; i < currentPhrases.size(); i++) {
 					statements.add(parseStatement(currentPhrases.get(i)));
 				}
-				return new WhileLoop(condition, new StatementSeries(
-						statements));
+				return new ParsedWhileLoop(condition,
+						new ParsedStatementSeries(statements));
 			case "If":
 				currentPhrases.get(0).remove(0);
 				condition = parseExpression(currentPhrases.get(0));
@@ -73,14 +74,15 @@ public class Parser {
 				for (i++; i < currentPhrases.size(); i++) {
 					ifelse.add(parseStatement(currentPhrases.get(i)));
 				}
-				return IfElse.getInstance(condition, new StatementSeries(
-						ifso), new StatementSeries(ifelse));
+				return ParsedIfElse.getInstance(condition,
+						new ParsedStatementSeries(ifso),
+						new ParsedStatementSeries(ifelse));
 		}
 		List<ParsedStatement> statements = new ArrayList<>();
 		for (int i = 0; i < currentPhrases.size(); i++) {
 			statements.add(parseStatement(currentPhrases.get(i)));
 		}
-		return new StatementSeries(statements);
+		return new ParsedStatementSeries(statements);
 	}
 	private static ParsedStatement parseStatement(List<String> line) {
 		switch (line.get(0)) {
@@ -108,11 +110,11 @@ public class Parser {
 		return new FunctionReturn(parseExpression(line));
 	}
 	private static ParsedExpression parseExpression(List<String> list) {
-		List<FunctionComponent> function = composeFunction(list);
-		if (function.size() == 1
-				&& function.get(0) instanceof FunctionVariable)
-			return ((FunctionVariable) function.get(0)).value;
-		return FunctionCall.getInstance(function);
+		ParsedFunctionCall function = composeFunction(list);
+		if (function.signature.function.size() == 1
+				&& function.signature.function.get(0) instanceof FunctionVariable)
+			return function.arguments.get(0).value;
+		return function;
 	}
 	private static ParsedExpression parsePureExpression(List<String> list) {
 		boolean expectsValue = true;
@@ -188,7 +190,8 @@ public class Parser {
 					else throw new RuntimeException(/* LOWPRI-E */);
 					break;
 				case '_':
-					expressions.add(new ParsedVariable(token));
+					expressions.add(new ParsedVariable(VariableIdentifier
+							.getInstance(token)));
 			}
 		}
 		ArrayList<ParsedExpression> expressionsWoUO = new ArrayList<>();
@@ -204,7 +207,8 @@ public class Parser {
 					} else if (uneop.operator.equals("-")) {
 						i++;
 						ParsedExpression next = expressions.get(i);
-						expressionsWoUO.add(Negation.getInstance(next));
+						expressionsWoUO.add(ParsedNegation
+								.getInstance(next));
 					}
 				}
 			}
@@ -247,14 +251,13 @@ public class Parser {
 		return exp.pop();
 	}
 	private static ParsedStatement parseVoidFunctionCall(List<String> list) {
-		List<FunctionComponent> function = composeFunction(list);
-		if (function.size() == 1
-				&& function.get(0) instanceof FunctionVariable)
+		ParsedFunctionCall function = composeFunction(list);
+		if (function.signature.function.size() == 1
+				&& function.signature.function.get(0) instanceof FunctionVariable)
 			throw new RuntimeException(/* LOWPRI-E non-void function call */);
-		return FunctionCall.getInstance(function);
-		// TODO check that return type of function is void
+		return function;
 	}
-	private static List<FunctionComponent> composeFunction(List<String> list) {
+	private static ParsedFunctionCall composeFunction(List<String> list) {
 		List<FunctionComponent> function = new ArrayList<>();
 		List<String> currentExpression = new ArrayList<>();
 		ArrayList<Pair<ParsedVariable, ParsedExpression>> arguments = new ArrayList<>();
@@ -265,7 +268,8 @@ public class Parser {
 				if (currentExpression.size() != 0) {
 					ParsedExpression argument = parsePureExpression(currentExpression);
 					ParsedVariable ParsedVariable = new ParsedVariable(
-							"_$" + arguments.size());
+							VariableIdentifier.getInstance("_$"
+									+ arguments.size()));
 					arguments.add(Pair.getInstance(ParsedVariable,
 							argument));
 					function.add(new FunctionVariable(ParsedVariable));
@@ -276,13 +280,14 @@ public class Parser {
 		}
 		if (currentExpression.size() != 0) {
 			ParsedExpression argument = parsePureExpression(currentExpression);
-			ParsedVariable ParsedVariable = new ParsedVariable("_$"
-					+ arguments.size());
+			ParsedVariable ParsedVariable = new ParsedVariable(
+					VariableIdentifier.getInstance("_$" + arguments.size()));
 			arguments.add(Pair.getInstance(ParsedVariable, argument));
 			function.add(new FunctionVariable(ParsedVariable));
 			currentExpression.clear();
 		}
-		return function;
+		return ParsedFunctionCall.getInstance(
+				FunctionSignature.getInstance(function), arguments);
 	}
 	private static ParsedStatement parseAssignment(List<String> line) {
 		/*
@@ -293,7 +298,7 @@ public class Parser {
 			throw new RuntimeException(/* LOWPRI-E */);
 		String field = line.get(2), name = line.get(4);
 		line.subList(0, 6).clear();
-		return new Assignment(name, field, parseExpression(line));
+		return new ParsedAssignment(name, field, parseExpression(line));
 	}
 	private static ParsedStatement parseDefinition(List<String> line) {
 		/*
@@ -318,7 +323,7 @@ public class Parser {
 			}
 			fields.add(Pair.getInstance(field, parseExpression(tokens)));
 		}
-		return new Definition(type, name, fields);
+		return new ParsedDefinition(type, name, fields);
 	}
 	private static ParsedStatement parseStructDefinition(List<String> line) {
 		/*
@@ -348,7 +353,7 @@ public class Parser {
 		for (String token : list) {
 			if (token.charAt(0) == '_')
 				components.add(new FunctionVariable(new ParsedVariable(
-						token)));
+						VariableIdentifier.getInstance(token))));
 			else components.add(new FunctionToken(token));
 		}
 		return FunctionSignature.getInstance(components);
@@ -374,8 +379,9 @@ public class Parser {
 		ArrayList<Pair<ParsedVariable, String>> types = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).equals("called")) continue;
-			types.add(Pair.getInstance(new ParsedVariable(line.get(i - 1)),
-					line.get(i + 1)));
+			types.add(Pair.getInstance(
+					new ParsedVariable(VariableIdentifier.getInstance(line
+							.get(i - 1))), line.get(i + 1)));
 		}
 		int outputloc = line.indexOf("outputs");
 		if (outputloc < 0)

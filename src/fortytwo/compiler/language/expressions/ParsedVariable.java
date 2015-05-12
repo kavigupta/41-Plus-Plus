@@ -1,11 +1,12 @@
 package fortytwo.compiler.language.expressions;
 
+import fortytwo.compiler.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.Environment;
 import fortytwo.vm.expressions.Expression;
 
 public class ParsedVariable implements ParsedExpression {
-	public final String name;
-	public ParsedVariable(String name) {
+	public final VariableIdentifier name;
+	public ParsedVariable(VariableIdentifier name) {
 		this.name = name;
 	}
 	@Override
