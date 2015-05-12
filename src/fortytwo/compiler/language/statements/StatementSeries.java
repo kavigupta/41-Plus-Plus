@@ -2,9 +2,9 @@ package fortytwo.compiler.language.statements;
 
 import java.util.List;
 
-public class StatementSeries implements Statement {
-	public final List<Statement> statements;
-	public StatementSeries(List<Statement> statements) {
+public class StatementSeries implements ParsedStatement {
+	public final List<ParsedStatement> statements;
+	public StatementSeries(List<ParsedStatement> statements) {
 		this.statements = statements;
 	}
 }

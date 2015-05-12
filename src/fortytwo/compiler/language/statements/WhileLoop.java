@@ -1,12 +1,13 @@
 package fortytwo.compiler.language.statements;
 
-import fortytwo.compiler.language.expressions.Expression;
+import fortytwo.compiler.language.expressions.ParsedExpression;
 
-public class WhileLoop implements Statement {
-	public final Expression condition;
-	public final Statement statement;
-	public WhileLoop(Expression condition, Statement statement) {
+public class WhileLoop implements ParsedStatement {
+	public final ParsedExpression condition;
+	public final ParsedStatement ParsedStatement;
+	public WhileLoop(ParsedExpression condition,
+			ParsedStatement ParsedStatement) {
 		this.condition = condition;
-		this.statement = statement;
+		this.ParsedStatement = ParsedStatement;
 	}
 }

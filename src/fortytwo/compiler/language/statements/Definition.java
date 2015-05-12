@@ -3,13 +3,13 @@ package fortytwo.compiler.language.statements;
 import java.util.ArrayList;
 
 import lib.standard.collections.Pair;
-import fortytwo.compiler.language.expressions.Expression;
+import fortytwo.compiler.language.expressions.ParsedExpression;
 
-public class Definition implements Statement {
+public class Definition implements ParsedStatement {
 	public final String type, name;
-	public final ArrayList<Pair<String, Expression>> fields;
+	public final ArrayList<Pair<String, ParsedExpression>> fields;
 	public Definition(String type, String name,
-			ArrayList<Pair<String, Expression>> fields) {
+			ArrayList<Pair<String, ParsedExpression>> fields) {
 		this.type = type;
 		this.name = name;
 		this.fields = fields;

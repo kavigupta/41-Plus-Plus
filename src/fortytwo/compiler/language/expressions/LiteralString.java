@@ -1,6 +1,5 @@
 package fortytwo.compiler.language.expressions;
 
-import fortytwo.vm.environment.Environment;
 
 public class LiteralString extends LiteralExpression {
 	public final String contents;
@@ -9,9 +8,5 @@ public class LiteralString extends LiteralExpression {
 	}
 	public LiteralString(String contents) {
 		this.contents = contents;
-	}
-	@Override
-	public String type(Environment environment) {
-		return "string";
 	}
 }

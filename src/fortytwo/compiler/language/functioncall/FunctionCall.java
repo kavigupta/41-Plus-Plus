@@ -2,11 +2,11 @@ package fortytwo.compiler.language.functioncall;
 
 import java.util.List;
 
-import fortytwo.compiler.language.expressions.Expression;
-import fortytwo.compiler.language.expressions.LiteralExpression;
+import fortytwo.compiler.language.expressions.ParsedExpression;
 import fortytwo.vm.environment.Environment;
+import fortytwo.vm.expressions.Expression;
 
-public class FunctionCall implements Expression {
+public class FunctionCall implements ParsedExpression {
 	public final List<FunctionComponent> function;
 	public static FunctionCall getInstance(List<FunctionComponent> function) {
 		return new FunctionCall(function);
@@ -15,12 +15,7 @@ public class FunctionCall implements Expression {
 		this.function = function;
 	}
 	@Override
-	public String type(Environment environment) {
-		// TODO
-		return null;
-	}
-	@Override
-	public LiteralExpression evaluate(Environment environment) {
+	public Expression contextualize(Environment env) {
 		// TODO Auto-generated method stub
 		return null;
 	}

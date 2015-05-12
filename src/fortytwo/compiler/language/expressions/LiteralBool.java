@@ -1,6 +1,5 @@
 package fortytwo.compiler.language.expressions;
 
-import fortytwo.vm.environment.Environment;
 
 public class LiteralBool extends LiteralExpression {
 	public static final LiteralBool TRUE = new LiteralBool(true);
@@ -8,9 +7,5 @@ public class LiteralBool extends LiteralExpression {
 	public final boolean contents;
 	private LiteralBool(boolean contents) {
 		this.contents = contents;
-	}
-	@Override
-	public String type(Environment environment) {
-		return "bool";
 	}
 }

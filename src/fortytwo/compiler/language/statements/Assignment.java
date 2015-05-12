@@ -1,11 +1,12 @@
 package fortytwo.compiler.language.statements;
 
-import fortytwo.compiler.language.expressions.Expression;
+import fortytwo.compiler.language.expressions.ParsedExpression;
 
-public class Assignment implements Statement {
+public class Assignment implements ParsedStatement {
 	public final String name, field;
-	public final Expression parseExpression;
-	public Assignment(String name, String field, Expression parseExpression) {
+	public final ParsedExpression parseExpression;
+	public Assignment(String name, String field,
+			ParsedExpression parseExpression) {
 		this.name = name;
 		this.field = field;
 		this.parseExpression = parseExpression;

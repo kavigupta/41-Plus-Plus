@@ -10,16 +10,18 @@ import lib.standard.collections.Pair;
 import fortytwo.compiler.language.Language;
 import fortytwo.compiler.language.expressions.*;
 import fortytwo.compiler.language.expressions.calc.Negation;
+import fortytwo.compiler.language.expressions.calc.ParsedBinaryOperation;
 import fortytwo.compiler.language.functioncall.FunctionArgument;
 import fortytwo.compiler.language.functioncall.FunctionCall;
 import fortytwo.compiler.language.functioncall.FunctionComponent;
 import fortytwo.compiler.language.functioncall.FunctionToken;
 import fortytwo.compiler.language.statements.*;
 import fortytwo.vm.environment.Environment;
+import fortytwo.vm.expressions.Expression;
 
 public class Parser {
 	private Parser() {}
-	public static List<Statement> parse(String text) {
+	public static List<ParsedStatement> parse(String text) {
 		List<String> tokens = tokenize42(text);
 		List<List<String>> phrases = new ArrayList<>();
 		List<String> current = new ArrayList<>();
@@ -31,7 +33,7 @@ public class Parser {
 				current = new ArrayList<>();
 			}
 		}
-		List<Statement> statements = new ArrayList<>();
+		List<ParsedStatement> statements = new ArrayList<>();
 		List<List<String>> currentPhrases = new ArrayList<>();
 		for (int i = 0; i < phrases.size(); i++) {
 			currentPhrases.add(phrases.get(i));
@@ -42,14 +44,14 @@ public class Parser {
 		}
 		return statements;
 	}
-	public static Statement parseCompleteStatement(
+	public static ParsedStatement parseCompleteStatement(
 			List<List<String>> currentPhrases) {
-		Expression condition;
+		ParsedExpression condition;
 		switch (currentPhrases.get(0).get(0)) {
 			case "While":
 				currentPhrases.get(0).remove(0);
 				condition = parseExpression(currentPhrases.get(0));
-				List<Statement> statements = new ArrayList<>();
+				List<ParsedStatement> statements = new ArrayList<>();
 				for (int i = 1; i < currentPhrases.size(); i++) {
 					statements.add(parseStatement(currentPhrases.get(i)));
 				}
@@ -58,27 +60,27 @@ public class Parser {
 			case "If":
 				currentPhrases.get(0).remove(0);
 				condition = parseExpression(currentPhrases.get(0));
-				List<Statement> ifso = new ArrayList<>();
+				List<ParsedStatement> ifso = new ArrayList<>();
 				int i = 1;
 				for (; i < currentPhrases.size()
 						&& !currentPhrases.get(i).get(0)
 								.equals("Otherwise"); i++) {
 					ifso.add(parseStatement(currentPhrases.get(i)));
 				}
-				List<Statement> ifelse = new ArrayList<>();
+				List<ParsedStatement> ifelse = new ArrayList<>();
 				for (i++; i < currentPhrases.size(); i++) {
 					ifelse.add(parseStatement(currentPhrases.get(i)));
 				}
 				return IfElse.getInstance(condition, new StatementSeries(
 						ifso), new StatementSeries(ifelse));
 		}
-		List<Statement> statements = new ArrayList<>();
+		List<ParsedStatement> statements = new ArrayList<>();
 		for (int i = 0; i < currentPhrases.size(); i++) {
 			statements.add(parseStatement(currentPhrases.get(i)));
 		}
 		return new StatementSeries(statements);
 	}
-	private static Statement parseStatement(List<String> line) {
+	private static ParsedStatement parseStatement(List<String> line) {
 		switch (line.get(0)) {
 			case "Run":
 				line.remove(0);
@@ -91,30 +93,27 @@ public class Parser {
 				return parseVoidFunctionCall(line);
 		}
 	}
-	private static Expression parseExpression(List<String> list) {
+	private static ParsedExpression parseExpression(List<String> list) {
 		List<FunctionComponent> function = composeFunction(list);
 		if (function.size() == 1
 				&& function.get(0) instanceof FunctionArgument)
 			return ((FunctionArgument) function.get(0)).value;
 		return FunctionCall.getInstance(function);
 	}
-	private static Expression parsePureExpression(List<String> list) {
+	private static ParsedExpression parsePureExpression(List<String> list) {
 		boolean expectsValue = true;
-		class UnevaluatedOperator implements Expression {
-			public String operator;
-			public UnevaluatedOperator(String operator) {
+		class UnevaluatedOperator implements ParsedExpression {
+			public ParsedBinaryOperation.Operation operator;
+			public UnevaluatedOperator(
+					ParsedBinaryOperation.Operation operator) {
 				this.operator = operator;
 			}
 			@Override
-			public String type(Environment environment) {
-				return null;
-			}
-			@Override
-			public LiteralExpression evaluate(Environment environment) {
+			public Expression contextualize(Environment env) {
 				return null;
 			}
 		}
-		List<Expression> expressions = new ArrayList<>();
+		List<ParsedExpression> expressions = new ArrayList<>();
 		for (String token : list) {
 			switch (token.charAt(0)) {
 				case '0':
@@ -148,16 +147,37 @@ public class Parser {
 					expressions.add(LiteralBool.FALSE);
 					break;
 				case '+':
+					expressions.add(new UnevaluatedOperator(
+							ParsedBinaryOperation.Operation.ADD));
+					break;
 				case '-':
+					expressions.add(new UnevaluatedOperator(
+							ParsedBinaryOperation.Operation.SUBTRACT));
+					break;
 				case '*':
+					expressions.add(new UnevaluatedOperator(
+							ParsedBinaryOperation.Operation.MULTIPLY));
+					break;
+				case '%':
+					expressions.add(new UnevaluatedOperator(
+							ParsedBinaryOperation.Operation.MOD));
+					break;
 				case '/':
-					expressions.add(new UnevaluatedOperator(token));
+					if (token.equals("//"))
+						expressions
+								.add(new UnevaluatedOperator(
+										ParsedBinaryOperation.Operation.DIVIDE_FLOOR));
+					else if (token.equals("/"))
+						expressions
+								.add(new UnevaluatedOperator(
+										ParsedBinaryOperation.Operation.DIVIDE));
+					else throw new RuntimeException(/* TODO */);
 					break;
 				case '_':
 					expressions.add(new Variable(token));
 			}
 		}
-		ArrayList<Expression> expressionsWoUO = new ArrayList<>();
+		ArrayList<ParsedExpression> expressionsWoUO = new ArrayList<>();
 		for (int i = 0; i < expressions.size(); i++) {
 			if (expressions.get(i) instanceof UnevaluatedOperator) {
 				UnevaluatedOperator uneop = (UnevaluatedOperator) expressions
@@ -169,51 +189,42 @@ public class Parser {
 						continue;
 					} else if (uneop.operator.equals("-")) {
 						i++;
-						Expression next = expressions.get(i);
+						ParsedExpression next = expressions.get(i);
 						expressionsWoUO.add(Negation.getInstance(next));
 					}
 				}
 			}
 		}
-		Stack<Expression> exp = new Stack<>();
+		Stack<ParsedExpression> exp = new Stack<>();
 		for (int i = 0; i < expressionsWoUO.size(); i++) {
-			Expression token = expressionsWoUO.get(i);
+			ParsedExpression token = expressionsWoUO.get(i);
 			if (token instanceof UnevaluatedOperator) {
 				if (exp.size() == 0)
 					throw new RuntimeException(/* LOWPRI-E */);
-				Expression first = exp.pop();
+				ParsedExpression first = exp.pop();
 				i++;
-				Expression second = expressionsWoUO.get(i);
+				ParsedExpression second = expressionsWoUO.get(i);
 				UnevaluatedOperator op = (UnevaluatedOperator) token;
-				if (op.operator.equals("*")) {
-					exp.push(new Multiplication(first, second));
-				} else if (op.operator.equals("/")) {
-					exp.push(new Division(first, second));
-				} else if (op.operator.equals("//")) {
-					exp.push(new FloorDivision(first, second));
-				} else if (op.operator.equals("%")) {
-					exp.push(new Modulus(first, second));
-				}
+				exp.push(new ParsedBinaryOperation(first, second,
+						op.operator));
 			} else {
 				exp.push(token);
 			}
 		}
-		ArrayList<Expression> expressionsApartfromPM = new ArrayList<>(exp);
+		ArrayList<ParsedExpression> expressionsApartfromPM = new ArrayList<>(
+				exp);
 		exp = new Stack<>();
 		for (int i = 0; i < expressionsApartfromPM.size(); i++) {
-			Expression token = expressionsApartfromPM.get(i);
+			ParsedExpression token = expressionsApartfromPM.get(i);
 			if (token instanceof UnevaluatedOperator) {
 				if (exp.size() == 0)
 					throw new RuntimeException(/* LOWPRI-E */);
-				Expression first = exp.pop();
+				ParsedExpression first = exp.pop();
 				i++;
-				Expression second = expressionsApartfromPM.get(i);
+				ParsedExpression second = expressionsApartfromPM.get(i);
 				UnevaluatedOperator op = (UnevaluatedOperator) token;
-				if (op.operator.equals("+")) {
-					exp.push(new Addition(first, second));
-				} else if (op.operator.equals("-")) {
-					exp.push(Addition.subtraction(first, second));
-				}
+				exp.push(new ParsedBinaryOperation(first, second,
+						op.operator));
 			} else {
 				exp.push(token);
 			}
@@ -221,12 +232,12 @@ public class Parser {
 		if (exp.size() != 1) throw new RuntimeException(/* LOWPRI-E */);
 		return exp.pop();
 	}
-	private static Statement parseVoidFunctionCall(List<String> list) {
+	private static ParsedStatement parseVoidFunctionCall(List<String> list) {
 		List<FunctionComponent> function = composeFunction(list);
 		if (function.size() == 1
 				&& function.get(0) instanceof FunctionArgument)
 			throw new RuntimeException(/* LOWPRI-E non-void function call */);
-		return new FunctionCall(function);
+		return FunctionCall.getInstance(function);
 		// TODO check that return type of function is void
 	}
 	private static List<FunctionComponent> composeFunction(List<String> list) {
@@ -273,7 +284,7 @@ public class Parser {
 		}
 		return function;
 	}
-	private static Statement parseAssignment(List<String> line) {
+	private static ParsedStatement parseAssignment(List<String> line) {
 		/*
 		 * Set the <field> of <name> to <value>.
 		 */
@@ -284,7 +295,7 @@ public class Parser {
 		line.subList(0, 6).clear();
 		return new Assignment(name, field, parseExpression(line));
 	}
-	private static Statement parseDefinition(List<String> line) {
+	private static ParsedStatement parseDefinition(List<String> line) {
 		/*
 		 * Define a[n] <type> called <name>( with a <field1> of <value1>, a
 		 * <field2> of <value2>, ...)?.
@@ -293,7 +304,7 @@ public class Parser {
 			throw new RuntimeException(/* LOWPRI-E */);
 		String type = Language.deparenthesize(line.get(2));
 		String name = line.get(4);
-		ArrayList<Pair<String, Expression>> fields = new ArrayList<>();
+		ArrayList<Pair<String, ParsedExpression>> fields = new ArrayList<>();
 		for (int i = 5; i < line.size(); i++) {
 			if (!line.get(i).equals("of")) continue;
 			String field = line.get(i - 1);

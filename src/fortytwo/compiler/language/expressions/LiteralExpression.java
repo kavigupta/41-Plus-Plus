@@ -1,12 +1,11 @@
 package fortytwo.compiler.language.expressions;
 
 import fortytwo.vm.environment.Environment;
+import fortytwo.vm.expressions.Expression;
 
-public abstract class LiteralExpression implements Expression {
+public abstract class LiteralExpression implements ParsedExpression, Expression {
 	@Override
-	public abstract String type(Environment environment);
-	@Override
-	public LiteralExpression evaluate(Environment environment) {
+	public Expression contextualize(Environment env) {
 		return this;
 	}
 }

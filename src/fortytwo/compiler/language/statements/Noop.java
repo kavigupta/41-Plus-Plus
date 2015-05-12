@@ -1,7 +1,6 @@
 package fortytwo.compiler.language.statements;
 
-
-public class Noop implements Statement {
-	public static final Statement INSTANCE = new Noop();
+public class Noop implements ParsedStatement {
+	public static final ParsedStatement INSTANCE = new Noop();
 	private Noop() {}
 }
