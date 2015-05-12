@@ -36,4 +36,11 @@ public class Language {
 		}
 		return word;
 	}
+	public static boolean isExpression(String token) {
+		if (token.equals("true") || token.equals("false")) return true;
+		char start = token.charAt(0);
+		return start == '(' || start == '+' || start == '-' || start == '*'
+				|| start == '/' || Character.isDigit(start)
+				|| start == '\'' || start == '_';
+	}
 }

@@ -10,16 +10,11 @@ import java.util.stream.Collectors;
 import lib.standard.collections.Pair;
 import fortytwo.compiler.language.Language;
 import fortytwo.compiler.language.expressions.ParsedExpression;
-import fortytwo.compiler.language.expressions.Variable;
+import fortytwo.compiler.language.expressions.ParsedVariable;
 import fortytwo.compiler.language.expressions.calc.Negation;
 import fortytwo.compiler.language.expressions.calc.ParsedBinaryOperation;
-import fortytwo.compiler.language.functioncall.FunctionArgument;
-import fortytwo.compiler.language.functioncall.FunctionCall;
-import fortytwo.compiler.language.functioncall.FunctionComponent;
-import fortytwo.compiler.language.functioncall.FunctionToken;
 import fortytwo.compiler.language.statements.*;
-import fortytwo.compiler.language.statements.functions.FunctionReturn;
-import fortytwo.compiler.language.statements.functions.StructureDefinition;
+import fortytwo.compiler.language.statements.constructions.*;
 import fortytwo.vm.environment.Environment;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
@@ -115,8 +110,8 @@ public class Parser {
 	private static ParsedExpression parseExpression(List<String> list) {
 		List<FunctionComponent> function = composeFunction(list);
 		if (function.size() == 1
-				&& function.get(0) instanceof FunctionArgument)
-			return ((FunctionArgument) function.get(0)).value;
+				&& function.get(0) instanceof FunctionVariable)
+			return ((FunctionVariable) function.get(0)).value;
 		return FunctionCall.getInstance(function);
 	}
 	private static ParsedExpression parsePureExpression(List<String> list) {
@@ -190,10 +185,10 @@ public class Parser {
 						expressions
 								.add(new UnevaluatedOperator(
 										ParsedBinaryOperation.Operation.DIVIDE));
-					else throw new RuntimeException(/* TODO */);
+					else throw new RuntimeException(/* LOWPRI-E */);
 					break;
 				case '_':
-					expressions.add(new Variable(token));
+					expressions.add(new ParsedVariable(token));
 			}
 		}
 		ArrayList<ParsedExpression> expressionsWoUO = new ArrayList<>();
@@ -254,7 +249,7 @@ public class Parser {
 	private static ParsedStatement parseVoidFunctionCall(List<String> list) {
 		List<FunctionComponent> function = composeFunction(list);
 		if (function.size() == 1
-				&& function.get(0) instanceof FunctionArgument)
+				&& function.get(0) instanceof FunctionVariable)
 			throw new RuntimeException(/* LOWPRI-E non-void function call */);
 		return FunctionCall.getInstance(function);
 		// TODO check that return type of function is void
@@ -262,43 +257,29 @@ public class Parser {
 	private static List<FunctionComponent> composeFunction(List<String> list) {
 		List<FunctionComponent> function = new ArrayList<>();
 		List<String> currentExpression = new ArrayList<>();
+		ArrayList<Pair<ParsedVariable, ParsedExpression>> arguments = new ArrayList<>();
 		for (String token : list) {
-			switch (token.charAt(0)) {
-				case 't':
-				case '(':
-				case '+':
-				case '-':
-				case '*':
-				case '/':
-				case '0':
-				case '1':
-				case '2':
-				case '3':
-				case '4':
-				case '5':
-				case '6':
-				case '7':
-				case '8':
-				case '9':
-				case '\'':
-				case '_':
-					currentExpression.add(token);
-				default:
-					if (token.equals("true") || token.equals("false"))
-						currentExpression.add(token);
-					else {
-						if (currentExpression.size() != 0) {
-							function.add(new FunctionArgument(
-									parsePureExpression(currentExpression)));
-							currentExpression.clear();
-						}
-						function.add(new FunctionToken(token));
-					}
+			if (Language.isExpression(token)) {
+				currentExpression.add(token);
+			} else {
+				if (currentExpression.size() != 0) {
+					ParsedExpression argument = parsePureExpression(currentExpression);
+					ParsedVariable ParsedVariable = new ParsedVariable(
+							"_$" + arguments.size());
+					arguments.add(Pair.getInstance(ParsedVariable,
+							argument));
+					function.add(new FunctionVariable(ParsedVariable));
+					currentExpression.clear();
+				}
+				function.add(new FunctionToken(token));
 			}
 		}
 		if (currentExpression.size() != 0) {
-			function.add(new FunctionArgument(
-					parsePureExpression(currentExpression)));
+			ParsedExpression argument = parsePureExpression(currentExpression);
+			ParsedVariable ParsedVariable = new ParsedVariable("_$"
+					+ arguments.size());
+			arguments.add(Pair.getInstance(ParsedVariable, argument));
+			function.add(new FunctionVariable(ParsedVariable));
 			currentExpression.clear();
 		}
 		return function;
@@ -345,7 +326,7 @@ public class Parser {
 		 * a[n] <type> called <field> , a[n] <type> called <field>, ...
 		 */
 		if (!line.get(1).equals("a") || !line.get(3).equals("called"))
-			throw new RuntimeException(/* TODO */);
+			throw new RuntimeException(/* LOWPRI-E */);
 		int i = 4;
 		ArrayList<String> structExpression = new ArrayList<>();
 		for (; i < line.size() && !line.get(i).equals(";"); i++) {
@@ -358,12 +339,53 @@ public class Parser {
 					parseExpression(Arrays.asList(line.get(i - 1))),
 					line.get(i + 1)));
 		}
-		// TODO parse struct expression.
-		return StructureDefinition.getInstance(null, fields);
+		return StructureDefinition.getInstance(
+				parseFunctionSignature(structExpression), fields);
 	}
-	private static ParsedStatement parseFunctionDefinition(List<String> line) {
-		// TODO Auto-generated method stub
-		return null;
+	private static FunctionSignature parseFunctionSignature(
+			ArrayList<String> list) {
+		List<FunctionComponent> components = new ArrayList<>();
+		for (String token : list) {
+			if (token.charAt(0) == '_')
+				components.add(new FunctionVariable(new ParsedVariable(
+						token)));
+			else components.add(new FunctionToken(token));
+		}
+		return FunctionSignature.getInstance(components);
+	}
+	private static FunctionDefinition parseFunctionDefinition(List<String> line) {
+		/*
+		 * Define a function called <function expression> that takes a[n]
+		 * <type1> called <field1>, a[n] <type2> called <field2>, and a[n]
+		 * <type3> called <field3>( and outputs a <return type>)?.
+		 */
+		if (!line.get(1).equals("a") || !line.get(2).equals("function")
+				|| !line.get(3).equals("called"))
+			throw new RuntimeException(/* LOWPRI-E */);
+		int i = 4;
+		ArrayList<String> funcExpress = new ArrayList<>();
+		for (; i < line.size() && !line.get(i).equals("that"); i++) {
+			funcExpress.add(line.get(i));
+		}
+		i++;
+		if (!line.get(i).equals("takes")) throw new RuntimeException(/*
+														 * LOWPRI-E
+														 */);
+		ArrayList<Pair<ParsedVariable, String>> types = new ArrayList<>();
+		for (; i < line.size(); i++) {
+			if (!line.get(i).equals("called")) continue;
+			types.add(Pair.getInstance(new ParsedVariable(line.get(i - 1)),
+					line.get(i + 1)));
+		}
+		int outputloc = line.indexOf("outputs");
+		if (outputloc < 0)
+			return new FunctionDefinition(
+					parseFunctionSignature(funcExpress), types, null);
+		if (!Language.isArticle(line.get(outputloc + 1)))
+			throw new RuntimeException(/* LOWPRI-E */);
+		line.subList(0, outputloc + 2);
+		return new FunctionDefinition(parseFunctionSignature(funcExpress),
+				types, parseExpression(line));
 	}
 	public static List<String> tokenize42(String text) {
 		text = text.replaceAll("(?<op>(//)|\\+|-|\\*|/)", " ${op} ")
