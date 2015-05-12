@@ -2,13 +2,15 @@ package fortytwo.compiler.parser;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
 import fortytwo.compiler.language.Language;
-import fortytwo.compiler.language.expressions.*;
+import fortytwo.compiler.language.expressions.ParsedExpression;
+import fortytwo.compiler.language.expressions.Variable;
 import fortytwo.compiler.language.expressions.calc.Negation;
 import fortytwo.compiler.language.expressions.calc.ParsedBinaryOperation;
 import fortytwo.compiler.language.functioncall.FunctionArgument;
@@ -16,8 +18,13 @@ import fortytwo.compiler.language.functioncall.FunctionCall;
 import fortytwo.compiler.language.functioncall.FunctionComponent;
 import fortytwo.compiler.language.functioncall.FunctionToken;
 import fortytwo.compiler.language.statements.*;
+import fortytwo.compiler.language.statements.functions.FunctionReturn;
+import fortytwo.compiler.language.statements.functions.StructureDefinition;
 import fortytwo.vm.environment.Environment;
 import fortytwo.vm.expressions.Expression;
+import fortytwo.vm.expressions.LiteralBool;
+import fortytwo.vm.expressions.LiteralNumber;
+import fortytwo.vm.expressions.LiteralString;
 
 public class Parser {
 	private Parser() {}
@@ -64,7 +71,7 @@ public class Parser {
 				int i = 1;
 				for (; i < currentPhrases.size()
 						&& !currentPhrases.get(i).get(0)
-								.equals("Otherwise"); i++) {
+								.equals("otherwise"); i++) {
 					ifso.add(parseStatement(currentPhrases.get(i)));
 				}
 				List<ParsedStatement> ifelse = new ArrayList<>();
@@ -89,9 +96,21 @@ public class Parser {
 				return parseDefinition(line);
 			case "Set":
 				return parseAssignment(line);
+			case "Exit":
+				return parseReturn(line);
 			default:
 				return parseVoidFunctionCall(line);
 		}
+	}
+	private static ParsedStatement parseReturn(List<String> line) {
+		/* Exit the function( and output <output>)?. */
+		if (!line.get(1).equals("the") || !line.get(2).equals("function"))
+			throw new RuntimeException(/* LOWPRI-E */);
+		if (line.size() == 3) return new FunctionReturn(null);
+		if (!line.get(3).equals("and") || !line.get(4).equals("output"))
+			throw new RuntimeException(/* LOWPRI-E */);
+		line.subList(0, 5).clear();
+		return new FunctionReturn(parseExpression(line));
 	}
 	private static ParsedExpression parseExpression(List<String> list) {
 		List<FunctionComponent> function = composeFunction(list);
@@ -303,6 +322,8 @@ public class Parser {
 		if (!Language.isArticle(line.get(1)) || line.get(3).equals("called"))
 			throw new RuntimeException(/* LOWPRI-E */);
 		String type = Language.deparenthesize(line.get(2));
+		if (type.equals("function")) return parseFunctionDefinition(line);
+		if (type.equals("type")) return parseStructDefinition(line);
 		String name = line.get(4);
 		ArrayList<Pair<String, ParsedExpression>> fields = new ArrayList<>();
 		for (int i = 5; i < line.size(); i++) {
@@ -318,10 +339,35 @@ public class Parser {
 		}
 		return new Definition(type, name, fields);
 	}
+	private static ParsedStatement parseStructDefinition(List<String> line) {
+		/*
+		 * Define a structure called <structure expression> ; which contains
+		 * a[n] <type> called <field> , a[n] <type> called <field>, ...
+		 */
+		if (!line.get(1).equals("a") || !line.get(3).equals("called"))
+			throw new RuntimeException(/* TODO */);
+		int i = 4;
+		ArrayList<String> structExpression = new ArrayList<>();
+		for (; i < line.size() && !line.get(i).equals(";"); i++) {
+			structExpression.add(line.get(i));
+		}
+		ArrayList<Pair<ParsedExpression, String>> fields = new ArrayList<>();
+		for (; i < line.size(); i++) {
+			if (!line.get(i).equals("called")) continue;
+			fields.add(Pair.getInstance(
+					parseExpression(Arrays.asList(line.get(i - 1))),
+					line.get(i + 1)));
+		}
+		// TODO parse struct expression.
+		return StructureDefinition.getInstance(null, fields);
+	}
+	private static ParsedStatement parseFunctionDefinition(List<String> line) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	public static List<String> tokenize42(String text) {
-		text = text
-				.replaceAll("(?<op>(//)|((>|<)=?)|/?=|\\+|-|\\*|/)",
-						" ${op} ").replaceAll("\\s+", " ").trim()
+		text = text.replaceAll("(?<op>(//)|\\+|-|\\*|/)", " ${op} ")
+				.replaceAll("\\s+", " ").trim()
 				+ " ";
 		boolean inString = false;
 		ArrayList<String> tokens = new ArrayList<>();

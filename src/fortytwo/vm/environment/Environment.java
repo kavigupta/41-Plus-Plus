@@ -1,7 +1,7 @@
 package fortytwo.vm.environment;
 
-import fortytwo.compiler.language.expressions.LiteralExpression;
 import fortytwo.compiler.language.expressions.Variable;
+import fortytwo.vm.expressions.LiteralExpression;
 
 public class Environment {
 	public String typeOf(Variable variable) {
