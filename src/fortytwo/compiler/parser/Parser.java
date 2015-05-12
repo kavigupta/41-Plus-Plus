@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+import lib.standard.collections.Pair;
+import fortytwo.compiler.language.Language;
 import fortytwo.compiler.language.expressions.*;
 import fortytwo.compiler.language.expressions.calc.*;
 import fortytwo.compiler.language.functioncall.FunctionArgument;
@@ -50,8 +52,8 @@ public class Parser {
 				for (int i = 1; i < currentPhrases.size(); i++) {
 					statements.add(parseStatement(currentPhrases.get(i)));
 				}
-				return WhileLoop.getInstance(condition,
-						StatementSeries.getInstance(statements));
+				return new WhileLoop(condition, new StatementSeries(
+						statements));
 			case "If":
 				currentPhrases.get(0).remove(0);
 				condition = parseExpression(currentPhrases.get(0));
@@ -66,15 +68,14 @@ public class Parser {
 				for (i++; i < currentPhrases.size(); i++) {
 					ifelse.add(parseStatement(currentPhrases.get(i)));
 				}
-				return IfElse.getInstance(condition,
-						StatementSeries.getInstance(ifso),
-						StatementSeries.getInstance(ifelse));
+				return IfElse.getInstance(condition, new StatementSeries(
+						ifso), new StatementSeries(ifelse));
 		}
 		List<Statement> statements = new ArrayList<>();
 		for (int i = 0; i < currentPhrases.size(); i++) {
 			statements.add(parseStatement(currentPhrases.get(i)));
 		}
-		return StatementSeries.getInstance(statements);
+		return new StatementSeries(statements);
 	}
 	private static Statement parseStatement(List<String> line) {
 		switch (line.get(0)) {
@@ -94,7 +95,7 @@ public class Parser {
 		if (function.size() == 1
 				&& function.get(0) instanceof FunctionArgument)
 			return ((FunctionArgument) function.get(0)).value;
-		return FunctionCall.getInstance(function);
+		return new FunctionCall(function);
 	}
 	private static Expression parsePureExpression(List<String> list) {
 		boolean expectsValue = true;
@@ -117,14 +118,15 @@ public class Parser {
 				case '7':
 				case '8':
 				case '9':
-					if (!expectsValue)
-						throw new RuntimeException(/* TODO */);
+					if (!expectsValue) throw new RuntimeException(/*
+														 * LOWPRI-E
+														 */);
 					try {
 						expressions.add(LiteralNumber
 								.getInstance(new BigDecimal(token)));
 						break;
 					} catch (NumberFormatException e) {
-						throw new RuntimeException(/* TODO */);
+						throw new RuntimeException(/* LOWPRI-E */);
 					}
 				case '\'':
 					expressions.add(LiteralString.getInstance(token
@@ -168,7 +170,8 @@ public class Parser {
 		for (int i = 0; i < expressionsWoUO.size(); i++) {
 			Expression token = expressionsWoUO.get(i);
 			if (token instanceof UnevaluatedOperator) {
-				if (exp.size() == 0) throw new RuntimeException(/* TODO */);
+				if (exp.size() == 0)
+					throw new RuntimeException(/* LOWPRI-E */);
 				Expression first = exp.pop();
 				i++;
 				Expression second = expressionsWoUO.get(i);
@@ -191,7 +194,8 @@ public class Parser {
 		for (int i = 0; i < expressionsApartfromPM.size(); i++) {
 			Expression token = expressionsApartfromPM.get(i);
 			if (token instanceof UnevaluatedOperator) {
-				if (exp.size() == 0) throw new RuntimeException(/* TODO */);
+				if (exp.size() == 0)
+					throw new RuntimeException(/* LOWPRI-E */);
 				Expression first = exp.pop();
 				i++;
 				Expression second = expressionsApartfromPM.get(i);
@@ -199,21 +203,21 @@ public class Parser {
 				if (op.operator.equals("+")) {
 					exp.push(new Addition(first, second));
 				} else if (op.operator.equals("-")) {
-					exp.push(new Subtraction(first, second));
+					exp.push(Addition.subtraction(first, second));
 				}
 			} else {
 				exp.push(token);
 			}
 		}
-		if (exp.size() != 1) throw new RuntimeException(/* TODO */);
+		if (exp.size() != 1) throw new RuntimeException(/* LOWPRI-E */);
 		return exp.pop();
 	}
 	private static Statement parseVoidFunctionCall(List<String> list) {
 		List<FunctionComponent> function = composeFunction(list);
 		if (function.size() == 1
 				&& function.get(0) instanceof FunctionArgument)
-			throw new RuntimeException(/* TODO non-void function call */);
-		return FunctionCall.getInstance(function);
+			throw new RuntimeException(/* LOWPRI-E non-void function call */);
+		return new FunctionCall(function);
 		// TODO check that return type of function is void
 	}
 	private static List<FunctionComponent> composeFunction(List<String> list) {
@@ -266,18 +270,33 @@ public class Parser {
 		 */
 		if (!line.get(1).equals("the") || !line.get(3).equals("of")
 				|| !line.get(5).equals("to"))
-			throw new RuntimeException(/* TODO */);
+			throw new RuntimeException(/* LOWPRI-E */);
 		String field = line.get(2), name = line.get(4);
 		line.subList(0, 6).clear();
-		return Assignment.getInstance(name, field, parseExpression(line));
+		return new Assignment(name, field, parseExpression(line));
 	}
 	private static Statement parseDefinition(List<String> line) {
 		/*
 		 * Define a[n] <type> called <name>( with a <field1> of <value1>, a
 		 * <field2> of <value2>, ...)?.
-		 * TODO
 		 */
-		return null;
+		if (!Language.isArticle(line.get(1)) || line.get(3).equals("called"))
+			throw new RuntimeException(/* LOWPRI-E */);
+		String type = Language.deparenthesize(line.get(2));
+		String name = line.get(4);
+		ArrayList<Pair<String, Expression>> fields = new ArrayList<>();
+		for (int i = 5; i < line.size(); i++) {
+			if (!line.get(i).equals("of")) continue;
+			String field = line.get(i - 1);
+			ArrayList<String> tokens = new ArrayList<>();
+			i++;
+			while (!line.get(i).equals(",")) {
+				tokens.add(line.get(i));
+				i++;
+			}
+			fields.add(Pair.getInstance(field, parseExpression(tokens)));
+		}
+		return new Definition(type, name, fields);
 	}
 	public static List<String> tokenize42(String text) {
 		text = text
@@ -321,11 +340,11 @@ public class Parser {
 								sbuff.append((char) (u));
 								i = i + 4;
 							} catch (NumberFormatException e) {
-								throw new RuntimeException(/* TODO */);
+								throw new RuntimeException(/* LOWPRI-E */);
 							}
 							continue;
 						default:
-							throw new RuntimeException(/* TODO */);
+							throw new RuntimeException(/* LOWPRI-E */);
 					}
 				}
 				sbuff.append(text.charAt(i));
@@ -339,21 +358,23 @@ public class Parser {
 					break;
 				case '(':
 					if (sbuff.length() != 0)
-						throw new RuntimeException(/* TODO */);
+						throw new RuntimeException(/* LOWPRI-E */);
 					int index = text.indexOf(')', i);
-					if (index < 0) throw new RuntimeException(/* TODO */);
+					if (index < 0)
+						throw new RuntimeException(/* LOWPRI-E */);
 					tokens.add(text.substring(i, index + 1));
 					i = index;
 					break;
 				case ')':
-					throw new RuntimeException(/* TODO */);
+					throw new RuntimeException(/* LOWPRI-E */);
 				case '[':
 					index = text.indexOf(']', i);
-					if (index < 0) throw new RuntimeException(/* TODO */);
+					if (index < 0)
+						throw new RuntimeException(/* LOWPRI-E */);
 					i = index;
 					break;
 				case ']':
-					throw new RuntimeException(/* TODO */);
+					throw new RuntimeException(/* LOWPRI-E */);
 				case ':':
 				case '.':
 				case ';':
@@ -374,7 +395,7 @@ public class Parser {
 					sbuff.append(text.charAt(i));
 			}
 		}
-		if (inString) throw new RuntimeException(/* TODO */);
+		if (inString) throw new RuntimeException(/* LOWPRI-E */);
 		return tokens.stream().filter(s -> s.length() != 0)
 				.collect(Collectors.toList());
 	}

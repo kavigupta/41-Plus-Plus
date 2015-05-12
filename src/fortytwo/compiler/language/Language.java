@@ -24,4 +24,16 @@ public class Language {
 				.append(howToSay.apply(fields.get(fields.size() - 1)))
 				.toString();
 	}
+	public static boolean isArticle(String word) {
+		return word.equals("a") || word.equals("an");
+	}
+	public static String deparenthesize(String word) {
+		if (word.startsWith("(")) {
+			if (!word.endsWith(")")) throw new RuntimeException(/*
+													 * LOWPRI-E
+													 */);
+			return word.substring(1, word.length() - 1);
+		}
+		return word;
+	}
 }

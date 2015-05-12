@@ -5,8 +5,8 @@ import java.util.List;
 import fortytwo.compiler.language.expressions.Expression;
 
 public class FunctionCall implements Expression {
-	public static Expression getInstance(List<FunctionComponent> function) {
-		// TODO Auto-generated method stub
-		return null;
+	public final List<FunctionComponent> function;
+	public FunctionCall(List<FunctionComponent> function) {
+		this.function = function;
 	}
 }

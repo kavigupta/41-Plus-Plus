@@ -1,11 +1,20 @@
 package fortytwo.compiler.language.expressions;
 
+import fortytwo.vm.environment.Environment;
+
 public class Variable implements Expression {
-	public final String contents;
-	public static Variable getInstance(String contents) {
-		return new Variable(contents);
+	public final String name;
+	public static Variable initialize(String name, Environment environment) {
+		return environment.initialize(name);
 	}
-	public Variable(String contents) {
-		this.contents = contents;
+	public static Variable getReferenceTo(String name, Environment environment) {
+		return environment.getReferenceTo(name);
+	}
+	public Variable(String name) {
+		this.name = name;
+	}
+	@Override
+	public String type(Environment environment) {
+		return environment.typeOf(this);
 	}
 }
