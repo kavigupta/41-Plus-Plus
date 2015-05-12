@@ -12,10 +12,7 @@ import fortytwo.compiler.language.functioncall.FunctionArgument;
 import fortytwo.compiler.language.functioncall.FunctionCall;
 import fortytwo.compiler.language.functioncall.FunctionComponent;
 import fortytwo.compiler.language.functioncall.FunctionToken;
-import fortytwo.compiler.language.statements.IfElse;
-import fortytwo.compiler.language.statements.Statement;
-import fortytwo.compiler.language.statements.StatementSeries;
-import fortytwo.compiler.language.statements.WhileLoop;
+import fortytwo.compiler.language.statements.*;
 
 public class Parser {
 	private Parser() {}
@@ -93,47 +90,7 @@ public class Parser {
 		}
 	}
 	private static Expression parseExpression(List<String> list) {
-		List<FunctionComponent> function = new ArrayList<>();
-		List<String> currentExpression = new ArrayList<>();
-		for (String token : list) {
-			switch (token.charAt(0)) {
-				case 't':
-				case '(':
-				case '+':
-				case '-':
-				case '*':
-				case '/':
-				case '0':
-				case '1':
-				case '2':
-				case '3':
-				case '4':
-				case '5':
-				case '6':
-				case '7':
-				case '8':
-				case '9':
-				case '\'':
-				case '_':
-					currentExpression.add(token);
-				default:
-					if (token.equals("true") || token.equals("false"))
-						currentExpression.add(token);
-					else {
-						if (currentExpression.size() != 0) {
-							function.add(new FunctionArgument(
-									parsePureExpression(currentExpression)));
-							currentExpression.clear();
-						}
-						function.add(new FunctionToken(token));
-					}
-			}
-		}
-		if (currentExpression.size() != 0) {
-			function.add(new FunctionArgument(
-					parsePureExpression(currentExpression)));
-			currentExpression.clear();
-		}
+		List<FunctionComponent> function = composeFunction(list);
 		if (function.size() == 1
 				&& function.get(0) instanceof FunctionArgument)
 			return ((FunctionArgument) function.get(0)).value;
@@ -251,16 +208,75 @@ public class Parser {
 		if (exp.size() != 1) throw new RuntimeException(/* TODO */);
 		return exp.pop();
 	}
-	private static Statement parseVoidFunctionCall(List<String> line) {
-		// TODO Auto-generated method stub
-		return null;
+	private static Statement parseVoidFunctionCall(List<String> list) {
+		List<FunctionComponent> function = composeFunction(list);
+		if (function.size() == 1
+				&& function.get(0) instanceof FunctionArgument)
+			throw new RuntimeException(/* TODO non-void function call */);
+		return FunctionCall.getInstance(function);
+		// TODO check that return type of function is void
+	}
+	private static List<FunctionComponent> composeFunction(List<String> list) {
+		List<FunctionComponent> function = new ArrayList<>();
+		List<String> currentExpression = new ArrayList<>();
+		for (String token : list) {
+			switch (token.charAt(0)) {
+				case 't':
+				case '(':
+				case '+':
+				case '-':
+				case '*':
+				case '/':
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
+				case '\'':
+				case '_':
+					currentExpression.add(token);
+				default:
+					if (token.equals("true") || token.equals("false"))
+						currentExpression.add(token);
+					else {
+						if (currentExpression.size() != 0) {
+							function.add(new FunctionArgument(
+									parsePureExpression(currentExpression)));
+							currentExpression.clear();
+						}
+						function.add(new FunctionToken(token));
+					}
+			}
+		}
+		if (currentExpression.size() != 0) {
+			function.add(new FunctionArgument(
+					parsePureExpression(currentExpression)));
+			currentExpression.clear();
+		}
+		return function;
 	}
 	private static Statement parseAssignment(List<String> line) {
-		// TODO Auto-generated method stub
-		return null;
+		/*
+		 * Set the <field> of <name> to <value>.
+		 */
+		if (!line.get(1).equals("the") || !line.get(3).equals("of")
+				|| !line.get(5).equals("to"))
+			throw new RuntimeException(/* TODO */);
+		String field = line.get(2), name = line.get(4);
+		line.subList(0, 6).clear();
+		return Assignment.getInstance(name, field, parseExpression(line));
 	}
 	private static Statement parseDefinition(List<String> line) {
-		// TODO Auto-generated method stub
+		/*
+		 * Define a[n] <type> called <name>( with a <field1> of <value1>, a
+		 * <field2> of <value2>, ...)?.
+		 * TODO
+		 */
 		return null;
 	}
 	public static List<String> tokenize42(String text) {
