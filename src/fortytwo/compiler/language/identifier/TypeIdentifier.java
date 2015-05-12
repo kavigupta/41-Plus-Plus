@@ -5,14 +5,14 @@ import fortytwo.compiler.language.expressions.ParsedExpression;
 import fortytwo.vm.environment.Environment;
 import fortytwo.vm.expressions.Expression;
 
-public class VariableIdentifier implements ParsedExpression {
+public class TypeIdentifier implements ParsedExpression {
 	public final String name;
-	public static VariableIdentifier getInstance(String name) {
-		if (!Language.isValidVariableIdentifier(name))
+	public static TypeIdentifier getInstance(String name) {
+		if (!Language.isValidTypeIdentifier(name))
 			throw new RuntimeException(/* LOWPRI-E */);
-		return new VariableIdentifier(name);
+		return new TypeIdentifier(name);
 	}
-	private VariableIdentifier(String name) {
+	private TypeIdentifier(String name) {
 		this.name = name;
 	}
 	@Override

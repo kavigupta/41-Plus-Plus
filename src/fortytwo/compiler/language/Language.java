@@ -43,4 +43,12 @@ public class Language {
 				|| start == '/' || Character.isDigit(start)
 				|| start == '\'' || start == '_';
 	}
+	public static boolean isValidVariableIdentifier(String name) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public static boolean isValidTypeIdentifier(String name) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
