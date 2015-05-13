@@ -44,11 +44,11 @@ public class Language {
 				|| start == '\'' || start == '_';
 	}
 	public static boolean isValidVariableIdentifier(String name) {
-		// TODO Auto-generated method stub
-		return false;
+		if (name.contains(" ")) return false;
+		return name.startsWith("_");
 	}
 	public static boolean isValidTypeIdentifier(String name) {
-		// TODO Auto-generated method stub
+		// TODO stub
 		return false;
 	}
 }

@@ -379,12 +379,12 @@ public class Parser {
 		if (!line.get(i).equals("takes")) throw new RuntimeException(/*
 														 * LOWPRI-E
 														 */);
-		ArrayList<Pair<VariableIdentifier, String>> types = new ArrayList<>();
+		ArrayList<Pair<TypeIdentifier, VariableIdentifier>> types = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).equals("called")) continue;
 			types.add(Pair.getInstance(
-					VariableIdentifier.getInstance(line.get(i - 1)),
-					line.get(i + 1)));
+					TypeIdentifier.getInstance(line.get(i - 1)),
+					VariableIdentifier.getInstance(line.get(i + 1))));
 		}
 		int outputloc = line.indexOf("outputs");
 		if (outputloc < 0)
