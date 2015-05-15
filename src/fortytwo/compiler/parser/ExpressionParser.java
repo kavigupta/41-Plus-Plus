@@ -8,7 +8,6 @@ import java.util.Stack;
 import fortytwo.compiler.language.Operation;
 import fortytwo.compiler.language.expressions.ParsedBinaryOperation;
 import fortytwo.compiler.language.expressions.ParsedExpression;
-import fortytwo.compiler.language.expressions.ParsedNegation;
 import fortytwo.compiler.language.identifier.VariableIdentifier;
 import fortytwo.compiler.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.compiler.language.statements.ParsedFunctionCall;
@@ -120,8 +119,8 @@ public class ExpressionParser {
 					} else if (uneop.operator.equals("-")) {
 						i++;
 						ParsedExpression next = expressions.get(i);
-						expressionsWoUO.add(ParsedNegation
-								.getInstance(next));
+						expressionsWoUO.add(ParsedBinaryOperation
+								.getNegation(next));
 					}
 				}
 			}

@@ -1,9 +1,12 @@
 package fortytwo.compiler.language.expressions;
 
+import java.math.BigDecimal;
+
 import fortytwo.compiler.language.Operation;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.expressions.BinaryOperation;
 import fortytwo.vm.expressions.Expression;
+import fortytwo.vm.expressions.LiteralNumber;
 
 public class ParsedBinaryOperation implements ParsedExpression {
 	public final ParsedExpression first, second;
@@ -13,6 +16,11 @@ public class ParsedBinaryOperation implements ParsedExpression {
 		this.first = first;
 		this.second = second;
 		this.operation = operation;
+	}
+	public static ParsedBinaryOperation getNegation(ParsedExpression contents) {
+		return new ParsedBinaryOperation(
+				LiteralNumber.getInstance(BigDecimal.ZERO), contents,
+				Operation.SUBTRACT);
 	}
 	@Override
 	public Expression contextualize(LocalEnvironment env) {
@@ -24,40 +32,9 @@ public class ParsedBinaryOperation implements ParsedExpression {
 	}
 	@Override
 	public SentenceType type() {
-		// TODO Auto-generated method stub
-		return null;
+		if (first.type() == SentenceType.PURE_EXPRESSION
+				&& second.type() == SentenceType.PURE_EXPRESSION)
+			return SentenceType.PURE_EXPRESSION;
+		return SentenceType.IMPURE_EXPRESSION;
 	}
-	// @Override
-	// public String type(Environment environment) {
-	// return "number";
-	// }
-	// @Override
-	// public LiteralExpression evaluate(Environment environment) {
-	// BigDecimal bdfirst = ((LiteralNumber)
-	// first.evaluate(environment)).contents;
-	// BigDecimal bdsecond = ((LiteralNumber)
-	// second.evaluate(environment)).contents;
-	// switch (operation) {
-	// case ADD:
-	// return LiteralNumber.getInstance(bdfirst.add(bdsecond));
-	// case SUBTRACT:
-	// return LiteralNumber
-	// .getInstance(bdfirst.subtract(bdsecond));
-	// case MULTIPLY:
-	// return LiteralNumber
-	// .getInstance(bdfirst.multiply(bdsecond));
-	// case DIVIDE:
-	// return LiteralNumber.getInstance(bdfirst
-	// .multiply(PRECISION)
-	// .divide(bdsecond, RoundingMode.HALF_EVEN)
-	// .divide(PRECISION));
-	// case DIVIDE_FLOOR:
-	// return LiteralNumber.getInstance(bdfirst
-	// .divideToIntegralValue(bdsecond));
-	// case MOD:
-	// return LiteralNumber.getInstance(bdfirst
-	// .remainder(bdsecond));
-	// }
-	// throw new RuntimeException(/* LOWPRI-E */);
-	// }
 }

@@ -30,6 +30,9 @@ public class BinaryOperation implements Expression {
 			throw new RuntimeException(/* LOWPRI-E */);
 		BigDecimal bdfirst = ((LiteralNumber) f).contents;
 		BigDecimal bdsecond = ((LiteralNumber) s).contents;
+		if (operation.requiresSecondArgumentNotZero
+				&& bdsecond.compareTo(BigDecimal.ZERO) == 0)
+			throw new RuntimeException(/* LOWPRI-E */);
 		switch (operation) {
 			case ADD:
 				return LiteralNumber.getInstance(bdfirst.add(bdsecond));

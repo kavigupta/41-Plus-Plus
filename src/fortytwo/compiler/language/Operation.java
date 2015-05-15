@@ -1,5 +1,10 @@
 package fortytwo.compiler.language;
 
 public enum Operation {
-	ADD, SUBTRACT, MULTIPLY, DIVIDE, DIVIDE_FLOOR, MOD;
+	ADD(false), SUBTRACT(false), MULTIPLY(false), DIVIDE(true), DIVIDE_FLOOR(
+			true), MOD(true);
+	public final boolean requiresSecondArgumentNotZero;
+	Operation(boolean requiresSecondArgumentNotZero) {
+		this.requiresSecondArgumentNotZero = requiresSecondArgumentNotZero;
+	}
 }
