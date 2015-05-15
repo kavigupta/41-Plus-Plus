@@ -39,9 +39,15 @@ public class ConstructionParser {
 				&& !line.get(i).equals("of"); i++) {
 			structExpression.add(line.get(i));
 		}
+		List<TypeIdentifier> typeVariables = new ArrayList<>();
 		if (line.get(i).equals("of")) {
 			i++;
-			for (; i < line.size() && !line.get(i).equals(";"); i++) {}
+			for (; i < line.size() && !line.get(i).equals(";"); i++) {
+				if (Language.isValidVariableIdentifier(line.get(i))) {
+					typeVariables.add(TypeIdentifier.getInstance(line
+							.get(i)));
+				}
+			}
 		}
 		ArrayList<Field> fields = new ArrayList<>();
 		for (; i < line.size(); i++) {
@@ -50,9 +56,8 @@ public class ConstructionParser {
 					.get(i + 1)), TypeIdentifier.getInstance(line
 					.get(i - 1))));
 		}
-		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(structExpression);
-		return new StructureDeclaration(new GenericStructure(sig.key,
-				sig.value, fields));
+		return new StructureDeclaration(new GenericStructure(
+				structExpression, typeVariables, fields));
 	}
 	public static FunctionDefinition parseFunctionDefinition(List<String> line) {
 		/*
