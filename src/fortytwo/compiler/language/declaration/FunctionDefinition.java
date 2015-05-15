@@ -1,20 +1,24 @@
 package fortytwo.compiler.language.declaration;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import fortytwo.compiler.language.expressions.ParsedExpression;
 import fortytwo.compiler.language.identifier.FunctionName;
-import fortytwo.vm.constructions.Field;
+import fortytwo.compiler.language.identifier.TypeIdentifier;
+import fortytwo.compiler.language.identifier.VariableIdentifier;
 
 public class FunctionDefinition implements Declaration {
 	public final FunctionName signature;
-	public final ArrayList<Field> argTypes;
-	public final ParsedExpression parsedExpression;
+	public final List<VariableIdentifier> parameterVariables;
+	public final List<TypeIdentifier> parameterTypes;
+	public final ParsedExpression output;
 	public FunctionDefinition(FunctionName signature,
-			ArrayList<Field> argTypes, ParsedExpression parsedExpression) {
+			List<VariableIdentifier> parameterVariables,
+			List<TypeIdentifier> parameterTypes, ParsedExpression output) {
 		this.signature = signature;
-		this.argTypes = argTypes;
-		this.parsedExpression = parsedExpression;
+		this.parameterVariables = parameterVariables;
+		this.parameterTypes = parameterTypes;
+		this.output = output;
 	}
 	@Override
 	public SentenceType type() {

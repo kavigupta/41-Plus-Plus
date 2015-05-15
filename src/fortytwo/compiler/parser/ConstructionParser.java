@@ -2,6 +2,7 @@ package fortytwo.compiler.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
 import fortytwo.compiler.language.Language;
@@ -44,7 +45,7 @@ public class ConstructionParser {
 					.get(i - 1))));
 		}
 		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(structExpression);
-		return new StructureDeclaration(GenericStructure.getInstance(sig.key,
+		return new StructureDeclaration(new GenericStructure(sig.key,
 				sig.value, fields));
 	}
 	public static FunctionDefinition parseFunctionDefinition(List<String> line) {
@@ -65,22 +66,27 @@ public class ConstructionParser {
 		if (!line.get(i).equals("takes")) throw new RuntimeException(/*
 														 * LOWPRI-E
 														 */);
-		ArrayList<Field> types = new ArrayList<>();
+		ArrayList<TypeIdentifier> types = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).equals("called")) continue;
-			types.add(new Field(VariableIdentifier.getInstance(line
-					.get(i + 1)), TypeIdentifier.getInstance(line
-					.get(i - 1))));
+			types.add(TypeIdentifier.getInstance(line.get(i + 1)));
 		}
 		int outputloc = line.indexOf("outputs");
+		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(funcExpress);
+		List<VariableIdentifier> variables = sig.value
+				.stream()
+				.map(x -> {
+					if (!(x instanceof VariableIdentifier))
+						throw new RuntimeException(/* LOWPRI-E */);
+					return (VariableIdentifier) x;
+				}).collect(Collectors.toList());
 		if (outputloc < 0)
-			return new FunctionDefinition(
-					parseFunctionSignature(funcExpress), types, null);
+			return new FunctionDefinition(sig.key, variables, types, null);
 		if (!Language.isArticle(line.get(outputloc + 1)))
 			throw new RuntimeException(/* LOWPRI-E */);
 		line.subList(0, outputloc + 2).clear();
-		return new FunctionDefinition(parseFunctionSignature(funcExpress),
-				types, ExpressionParser.parseExpression(line));
+		return new FunctionDefinition(sig.key, variables, types,
+				ExpressionParser.parseExpression(line));
 	}
 	private static Pair<FunctionName, List<ParsedExpression>> parseFunctionSignature(
 			List<String> list) {

@@ -24,7 +24,7 @@ public class ExpressionParser {
 				.composeFunction(list);
 		if (function.signature.function.size() == 1
 				&& function.signature.function.get(0) instanceof FunctionArgument)
-			return function.arguments.get(0).value;
+			return function.arguments.get(0);
 		return function;
 	}
 	public static ParsedExpression parsePureExpression(List<String> list) {
