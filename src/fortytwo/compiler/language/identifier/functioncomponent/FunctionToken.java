@@ -1,4 +1,4 @@
-package fortytwo.compiler.language.declaration;
+package fortytwo.compiler.language.identifier.functioncomponent;
 
 
 public class FunctionToken implements FunctionComponent {

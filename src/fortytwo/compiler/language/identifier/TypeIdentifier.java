@@ -8,6 +8,8 @@ import fortytwo.vm.expressions.Expression;
 public class TypeIdentifier implements ParsedExpression {
 	public final String name;
 	public static TypeIdentifier getInstance(String name) {
+		if (Language.isValidVariableIdentifier(name))
+			return new TypeIdentifier(name);
 		if (!Language.isValidTypeIdentifier(name))
 			throw new RuntimeException(/* LOWPRI-E */);
 		return new TypeIdentifier(name);

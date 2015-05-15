@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.vm.constructions.Structure;
+import fortytwo.vm.constructions.GenericStructure;
 
 public class StructureRoster {
-	public List<Structure> roster;
+	public List<GenericStructure> roster;
 	public StructureRoster() {
 		this.roster = new ArrayList<>();
 	}
-	public void addStructure(Structure s) {
+	public void addStructure(GenericStructure s) {
 		roster.add(s);
 	}
-	public Structure referenceTo(TypeIdentifier type) {
+	public GenericStructure referenceTo(TypeIdentifier type) {
 		// TODO Auto-generated method stub
 		return null;
 	}

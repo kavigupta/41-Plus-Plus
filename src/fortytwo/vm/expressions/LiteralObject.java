@@ -4,12 +4,12 @@ import java.util.List;
 
 import lib.standard.collections.Pair;
 import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.vm.constructions.Structure;
+import fortytwo.vm.constructions.GenericStructure;
 
 public class LiteralObject extends LiteralExpression {
-	public final Structure struct;
+	public final GenericStructure struct;
 	public final List<Pair<VariableIdentifier, LiteralExpression>> fields;
-	public LiteralObject(Structure struct,
+	public LiteralObject(GenericStructure struct,
 			List<Pair<VariableIdentifier, LiteralExpression>> fields) {
 		this.struct = struct;
 		this.fields = fields;

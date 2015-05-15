@@ -1,51 +1,28 @@
 package fortytwo.compiler.parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import lib.standard.collections.Pair;
 import fortytwo.compiler.language.Language;
-import fortytwo.compiler.language.declaration.*;
+import fortytwo.compiler.language.declaration.Declaration;
+import fortytwo.compiler.language.declaration.FunctionDefinition;
+import fortytwo.compiler.language.declaration.StructureDeclaration;
 import fortytwo.compiler.language.expressions.ParsedExpression;
+import fortytwo.compiler.language.identifier.FunctionName;
 import fortytwo.compiler.language.identifier.TypeIdentifier;
 import fortytwo.compiler.language.identifier.VariableIdentifier;
+import fortytwo.compiler.language.identifier.functioncomponent.FunctionArgument;
+import fortytwo.compiler.language.identifier.functioncomponent.FunctionComponent;
+import fortytwo.compiler.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.compiler.language.statements.ParsedFunctionCall;
-import fortytwo.vm.constructions.Structure;
+import fortytwo.vm.constructions.Field;
+import fortytwo.vm.constructions.GenericStructure;
 
 public class ConstructionParser {
 	public static ParsedFunctionCall composeFunction(List<String> list) {
-		List<FunctionComponent> function = new ArrayList<>();
-		List<String> currentExpression = new ArrayList<>();
-		ArrayList<Pair<VariableIdentifier, ParsedExpression>> arguments = new ArrayList<>();
-		for (String token : list) {
-			if (Language.isExpression(token)) {
-				currentExpression.add(token);
-			} else {
-				if (currentExpression.size() != 0) {
-					ParsedExpression argument = ExpressionParser
-							.parsePureExpression(currentExpression);
-					VariableIdentifier ParsedVariable = VariableIdentifier
-							.getInstance("_$" + arguments.size());
-					arguments.add(Pair.getInstance(ParsedVariable,
-							argument));
-					function.add(new FunctionVariable(ParsedVariable));
-					currentExpression.clear();
-				}
-				function.add(new FunctionToken(token));
-			}
-		}
-		if (currentExpression.size() != 0) {
-			ParsedExpression argument = ExpressionParser
-					.parsePureExpression(currentExpression);
-			VariableIdentifier var = VariableIdentifier.getInstance("_$"
-					+ arguments.size());
-			arguments.add(Pair.getInstance(var, argument));
-			function.add(new FunctionVariable(var));
-			currentExpression.clear();
-		}
-		return ParsedFunctionCall.getInstance(
-				FunctionSignature.getInstance(function), arguments);
+		Pair<FunctionName, List<ParsedExpression>> fsig = parseFunctionSignature(list);
+		return ParsedFunctionCall.getInstance(fsig.key, fsig.value);
 	}
 	public static Declaration parseStructDefinition(List<String> line) {
 		/*
@@ -59,15 +36,16 @@ public class ConstructionParser {
 		for (; i < line.size() && !line.get(i).equals(";"); i++) {
 			structExpression.add(line.get(i));
 		}
-		ArrayList<Pair<ParsedExpression, VariableIdentifier>> fields = new ArrayList<>();
+		ArrayList<Field> fields = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).equals("called")) continue;
-			fields.add(Pair.getInstance(ExpressionParser
-					.parseExpression(Arrays.asList(line.get(i - 1))),
-					VariableIdentifier.getInstance(line.get(i + 1))));
+			fields.add(new Field(VariableIdentifier.getInstance(line
+					.get(i + 1)), TypeIdentifier.getInstance(line
+					.get(i - 1))));
 		}
-		return new StructureDeclaration(Structure.getInstance(
-				parseFunctionSignature(structExpression), fields));
+		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(structExpression);
+		return new StructureDeclaration(GenericStructure.getInstance(sig.key,
+				sig.value, fields));
 	}
 	public static FunctionDefinition parseFunctionDefinition(List<String> line) {
 		/*
@@ -87,12 +65,12 @@ public class ConstructionParser {
 		if (!line.get(i).equals("takes")) throw new RuntimeException(/*
 														 * LOWPRI-E
 														 */);
-		ArrayList<Pair<TypeIdentifier, VariableIdentifier>> types = new ArrayList<>();
+		ArrayList<Field> types = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).equals("called")) continue;
-			types.add(Pair.getInstance(
-					TypeIdentifier.getInstance(line.get(i - 1)),
-					VariableIdentifier.getInstance(line.get(i + 1))));
+			types.add(new Field(VariableIdentifier.getInstance(line
+					.get(i + 1)), TypeIdentifier.getInstance(line
+					.get(i - 1))));
 		}
 		int outputloc = line.indexOf("outputs");
 		if (outputloc < 0)
@@ -100,19 +78,37 @@ public class ConstructionParser {
 					parseFunctionSignature(funcExpress), types, null);
 		if (!Language.isArticle(line.get(outputloc + 1)))
 			throw new RuntimeException(/* LOWPRI-E */);
-		line.subList(0, outputloc + 2);
+		line.subList(0, outputloc + 2).clear();
 		return new FunctionDefinition(parseFunctionSignature(funcExpress),
 				types, ExpressionParser.parseExpression(line));
 	}
-	private static FunctionSignature parseFunctionSignature(
-			ArrayList<String> list) {
-		List<FunctionComponent> components = new ArrayList<>();
+	private static Pair<FunctionName, List<ParsedExpression>> parseFunctionSignature(
+			List<String> list) {
+		List<FunctionComponent> function = new ArrayList<>();
+		List<String> currentExpression = new ArrayList<>();
+		List<ParsedExpression> arguments = new ArrayList<>();
 		for (String token : list) {
-			if (token.charAt(0) == '_')
-				components.add(new FunctionVariable(VariableIdentifier
-						.getInstance(token)));
-			else components.add(new FunctionToken(token));
+			if (Language.isExpression(token)) {
+				currentExpression.add(token);
+			} else {
+				if (currentExpression.size() != 0) {
+					ParsedExpression argument = ExpressionParser
+							.parsePureExpression(currentExpression);
+					arguments.add(argument);
+					function.add(FunctionArgument.INSTANCE);
+					currentExpression.clear();
+				}
+				function.add(new FunctionToken(token));
+			}
 		}
-		return FunctionSignature.getInstance(components);
+		if (currentExpression.size() != 0) {
+			ParsedExpression argument = ExpressionParser
+					.parsePureExpression(currentExpression);
+			arguments.add(argument);
+			function.add(FunctionArgument.INSTANCE);
+			currentExpression.clear();
+		}
+		return Pair
+				.getInstance(FunctionName.getInstance(function), arguments);
 	}
 }

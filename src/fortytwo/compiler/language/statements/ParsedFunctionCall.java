@@ -2,22 +2,20 @@ package fortytwo.compiler.language.statements;
 
 import java.util.List;
 
-import lib.standard.collections.Pair;
-import fortytwo.compiler.language.declaration.FunctionSignature;
 import fortytwo.compiler.language.expressions.ParsedExpression;
-import fortytwo.compiler.language.identifier.VariableIdentifier;
+import fortytwo.compiler.language.identifier.FunctionName;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.expressions.Expression;
 
 public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
-	public final FunctionSignature signature;
-	public final List<Pair<VariableIdentifier, ParsedExpression>> arguments;
-	public static ParsedFunctionCall getInstance(FunctionSignature signature,
-			List<Pair<VariableIdentifier, ParsedExpression>> arguments) {
-		return new ParsedFunctionCall(signature, arguments);
+	public final FunctionName signature;
+	public final List<ParsedExpression> arguments;
+	public static ParsedFunctionCall getInstance(FunctionName signature,
+			List<ParsedExpression> value) {
+		return new ParsedFunctionCall(signature, value);
 	}
-	private ParsedFunctionCall(FunctionSignature signature,
-			List<Pair<VariableIdentifier, ParsedExpression>> arguments) {
+	private ParsedFunctionCall(FunctionName signature,
+			List<ParsedExpression> arguments) {
 		this.signature = signature;
 		this.arguments = arguments;
 	}

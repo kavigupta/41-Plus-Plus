@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import lib.standard.collections.Pair;
 import fortytwo.compiler.language.identifier.TypeIdentifier;
 import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.vm.constructions.Structure;
+import fortytwo.vm.constructions.GenericStructure;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
@@ -29,7 +29,7 @@ public class LocalEnvironment {
 	public LiteralExpression instance(
 			TypeIdentifier type,
 			ArrayList<Pair<VariableIdentifier, LiteralExpression>> fieldValues) {
-		Structure struct = global.structs.referenceTo(type);
+		GenericStructure struct = global.structs.referenceTo(type);
 		if (struct == null) return null;
 		return new LiteralObject(struct, fieldValues);
 	}

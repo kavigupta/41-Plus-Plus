@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Stack;
 
 import fortytwo.compiler.language.Operation;
-import fortytwo.compiler.language.declaration.FunctionVariable;
 import fortytwo.compiler.language.expressions.ParsedBinaryOperation;
 import fortytwo.compiler.language.expressions.ParsedExpression;
 import fortytwo.compiler.language.expressions.ParsedNegation;
 import fortytwo.compiler.language.identifier.VariableIdentifier;
+import fortytwo.compiler.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.compiler.language.statements.ParsedFunctionCall;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.expressions.Expression;
@@ -23,7 +23,7 @@ public class ExpressionParser {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.signature.function.size() == 1
-				&& function.signature.function.get(0) instanceof FunctionVariable)
+				&& function.signature.function.get(0) instanceof FunctionArgument)
 			return function.arguments.get(0).value;
 		return function;
 	}

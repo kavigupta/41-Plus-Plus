@@ -2,18 +2,16 @@ package fortytwo.compiler.language.declaration;
 
 import java.util.ArrayList;
 
-import lib.standard.collections.Pair;
 import fortytwo.compiler.language.expressions.ParsedExpression;
-import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.compiler.language.identifier.VariableIdentifier;
+import fortytwo.compiler.language.identifier.FunctionName;
+import fortytwo.vm.constructions.Field;
 
 public class FunctionDefinition implements Declaration {
-	public final FunctionSignature signature;
-	public final ArrayList<Pair<TypeIdentifier, VariableIdentifier>> argTypes;
+	public final FunctionName signature;
+	public final ArrayList<Field> argTypes;
 	public final ParsedExpression parsedExpression;
-	public FunctionDefinition(FunctionSignature signature,
-			ArrayList<Pair<TypeIdentifier, VariableIdentifier>> argTypes,
-			ParsedExpression parsedExpression) {
+	public FunctionDefinition(FunctionName signature,
+			ArrayList<Field> argTypes, ParsedExpression parsedExpression) {
 		this.signature = signature;
 		this.argTypes = argTypes;
 		this.parsedExpression = parsedExpression;

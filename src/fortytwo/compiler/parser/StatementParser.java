@@ -6,10 +6,10 @@ import java.util.List;
 import lib.standard.collections.Pair;
 import fortytwo.compiler.language.Language;
 import fortytwo.compiler.language.declaration.FunctionReturn;
-import fortytwo.compiler.language.declaration.FunctionVariable;
 import fortytwo.compiler.language.expressions.ParsedExpression;
 import fortytwo.compiler.language.identifier.TypeIdentifier;
 import fortytwo.compiler.language.identifier.VariableIdentifier;
+import fortytwo.compiler.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.compiler.language.sentences.Sentence;
 import fortytwo.compiler.language.sentences.Sentence.SentenceType;
 import fortytwo.compiler.language.statements.*;
@@ -114,7 +114,7 @@ public class StatementParser {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.signature.function.size() == 1
-				&& function.signature.function.get(0) instanceof FunctionVariable)
+				&& function.signature.function.get(0) instanceof FunctionArgument)
 			throw new RuntimeException(/* LOWPRI-E non-void function call */);
 		return function;
 	}
