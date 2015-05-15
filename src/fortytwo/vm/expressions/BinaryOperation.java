@@ -18,7 +18,9 @@ public class BinaryOperation implements Expression {
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
-		// TODO Auto-generated method stub
+		// executes both branches.
+		first.execute(environment);
+		second.execute(environment);
 	}
 	@Override
 	public LiteralExpression literalValue(LocalEnvironment environment) {

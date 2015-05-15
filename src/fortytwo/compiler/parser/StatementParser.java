@@ -100,7 +100,7 @@ public class StatementParser {
 				return parseVoidFunctionCall(line);
 		}
 	}
-	private static ParsedStatement parseReturn(List<String> line) {
+	private static FunctionReturn parseReturn(List<String> line) {
 		/* Exit the function( and output <output>)?. */
 		if (!line.get(1).equals("the") || !line.get(2).equals("function"))
 			throw new RuntimeException(/* LOWPRI-E */);
@@ -118,19 +118,20 @@ public class StatementParser {
 			throw new RuntimeException(/* LOWPRI-E non-void function call */);
 		return function;
 	}
-	private static ParsedStatement parseAssignment(List<String> line) {
+	private static ParsedAssignment parseAssignment(List<String> line) {
 		/*
 		 * Set the <field> of <name> to <value>.
 		 */
 		if (!line.get(1).equals("the") || !line.get(3).equals("of")
 				|| !line.get(5).equals("to"))
 			throw new RuntimeException(/* LOWPRI-E */);
-		VariableIdentifier field = VariableIdentifier
-				.getInstance(line.get(2));
+		String field = line.get(2);
+		ParsedExpression expr = ExpressionParser.parseExpression(line);
 		VariableIdentifier name = VariableIdentifier.getInstance(line.get(4));
 		line.subList(0, 6).clear();
-		return new ParsedAssignment(name, field,
-				ExpressionParser.parseExpression(line));
+		return field.equals("value") ? new ParsedRedefinition(name, expr)
+				: new ParsedFieldAssignment(name,
+						VariableIdentifier.getInstance(field), expr);
 	}
 	private static Sentence parseDefinition(List<String> line) {
 		/*

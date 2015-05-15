@@ -7,8 +7,11 @@ import fortytwo.compiler.language.identifier.VariableIdentifier;
 import fortytwo.vm.constructions.Structure;
 
 public class LiteralObject extends LiteralExpression {
+	public final Structure struct;
+	public final List<Pair<VariableIdentifier, LiteralExpression>> fields;
 	public LiteralObject(Structure struct,
 			List<Pair<VariableIdentifier, LiteralExpression>> fields) {
-		// TODO Auto-generated constructor stub
+		this.struct = struct;
+		this.fields = fields;
 	}
 }
