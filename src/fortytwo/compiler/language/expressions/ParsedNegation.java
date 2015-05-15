@@ -1,6 +1,6 @@
 package fortytwo.compiler.language.expressions;
 
-import fortytwo.vm.environment.Environment;
+import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.expressions.Expression;
 
 public class ParsedNegation implements ParsedExpression {
@@ -15,7 +15,12 @@ public class ParsedNegation implements ParsedExpression {
 		return new ParsedNegation(contents);
 	}
 	@Override
-	public Expression contextualize(Environment env) {
+	public Expression contextualize(LocalEnvironment env) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public SentenceType type() {
 		// TODO Auto-generated method stub
 		return null;
 	}

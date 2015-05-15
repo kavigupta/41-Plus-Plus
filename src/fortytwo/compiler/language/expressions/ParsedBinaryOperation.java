@@ -1,15 +1,11 @@
 package fortytwo.compiler.language.expressions;
 
-import java.math.BigDecimal;
-
-import fortytwo.vm.environment.Environment;
+import fortytwo.compiler.language.Operation;
+import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.expressions.BinaryOperation;
 import fortytwo.vm.expressions.Expression;
 
 public class ParsedBinaryOperation implements ParsedExpression {
-	public static enum Operation {
-		ADD, SUBTRACT, MULTIPLY, DIVIDE, DIVIDE_FLOOR, MOD;
-	}
-	public static final BigDecimal PRECISION = BigDecimal.TEN.pow(100);
 	public final ParsedExpression first, second;
 	public final Operation operation;
 	public ParsedBinaryOperation(ParsedExpression first,
@@ -19,8 +15,16 @@ public class ParsedBinaryOperation implements ParsedExpression {
 		this.operation = operation;
 	}
 	@Override
-	public Expression contextualize(Environment env) {
-		// TODO See below for code to transfer
+	public Expression contextualize(LocalEnvironment env) {
+		Expression firstE = first.contextualize(env), secondE = second
+				.contextualize(env);
+		if (firstE == null || secondE == null)
+			throw new RuntimeException(/* LOWPRI-E */);
+		return new BinaryOperation(firstE, secondE, operation);
+	}
+	@Override
+	public SentenceType type() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 	// @Override

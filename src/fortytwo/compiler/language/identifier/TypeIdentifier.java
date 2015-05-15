@@ -2,7 +2,7 @@ package fortytwo.compiler.language.identifier;
 
 import fortytwo.compiler.language.Language;
 import fortytwo.compiler.language.expressions.ParsedExpression;
-import fortytwo.vm.environment.Environment;
+import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.expressions.Expression;
 
 public class TypeIdentifier implements ParsedExpression {
@@ -16,7 +16,12 @@ public class TypeIdentifier implements ParsedExpression {
 		this.name = name;
 	}
 	@Override
-	public Expression contextualize(Environment env) {
+	public Expression contextualize(LocalEnvironment env) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public SentenceType type() {
 		// TODO Auto-generated method stub
 		return null;
 	}
