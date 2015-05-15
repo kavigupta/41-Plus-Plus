@@ -27,15 +27,21 @@ public class ConstructionParser {
 	}
 	public static Declaration parseStructDefinition(List<String> line) {
 		/*
-		 * Define a structure called <structure expression> ; which contains
-		 * a[n] <type> called <field> , a[n] <type> called <field>, ...
+		 * Define a structure called <structure> of <typevar1>, <typevar2>,
+		 * and <typevar3> ; which contains a[n] <type> called <field> , a[n]
+		 * <type> called <field>, ...
 		 */
 		if (!line.get(1).equals("a") || !line.get(3).equals("called"))
 			throw new RuntimeException(/* LOWPRI-E */);
 		int i = 4;
 		ArrayList<String> structExpression = new ArrayList<>();
-		for (; i < line.size() && !line.get(i).equals(";"); i++) {
+		for (; i < line.size() && !line.get(i).equals(";")
+				&& !line.get(i).equals("of"); i++) {
 			structExpression.add(line.get(i));
+		}
+		if (line.get(i).equals("of")) {
+			i++;
+			for (; i < line.size() && !line.get(i).equals(";"); i++) {}
 		}
 		ArrayList<Field> fields = new ArrayList<>();
 		for (; i < line.size(); i++) {
