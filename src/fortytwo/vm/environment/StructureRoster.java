@@ -5,9 +5,9 @@ import java.util.List;
 
 import fortytwo.compiler.language.identifier.TypeIdentifier;
 import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.vm.constructions.Field;
-import fortytwo.vm.constructions.GenericStructure;
-import fortytwo.vm.constructions.Structure;
+import fortytwo.compiler.language.type.Field;
+import fortytwo.compiler.language.type.GenericStructure;
+import fortytwo.compiler.language.type.Structure;
 
 public class StructureRoster {
 	public List<GenericStructure> roster;

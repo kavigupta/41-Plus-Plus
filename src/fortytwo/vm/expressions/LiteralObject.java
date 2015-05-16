@@ -1,7 +1,7 @@
 package fortytwo.vm.expressions;
 
 import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.vm.constructions.Structure;
+import fortytwo.compiler.language.type.Structure;
 import fortytwo.vm.environment.VariableRoster;
 
 public class LiteralObject extends LiteralExpression {

@@ -17,8 +17,8 @@ import fortytwo.compiler.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.compiler.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.compiler.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.compiler.language.statements.ParsedFunctionCall;
-import fortytwo.vm.constructions.Field;
-import fortytwo.vm.constructions.GenericStructure;
+import fortytwo.compiler.language.type.Field;
+import fortytwo.compiler.language.type.GenericStructure;
 
 public class ConstructionParser {
 	public static ParsedFunctionCall composeFunction(List<String> list) {

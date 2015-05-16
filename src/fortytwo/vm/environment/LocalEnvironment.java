@@ -2,7 +2,7 @@ package fortytwo.vm.environment;
 
 import fortytwo.compiler.language.identifier.TypeIdentifier;
 import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.vm.constructions.Structure;
+import fortytwo.compiler.language.type.Structure;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
