@@ -1,17 +1,19 @@
 package fortytwo.vm.expressions;
 
-import java.util.List;
-
-import lib.standard.collections.Pair;
-import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.vm.constructions.GenericStructure;
+import fortytwo.compiler.language.identifier.TypeIdentifier;
+import fortytwo.vm.constructions.Structure;
+import fortytwo.vm.environment.VariableRoster;
+import fortytwo.vm.environment.VariableTypeRoster;
 
 public class LiteralObject extends LiteralExpression {
-	public final GenericStructure struct;
-	public final List<Pair<VariableIdentifier, LiteralExpression>> fields;
-	public LiteralObject(GenericStructure struct,
-			List<Pair<VariableIdentifier, LiteralExpression>> fields) {
+	public final Structure struct;
+	public final VariableRoster fields;
+	public LiteralObject(Structure struct, VariableRoster fields) {
 		this.struct = struct;
 		this.fields = fields;
+	}
+	@Override
+	public TypeIdentifier resolveType(VariableTypeRoster typeRoster) {
+		return struct.getType();
 	}
 }

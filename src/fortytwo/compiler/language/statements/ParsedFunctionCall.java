@@ -21,12 +21,11 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 	}
 	@Override
 	public Expression contextualize(LocalEnvironment env) {
-		// TODO Auto-generated method stub
+		// TODO do this once functions are properly implemented
 		return null;
 	}
 	@Override
 	public SentenceType type() {
-		// TODO Auto-generated method stub
-		return null;
+		return SentenceType.FUNCTION_CALL;
 	}
 }

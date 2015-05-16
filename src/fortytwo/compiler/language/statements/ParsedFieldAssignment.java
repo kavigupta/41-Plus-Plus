@@ -3,6 +3,7 @@ package fortytwo.compiler.language.statements;
 import fortytwo.compiler.language.expressions.ParsedExpression;
 import fortytwo.compiler.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.statements.FieldAssignment;
 import fortytwo.vm.statements.Statement;
 
 public class ParsedFieldAssignment implements ParsedAssignment {
@@ -16,8 +17,8 @@ public class ParsedFieldAssignment implements ParsedAssignment {
 	}
 	@Override
 	public Statement contextualize(LocalEnvironment environment) {
-		// TODO Auto-generated method stub
-		return null;
+		return new FieldAssignment(name, field,
+				value.contextualize(environment));
 	}
 	@Override
 	public SentenceType type() {

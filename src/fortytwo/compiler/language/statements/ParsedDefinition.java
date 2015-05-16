@@ -4,6 +4,7 @@ import fortytwo.compiler.language.identifier.TypeIdentifier;
 import fortytwo.compiler.language.identifier.VariableIdentifier;
 import fortytwo.compiler.languages.constructions.ParsedVariableRoster;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.statements.Definition;
 import fortytwo.vm.statements.Statement;
 
 public class ParsedDefinition implements ParsedStatement {
@@ -18,8 +19,7 @@ public class ParsedDefinition implements ParsedStatement {
 	}
 	@Override
 	public Statement contextualize(LocalEnvironment environment) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Definition(type, name, fields.contextualize(environment));
 	}
 	@Override
 	public SentenceType type() {

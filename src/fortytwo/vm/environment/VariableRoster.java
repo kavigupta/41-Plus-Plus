@@ -5,7 +5,7 @@ import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class VariableRoster {
-	public void add(VariableIdentifier name, LiteralExpression express) {
+	public void assign(VariableIdentifier name, LiteralExpression express) {
 		// TODO Auto-generated method stub
 	}
 	public LiteralExpression referenceTo(VariableIdentifier id) {

@@ -6,6 +6,11 @@ import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.expressions.Expression;
 
 public class TypeIdentifier implements ParsedExpression {
+	// TODO some serious fixes are needed on this class. Perhaps interfaceify
+	// it, split into three types
+	// 1) Literal Types
+	// 2) Type variables
+	// 3) Structure Types
 	public final String name;
 	public static TypeIdentifier getInstance(String name) {
 		if (Language.isValidVariableIdentifier(name))

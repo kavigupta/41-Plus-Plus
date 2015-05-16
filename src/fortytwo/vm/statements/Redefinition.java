@@ -2,6 +2,7 @@ package fortytwo.vm.statements;
 
 import fortytwo.compiler.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.Expression;
 
 public class Redefinition implements Statement {
@@ -14,5 +15,10 @@ public class Redefinition implements Statement {
 	@Override
 	public void execute(LocalEnvironment environment) {
 		environment.vars.redefine(name, value);
+	}
+	@Override
+	public boolean typeCheck(VariableTypeRoster typeRoster) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

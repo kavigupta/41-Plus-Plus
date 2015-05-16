@@ -58,7 +58,7 @@ public class GlobalEnvironment {
 					break;
 				case DEFINITION:
 					ParsedDefinition def = (ParsedDefinition) s;
-					ArrayList<Pair<VariableIdentifier, LiteralExpression>> fieldValues = new ArrayList<>();
+					VariableRoster fieldValues = new VariableRoster();
 					for (Pair<VariableIdentifier, ParsedExpression> pair : def.fields
 							.entryIterator()) {
 						LiteralExpression applied = pair.value
@@ -66,10 +66,9 @@ public class GlobalEnvironment {
 										minimal);
 						if (applied == null)
 							throw new RuntimeException(/* LOWPRI-E */);
-						fieldValues.add(Pair.getInstance(pair.key,
-								applied));
+						fieldValues.assign(pair.key, applied);
 					}
-					vars.add(def.name,
+					vars.assign(def.name,
 							minimal.instance(def.type, fieldValues));
 					break;
 				default:

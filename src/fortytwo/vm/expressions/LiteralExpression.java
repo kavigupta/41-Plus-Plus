@@ -2,6 +2,7 @@ package fortytwo.vm.expressions;
 
 import fortytwo.compiler.language.expressions.ParsedExpression;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.VariableTypeRoster;
 
 public abstract class LiteralExpression implements ParsedExpression, Expression {
 	@Override
@@ -19,5 +20,9 @@ public abstract class LiteralExpression implements ParsedExpression, Expression 
 	@Override
 	public SentenceType type() {
 		return SentenceType.PURE_EXPRESSION;
+	}
+	@Override
+	public final boolean typeCheck(VariableTypeRoster typeRoster) {
+		return true;
 	}
 }

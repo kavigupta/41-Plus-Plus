@@ -1,19 +1,16 @@
 package fortytwo.vm.statements;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import lib.standard.collections.Pair;
 import fortytwo.compiler.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
 
-public class Assignment implements Statement {
+public class FieldAssignment implements Statement {
 	public final VariableIdentifier name, field;
 	public final Expression value;
-	public Assignment(VariableIdentifier name, VariableIdentifier field,
+	public FieldAssignment(VariableIdentifier name, VariableIdentifier field,
 			Expression value) {
 		this.name = name;
 		this.field = field;
@@ -25,8 +22,11 @@ public class Assignment implements Statement {
 		if (!(expr instanceof LiteralObject))
 			throw new RuntimeException(/* LOWPRI-E */);
 		LiteralObject obj = (LiteralObject) expr;
-		List<Pair<VariableIdentifier, LiteralExpression>> fields = new ArrayList<>(
-				obj.fields);
-		// TODO finish this after refactor
+		obj.fields.redefine(field, value);
+	}
+	@Override
+	public boolean typeCheck(VariableTypeRoster typeRoster) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

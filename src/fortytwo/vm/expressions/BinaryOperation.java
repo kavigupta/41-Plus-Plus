@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import fortytwo.compiler.language.Operation;
+import fortytwo.compiler.language.identifier.TypeIdentifier;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.VariableTypeRoster;
 
 public class BinaryOperation implements Expression {
 	public static final BigDecimal PRECISION = BigDecimal.TEN.pow(100);
@@ -56,5 +58,20 @@ public class BinaryOperation implements Expression {
 		}
 		// This should never happen.
 		throw new RuntimeException(/* LOWPRI-E */);
+	}
+	@Override
+	public boolean typeCheck(VariableTypeRoster typeRoster) {
+		if (first.resolveType(typeRoster).equals(
+				TypeIdentifier.getInstance("number")))
+			throw new RuntimeException(/* LOWPRI-E */);
+		if (second.resolveType(typeRoster).equals(
+				TypeIdentifier.getInstance("number")))
+			throw new RuntimeException(/* LOWPRI-E */);
+		return true;
+	}
+	@Override
+	public TypeIdentifier resolveType(VariableTypeRoster typeRoster) {
+		typeCheck(typeRoster);
+		return TypeIdentifier.getInstance("number");
 	}
 }
