@@ -1,8 +1,8 @@
 package fortytwo.vm.environment;
 
-import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.compiler.language.type.Structure;
+import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.Structure;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
@@ -23,7 +23,7 @@ public class LocalEnvironment {
 		Expression globalE = global.vars.referenceTo(id);
 		return globalE;
 	}
-	public LiteralExpression instance(TypeIdentifier type,
+	public LiteralExpression instance(ConcreteType type,
 			VariableRoster fieldValues) {
 		Structure struct = global.structs.referenceTo(type);
 		if (struct == null) return null;

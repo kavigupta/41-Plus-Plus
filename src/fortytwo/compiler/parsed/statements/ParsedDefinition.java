@@ -1,0 +1,24 @@
+package fortytwo.compiler.parsed.statements;
+
+import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
+import fortytwo.language.field.Field;
+import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.statements.Definition;
+import fortytwo.vm.statements.Statement;
+
+public class ParsedDefinition implements ParsedStatement {
+	public final Field name;
+	public final ParsedVariableRoster fields;
+	public ParsedDefinition(Field name, ParsedVariableRoster fields) {
+		this.name = name;
+		this.fields = fields;
+	}
+	@Override
+	public Statement contextualize(LocalEnvironment environment) {
+		return new Definition(name, fields.contextualize(environment));
+	}
+	@Override
+	public SentenceType type() {
+		return SentenceType.DEFINITION;
+	}
+}

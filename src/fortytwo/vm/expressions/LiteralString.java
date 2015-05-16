@@ -1,6 +1,6 @@
 package fortytwo.vm.expressions;
 
-import fortytwo.compiler.language.identifier.TypeIdentifier;
+import fortytwo.language.type.PrimitiveType;
 
 public class LiteralString extends LiteralExpression {
 	public final String contents;
@@ -11,7 +11,7 @@ public class LiteralString extends LiteralExpression {
 		this.contents = contents;
 	}
 	@Override
-	public TypeIdentifier resolveType() {
-		return TypeIdentifier.getInstance("string");
+	public PrimitiveType resolveType() {
+		return PrimitiveType.STRING;
 	}
 }

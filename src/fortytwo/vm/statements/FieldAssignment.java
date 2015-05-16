@@ -1,7 +1,7 @@
 package fortytwo.vm.statements;
 
-import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.compiler.language.type.Field;
+import fortytwo.language.field.Field;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.Expression;

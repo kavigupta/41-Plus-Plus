@@ -5,20 +5,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
-import fortytwo.compiler.language.Language;
-import fortytwo.compiler.language.declaration.Declaration;
-import fortytwo.compiler.language.declaration.FunctionDefinition;
-import fortytwo.compiler.language.declaration.StructureDeclaration;
-import fortytwo.compiler.language.expressions.ParsedExpression;
-import fortytwo.compiler.language.identifier.FunctionName;
-import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.compiler.language.identifier.functioncomponent.FunctionArgument;
-import fortytwo.compiler.language.identifier.functioncomponent.FunctionComponent;
-import fortytwo.compiler.language.identifier.functioncomponent.FunctionToken;
-import fortytwo.compiler.language.statements.ParsedFunctionCall;
-import fortytwo.compiler.language.type.Field;
-import fortytwo.compiler.language.type.GenericStructure;
+import fortytwo.compiler.parsed.declaration.Declaration;
+import fortytwo.compiler.parsed.declaration.FunctionDefinition;
+import fortytwo.compiler.parsed.declaration.StructureDeclaration;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
+import fortytwo.language.Language;
+import fortytwo.language.field.GenericField;
+import fortytwo.language.identifier.FunctionName;
+import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.functioncomponent.FunctionArgument;
+import fortytwo.language.identifier.functioncomponent.FunctionComponent;
+import fortytwo.language.identifier.functioncomponent.FunctionToken;
+import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.GenericStructure;
+import fortytwo.language.type.GenericType;
+import fortytwo.language.type.TypeVariable;
 
 public class ConstructionParser {
 	public static ParsedFunctionCall composeFunction(List<String> list) {
@@ -39,21 +41,21 @@ public class ConstructionParser {
 				&& !line.get(i).equals("of"); i++) {
 			structExpression.add(line.get(i));
 		}
-		List<TypeIdentifier> typeVariables = new ArrayList<>();
+		List<GenericType> typeVariables = new ArrayList<>();
 		if (line.get(i).equals("of")) {
 			i++;
 			for (; i < line.size() && !line.get(i).equals(";"); i++) {
 				if (Language.isValidVariableIdentifier(line.get(i))) {
-					typeVariables.add(TypeIdentifier.getInstance(line
-							.get(i)));
+					typeVariables.add(new TypeVariable(VariableIdentifier
+							.getInstance(line.get(i))));
 				}
 			}
 		}
-		ArrayList<Field> fields = new ArrayList<>();
+		ArrayList<GenericField> fields = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).equals("called")) continue;
-			fields.add(new Field(VariableIdentifier.getInstance(line
-					.get(i + 1)), TypeIdentifier.getInstance(line
+			fields.add(new GenericField(VariableIdentifier.getInstance(line
+					.get(i + 1)), ExpressionParser.parseType(line
 					.get(i - 1))));
 		}
 		return new StructureDeclaration(new GenericStructure(
@@ -77,10 +79,13 @@ public class ConstructionParser {
 		if (!line.get(i).equals("takes")) throw new RuntimeException(/*
 														 * LOWPRI-E
 														 */);
-		ArrayList<TypeIdentifier> types = new ArrayList<>();
+		ArrayList<ConcreteType> types = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).equals("called")) continue;
-			types.add(TypeIdentifier.getInstance(line.get(i + 1)));
+			GenericType type = ExpressionParser.parseType(line.get(i + 1));
+			if (!(type instanceof ConcreteType))
+				throw new RuntimeException(/* LOWPRI-E */);
+			types.add((ConcreteType) type);
 		}
 		int outputloc = line.indexOf("outputs");
 		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(funcExpress);

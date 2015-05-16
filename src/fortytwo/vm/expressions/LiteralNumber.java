@@ -2,7 +2,7 @@ package fortytwo.vm.expressions;
 
 import java.math.BigDecimal;
 
-import fortytwo.compiler.language.identifier.TypeIdentifier;
+import fortytwo.language.type.PrimitiveType;
 
 public class LiteralNumber extends LiteralExpression {
 	public final BigDecimal contents;
@@ -13,7 +13,7 @@ public class LiteralNumber extends LiteralExpression {
 		this.contents = contents;
 	}
 	@Override
-	public TypeIdentifier resolveType() {
-		return TypeIdentifier.getInstance("number");
+	public PrimitiveType resolveType() {
+		return PrimitiveType.NUMBER;
 	}
 }

@@ -1,6 +1,6 @@
 package fortytwo.vm.statements;
 
-import fortytwo.compiler.language.identifier.TypeIdentifier;
+import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.Expression;
@@ -26,8 +26,8 @@ public class IfElse implements Statement {
 	}
 	@Override
 	public boolean typeCheck(VariableTypeRoster typeRoster) {
-		if (condition.resolveType(typeRoster).equals(
-				TypeIdentifier.getInstance("bool"))) return true;
+		if (condition.resolveType(typeRoster).equals(PrimitiveType.BOOLEAN))
+			return true;
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 }

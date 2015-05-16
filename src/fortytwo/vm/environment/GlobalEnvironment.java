@@ -3,16 +3,16 @@ package fortytwo.vm.environment;
 import java.util.ArrayList;
 
 import lib.standard.collections.Pair;
-import fortytwo.compiler.language.constructions.ParsedFunction;
-import fortytwo.compiler.language.declaration.FunctionDefinition;
-import fortytwo.compiler.language.declaration.FunctionReturn;
-import fortytwo.compiler.language.declaration.StructureDeclaration;
-import fortytwo.compiler.language.expressions.ParsedExpression;
-import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.compiler.language.sentences.Sentence;
-import fortytwo.compiler.language.sentences.Sentence.SentenceType;
-import fortytwo.compiler.language.statements.ParsedDefinition;
-import fortytwo.compiler.language.statements.ParsedStatement;
+import fortytwo.compiler.parsed.constructions.ParsedFunction;
+import fortytwo.compiler.parsed.declaration.FunctionDefinition;
+import fortytwo.compiler.parsed.declaration.FunctionReturn;
+import fortytwo.compiler.parsed.declaration.StructureDeclaration;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.sentences.Sentence;
+import fortytwo.compiler.parsed.sentences.Sentence.SentenceType;
+import fortytwo.compiler.parsed.statements.ParsedDefinition;
+import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class GlobalEnvironment {
@@ -68,8 +68,8 @@ public class GlobalEnvironment {
 							throw new RuntimeException(/* LOWPRI-E */);
 						fieldValues.assign(pair.key, applied);
 					}
-					vars.assign(def.name,
-							minimal.instance(def.type, fieldValues));
+					vars.assign(def.name.name,
+							minimal.instance(def.name.type, fieldValues));
 					break;
 				default:
 					throw new RuntimeException(/* LOWPRI-E */);

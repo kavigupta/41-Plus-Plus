@@ -3,11 +3,11 @@ package fortytwo.vm.environment;
 import java.util.ArrayList;
 import java.util.List;
 
-import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.compiler.language.type.Field;
-import fortytwo.compiler.language.type.GenericStructure;
-import fortytwo.compiler.language.type.Structure;
+import fortytwo.language.field.Field;
+import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.GenericStructure;
+import fortytwo.language.type.Structure;
 
 public class StructureRoster {
 	public List<GenericStructure> roster;
@@ -17,7 +17,7 @@ public class StructureRoster {
 	public void addStructure(GenericStructure s) {
 		roster.add(s);
 	}
-	public Structure referenceTo(TypeIdentifier type) {
+	public Structure referenceTo(ConcreteType type) {
 		// TODO Auto-generated method stub
 		return null;
 	}

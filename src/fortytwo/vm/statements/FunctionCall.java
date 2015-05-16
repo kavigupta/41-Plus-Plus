@@ -2,7 +2,7 @@ package fortytwo.vm.statements;
 
 import java.util.List;
 
-import fortytwo.compiler.language.identifier.TypeIdentifier;
+import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.VariableTypeRoster;
@@ -35,7 +35,7 @@ public class FunctionCall implements Expression, Statement {
 		return function.apply(environment, arguments);
 	}
 	@Override
-	public TypeIdentifier resolveType(VariableTypeRoster typeRoster) {
+	public ConcreteType resolveType(VariableTypeRoster typeRoster) {
 		return function.outputType();
 	}
 }

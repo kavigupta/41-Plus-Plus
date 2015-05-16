@@ -3,16 +3,18 @@ package fortytwo.compiler.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import fortytwo.compiler.language.Language;
-import fortytwo.compiler.language.declaration.FunctionReturn;
-import fortytwo.compiler.language.expressions.ParsedExpression;
-import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.compiler.language.identifier.functioncomponent.FunctionArgument;
-import fortytwo.compiler.language.sentences.Sentence;
-import fortytwo.compiler.language.sentences.Sentence.SentenceType;
-import fortytwo.compiler.language.statements.*;
-import fortytwo.compiler.languages.constructions.ParsedVariableRoster;
+import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
+import fortytwo.compiler.parsed.declaration.FunctionReturn;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.sentences.Sentence;
+import fortytwo.compiler.parsed.sentences.Sentence.SentenceType;
+import fortytwo.compiler.parsed.statements.*;
+import fortytwo.language.Language;
+import fortytwo.language.field.Field;
+import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.functioncomponent.FunctionArgument;
+import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.GenericType;
 
 public class StatementParser {
 	public static ParsedStatement parseCompleteStatement(
@@ -159,7 +161,11 @@ public class StatementParser {
 			fields.add(VariableIdentifier.getInstance(field),
 					ExpressionParser.parseExpression(tokens));
 		}
-		return new ParsedDefinition(TypeIdentifier.getInstance(type),
-				VariableIdentifier.getInstance(name), fields);
+		GenericType genericType = ExpressionParser.parseType(type);
+		if (!(genericType instanceof ConcreteType))
+			throw new RuntimeException(/* LOWPRI-E */);
+		return new ParsedDefinition(new Field(
+				VariableIdentifier.getInstance(name),
+				(ConcreteType) genericType), fields);
 	}
 }

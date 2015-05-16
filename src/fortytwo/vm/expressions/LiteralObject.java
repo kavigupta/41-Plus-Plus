@@ -1,7 +1,7 @@
 package fortytwo.vm.expressions;
 
-import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.compiler.language.type.Structure;
+import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.Structure;
 import fortytwo.vm.environment.VariableRoster;
 
 public class LiteralObject extends LiteralExpression {
@@ -12,7 +12,7 @@ public class LiteralObject extends LiteralExpression {
 		this.fields = fields;
 	}
 	@Override
-	public TypeIdentifier resolveType() {
-		return struct.getType();
+	public ConcreteType resolveType() {
+		return struct;
 	}
 }

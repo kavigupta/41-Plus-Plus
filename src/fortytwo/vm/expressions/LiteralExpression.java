@@ -1,7 +1,7 @@
 package fortytwo.vm.expressions;
 
-import fortytwo.compiler.language.expressions.ParsedExpression;
-import fortytwo.compiler.language.identifier.TypeIdentifier;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.VariableTypeRoster;
 
@@ -27,8 +27,8 @@ public abstract class LiteralExpression implements ParsedExpression, Expression 
 		return true;
 	}
 	@Override
-	public final TypeIdentifier resolveType(VariableTypeRoster typeRoster) {
+	public final ConcreteType resolveType(VariableTypeRoster typeRoster) {
 		return resolveType();
 	}
-	public abstract TypeIdentifier resolveType();
+	public abstract ConcreteType resolveType();
 }

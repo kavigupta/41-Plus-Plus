@@ -1,6 +1,6 @@
 package fortytwo.vm.expressions;
 
-import fortytwo.compiler.language.identifier.TypeIdentifier;
+import fortytwo.language.type.PrimitiveType;
 
 public class LiteralBool extends LiteralExpression {
 	public static final LiteralBool TRUE = new LiteralBool(true);
@@ -10,7 +10,7 @@ public class LiteralBool extends LiteralExpression {
 		this.contents = contents;
 	}
 	@Override
-	public TypeIdentifier resolveType() {
-		return TypeIdentifier.getInstance("bool");
+	public PrimitiveType resolveType() {
+		return PrimitiveType.BOOLEAN;
 	}
 }

@@ -2,7 +2,7 @@ package fortytwo.vm.environment;
 
 import java.util.HashMap;
 
-import fortytwo.compiler.language.identifier.FunctionSignature;
+import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.vm.constructions.Function42;
 
 public class FunctionRoster {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import fortytwo.compiler.language.statements.ParsedStatement;
+import fortytwo.compiler.parsed.statements.ParsedStatement;
 
 public class Parser {
 	private Parser() {}

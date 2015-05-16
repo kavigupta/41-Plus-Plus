@@ -1,6 +1,6 @@
 package fortytwo.vm.environment;
 
-import fortytwo.compiler.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 

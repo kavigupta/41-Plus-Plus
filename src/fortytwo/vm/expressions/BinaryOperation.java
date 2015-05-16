@@ -3,8 +3,9 @@ package fortytwo.vm.expressions;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import fortytwo.compiler.language.Operation;
-import fortytwo.compiler.language.identifier.TypeIdentifier;
+import fortytwo.language.Operation;
+import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.VariableTypeRoster;
 
@@ -61,17 +62,15 @@ public class BinaryOperation implements Expression {
 	}
 	@Override
 	public boolean typeCheck(VariableTypeRoster typeRoster) {
-		if (first.resolveType(typeRoster).equals(
-				TypeIdentifier.getInstance("number")))
+		if (first.resolveType(typeRoster).equals(PrimitiveType.NUMBER))
 			throw new RuntimeException(/* LOWPRI-E */);
-		if (second.resolveType(typeRoster).equals(
-				TypeIdentifier.getInstance("number")))
+		if (second.resolveType(typeRoster).equals(PrimitiveType.NUMBER))
 			throw new RuntimeException(/* LOWPRI-E */);
 		return true;
 	}
 	@Override
-	public TypeIdentifier resolveType(VariableTypeRoster typeRoster) {
+	public ConcreteType resolveType(VariableTypeRoster typeRoster) {
 		typeCheck(typeRoster);
-		return TypeIdentifier.getInstance("number");
+		return PrimitiveType.NUMBER;
 	}
 }

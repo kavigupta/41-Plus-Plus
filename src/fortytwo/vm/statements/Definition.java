@@ -1,26 +1,22 @@
 package fortytwo.vm.statements;
 
-import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.compiler.language.identifier.VariableIdentifier;
+import fortytwo.language.field.Field;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.VariableRoster;
 import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.LiteralObject;
 
 public class Definition implements Statement {
-	public final TypeIdentifier type;
-	public final VariableIdentifier name;
+	public final Field name;
 	public final VariableRoster fields;
-	public Definition(TypeIdentifier type, VariableIdentifier name,
-			VariableRoster fields) {
-		this.type = type;
+	public Definition(Field name, VariableRoster fields) {
 		this.name = name;
 		this.fields = fields;
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
-		environment.vars.assign(name, new LiteralObject(
-				environment.global.structs.referenceTo(type), fields));
+		environment.vars.assign(name.name, new LiteralObject(
+				environment.global.structs.referenceTo(name.type), fields));
 	}
 	@Override
 	public boolean typeCheck(VariableTypeRoster typeRoster) {

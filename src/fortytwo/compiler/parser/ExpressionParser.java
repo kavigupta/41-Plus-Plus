@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import fortytwo.compiler.language.Operation;
-import fortytwo.compiler.language.expressions.ParsedBinaryOperation;
-import fortytwo.compiler.language.expressions.ParsedExpression;
-import fortytwo.compiler.language.identifier.VariableIdentifier;
-import fortytwo.compiler.language.identifier.functioncomponent.FunctionArgument;
-import fortytwo.compiler.language.statements.ParsedFunctionCall;
+import fortytwo.compiler.parsed.expressions.ParsedBinaryOperation;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
+import fortytwo.language.Operation;
+import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.functioncomponent.FunctionArgument;
+import fortytwo.language.type.GenericType;
+import fortytwo.language.type.TypeVariable;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
@@ -161,5 +163,15 @@ public class ExpressionParser {
 		}
 		if (exp.size() != 1) throw new RuntimeException(/* LOWPRI-E */);
 		return exp.pop();
+	}
+	public static GenericType parseType(String name) {
+		if (name.startsWith("_"))
+			return new TypeVariable(VariableIdentifier.getInstance(name));
+		else if (name.startsWith("(")) {
+			// TODO handle struct type
+		} else {
+			// TODO handle literal type
+		}
+		return null;
 	}
 }
