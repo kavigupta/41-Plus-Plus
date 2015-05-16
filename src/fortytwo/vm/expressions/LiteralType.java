@@ -6,3 +6,4 @@ public class LiteralType {
 		this.type = type;
 	}
 }
+//
