@@ -6,7 +6,7 @@ import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.statements.Redefinition;
 import fortytwo.vm.statements.Statement;
 
-public class ParsedRedefinition implements ParsedAssignment {
+public class ParsedRedefinition extends ParsedAssignment {
 	public final VariableIdentifier name;
 	public final ParsedExpression expr;
 	public ParsedRedefinition(VariableIdentifier name, ParsedExpression expr) {
@@ -16,10 +16,5 @@ public class ParsedRedefinition implements ParsedAssignment {
 	@Override
 	public Statement contextualize(LocalEnvironment environment) {
 		return new Redefinition(name, expr.contextualize(environment));
-	}
-	@Override
-	public SentenceType type() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

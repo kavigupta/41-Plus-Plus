@@ -1,7 +1,6 @@
 package fortytwo.vm.expressions;
 
 import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.vm.environment.VariableTypeRoster;
 
 public class LiteralBool extends LiteralExpression {
 	public static final LiteralBool TRUE = new LiteralBool(true);
@@ -11,7 +10,7 @@ public class LiteralBool extends LiteralExpression {
 		this.contents = contents;
 	}
 	@Override
-	public TypeIdentifier resolveType(VariableTypeRoster typeRoster) {
+	public TypeIdentifier resolveType() {
 		return TypeIdentifier.getInstance("bool");
 	}
 }

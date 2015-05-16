@@ -32,4 +32,5 @@ public class TypeIdentifier implements ParsedExpression {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	// TODO make sure subclasses implement equals when push comes to shove
 }

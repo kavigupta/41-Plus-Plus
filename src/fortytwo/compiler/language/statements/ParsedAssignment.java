@@ -1,3 +1,8 @@
 package fortytwo.compiler.language.statements;
 
-public interface ParsedAssignment extends ParsedStatement {}
+public abstract class ParsedAssignment implements ParsedStatement {
+	@Override
+	public final SentenceType type() {
+		return SentenceType.ASSIGNMENT;
+	}
+}

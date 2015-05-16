@@ -1,7 +1,6 @@
 package fortytwo.vm.expressions;
 
 import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.vm.environment.VariableTypeRoster;
 
 public class LiteralString extends LiteralExpression {
 	public final String contents;
@@ -12,7 +11,7 @@ public class LiteralString extends LiteralExpression {
 		this.contents = contents;
 	}
 	@Override
-	public TypeIdentifier resolveType(VariableTypeRoster typeRoster) {
+	public TypeIdentifier resolveType() {
 		return TypeIdentifier.getInstance("string");
 	}
 }

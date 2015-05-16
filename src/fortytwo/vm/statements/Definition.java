@@ -24,9 +24,9 @@ public class Definition implements Statement {
 	}
 	@Override
 	public boolean typeCheck(VariableTypeRoster typeRoster) {
-		// everything had to be typechecked on input, I think.
-		// This function needs TODO to check if the fields exist and are a
-		// complete definition of the structure
+		// everything had to be typechecked on input, I think. This function
+		// needs TODO to check if the fields exist and are a complete
+		// definition of the structure
 		return true;
 	}
 }

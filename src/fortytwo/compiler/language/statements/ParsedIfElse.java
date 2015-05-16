@@ -2,7 +2,8 @@ package fortytwo.compiler.language.statements;
 
 import fortytwo.compiler.language.expressions.ParsedExpression;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.expressions.Expression;
+import fortytwo.vm.statements.IfElse;
+import fortytwo.vm.statements.Statement;
 
 public class ParsedIfElse implements ParsedStatement {
 	public final ParsedExpression condition;
@@ -18,9 +19,9 @@ public class ParsedIfElse implements ParsedStatement {
 		this.ifelse = ifelse;
 	}
 	@Override
-	public Expression contextualize(LocalEnvironment env) {
-		// TODO Auto-generated method stub
-		return null;
+	public Statement contextualize(LocalEnvironment env) {
+		return IfElse.getInstance(condition.contextualize(env),
+				ifso.contextualize(env), ifelse.contextualize(env));
 	}
 	@Override
 	public SentenceType type() {

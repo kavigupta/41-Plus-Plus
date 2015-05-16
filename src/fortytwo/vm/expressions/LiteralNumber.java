@@ -3,7 +3,6 @@ package fortytwo.vm.expressions;
 import java.math.BigDecimal;
 
 import fortytwo.compiler.language.identifier.TypeIdentifier;
-import fortytwo.vm.environment.VariableTypeRoster;
 
 public class LiteralNumber extends LiteralExpression {
 	public final BigDecimal contents;
@@ -14,7 +13,7 @@ public class LiteralNumber extends LiteralExpression {
 		this.contents = contents;
 	}
 	@Override
-	public TypeIdentifier resolveType(VariableTypeRoster typeRoster) {
+	public TypeIdentifier resolveType() {
 		return TypeIdentifier.getInstance("number");
 	}
 }
