@@ -59,7 +59,8 @@ public class GlobalEnvironment {
 				case DEFINITION:
 					ParsedDefinition def = (ParsedDefinition) s;
 					ArrayList<Pair<VariableIdentifier, LiteralExpression>> fieldValues = new ArrayList<>();
-					for (Pair<VariableIdentifier, ParsedExpression> pair : def.fields) {
+					for (Pair<VariableIdentifier, ParsedExpression> pair : def.fields
+							.entryIterator()) {
 						LiteralExpression applied = pair.value
 								.contextualize(minimal).literalValue(
 										minimal);

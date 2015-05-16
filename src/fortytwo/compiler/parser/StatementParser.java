@@ -3,7 +3,6 @@ package fortytwo.compiler.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.standard.collections.Pair;
 import fortytwo.compiler.language.Language;
 import fortytwo.compiler.language.declaration.FunctionReturn;
 import fortytwo.compiler.language.expressions.ParsedExpression;
@@ -13,6 +12,7 @@ import fortytwo.compiler.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.compiler.language.sentences.Sentence;
 import fortytwo.compiler.language.sentences.Sentence.SentenceType;
 import fortytwo.compiler.language.statements.*;
+import fortytwo.compiler.languages.constructions.ParsedVariableRoster;
 
 public class StatementParser {
 	public static ParsedStatement parseCompleteStatement(
@@ -146,7 +146,7 @@ public class StatementParser {
 		if (type.equals("type"))
 			return ConstructionParser.parseStructDefinition(line);
 		String name = line.get(4);
-		ArrayList<Pair<VariableIdentifier, ParsedExpression>> fields = new ArrayList<>();
+		ParsedVariableRoster fields = new ParsedVariableRoster();
 		for (int i = 5; i < line.size(); i++) {
 			if (!line.get(i).equals("of")) continue;
 			String field = line.get(i - 1);
@@ -156,9 +156,8 @@ public class StatementParser {
 				tokens.add(line.get(i));
 				i++;
 			}
-			fields.add(Pair.getInstance(
-					VariableIdentifier.getInstance(field),
-					ExpressionParser.parseExpression(tokens)));
+			fields.add(VariableIdentifier.getInstance(field),
+					ExpressionParser.parseExpression(tokens));
 		}
 		return new ParsedDefinition(TypeIdentifier.getInstance(type),
 				VariableIdentifier.getInstance(name), fields);
