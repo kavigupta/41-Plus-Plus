@@ -29,7 +29,7 @@ public class IfElse implements Statement {
 	public boolean typeCheck(VariableTypeRoster typeRoster,
 			StructureRoster structRoster) {
 		if (condition.resolveType(typeRoster, structRoster).equals(
-				PrimitiveType.BOOLEAN)) return true;
+				PrimitiveType.BOOL)) return true;
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 }

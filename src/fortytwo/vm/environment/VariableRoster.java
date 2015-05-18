@@ -3,6 +3,7 @@ package fortytwo.vm.environment;
 import java.util.HashMap;
 
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class VariableRoster {
@@ -24,5 +25,9 @@ public class VariableRoster {
 	}
 	public LiteralExpression value() {
 		return pairs.get(VariableIdentifier.VALUE);
+	}
+	public ConcreteType typeOf(VariableIdentifier name) {
+		LiteralExpression exp = pairs.get(name);
+		return exp == null ? null : exp.resolveType();
 	}
 }

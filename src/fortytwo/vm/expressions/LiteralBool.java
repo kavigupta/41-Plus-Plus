@@ -11,6 +11,6 @@ public class LiteralBool extends LiteralExpression {
 	}
 	@Override
 	public PrimitiveType resolveType() {
-		return PrimitiveType.BOOLEAN;
+		return PrimitiveType.BOOL;
 	}
 }

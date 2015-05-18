@@ -3,13 +3,12 @@ package fortytwo.vm.environment;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.standard.collections.Pair;
 import fortytwo.language.field.Field;
+import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericStructureType;
 import fortytwo.language.type.StructureType;
-import fortytwo.language.type.TypeVariable;
 import fortytwo.vm.constructions.GenericStructure;
 import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -29,9 +28,13 @@ public class StructureRoster {
 		}
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
-	public Field typeOf(VariableIdentifier name, VariableIdentifier field) {
-		// TODO Auto-generated method stub
-		return null;
+	public Field typeOf(ConcreteType type, VariableIdentifier field) {
+		if (!(type instanceof StructureType))
+			throw new RuntimeException(/* LOWPRI-E */);
+		for (Field f : getStructure((StructureType) type).fields) {
+			if (f.name.equals(field)) { return f; }
+		}
+		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	public LiteralExpression instance(ConcreteType type,
 			VariableRoster fieldValues) {
@@ -39,27 +42,46 @@ public class StructureRoster {
 		if (exp != null) return exp;
 		if (!(type instanceof StructureType))
 			throw new RuntimeException(/* LOWPRI-E */);
-		StructureType struct = (StructureType) type;
+		return new LiteralObject(getStructure((StructureType) type),
+				fieldValues);
+	}
+	public Structure getStructure(StructureType type) {
+		StructureType struct = type;
 		GenericStructureType genericType = genericVersionOf(struct);
-		List<Pair<TypeVariable, ConcreteType>> typeVariables = new ArrayList<>();
-		if (struct.types.size() != genericType.typeVariables.size())
-			throw new RuntimeException(/* LOWPRI-E */);
+		GenericStructure baseStructure = getStructure(genericType);
+		List<GenericField> fieldsGeneric = baseStructure.fields;
+		List<Field> fields = new ArrayList<>();
 		for (int i = 0; i < struct.types.size(); i++) {
-			typeVariables
-					.add(Pair.getInstance(
-							genericType.typeVariables.get(i),
-							struct.types.get(i)));
+			for (GenericField f : fieldsGeneric) {
+				if (f.equals(genericType.typeVariables.get(i))) {
+					fields.add(new Field(f.name, struct.types.get(i)));
+				}
+			}
 		}
-		Structure structure = new Structure(struct, typeVariables);
-		return new LiteralObject(structure, fieldValues);
+		Structure structure = new Structure(struct, fields);
+		return structure;
+	}
+	private GenericStructure getStructure(GenericStructureType genericType) {
+		for (GenericStructure gs : roster)
+			if (gs.type.equals(genericType)) return gs;
+		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	private GenericStructureType genericVersionOf(StructureType type) {
-		// TODO Auto-generated method stub
-		return null;
+		for (GenericStructure gs : roster)
+			if (gs.type.name.equals(type.name)) return gs.type;
+		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	public boolean typeCheckConstructor(ConcreteType type,
 			VariableRoster fields) {
-		// TODO Auto-generated method stub
-		return false;
+		if (!(type instanceof StructureType)) {
+			if (fields.value().resolveType().equals(type)) return true;
+			throw new RuntimeException(/* LOWPRI-E */);
+		}
+		Structure struct = getStructure((StructureType) type);
+		for (Field f : struct.fields) {
+			if (!fields.referenceTo(f.name).resolveType().equals(f.type))
+				throw new RuntimeException(/* LOWPRI-E */);
+		}
+		return true;
 	}
 }

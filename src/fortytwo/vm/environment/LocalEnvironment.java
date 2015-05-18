@@ -1,6 +1,7 @@
 package fortytwo.vm.environment;
 
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.expressions.Expression;
 
 public class LocalEnvironment {
@@ -15,5 +16,12 @@ public class LocalEnvironment {
 		if (localE != null) return localE;
 		Expression globalE = global.vars.referenceTo(id);
 		return globalE;
+	}
+	public ConcreteType typeOf(VariableIdentifier name) {
+		ConcreteType type = vars.typeOf(name);
+		if (type != null) return type;
+		type = global.vars.typeOf(name);
+		if (type != null) return type;
+		throw new RuntimeException(/* LOWPRI-E */);
 	}
 }
