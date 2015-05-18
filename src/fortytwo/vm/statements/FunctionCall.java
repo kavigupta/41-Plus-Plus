@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -29,9 +30,16 @@ public class FunctionCall implements Expression, Statement {
 		literalValue(environment);
 	}
 	@Override
-	public boolean typeCheck(VariableTypeRoster typeRoster) {
-		// TODO check that the function applies to the argument types.
-		// Everything else is checked by now, hopefully.
+	public boolean typeCheck(VariableTypeRoster typeRoster,
+			StructureRoster structRoster) {
+		if (function.inputTypes.size() != arguments.size())
+			throw new RuntimeException(/* LOWPRI-E */);
+		for (int i = 0; i < function.inputTypes.size(); i++) {
+			if (!function.inputTypes.get(i)
+					.equals(arguments.get(i).resolveType(typeRoster,
+							structRoster)))
+				throw new RuntimeException(/* LOWPRI-E */);
+		}
 		return true;
 	}
 	@Override
@@ -42,7 +50,8 @@ public class FunctionCall implements Expression, Statement {
 						.collect(Collectors.toList()));
 	}
 	@Override
-	public ConcreteType resolveType(VariableTypeRoster typeRoster) {
+	public ConcreteType resolveType(VariableTypeRoster typeRoster,
+			StructureRoster structRoster) {
 		return outputType;
 	}
 }

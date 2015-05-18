@@ -3,6 +3,7 @@ package fortytwo.vm.expressions;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.environment.VariableTypeRoster;
 
 public abstract class LiteralExpression implements ParsedExpression, Expression {
@@ -23,11 +24,13 @@ public abstract class LiteralExpression implements ParsedExpression, Expression 
 		return SentenceType.PURE_EXPRESSION;
 	}
 	@Override
-	public final boolean typeCheck(VariableTypeRoster typeRoster) {
+	public final boolean typeCheck(VariableTypeRoster typeRoster,
+			StructureRoster structRoster) {
 		return true;
 	}
 	@Override
-	public final ConcreteType resolveType(VariableTypeRoster typeRoster) {
+	public final ConcreteType resolveType(VariableTypeRoster typeRoster,
+			StructureRoster structRoster) {
 		return resolveType();
 	}
 	public abstract ConcreteType resolveType();

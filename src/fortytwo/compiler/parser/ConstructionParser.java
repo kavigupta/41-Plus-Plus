@@ -21,6 +21,7 @@ import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericStructureType;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.TypeVariable;
+import fortytwo.vm.constructions.GenericStructure;
 
 public class ConstructionParser {
 	public static ParsedFunctionCall composeFunction(List<String> list) {
@@ -51,7 +52,7 @@ public class ConstructionParser {
 							.getInstance(line.get(i))));
 				}
 			}
-		}// TODO remove redundant code
+		}
 		ArrayList<GenericField> fields = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).equals("called")) continue;

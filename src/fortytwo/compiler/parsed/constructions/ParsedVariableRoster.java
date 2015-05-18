@@ -1,21 +1,27 @@
 package fortytwo.compiler.parsed.constructions;
 
-import lib.standard.collections.Pair;
+import java.util.HashMap;
+import java.util.Map;
+
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.VariableRoster;
 
 public class ParsedVariableRoster {
+	public final HashMap<VariableIdentifier, ParsedExpression> pairs = new HashMap<>();
 	public void add(VariableIdentifier id, ParsedExpression expr) {
-		// TODO Auto-generated method stub
+		pairs.put(id, expr);
 	}
-	public Iterable<Pair<VariableIdentifier, ParsedExpression>> entryIterator() {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterable<Map.Entry<VariableIdentifier, ParsedExpression>> entryIterator() {
+		return pairs.entrySet();
 	}
 	public VariableRoster contextualize(LocalEnvironment env) {
-		// TODO Auto-generated method stub
-		return null;
+		VariableRoster roster = new VariableRoster();
+		pairs.entrySet()
+				.stream()
+				.forEach(p -> roster.assign(p.getKey(), p.getValue()
+						.contextualize(env).literalValue(env)));
+		return roster;
 	}
 }

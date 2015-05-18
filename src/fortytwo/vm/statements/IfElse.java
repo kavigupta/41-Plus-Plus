@@ -2,6 +2,7 @@ package fortytwo.vm.statements;
 
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
@@ -25,9 +26,10 @@ public class IfElse implements Statement {
 		else ifelse.execute(environment);
 	}
 	@Override
-	public boolean typeCheck(VariableTypeRoster typeRoster) {
-		if (condition.resolveType(typeRoster).equals(PrimitiveType.BOOLEAN))
-			return true;
+	public boolean typeCheck(VariableTypeRoster typeRoster,
+			StructureRoster structRoster) {
+		if (condition.resolveType(typeRoster, structRoster).equals(
+				PrimitiveType.BOOLEAN)) return true;
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 }

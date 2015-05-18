@@ -9,5 +9,5 @@ import fortytwo.vm.expressions.LiteralExpression;
 public interface Function42 {
 	public LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments);
-	public ConcreteType outputType();
+	public ConcreteType outputType(GlobalEnvironment env);
 }

@@ -1,7 +1,7 @@
 package fortytwo.vm.expressions;
 
 import fortytwo.language.type.ConcreteType;
-import fortytwo.language.type.Structure;
+import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.environment.VariableRoster;
 
 public class LiteralObject extends LiteralExpression {
@@ -13,6 +13,6 @@ public class LiteralObject extends LiteralExpression {
 	}
 	@Override
 	public ConcreteType resolveType() {
-		return struct;
+		return struct.type;
 	}
 }

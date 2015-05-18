@@ -6,8 +6,10 @@ import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.expressions.Expression;
 
 public class VariableIdentifier implements ParsedExpression {
+	public static final VariableIdentifier VALUE = getInstance("value");
 	public final String name;
 	public static VariableIdentifier getInstance(String name) {
+		if (name.equals("value")) return VALUE;
 		if (!Language.isValidVariableIdentifier(name))
 			throw new RuntimeException(/* LOWPRI-E */);
 		return new VariableIdentifier(name);

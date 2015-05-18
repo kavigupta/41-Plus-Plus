@@ -7,6 +7,7 @@ import fortytwo.language.Operation;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.environment.VariableTypeRoster;
 
 public class BinaryOperation implements Expression {
@@ -61,16 +62,22 @@ public class BinaryOperation implements Expression {
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	@Override
-	public boolean typeCheck(VariableTypeRoster typeRoster) {
-		if (first.resolveType(typeRoster).equals(PrimitiveType.NUMBER))
-			throw new RuntimeException(/* LOWPRI-E */);
-		if (second.resolveType(typeRoster).equals(PrimitiveType.NUMBER))
-			throw new RuntimeException(/* LOWPRI-E */);
+	public boolean typeCheck(VariableTypeRoster typeRoster,
+			StructureRoster structRoster) {
+		if (first.resolveType(typeRoster, structRoster).equals(
+				PrimitiveType.NUMBER)) throw new RuntimeException(/*
+														 * LOWPRI-E
+														 */);
+		if (second.resolveType(typeRoster, structRoster).equals(
+				PrimitiveType.NUMBER)) throw new RuntimeException(/*
+														 * LOWPRI-E
+														 */);
 		return true;
 	}
 	@Override
-	public ConcreteType resolveType(VariableTypeRoster typeRoster) {
-		typeCheck(typeRoster);
+	public ConcreteType resolveType(VariableTypeRoster typeRoster,
+			StructureRoster structRoster) {
+		typeCheck(typeRoster, structRoster);
 		return PrimitiveType.NUMBER;
 	}
 }

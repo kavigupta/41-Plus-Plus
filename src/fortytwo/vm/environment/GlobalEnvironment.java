@@ -1,8 +1,8 @@
 package fortytwo.vm.environment;
 
 import java.util.ArrayList;
+import java.util.Map.Entry;
 
-import lib.standard.collections.Pair;
 import fortytwo.compiler.parsed.constructions.ParsedFunction;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.FunctionReturn;
@@ -59,17 +59,17 @@ public class GlobalEnvironment {
 				case DEFINITION:
 					ParsedDefinition def = (ParsedDefinition) s;
 					VariableRoster fieldValues = new VariableRoster();
-					for (Pair<VariableIdentifier, ParsedExpression> pair : def.fields
+					for (Entry<VariableIdentifier, ParsedExpression> pair : def.fields
 							.entryIterator()) {
-						LiteralExpression applied = pair.value
-								.contextualize(minimal).literalValue(
-										minimal);
+						LiteralExpression applied = pair.getValue()
+								.contextualize(minimal)
+								.literalValue(minimal);
 						if (applied == null)
 							throw new RuntimeException(/* LOWPRI-E */);
-						fieldValues.assign(pair.key, applied);
+						fieldValues.assign(pair.getKey(), applied);
 					}
 					vars.assign(def.name.name,
-							minimal.instance(def.name.type, fieldValues));
+							structs.instance(def.name.type, fieldValues));
 					break;
 				default:
 					throw new RuntimeException(/* LOWPRI-E */);

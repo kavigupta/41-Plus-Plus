@@ -1,6 +1,6 @@
 package fortytwo.compiler.parsed.declaration;
 
-import fortytwo.compiler.parser.GenericStructure;
+import fortytwo.vm.constructions.GenericStructure;
 
 public class StructureDeclaration implements Declaration {
 	public final GenericStructure structure;

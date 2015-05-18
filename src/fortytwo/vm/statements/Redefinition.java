@@ -2,6 +2,7 @@ package fortytwo.vm.statements;
 
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.Expression;
 
@@ -17,8 +18,10 @@ public class Redefinition implements Statement {
 		environment.vars.redefine(name, value);
 	}
 	@Override
-	public boolean typeCheck(VariableTypeRoster typeRoster) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean typeCheck(VariableTypeRoster typeRoster,
+			StructureRoster structRoster) {
+		if (typeRoster.typeOf(name).equals(
+				value.resolveType(typeRoster, structRoster))) return true;
+		throw new RuntimeException(/* LOWPRI-E */);
 	}
 }

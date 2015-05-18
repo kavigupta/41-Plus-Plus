@@ -1,4 +1,4 @@
-package fortytwo.compiler.parser;
+package fortytwo.vm.constructions;
 
 import java.util.List;
 
@@ -10,7 +10,6 @@ public class GenericStructure {
 	public final List<GenericField> fields;
 	public GenericStructure(GenericStructureType type,
 			List<GenericField> fields) {
-		super();
 		this.type = type;
 		this.fields = fields;
 	}

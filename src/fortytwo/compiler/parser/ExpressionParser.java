@@ -172,9 +172,14 @@ public class ExpressionParser {
 			name = Language.deparenthesize(name);
 			return parseStructType(Parser.tokenize42(name));
 		} else {
-			// TODO handle literal type
+			return parsePrimitiveType(name);
 		}
-		return null;
+	}
+	private static PrimitiveType parsePrimitiveType(String name) {
+		for (PrimitiveType type : PrimitiveType.values()) {
+			if (type.typeID().equals(name)) return type;
+		}
+		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	private static GenericType parseStructType(List<String> line) {
 		ArrayList<String> structExpression = new ArrayList<>();
@@ -209,10 +214,10 @@ public class ExpressionParser {
 			}
 		}
 		if (typeVariables.size() == 0)
-			return new Structure(structExpression, new ArrayList<>());
+			return new StructureType(structExpression, new ArrayList<>());
 		if (arguments == Kind.CONCRETE)
-			return new Structure(structExpression, typeVariables.stream()
-					.map(x -> (ConcreteType) x)
+			return new StructureType(structExpression, typeVariables
+					.stream().map(x -> (ConcreteType) x)
 					.collect(Collectors.toList()));
 		return new GenericStructureType(structExpression, typeVariables
 				.stream().map(x -> (TypeVariable) x)

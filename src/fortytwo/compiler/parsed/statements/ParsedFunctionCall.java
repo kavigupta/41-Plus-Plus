@@ -29,12 +29,12 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 	public Expression contextualize(LocalEnvironment env) {
 		Function<ParsedExpression, ConcreteType> typeResolver = x -> x
 				.contextualize(env).literalValue(env).resolveType();
-		FunctionSignature sig = env.getSignature(name, arguments.stream()
-				.map(typeResolver).collect(Collectors.toList()));
+		FunctionSignature sig = env.global.funcs.referenceTo(name, arguments
+				.stream().map(typeResolver).collect(Collectors.toList()));
 		Function42 function = env.global.funcs.get(sig);
 		return FunctionCall.getInstance(
 				sig,
-				function.outputType(),
+				function.outputType(env.global),
 				arguments.stream().map(x -> x.contextualize(env))
 						.collect(Collectors.toList()));
 	}

@@ -10,6 +10,7 @@ import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
+import fortytwo.vm.statements.Definition;
 import fortytwo.vm.statements.Statement;
 
 public class FunctionImplemented implements Function42 {
@@ -33,8 +34,16 @@ public class FunctionImplemented implements Function42 {
 		return output == null ? null : output.literalValue(local);
 	}
 	@Override
-	public ConcreteType outputType() {
-		return output == null ? PrimitiveType.VOID : output
-				.resolveType(new VariableTypeRoster());
+	public ConcreteType outputType(GlobalEnvironment env) {
+		VariableTypeRoster roster = new VariableTypeRoster();
+		for (int i = 0; i < f.parameterTypes.size(); i++)
+			roster.add(f.parameterVariables.get(i), f.parameterTypes.get(i));
+		body.forEach(s -> {
+			if (s instanceof Definition) {
+				roster.add(((Definition) s).toCreate);
+			}
+		});
+		return output == null ? PrimitiveType.VOID : output.resolveType(
+				roster, env.structs);
 	}
 }

@@ -3,6 +3,7 @@ package fortytwo.vm.statements;
 import java.util.List;
 
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.environment.VariableTypeRoster;
 
 public class StatementSeries implements Statement {
@@ -15,8 +16,9 @@ public class StatementSeries implements Statement {
 		statements.forEach(s -> s.execute(environment));
 	}
 	@Override
-	public boolean typeCheck(VariableTypeRoster typeRoster) {
-		statements.forEach(s -> s.typeCheck(typeRoster));
+	public boolean typeCheck(VariableTypeRoster typeRoster,
+			StructureRoster structRoster) {
+		statements.forEach(s -> s.typeCheck(typeRoster, structRoster));
 		return true;
 	}
 }
