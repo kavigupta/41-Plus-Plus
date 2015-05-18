@@ -25,7 +25,7 @@ public class FieldAssignment implements Statement {
 		if (!(expr instanceof LiteralObject))
 			throw new RuntimeException(/* LOWPRI-E */);
 		LiteralObject obj = (LiteralObject) expr;
-		obj.fields.redefine(field.name, value);
+		obj.fields.redefine(field.name, value.literalValue(environment));
 	}
 	@Override
 	public boolean typeCheck(VariableTypeRoster typeRoster,

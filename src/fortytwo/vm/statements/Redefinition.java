@@ -15,7 +15,7 @@ public class Redefinition implements Statement {
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
-		environment.vars.redefine(name, value);
+		environment.vars.redefine(name, value.literalValue(environment));
 	}
 	@Override
 	public boolean typeCheck(VariableTypeRoster typeRoster,
