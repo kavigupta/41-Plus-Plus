@@ -1,5 +1,9 @@
 package fortytwo.vm.environment;
 
+import java.util.List;
+
+import fortytwo.language.identifier.FunctionName;
+import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.Structure;
@@ -14,9 +18,6 @@ public class LocalEnvironment {
 		this.global = global;
 		vars = new VariableRoster();
 	}
-	public static LocalEnvironment minimalEnvironment(GlobalEnvironment global) {
-		return new LocalEnvironment(global);
-	}
 	public Expression referenceTo(VariableIdentifier id) {
 		Expression localE = vars.referenceTo(id);
 		if (localE != null) return localE;
@@ -28,5 +29,10 @@ public class LocalEnvironment {
 		Structure struct = global.structs.referenceTo(type);
 		if (struct == null) return null;
 		return new LiteralObject(struct, fieldValues);
+	}
+	public FunctionSignature getSignature(FunctionName name,
+			List<ConcreteType> types) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -4,15 +4,16 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import fortytwo.compiler.parsed.expressions.ParsedBinaryOperation;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
+import fortytwo.language.Language;
 import fortytwo.language.Operation;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
-import fortytwo.language.type.GenericType;
-import fortytwo.language.type.TypeVariable;
+import fortytwo.language.type.*;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
@@ -23,8 +24,8 @@ public class ExpressionParser {
 	public static ParsedExpression parseExpression(List<String> list) {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
-		if (function.signature.function.size() == 1
-				&& function.signature.function.get(0) instanceof FunctionArgument)
+		if (function.name.function.size() == 1
+				&& function.name.function.get(0) instanceof FunctionArgument)
 			return function.arguments.get(0);
 		return function;
 	}
@@ -168,10 +169,53 @@ public class ExpressionParser {
 		if (name.startsWith("_"))
 			return new TypeVariable(VariableIdentifier.getInstance(name));
 		else if (name.startsWith("(")) {
-			// TODO handle struct type
+			name = Language.deparenthesize(name);
+			return parseStructType(Parser.tokenize42(name));
 		} else {
 			// TODO handle literal type
 		}
 		return null;
+	}
+	private static GenericType parseStructType(List<String> line) {
+		ArrayList<String> structExpression = new ArrayList<>();
+		int i = 0;
+		for (; i < line.size() && !line.get(i).equals(";")
+				&& !line.get(i).equals("of"); i++) {
+			structExpression.add(line.get(i));
+		}
+		List<GenericType> typeVariables = new ArrayList<>();
+		// Type constructors are not allowed in the post-of clause. (e.g.,
+		// what would a structure that takes a (array of _k) as a type
+		// variable be?)
+		Kind arguments = null;
+		if (line.get(i).equals("of")) {
+			i++;
+			for (; i < line.size() && !line.get(i).equals(";"); i++) {
+				GenericType var = parseType(line.get(i));
+				switch (var.kind()) {
+					case CONCRETE:
+						if (arguments == Kind.VARIABLE)
+							throw new RuntimeException(/* LOWPRI-E */);
+						arguments = Kind.CONCRETE;
+						break;
+					case VARIABLE:
+						if (arguments == Kind.CONCRETE)
+							throw new RuntimeException(/* LOWPRI-E */);
+						break;
+					case CONSTRUCTOR:
+						throw new RuntimeException(/* LOWPRI-E */);
+				}
+				typeVariables.add(var);
+			}
+		}
+		if (typeVariables.size() == 0)
+			return new Structure(structExpression, new ArrayList<>());
+		if (arguments == Kind.CONCRETE)
+			return new Structure(structExpression, typeVariables.stream()
+					.map(x -> (ConcreteType) x)
+					.collect(Collectors.toList()));
+		return new GenericStructureType(structExpression, typeVariables
+				.stream().map(x -> (TypeVariable) x)
+				.collect(Collectors.toList()));
 	}
 }

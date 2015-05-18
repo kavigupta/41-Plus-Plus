@@ -14,7 +14,7 @@ import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.statements.FunctionCall;
 
 public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
-	public final FunctionName signature;
+	public final FunctionName name;
 	public final List<ParsedExpression> arguments;
 	public static ParsedFunctionCall getInstance(FunctionName signature,
 			List<ParsedExpression> value) {
@@ -22,18 +22,19 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 	}
 	private ParsedFunctionCall(FunctionName signature,
 			List<ParsedExpression> arguments) {
-		this.signature = signature;
+		this.name = signature;
 		this.arguments = arguments;
 	}
 	@Override
 	public Expression contextualize(LocalEnvironment env) {
 		Function<ParsedExpression, ConcreteType> typeResolver = x -> x
 				.contextualize(env).literalValue(env).resolveType();
-		Function42 function = env.global.funcs.get(FunctionSignature
-				.getInstance(signature, arguments.stream()
-						.map(typeResolver).collect(Collectors.toList())));
+		FunctionSignature sig = env.getSignature(name, arguments.stream()
+				.map(typeResolver).collect(Collectors.toList()));
+		Function42 function = env.global.funcs.get(sig);
 		return FunctionCall.getInstance(
-				function,
+				sig,
+				function.outputType(),
 				arguments.stream().map(x -> x.contextualize(env))
 						.collect(Collectors.toList()));
 	}

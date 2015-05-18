@@ -6,15 +6,15 @@ import java.util.List;
 import fortytwo.language.field.Field;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
-import fortytwo.language.type.GenericStructure;
+import fortytwo.language.type.GenericStructureType;
 import fortytwo.language.type.Structure;
 
 public class StructureRoster {
-	public List<GenericStructure> roster;
+	public List<GenericStructureType> roster;
 	public StructureRoster() {
 		this.roster = new ArrayList<>();
 	}
-	public void addStructure(GenericStructure s) {
+	public void addStructure(GenericStructureType s) {
 		roster.add(s);
 	}
 	public Structure referenceTo(ConcreteType type) {

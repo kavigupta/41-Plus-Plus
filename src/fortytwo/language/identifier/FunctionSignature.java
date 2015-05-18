@@ -7,13 +7,16 @@ import fortytwo.language.type.ConcreteType;
 public class FunctionSignature {
 	public final FunctionName name;
 	public final List<ConcreteType> inputTypes;
+	public final ConcreteType outputType;
 	public static FunctionSignature getInstance(FunctionName name,
-			List<ConcreteType> inputTypes) {
-		return new FunctionSignature(name, inputTypes);
+			List<ConcreteType> inputTypes, ConcreteType outputType) {
+		return new FunctionSignature(name, inputTypes, outputType);
 	}
-	private FunctionSignature(FunctionName name, List<ConcreteType> inputTypes) {
+	private FunctionSignature(FunctionName name,
+			List<ConcreteType> inputTypes, ConcreteType outputType) {
 		this.name = name;
 		this.inputTypes = inputTypes;
+		this.outputType = outputType;
 	}
 	@Override
 	public int hashCode() {

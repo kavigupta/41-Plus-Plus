@@ -29,7 +29,7 @@ public class GlobalEnvironment {
 		return null;
 	}
 	public void initializeEnvironment(ArrayList<Sentence> sentences) {
-		LocalEnvironment minimal = LocalEnvironment.minimalEnvironment(this);
+		LocalEnvironment minimal = minimalLocalEnvironment();
 		ArrayList<ParsedFunction> functions = new ArrayList<>();
 		for (int i = 0; i < sentences.size(); i++) {
 			Sentence s = sentences.get(i);
@@ -76,5 +76,8 @@ public class GlobalEnvironment {
 			}
 		}
 		// TODO finsih this
+	}
+	public LocalEnvironment minimalLocalEnvironment() {
+		return new LocalEnvironment(this);
 	}
 }

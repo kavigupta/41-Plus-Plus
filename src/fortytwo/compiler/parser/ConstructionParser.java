@@ -18,7 +18,7 @@ import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.ConcreteType;
-import fortytwo.language.type.GenericStructure;
+import fortytwo.language.type.GenericStructureType;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.TypeVariable;
 
@@ -35,13 +35,14 @@ public class ConstructionParser {
 		 */
 		if (!line.get(1).equals("a") || !line.get(3).equals("called"))
 			throw new RuntimeException(/* LOWPRI-E */);
-		int i = 4;
+		line.subList(0, 4).clear();
 		ArrayList<String> structExpression = new ArrayList<>();
+		int i = 0;
 		for (; i < line.size() && !line.get(i).equals(";")
 				&& !line.get(i).equals("of"); i++) {
 			structExpression.add(line.get(i));
 		}
-		List<GenericType> typeVariables = new ArrayList<>();
+		List<TypeVariable> typeVariables = new ArrayList<>();
 		if (line.get(i).equals("of")) {
 			i++;
 			for (; i < line.size() && !line.get(i).equals(";"); i++) {
@@ -50,7 +51,7 @@ public class ConstructionParser {
 							.getInstance(line.get(i))));
 				}
 			}
-		}
+		}// TODO remove redundant code
 		ArrayList<GenericField> fields = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).equals("called")) continue;
@@ -59,7 +60,8 @@ public class ConstructionParser {
 					.get(i - 1))));
 		}
 		return new StructureDeclaration(new GenericStructure(
-				structExpression, typeVariables, fields));
+				new GenericStructureType(structExpression, typeVariables),
+				fields));
 	}
 	public static FunctionDefinition parseFunctionDefinition(List<String> line) {
 		/*

@@ -47,8 +47,4 @@ public class Language {
 		if (name.contains(" ")) return false;
 		return name.startsWith("_");
 	}
-	public static boolean isValidTypeIdentifier(String name) {
-		// TODO stub
-		return false;
-	}
 }

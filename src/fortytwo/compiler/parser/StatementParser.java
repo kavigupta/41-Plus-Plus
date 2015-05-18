@@ -115,8 +115,8 @@ public class StatementParser {
 	private static ParsedStatement parseVoidFunctionCall(List<String> list) {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
-		if (function.signature.function.size() == 1
-				&& function.signature.function.get(0) instanceof FunctionArgument)
+		if (function.name.function.size() == 1
+				&& function.name.function.get(0) instanceof FunctionArgument)
 			throw new RuntimeException(/* LOWPRI-E non-void function call */);
 		return function;
 	}
