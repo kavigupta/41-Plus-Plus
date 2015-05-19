@@ -3,8 +3,6 @@ package fortytwo.vm.statements;
 import fortytwo.language.field.Field;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StructureRoster;
-import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
@@ -28,9 +26,8 @@ public class FieldAssignment implements Statement {
 		obj.fields.redefine(field.name, value.literalValue(environment));
 	}
 	@Override
-	public boolean typeCheck(VariableTypeRoster typeRoster,
-			StructureRoster structRoster) {
-		if (!field.type.equals(value.resolveType(typeRoster, structRoster)))
+	public boolean typeCheck() {
+		if (!field.type.equals(value.resolveType()))
 			throw new RuntimeException(/* LOWPRI-E */);
 		return true;
 	}

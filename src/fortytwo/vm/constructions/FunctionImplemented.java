@@ -34,7 +34,7 @@ public class FunctionImplemented implements Function42 {
 		return output == null ? null : output.literalValue(local);
 	}
 	@Override
-	public ConcreteType outputType(GlobalEnvironment env) {
+	public ConcreteType outputType() {
 		VariableTypeRoster roster = new VariableTypeRoster();
 		for (int i = 0; i < f.parameterTypes.size(); i++)
 			roster.add(f.parameterVariables.get(i), f.parameterTypes.get(i));
@@ -43,7 +43,6 @@ public class FunctionImplemented implements Function42 {
 				roster.add(((Definition) s).toCreate);
 			}
 		});
-		return output == null ? PrimitiveType.VOID : output.resolveType(
-				roster, env.structs);
+		return output == null ? PrimitiveType.VOID : output.resolveType();
 	}
 }

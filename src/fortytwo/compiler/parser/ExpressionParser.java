@@ -14,7 +14,7 @@ import fortytwo.language.Operation;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.*;
-import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralNumber;
@@ -37,7 +37,7 @@ public class ExpressionParser {
 				this.operator = operator;
 			}
 			@Override
-			public Expression contextualize(LocalEnvironment env) {
+			public Expression contextualize(StaticEnvironment env) {
 				return null;
 				// Should never be called
 			}

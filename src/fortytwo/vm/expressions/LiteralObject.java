@@ -2,12 +2,12 @@ package fortytwo.vm.expressions;
 
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.environment.VariableRoster;
+import fortytwo.vm.environment.LiteralVariableRoster;
 
 public class LiteralObject extends LiteralExpression {
 	public final Structure struct;
-	public final VariableRoster fields;
-	public LiteralObject(Structure struct, VariableRoster fields) {
+	public final LiteralVariableRoster fields;
+	public LiteralObject(Structure struct, LiteralVariableRoster fields) {
 		this.struct = struct;
 		this.fields = fields;
 	}

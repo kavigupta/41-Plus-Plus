@@ -2,11 +2,16 @@ package fortytwo.language.identifier;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.Language;
+import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.Expression;
+import fortytwo.vm.expressions.LiteralExpression;
 
-public class VariableIdentifier implements ParsedExpression {
+public class VariableIdentifier implements ParsedExpression, Expression {
 	public static final VariableIdentifier VALUE = getInstance("value");
+	// LOWPRI quick and dirty solution. Fix later
+	private StaticEnvironment env;
 	public final String name;
 	public static VariableIdentifier getInstance(String name) {
 		if (name.equals("value")) return VALUE;
@@ -18,12 +23,26 @@ public class VariableIdentifier implements ParsedExpression {
 		this.name = name;
 	}
 	@Override
-	public Expression contextualize(LocalEnvironment env) {
-		return env.referenceTo(this);
+	public Expression contextualize(StaticEnvironment env) {
+		this.env = env;
+		return this;
 	}
 	@Override
 	public SentenceType type() {
 		return SentenceType.PURE_EXPRESSION;
+	}
+	@Override
+	public void execute(LocalEnvironment environment) {
+		// no-op
+	}
+	@Override
+	public LiteralExpression literalValue(LocalEnvironment environment) {
+		return environment.referenceTo(this);
+	}
+	@Override
+	public ConcreteType resolveType() {
+		if (env == null) throw new RuntimeException(/* LOWPRI-E */);
+		return env.types.typeOf(this);
 	}
 	@Override
 	public int hashCode() {
@@ -41,6 +60,11 @@ public class VariableIdentifier implements ParsedExpression {
 		if (name == null) {
 			if (other.name != null) return false;
 		} else if (!name.equals(other.name)) return false;
+		return true;
+	}
+	@Override
+	public boolean typeCheck() {
+		// a variable's type automatically works
 		return true;
 	}
 }

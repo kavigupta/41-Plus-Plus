@@ -1,7 +1,7 @@
 package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
-import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.Statement;
 import fortytwo.vm.statements.WhileLoop;
 
@@ -14,7 +14,7 @@ public class ParsedWhileLoop implements ParsedStatement {
 		this.statement = ParsedStatement;
 	}
 	@Override
-	public Statement contextualize(LocalEnvironment environment) {
+	public Statement contextualize(StaticEnvironment environment) {
 		return new WhileLoop(condition.contextualize(environment),
 				statement.contextualize(environment));
 	}

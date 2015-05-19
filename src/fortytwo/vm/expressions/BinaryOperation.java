@@ -7,8 +7,6 @@ import fortytwo.language.Operation;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StructureRoster;
-import fortytwo.vm.environment.VariableTypeRoster;
 
 public class BinaryOperation implements Expression {
 	public static final BigDecimal PRECISION = BigDecimal.TEN.pow(100);
@@ -62,22 +60,20 @@ public class BinaryOperation implements Expression {
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	@Override
-	public boolean typeCheck(VariableTypeRoster typeRoster,
-			StructureRoster structRoster) {
-		if (first.resolveType(typeRoster, structRoster).equals(
-				PrimitiveType.NUMBER)) throw new RuntimeException(/*
-														 * LOWPRI-E
-														 */);
-		if (second.resolveType(typeRoster, structRoster).equals(
-				PrimitiveType.NUMBER)) throw new RuntimeException(/*
-														 * LOWPRI-E
-														 */);
+	public boolean typeCheck() {
+		if (first.resolveType().equals(PrimitiveType.NUMBER))
+			throw new RuntimeException(/*
+								 * LOWPRI-E
+								 */);
+		if (second.resolveType().equals(PrimitiveType.NUMBER))
+			throw new RuntimeException(/*
+								 * LOWPRI-E
+								 */);
 		return true;
 	}
 	@Override
-	public ConcreteType resolveType(VariableTypeRoster typeRoster,
-			StructureRoster structRoster) {
-		typeCheck(typeRoster, structRoster);
+	public ConcreteType resolveType() {
+		typeCheck();
 		return PrimitiveType.NUMBER;
 	}
 }

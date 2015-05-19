@@ -37,7 +37,7 @@ public class StructureRoster {
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	public LiteralExpression instance(ConcreteType type,
-			VariableRoster fieldValues) {
+			LiteralVariableRoster fieldValues) {
 		LiteralExpression exp = fieldValues.value();
 		if (exp != null) return exp;
 		if (!(type instanceof StructureType))

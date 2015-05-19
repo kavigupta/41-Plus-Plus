@@ -3,7 +3,7 @@ package fortytwo.compiler.parsed.statements;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.Statement;
 import fortytwo.vm.statements.StatementSeries;
 
@@ -13,7 +13,7 @@ public class ParsedStatementSeries implements ParsedStatement {
 		this.statements = statements;
 	}
 	@Override
-	public Statement contextualize(LocalEnvironment env) {
+	public Statement contextualize(StaticEnvironment env) {
 		return new StatementSeries(statements.stream()
 				.map(s -> s.contextualize(env))
 				.collect(Collectors.toList()));

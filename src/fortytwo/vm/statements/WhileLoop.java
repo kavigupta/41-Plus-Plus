@@ -2,8 +2,6 @@ package fortytwo.vm.statements;
 
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StructureRoster;
-import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
 
@@ -21,13 +19,11 @@ public class WhileLoop implements Statement {
 		}
 	}
 	@Override
-	public boolean typeCheck(VariableTypeRoster typeRoster,
-			StructureRoster structRoster) {
-		condition.typeCheck(typeRoster, structRoster);
-		if (!condition.resolveType(typeRoster, structRoster).equals(
-				PrimitiveType.BOOL))
+	public boolean typeCheck() {
+		condition.typeCheck();
+		if (!condition.resolveType().equals(PrimitiveType.BOOL))
 			throw new RuntimeException(/* LOWPRI-E */);
-		statement.typeCheck(typeRoster, structRoster);
+		statement.typeCheck();
 		return false;
 	}
 }

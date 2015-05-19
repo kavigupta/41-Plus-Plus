@@ -2,7 +2,7 @@ package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.Redefinition;
 import fortytwo.vm.statements.Statement;
 
@@ -14,7 +14,8 @@ public class ParsedRedefinition extends ParsedAssignment {
 		this.expr = expr;
 	}
 	@Override
-	public Statement contextualize(LocalEnvironment environment) {
-		return new Redefinition(name, expr.contextualize(environment));
+	public Statement contextualize(StaticEnvironment environment) {
+		return new Redefinition(name, expr.contextualize(environment),
+				environment.types);
 	}
 }

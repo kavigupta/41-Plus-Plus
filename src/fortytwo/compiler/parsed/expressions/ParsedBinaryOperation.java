@@ -3,7 +3,7 @@ package fortytwo.compiler.parsed.expressions;
 import java.math.BigDecimal;
 
 import fortytwo.language.Operation;
-import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.BinaryOperation;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralNumber;
@@ -23,7 +23,7 @@ public class ParsedBinaryOperation implements ParsedExpression {
 				Operation.SUBTRACT);
 	}
 	@Override
-	public Expression contextualize(LocalEnvironment env) {
+	public Expression contextualize(StaticEnvironment env) {
 		Expression firstE = first.contextualize(env), secondE = second
 				.contextualize(env);
 		if (firstE == null || secondE == null)

@@ -2,7 +2,7 @@ package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.FieldAssignment;
 import fortytwo.vm.statements.Statement;
 
@@ -16,9 +16,9 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		this.value = parseExpression;
 	}
 	@Override
-	public Statement contextualize(LocalEnvironment environment) {
-		return new FieldAssignment(name, environment.global.structs.typeOf(
-				environment.typeOf(name), field),
+	public Statement contextualize(StaticEnvironment environment) {
+		return new FieldAssignment(name, environment.structs.typeOf(
+				environment.types.typeOf(name), field),
 				value.contextualize(environment));
 	}
 }

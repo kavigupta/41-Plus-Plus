@@ -1,7 +1,7 @@
 package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
-import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.IfElse;
 import fortytwo.vm.statements.Statement;
 
@@ -19,7 +19,7 @@ public class ParsedIfElse implements ParsedStatement {
 		this.ifelse = ifelse;
 	}
 	@Override
-	public Statement contextualize(LocalEnvironment env) {
+	public Statement contextualize(StaticEnvironment env) {
 		return IfElse.getInstance(condition.contextualize(env),
 				ifso.contextualize(env), ifelse.contextualize(env));
 	}
