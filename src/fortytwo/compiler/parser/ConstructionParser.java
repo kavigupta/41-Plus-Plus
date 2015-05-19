@@ -104,8 +104,12 @@ public class ConstructionParser {
 		if (!Language.isArticle(line.get(outputloc + 1)))
 			throw new RuntimeException(/* LOWPRI-E */);
 		line.subList(0, outputloc + 2).clear();
+		GenericType outputType = ExpressionParser.parseType(Language
+				.parenthesize(line));
+		if (!(outputType instanceof ConcreteType))
+			throw new RuntimeException(/* LOWPRI-E */);
 		return new FunctionDefinition(sig.key, variables, types,
-				ExpressionParser.parseExpression(line));
+				(ConcreteType) outputType);
 	}
 	private static Pair<FunctionName, List<ParsedExpression>> parseFunctionSignature(
 			List<String> list) {

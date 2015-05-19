@@ -47,4 +47,13 @@ public class Language {
 		if (name.contains(" ")) return false;
 		return name.startsWith("_");
 	}
+	public static String parenthesize(List<String> line) {
+		if (line.size() == 0) return "";
+		if (line.size() == 1) return line.get(0);
+		StringBuilder s = new StringBuilder("(");
+		for (String l : line) {
+			s.append(l).append(" ");
+		}
+		return s.append(")").toString();
+	}
 }

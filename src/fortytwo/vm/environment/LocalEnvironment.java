@@ -26,7 +26,8 @@ public class LocalEnvironment {
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	public StaticEnvironment staticEnvironment() {
-		// TODO Auto-generated method stub
+		// TODO this may require a slight refactor to account for the fact
+		// that local types must be utilized.
 		return null;
 	}
 }
