@@ -24,9 +24,9 @@ import fortytwo.vm.statements.Statement;
 public class GlobalEnvironment {
 	public final StaticEnvironment staticEnv;
 	public final FunctionRoster funcs;
-	private GlobalEnvironment(StaticEnvironment staticEnv) {
+	private GlobalEnvironment(StaticEnvironment staticEnv, FunctionRoster funcs) {
 		this.staticEnv = staticEnv;
-		funcs = new FunctionRoster();
+		this.funcs = funcs;
 	}
 	public static GlobalEnvironment getDefaultEnvironment(
 			StaticEnvironment environment) {

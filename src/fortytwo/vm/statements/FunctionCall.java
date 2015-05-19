@@ -40,7 +40,7 @@ public class FunctionCall implements Expression, Statement {
 	}
 	@Override
 	public LiteralExpression literalValue(LocalEnvironment environment) {
-		return environment.global.funcs.get(function).apply(
+		return environment.global.funcs.get(function, arguments).apply(
 				environment.global,
 				arguments.stream().map(x -> x.literalValue(environment))
 						.collect(Collectors.toList()));

@@ -14,6 +14,7 @@ import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
 
+// TODO handle arrays
 public class StructureRoster {
 	public List<GenericStructure> structs;
 	public StructureRoster() {

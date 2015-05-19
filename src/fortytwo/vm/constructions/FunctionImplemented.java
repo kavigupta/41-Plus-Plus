@@ -3,10 +3,12 @@ package fortytwo.vm.constructions;
 import java.util.List;
 
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
+import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.VariableTypeRoster;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -34,7 +36,7 @@ public class FunctionImplemented implements Function42 {
 		return output == null ? null : output.literalValue(local);
 	}
 	@Override
-	public ConcreteType outputType() {
+	public ConcreteType outputType(StaticEnvironment env) {
 		VariableTypeRoster roster = new VariableTypeRoster();
 		for (int i = 0; i < f.parameterTypes.size(); i++)
 			roster.add(f.parameterVariables.get(i), f.parameterTypes.get(i));
@@ -44,5 +46,10 @@ public class FunctionImplemented implements Function42 {
 			}
 		});
 		return output == null ? PrimitiveType.VOID : output.resolveType();
+	}
+	@Override
+	public FunctionSignature signature(StaticEnvironment env) {
+		return FunctionSignature.getInstance(f.name, f.parameterTypes,
+				f.outputTypes);
 	}
 }

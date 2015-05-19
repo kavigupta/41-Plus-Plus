@@ -30,8 +30,6 @@ public class LocalEnvironment {
 		vars.pairs.entrySet().forEach(
 				variable -> env.types.add(variable.getKey(), variable
 						.getValue().resolveType()));
-		// TODO this may require a slight refactor to account for the fact
-		// that local types must be utilized .
-		return null;
+		return env;
 	}
 }

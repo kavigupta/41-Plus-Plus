@@ -21,6 +21,7 @@ import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericStructureType;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.TypeVariable;
+import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.constructions.GenericStructure;
 
 public class ConstructionParser {
@@ -137,7 +138,6 @@ public class ConstructionParser {
 			function.add(FunctionArgument.INSTANCE);
 			currentExpression.clear();
 		}
-		return Pair
-				.getInstance(FunctionName.getInstance(function), arguments);
+		return StdLib42.parse(function, arguments);
 	}
 }
