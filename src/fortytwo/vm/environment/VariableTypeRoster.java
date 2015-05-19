@@ -20,4 +20,10 @@ public class VariableTypeRoster {
 		if (type == null) throw new RuntimeException(/* LOWPRI-E */);
 		return type;
 	}
+	@Override
+	public VariableTypeRoster clone() {
+		VariableTypeRoster other = new VariableTypeRoster();
+		other.pairs.putAll(pairs);
+		return other;
+	}
 }

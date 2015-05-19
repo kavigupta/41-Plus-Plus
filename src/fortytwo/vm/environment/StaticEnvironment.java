@@ -23,4 +23,9 @@ public class StaticEnvironment {
 		this.globalVariables = global;
 		this.types = types;
 	}
+	@Override
+	public StaticEnvironment clone()  {
+		return new StaticEnvironment(structs.clone(), funcs.clone(),
+				globalVariables.clone(), types.clone());
+	}
 }

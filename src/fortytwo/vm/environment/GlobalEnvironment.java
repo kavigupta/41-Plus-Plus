@@ -30,7 +30,8 @@ public class GlobalEnvironment {
 	}
 	public static GlobalEnvironment getDefaultEnvironment(
 			StaticEnvironment environment) {
-		return new GlobalEnvironment(environment);
+		// TODO add functions ???
+		return null;
 	}
 	public static GlobalEnvironment initialized(List<Sentence> sentences) {
 		StaticEnvironment environment = new StaticEnvironment(

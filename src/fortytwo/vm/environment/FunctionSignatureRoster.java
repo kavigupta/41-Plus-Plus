@@ -18,7 +18,13 @@ public class FunctionSignatureRoster {
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	public void putReference(FunctionDefinition f) {
-		funcs.add(FunctionSignature.getInstance(f.name,
-				f.parameterTypes, f.outputTypes));
+		funcs.add(FunctionSignature.getInstance(f.name, f.parameterTypes,
+				f.outputTypes));
+	}
+	@Override
+	public FunctionSignatureRoster clone() {
+		FunctionSignatureRoster other = new FunctionSignatureRoster();
+		other.funcs.addAll(funcs);
+		return other;
 	}
 }

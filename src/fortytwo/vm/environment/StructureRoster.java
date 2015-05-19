@@ -15,15 +15,15 @@ import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
 
 public class StructureRoster {
-	public List<GenericStructure> roster;
+	public List<GenericStructure> structs;
 	public StructureRoster() {
-		this.roster = new ArrayList<>();
+		this.structs = new ArrayList<>();
 	}
 	public void addStructure(GenericStructure structure) {
-		roster.add(structure);
+		structs.add(structure);
 	}
 	public GenericStructure referenceTo(GenericStructureType type) {
-		for (GenericStructure struct : roster) {
+		for (GenericStructure struct : structs) {
 			if (struct.type.equals(type)) return struct;
 		}
 		throw new RuntimeException(/* LOWPRI-E */);
@@ -62,12 +62,12 @@ public class StructureRoster {
 		return structure;
 	}
 	private GenericStructure getStructure(GenericStructureType genericType) {
-		for (GenericStructure gs : roster)
+		for (GenericStructure gs : structs)
 			if (gs.type.equals(genericType)) return gs;
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	private GenericStructureType genericVersionOf(StructureType type) {
-		for (GenericStructure gs : roster)
+		for (GenericStructure gs : structs)
 			if (gs.type.name.equals(type.name)) return gs.type;
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
@@ -83,5 +83,11 @@ public class StructureRoster {
 				throw new RuntimeException(/* LOWPRI-E */);
 		}
 		return true;
+	}
+	@Override
+	public StructureRoster clone() {
+		StructureRoster other = new StructureRoster();
+		other.structs.addAll(structs);
+		return other;
 	}
 }

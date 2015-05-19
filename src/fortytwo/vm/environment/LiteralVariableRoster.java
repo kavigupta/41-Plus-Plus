@@ -30,4 +30,10 @@ public class LiteralVariableRoster {
 		LiteralExpression exp = pairs.get(name);
 		return exp == null ? null : exp.resolveType();
 	}
+	@Override
+	public LiteralVariableRoster clone() {
+		LiteralVariableRoster other = new LiteralVariableRoster();
+		other.pairs.putAll(pairs);
+		return other;
+	}
 }
