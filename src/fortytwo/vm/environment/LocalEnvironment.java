@@ -28,9 +28,10 @@ public class LocalEnvironment {
 	public StaticEnvironment staticEnvironment() {
 		StaticEnvironment env = global.staticEnv.clone();
 		vars.pairs.entrySet().forEach(
-				variable -> env.types.add(variable.getKey(), variable.getValue().resolveType()));
+				variable -> env.types.add(variable.getKey(), variable
+						.getValue().resolveType()));
 		// TODO this may require a slight refactor to account for the fact
-		// that local types must be utilized.
+		// that local types must be utilized .
 		return null;
 	}
 }
