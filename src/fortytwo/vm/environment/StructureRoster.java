@@ -6,15 +6,11 @@ import java.util.List;
 import fortytwo.language.field.Field;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.language.type.ConcreteType;
-import fortytwo.language.type.GenericStructureType;
-import fortytwo.language.type.StructureType;
+import fortytwo.language.type.*;
 import fortytwo.vm.constructions.GenericStructure;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.expressions.LiteralExpression;
-import fortytwo.vm.expressions.LiteralObject;
+import fortytwo.vm.expressions.*;
 
-// TODO handle arrays
 public class StructureRoster {
 	public List<GenericStructure> structs;
 	public StructureRoster() {
@@ -41,13 +37,25 @@ public class StructureRoster {
 			LiteralVariableRoster fieldValues) {
 		LiteralExpression exp = fieldValues.value();
 		if (exp != null) return exp;
+		if (type instanceof ArrayType) {
+			if (fieldValues.pairs.size() != 1)
+				throw new RuntimeException(/* LOWPRI-E */);
+			if (!fieldValues.pairs.containsKey(VariableIdentifier
+					.getInstance("_length")))
+				throw new RuntimeException(/* LOWPRI-E */);
+			LiteralExpression length = fieldValues.pairs
+					.get(VariableIdentifier.getInstance("_length"));
+			if (length.resolveType() != PrimitiveType.NUMBER)
+				throw new RuntimeException(/* LOWPRI-E */);
+			return new LiteralArray(((ArrayType) type).contentType,
+					((LiteralNumber) length).contents.intValue());
+		}
 		if (!(type instanceof StructureType))
 			throw new RuntimeException(/* LOWPRI-E */);
 		return new LiteralObject(getStructure((StructureType) type),
 				fieldValues);
 	}
-	public Structure getStructure(StructureType type) {
-		StructureType struct = type;
+	public Structure getStructure(StructureType struct) {
 		GenericStructureType genericType = genericVersionOf(struct);
 		GenericStructure baseStructure = getStructure(genericType);
 		List<GenericField> fieldsGeneric = baseStructure.fields;
@@ -74,6 +82,16 @@ public class StructureRoster {
 	}
 	public boolean typeCheckConstructor(ConcreteType type,
 			VariableRoster fields) {
+		if (type instanceof ArrayType) {
+			if (fields.pairs.size() != 1) throw new RuntimeException(/*
+														 * LOWPRI-E
+														 */);
+			Expression length = fields.pairs.get(VariableIdentifier
+					.getInstance("_length"));
+			if (length == null || length.resolveType() != PrimitiveType.BOOL)
+				throw new RuntimeException(/* LOWPRI-E */);
+			return true;
+		}
 		if (!(type instanceof StructureType)) {
 			if (fields.value().resolveType().equals(type)) return true;
 			throw new RuntimeException(/* LOWPRI-E */);

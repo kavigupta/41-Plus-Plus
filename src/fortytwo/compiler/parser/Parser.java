@@ -33,6 +33,7 @@ public class Parser {
 		return statements;
 	}
 	public static List<String> tokenize42(String text) {
+		// TODO i think this actually needs to be fixed.
 		text = text.replaceAll("(?<op>(//)|\\+|-|\\*|/)", " ${op} ")
 				.replaceAll("\\s+", " ").trim()
 				+ " ";

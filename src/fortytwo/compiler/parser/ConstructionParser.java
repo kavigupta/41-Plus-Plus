@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
-import fortytwo.compiler.parsed.declaration.Declaration;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
@@ -29,7 +28,7 @@ public class ConstructionParser {
 		Pair<FunctionName, List<ParsedExpression>> fsig = parseFunctionSignature(list);
 		return ParsedFunctionCall.getInstance(fsig.key, fsig.value);
 	}
-	public static Declaration parseStructDefinition(List<String> line) {
+	public static StructureDeclaration parseStructDefinition(List<String> line) {
 		/*
 		 * Define a structure called <structure> of <typevar1>, <typevar2>,
 		 * and <typevar3> ; which contains a[n] <type> called <field> , a[n]
@@ -138,6 +137,6 @@ public class ConstructionParser {
 			function.add(FunctionArgument.INSTANCE);
 			currentExpression.clear();
 		}
-		return StdLib42.parse(function, arguments);
+		return StdLib42.parseFunction(function, arguments);
 	}
 }

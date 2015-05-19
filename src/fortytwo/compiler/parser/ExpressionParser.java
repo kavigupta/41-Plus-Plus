@@ -14,6 +14,7 @@ import fortytwo.language.Operation;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.*;
+import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
@@ -212,6 +213,14 @@ public class ExpressionParser {
 				}
 				typeVariables.add(var);
 			}
+		}
+		if (structExpression.equals(StdLib42.STRUCT_ARRAY)) {
+			if (typeVariables.size() != 1) throw new RuntimeException(/*
+														 * LOWPRI-E
+														 */);
+			if (arguments == Kind.CONCRETE)
+				return new ArrayType((ConcreteType) typeVariables.get(0));
+			return GenericArrayType.INSTANCE;
 		}
 		if (typeVariables.size() == 0)
 			return new StructureType(structExpression, new ArrayList<>());

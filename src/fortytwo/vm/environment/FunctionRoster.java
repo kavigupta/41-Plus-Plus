@@ -13,6 +13,7 @@ import fortytwo.vm.expressions.LiteralObject;
 
 public class FunctionRoster {
 	public final HashMap<FunctionSignature, Function42> functions = new HashMap<>();
+	private FunctionRoster() {}
 	public Function42 get(FunctionSignature signature, List<Expression> inputs) {
 		if (StdLib42.matchesFieldAccess(signature.name)) {
 			if (!(inputs.get(0) instanceof VariableIdentifier))
@@ -26,7 +27,8 @@ public class FunctionRoster {
 		return functions.get(signature);
 	}
 	public static FunctionRoster getDefault() {
-		// TODO Auto-generated method stub
-		return null;
+		FunctionRoster funcs = new FunctionRoster();
+		StdLib42.defaultFunctions(funcs);
+		return funcs;
 	}
 }

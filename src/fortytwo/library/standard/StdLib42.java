@@ -21,11 +21,11 @@ import fortytwo.vm.environment.StructureRoster;
 public class StdLib42 {
 	// TODO rest
 	public static final StructureRoster DEF_STRUCT = new StructureRoster();
-	public static final FunctionRoster DEF_FUNC = new FunctionRoster();
 	public static final FunctionName FUNC_FIELD_ACCESS_NAME_APPARENT = FunctionName
 			.getInstance(Arrays.asList(new FunctionToken("the"),
 					FunctionArgument.INSTANCE, new FunctionToken("of"),
 					FunctionArgument.INSTANCE));
+	public static final List<String> STRUCT_ARRAY = Arrays.asList("array");
 	static {
 		addPair();
 	}
@@ -42,7 +42,7 @@ public class StdLib42 {
 						new GenericField(VariableIdentifier
 								.getInstance("value"), _v))));
 	}
-	public static Pair<FunctionName, List<ParsedExpression>> parse(
+	public static Pair<FunctionName, List<ParsedExpression>> parseFunction(
 			List<FunctionComponent> name, List<ParsedExpression> arguments) {
 		if (name.equals(StdLib42.FUNC_FIELD_ACCESS_NAME_APPARENT)) {
 			if (!(arguments.get(0) instanceof VariableIdentifier))
@@ -71,5 +71,8 @@ public class StdLib42 {
 		if (!(name.function.get(3) instanceof FunctionArgument))
 			return false;
 		return true;
+	}
+	public static void defaultFunctions(FunctionRoster funcs) {
+		// TODO Auto-generated method stub
 	}
 }
