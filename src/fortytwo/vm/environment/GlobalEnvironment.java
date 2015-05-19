@@ -25,7 +25,7 @@ public class GlobalEnvironment {
 		vars = new VariableRoster();
 	}
 	public static GlobalEnvironment getDefaultEnvironment() {
-		// TODO Default environment with default structures and whatnot.
+		// TODO Default environment with default structures and whatnot
 		return null;
 	}
 	public void initializeEnvironment(ArrayList<Sentence> sentences) {
