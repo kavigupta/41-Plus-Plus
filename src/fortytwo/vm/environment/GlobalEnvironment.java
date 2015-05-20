@@ -94,8 +94,8 @@ public class GlobalEnvironment {
 		for (ParsedFunction func : functions) {
 			FunctionImplemented impl = func.contextualize(environment);
 			impl.body.forEach(Statement::typeCheck);
-			implFunctions.put(environment.funcs.referenceTo(func.f.name,
-					func.f.parameterTypes), impl);
+			implFunctions.put(FunctionSignature.getInstance(func.f.name,
+					func.f.parameterTypes, func.f.outputType), impl);
 		}
 		global.funcs.functions.putAll(implFunctions);
 		return global;

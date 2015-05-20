@@ -11,14 +11,14 @@ public class FunctionDefinition implements Declaration {
 	public final FunctionName name;
 	public final List<VariableIdentifier> parameterVariables;
 	public final List<GenericType> parameterTypes;
-	public final ConcreteType outputTypes;
+	public final ConcreteType outputType;
 	public FunctionDefinition(FunctionName signature,
 			List<VariableIdentifier> parameterVariables,
 			List<GenericType> parameterTypes, ConcreteType output) {
 		this.name = signature;
 		this.parameterVariables = parameterVariables;
 		this.parameterTypes = parameterTypes;
-		this.outputTypes = output;
+		this.outputType = output;
 	}
 	@Override
 	public SentenceType type() {

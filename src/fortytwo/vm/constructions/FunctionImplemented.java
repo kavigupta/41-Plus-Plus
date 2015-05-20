@@ -41,6 +41,6 @@ public class FunctionImplemented extends Function42 {
 	@Override
 	public FunctionSignature signature(StaticEnvironment env) {
 		return FunctionSignature.getInstance(f.name, f.parameterTypes,
-				f.outputTypes);
+				f.outputType);
 	}
 }

@@ -67,4 +67,14 @@ public class FunctionSignature {
 		// TODO
 		return false;
 	}
+	public boolean accepts(List<ConcreteType> inputs) {
+		if (inputs.size() != inputTypes.size()) return false;
+		try {
+			for (int i = 0; i < inputs.size(); i++)
+				inputTypes.get(i).match(inputs.get(i));
+			return true;
+		} catch (Throwable t) {
+			return false;
+		}
+	}
 }
