@@ -220,7 +220,7 @@ public class ExpressionParser {
 														 */);
 			if (arguments == Kind.CONCRETE)
 				return new ArrayType((ConcreteType) typeVariables.get(0));
-			return GenericArrayType.INSTANCE;
+			return new GenericArrayType(typeVariables.get(0));
 		}
 		if (typeVariables.size() == 0)
 			return new StructureType(structExpression, new ArrayList<>());

@@ -82,13 +82,14 @@ public class ConstructionParser {
 		if (!line.get(i).equals("takes")) throw new RuntimeException(/*
 														 * LOWPRI-E
 														 */);
-		ArrayList<ConcreteType> types = new ArrayList<>();
+		List<GenericType> types = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).equals("called")) continue;
 			GenericType type = ExpressionParser.parseType(line.get(i + 1));
+			// LOWPRI allow generic typing in functions... later
 			if (!(type instanceof ConcreteType))
 				throw new RuntimeException(/* LOWPRI-E */);
-			types.add((ConcreteType) type);
+			types.add(type);
 		}
 		int outputloc = line.indexOf("outputs");
 		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(funcExpress);

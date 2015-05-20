@@ -32,7 +32,9 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 				.stream().map(typeResolver).collect(Collectors.toList()));
 		return FunctionCall.getInstance(
 				sig,
-				sig.outputType,
+				sig.outputType.resolve(sig.typeVariables(arguments.stream()
+						.map(x -> x.contextualize(env))
+						.collect(Collectors.toList()))),
 				arguments.stream().map(x -> x.contextualize(env))
 						.collect(Collectors.toList()));
 	}

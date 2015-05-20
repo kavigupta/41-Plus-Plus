@@ -1,6 +1,9 @@
 package fortytwo.language.type;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import fortytwo.vm.environment.TypeVariableRoster;
 
 public class GenericStructureType implements GenericType {
 	public final List<String> name;
@@ -9,6 +12,31 @@ public class GenericStructureType implements GenericType {
 			List<TypeVariable> typeVariables) {
 		this.name = name;
 		this.typeVariables = typeVariables;
+	}
+	@Override
+	public TypeVariableRoster match(ConcreteType toMatch) {
+		if (!(toMatch instanceof StructureType))
+			throw new RuntimeException(/* LOWPRI-E */);
+		StructureType type = (StructureType) toMatch;
+		if (type.types.size() != typeVariables.size())
+			throw new RuntimeException(/* LOWPRI-E */);
+		TypeVariableRoster roster = new TypeVariableRoster();
+		for (int i = 0; i < type.types.size(); i++) {
+			roster.assign(typeVariables.get(i), type.types.get(i));
+		}
+		return roster;
+	}
+	@Override
+	public ConcreteType resolve(TypeVariableRoster roster) {
+		List<ConcreteType> types = new ArrayList<>();
+		for (TypeVariable gt : typeVariables) {
+			ConcreteType typeParameter = roster.referenceTo(gt);
+			if (typeParameter == null) throw new RuntimeException(/*
+														 * LOWPRI-E
+														 */);
+			types.add(typeParameter);
+		}
+		return new StructureType(name, types);
 	}
 	@Override
 	public Kind kind() {

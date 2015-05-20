@@ -3,17 +3,20 @@ package fortytwo.language.identifier;
 import java.util.List;
 
 import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.GenericType;
+import fortytwo.vm.environment.TypeVariableRoster;
+import fortytwo.vm.expressions.Expression;
 
 public class FunctionSignature {
 	public final FunctionName name;
-	public final List<ConcreteType> inputTypes;
-	public final ConcreteType outputType;
+	public final List<GenericType> inputTypes;
+	public final GenericType outputType;
 	public static FunctionSignature getInstance(FunctionName name,
-			List<ConcreteType> inputTypes, ConcreteType outputType) {
+			List<GenericType> inputTypes, GenericType outputType) {
 		return new FunctionSignature(name, inputTypes, outputType);
 	}
-	private FunctionSignature(FunctionName name,
-			List<ConcreteType> inputTypes, ConcreteType outputType) {
+	private FunctionSignature(FunctionName name, List<GenericType> inputTypes,
+			GenericType outputType) {
 		this.name = name;
 		this.inputTypes = inputTypes;
 		this.outputType = outputType;
@@ -40,5 +43,28 @@ public class FunctionSignature {
 			if (other.name != null) return false;
 		} else if (!name.equals(other.name)) return false;
 		return true;
+	}
+	public final TypeVariableRoster typeVariables(
+			List<? extends Expression> arguments) {
+		TypeVariableRoster roster = new TypeVariableRoster();
+		for (int i = 0; i < this.inputTypes.size(); i++) {
+			ConcreteType arg = arguments.get(i).resolveType();
+			GenericType expected = this.inputTypes.get(i);
+			switch (expected.kind()) {
+				case CONCRETE:
+					if (!expected.equals(this))
+						throw new RuntimeException(/* LOWPRI-E */);
+					break;
+				case CONSTRUCTOR:
+				case VARIABLE:
+					roster.pairs.putAll(expected.match(arg).pairs);
+					break;
+			}
+		}
+		return roster;
+	}
+	public boolean matches(FunctionName name, List<ConcreteType> inputs) {
+		// TODO
+		return false;
 	}
 }

@@ -9,13 +9,14 @@ import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
-import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
 
-public class FunctionFieldAccess implements Function42 {
+public class FunctionFieldAccess extends Function42 {
 	public final VariableIdentifier field;
 	public final Structure from;
 	public FunctionFieldAccess(VariableIdentifier field, Structure from) {
@@ -24,14 +25,14 @@ public class FunctionFieldAccess implements Function42 {
 	}
 	@Override
 	public LiteralExpression apply(GlobalEnvironment env,
-			List<LiteralExpression> arguments) {
-		if (!(arguments.get(1) instanceof LiteralObject))
+			List<LiteralExpression> arguments, TypeVariableRoster roster) {
+		if (!(arguments.get(0) instanceof LiteralObject))
 			throw new RuntimeException(/* LOWPRI-E */);
 		LiteralObject obj = (LiteralObject) arguments.get(1);
 		return obj.fields.referenceTo(field);
 	}
 	@Override
-	public ConcreteType outputType(StaticEnvironment env) {
+	public GenericType outputType(StaticEnvironment env) {
 		for (Field f : from.fields) {
 			if (f.name.equals(field)) return f.type;
 		}

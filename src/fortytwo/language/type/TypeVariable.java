@@ -1,6 +1,7 @@
 package fortytwo.language.type;
 
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.vm.environment.TypeVariableRoster;
 
 public class TypeVariable implements GenericType {
 	public final VariableIdentifier name;
@@ -10,6 +11,18 @@ public class TypeVariable implements GenericType {
 	@Override
 	public Kind kind() {
 		return Kind.VARIABLE;
+	}
+	@Override
+	public TypeVariableRoster match(ConcreteType toMatch) {
+		TypeVariableRoster roster = new TypeVariableRoster();
+		roster.assign(this, toMatch);
+		return roster;
+	}
+	@Override
+	public ConcreteType resolve(TypeVariableRoster roster) {
+		ConcreteType type = roster.referenceTo(this);
+		if (type == null) throw new RuntimeException(/* LOWPRI-E */);
+		return type;
 	}
 	@Override
 	public int hashCode() {
