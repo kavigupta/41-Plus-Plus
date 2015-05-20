@@ -33,7 +33,7 @@ public class SourceCode {
 				+ ".";
 	}
 	public static String display(StructureDeclaration structureDeclaration) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method
 		return null;
 	}
 	public static String display(ParsedDefinition parsedDefinition) {
