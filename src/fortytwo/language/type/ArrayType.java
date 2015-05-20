@@ -24,4 +24,8 @@ public class ArrayType implements ConcreteType {
 		} else if (!contentType.equals(other.contentType)) return false;
 		return true;
 	}
+	@Override
+	public String toSourceCode() {
+		return "(array of " + contentType.toSourceCode() + ")";
+	}
 }

@@ -5,4 +5,8 @@ public enum PrimitiveType implements ConcreteType {
 	public final String typeID() {
 		return name().toLowerCase();
 	}
+	@Override
+	public String toSourceCode() {
+		return typeID();
+	}
 }

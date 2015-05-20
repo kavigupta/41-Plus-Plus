@@ -2,7 +2,6 @@ package fortytwo.language.identifier;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.Language;
-import fortytwo.language.SourceCode;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
@@ -74,6 +73,6 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 	}
 	@Override
 	public String toSourceCode() {
-		return SourceCode.display(this);
+		return name;
 	}
 }

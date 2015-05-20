@@ -21,4 +21,8 @@ public class GenericArrayType implements GenericType {
 	public ConcreteType resolve(TypeVariableRoster roster) {
 		return new ArrayType(contents.resolve(roster));
 	}
+	@Override
+	public String toSourceCode() {
+		return "(array of " + contents.toSourceCode() + ")";
+	}
 }

@@ -25,6 +25,10 @@ public class TypeVariable implements GenericType {
 		return type;
 	}
 	@Override
+	public String toSourceCode() {
+		return name.toSourceCode();
+	}
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

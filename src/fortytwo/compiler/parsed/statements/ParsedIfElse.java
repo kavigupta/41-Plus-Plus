@@ -8,13 +8,13 @@ import fortytwo.vm.statements.Statement;
 
 public class ParsedIfElse implements ParsedStatement {
 	public final ParsedExpression condition;
-	public final ParsedStatement ifso, ifelse;
+	public final ParsedStatementSeries ifso, ifelse;
 	public static ParsedIfElse getInstance(ParsedExpression condition,
-			ParsedStatement ifso, ParsedStatement ifelse) {
+			ParsedStatementSeries ifso, ParsedStatementSeries ifelse) {
 		return new ParsedIfElse(condition, ifso, ifelse);
 	}
-	private ParsedIfElse(ParsedExpression condition, ParsedStatement ifso,
-			ParsedStatement ifelse) {
+	private ParsedIfElse(ParsedExpression condition,
+			ParsedStatementSeries ifso, ParsedStatementSeries ifelse) {
 		this.condition = condition;
 		this.ifso = ifso;
 		this.ifelse = ifelse;

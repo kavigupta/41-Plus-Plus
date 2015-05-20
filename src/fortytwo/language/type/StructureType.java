@@ -2,6 +2,8 @@ package fortytwo.language.type;
 
 import java.util.List;
 
+import fortytwo.language.SourceCode;
+
 public class StructureType implements ConcreteType {
 	public final List<String> name;
 	public final List<ConcreteType> types;
@@ -30,5 +32,9 @@ public class StructureType implements ConcreteType {
 			if (other.types != null) return false;
 		} else if (!types.equals(other.types)) return false;
 		return true;
+	}
+	@Override
+	public String toSourceCode() {
+		return SourceCode.display(this);
 	}
 }

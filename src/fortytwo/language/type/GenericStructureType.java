@@ -65,4 +65,8 @@ public class GenericStructureType implements GenericType {
 		} else if (!typeVariables.equals(other.typeVariables)) return false;
 		return true;
 	}
+	public String toSourceCode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
