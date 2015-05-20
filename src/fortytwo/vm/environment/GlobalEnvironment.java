@@ -37,7 +37,7 @@ public class GlobalEnvironment {
 		return new GlobalEnvironment(staticEnv, vm,
 				FunctionRoster.getDefault());
 	}
-	public static GlobalEnvironment initialized(List<Sentence> sentences) {
+	public static GlobalEnvironment interpret(List<Sentence> sentences) {
 		StaticEnvironment environment = StaticEnvironment.getDefault();
 		GlobalEnvironment global = GlobalEnvironment.getDefaultEnvironment(
 				environment, VirtualMachine.defaultVM);

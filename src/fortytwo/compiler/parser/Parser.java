@@ -2,6 +2,7 @@ package fortytwo.compiler.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
@@ -33,10 +34,14 @@ public class Parser {
 		return statements;
 	}
 	public static List<String> tokenize42(String text) {
-		text = text.replaceAll("(?<op>(//)|\\+|-|\\*|/)", " ${op} ")
-				.replaceAll("\\s+", " ").trim()
+		text = text.replaceAll("(?<op>(//)|\\+|-|\\*|/|%)", " ${op} ")
+				.replaceAll("\\s+", " ")
+				.replaceAll("(?<punct>\\.|;|:|,)(?!\\d)", " ${punct} ")
+				.trim()
 				+ " ";
-		return tokenizeRecursive(text);
+		return tokenizeRecursive(text).stream()
+				.filter(x -> x.replaceAll("\\s", "").length() != 0)
+				.collect(Collectors.toList());
 	}
 	private static List<String> tokenizeRecursive(String text) {
 		if (text.length() == 0) return new ArrayList<>();
@@ -50,7 +55,7 @@ public class Parser {
 			case '[':
 				int endb = text.indexOf(']');
 				if (endb < 0) throw new RuntimeException(/* LOWPRI-E */);
-				return tokenizeRecursive(text.substring(endb));
+				return tokenizeRecursive(text.substring(endb + 1));
 			case '(':
 				Pair<String, Integer> poppedParenthetical = popParenthetical(text
 						.substring(1));
@@ -96,7 +101,8 @@ public class Parser {
 					break;
 			}
 			if (paren == 0)
-				return Pair.getInstance(text.substring(0, i), i + 1);
+				return Pair.getInstance('(' + text.substring(0, i) + ')',
+						i + 2);
 		}
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
@@ -107,11 +113,11 @@ public class Parser {
 				case '\\':
 					Pair<Character, Integer> pair = popEscape(text
 							.substring(i + 1));
-					i += 1 + pair.value;
+					i += pair.value;
 					unes += pair.key;
 					break;
 				case '\'':
-					return Pair.getInstance(unes, i + 1);
+					return Pair.getInstance('\'' + unes + '\'', i + 2);
 				default:
 					unes += text.charAt(i);
 			}
