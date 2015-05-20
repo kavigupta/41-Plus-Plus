@@ -18,7 +18,7 @@ public class FunctionName {
 						: new FunctionToken(x))
 				.collect(Collectors.toList()));
 	}
-	private static FunctionName getInstance(List<FunctionComponent> function) {
+	public static FunctionName getInstance(List<FunctionComponent> function) {
 		return new FunctionName(function);
 	}
 	private FunctionName(List<FunctionComponent> function) {

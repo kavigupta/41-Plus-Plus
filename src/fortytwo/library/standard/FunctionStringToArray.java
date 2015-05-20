@@ -11,9 +11,9 @@ import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralString;
 
-public class FunctionPrint extends Function42 {
-	public static final FunctionPrint INSTANCE = new FunctionPrint();
-	private FunctionPrint() {}
+public class FunctionStringToArray extends Function42 {
+	public static final FunctionStringToArray INSTANCE = new FunctionStringToArray();
+	private FunctionStringToArray() {}
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {

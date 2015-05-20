@@ -30,4 +30,7 @@ public class LiteralArray extends LiteralExpression {
 			throw new RuntimeException(/* LOWPRI-E */);
 		}
 	}
+	public int length() {
+		return elements.length;
+	}
 }

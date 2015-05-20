@@ -64,8 +64,9 @@ public class FunctionSignature {
 		return roster;
 	}
 	public boolean matches(FunctionName name, List<ConcreteType> inputs) {
-		// TODO
-		return false;
+		if (!this.name.equals(name)) return false;
+		if (this.inputTypes.size() != inputs.size()) return false;
+		return accepts(inputs);
 	}
 	public boolean accepts(List<ConcreteType> inputs) {
 		if (inputs.size() != inputTypes.size()) return false;

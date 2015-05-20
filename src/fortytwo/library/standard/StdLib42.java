@@ -14,18 +14,34 @@ import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.GenericStructureType;
 import fortytwo.language.type.TypeVariable;
+import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.GenericStructure;
 import fortytwo.vm.environment.FunctionRoster;
+import fortytwo.vm.environment.FunctionSignatureRoster;
 import fortytwo.vm.environment.StructureRoster;
 
 public class StdLib42 {
-	// TODO rest
 	public static final StructureRoster DEF_STRUCT = new StructureRoster();
 	public static final FunctionName FUNC_FIELD_ACCESS_NAME_APPARENT = FunctionName
-			.getInstance(Arrays.asList(new FunctionToken("the"),
-					FunctionArgument.INSTANCE, new FunctionToken("of"),
-					FunctionArgument.INSTANCE));
+			.getInstance("the", "", "of", "");
 	public static final List<String> STRUCT_ARRAY = Arrays.asList("array");
+	public static final FunctionName FUNC_PRINT = FunctionName.getInstance(
+			"Tell", "me", "what", "", "is");
+	public static final FunctionName FUNC_STRING_SPLIT = FunctionName
+			.getInstance("", "split", "into", "individual", "letters");
+	public static final FunctionName FUNC_STRING_APPEND = FunctionName
+			.getInstance("", "joined", "with", "");
+	public static final FunctionName FUNC_LETTER_COMBINE = FunctionName
+			.getInstance("the", "letters", "", "combined", "to", "form",
+					"a", "string");
+	public static final Function42[] DEFAULT_FUNCTIONS = {
+			FunctionArrayAccess.ST, FunctionArrayAccess.ND,
+			FunctionArrayAccess.RD, FunctionArrayAccess.TH,
+			FunctionPrint.INSTANCE, FunctionStringAppend.INSTANCE,
+			FunctionStringSplit.INSTANCE };
+	public static FunctionName functArrayAccess(String suffix) {
+		return FunctionName.getInstance("the", "", suffix, "of", "");
+	}
 	static {
 		addPair();
 	}
@@ -56,9 +72,7 @@ public class StdLib42 {
 		return Pair.getInstance(FunctionName.getInstance(name), arguments);
 	}
 	public static FunctionName getFieldAccess(String name) {
-		return FunctionName.getInstance(Arrays.asList(
-				new FunctionToken("the"), new FunctionToken(name),
-				new FunctionToken("of"), FunctionArgument.INSTANCE));
+		return FunctionName.getInstance("the", name, "of", "");
 	}
 	public static boolean matchesFieldAccess(FunctionName name) {
 		if (name.function.size() != 4) return false;
@@ -73,11 +87,11 @@ public class StdLib42 {
 		return true;
 	}
 	public static void defaultFunctions(FunctionRoster funcs) {
-		funcs.add(FunctionArrayAccess.ST);
-		funcs.add(FunctionArrayAccess.ND);
-		funcs.add(FunctionArrayAccess.RD);
-		funcs.add(FunctionArrayAccess.TH);
-		funcs.add(FunctionPrint.INSTANCE);
-		// TODO Auto-generated method stub
+		for (Function42 f : DEFAULT_FUNCTIONS)
+			funcs.add(f);
+	}
+	public static void defaultSignatures(FunctionSignatureRoster funcs) {
+		for (Function42 f : DEFAULT_FUNCTIONS)
+			funcs.funcs.add(f.signature());
 	}
 }

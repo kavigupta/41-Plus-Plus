@@ -3,7 +3,6 @@ package fortytwo.library.standard;
 import java.util.Arrays;
 import java.util.List;
 
-import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericArrayType;
@@ -41,8 +40,9 @@ public class FunctionArrayAccess extends Function42 {
 	public FunctionSignature signature() {
 		TypeVariable contents = new TypeVariable(
 				VariableIdentifier.getInstance("_contents"));
-		return FunctionSignature.getInstance(FunctionName.getInstance("the",
-				"", suffix, "of", ""), Arrays.asList(PrimitiveType.NUMBER,
-				new GenericArrayType(contents)), contents);
+		return FunctionSignature.getInstance(StdLib42
+				.functArrayAccess(suffix), Arrays.asList(
+				PrimitiveType.NUMBER, new GenericArrayType(contents)),
+				contents);
 	}
 }

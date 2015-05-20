@@ -11,22 +11,24 @@ import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralString;
 
-public class FunctionPrint extends Function42 {
-	public static final FunctionPrint INSTANCE = new FunctionPrint();
-	private FunctionPrint() {}
+public class FunctionStringAppend extends Function42 {
+	public static final FunctionStringAppend INSTANCE = new FunctionStringAppend();
+	private FunctionStringAppend() {}
 	@Override
-	protected LiteralExpression apply(GlobalEnvironment env,
+	protected LiteralString apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		env.machine.println(((LiteralString) arguments.get(0)).contents);
-		return null;
+		String a = ((LiteralString) arguments.get(0)).contents;
+		String b = ((LiteralString) arguments.get(1)).contents;
+		return new LiteralString(a + b);
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return PrimitiveType.VOID;
+		return PrimitiveType.STRING;
 	}
 	@Override
 	public FunctionSignature signature() {
-		return FunctionSignature.getInstance(StdLib42.FUNC_PRINT,
-				Arrays.asList(PrimitiveType.STRING), outputType());
+		return FunctionSignature.getInstance(StdLib42.FUNC_STRING_APPEND,
+				Arrays.asList(PrimitiveType.STRING, PrimitiveType.STRING),
+				outputType());
 	}
 }

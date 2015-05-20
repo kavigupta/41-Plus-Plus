@@ -33,16 +33,14 @@ public class GlobalEnvironment {
 		this.funcs = funcs;
 	}
 	public static GlobalEnvironment getDefaultEnvironment(
-			StaticEnvironment environment) {
-		// TODO add functions ???
-		return null;
+			StaticEnvironment staticEnv, VirtualMachine vm) {
+		return new GlobalEnvironment(staticEnv, vm,
+				FunctionRoster.getDefault());
 	}
 	public static GlobalEnvironment initialized(List<Sentence> sentences) {
-		StaticEnvironment environment = new StaticEnvironment(
-				new StructureRoster(), new FunctionSignatureRoster(),
-				new LiteralVariableRoster(), new VariableTypeRoster());
-		GlobalEnvironment global = GlobalEnvironment
-				.getDefaultEnvironment(environment);
+		StaticEnvironment environment = StaticEnvironment.getDefault();
+		GlobalEnvironment global = GlobalEnvironment.getDefaultEnvironment(
+				environment, VirtualMachine.defaultVM);
 		LocalEnvironment local = global.minimalLocalEnvironment();
 		ArrayList<ParsedFunction> functions = new ArrayList<>();
 		for (int i = 0; i < sentences.size(); i++) {
