@@ -73,6 +73,11 @@ public class StdLib42 {
 		return true;
 	}
 	public static void defaultFunctions(FunctionRoster funcs) {
+		funcs.add(FunctionArrayAccess.ST);
+		funcs.add(FunctionArrayAccess.ND);
+		funcs.add(FunctionArrayAccess.RD);
+		funcs.add(FunctionArrayAccess.TH);
+		funcs.add(FunctionPrint.INSTANCE);
 		// TODO Auto-generated method stub
 	}
 }

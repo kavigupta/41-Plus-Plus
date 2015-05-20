@@ -16,6 +16,7 @@ import fortytwo.compiler.parsed.statements.ParsedDefinition;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.FunctionImplemented;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -23,9 +24,12 @@ import fortytwo.vm.statements.Statement;
 
 public class GlobalEnvironment {
 	public final StaticEnvironment staticEnv;
+	public final VirtualMachine machine;
 	public final FunctionRoster funcs;
-	private GlobalEnvironment(StaticEnvironment staticEnv, FunctionRoster funcs) {
+	public GlobalEnvironment(StaticEnvironment staticEnv,
+			VirtualMachine machine, FunctionRoster funcs) {
 		this.staticEnv = staticEnv;
+		this.machine = machine;
 		this.funcs = funcs;
 	}
 	public static GlobalEnvironment getDefaultEnvironment(

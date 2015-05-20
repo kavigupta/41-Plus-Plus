@@ -1,4 +1,4 @@
-package fortytwo.vm.constructions;
+package fortytwo.library.standard;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,8 +10,9 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.GenericType;
+import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.environment.GlobalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
@@ -32,18 +33,18 @@ public class FunctionFieldAccess extends Function42 {
 		return obj.fields.referenceTo(field);
 	}
 	@Override
-	public GenericType outputType(StaticEnvironment env) {
+	public GenericType outputType() {
 		for (Field f : from.fields) {
 			if (f.name.equals(field)) return f.type;
 		}
 		throw new RuntimeException(/**/);
 	}
 	@Override
-	public FunctionSignature signature(StaticEnvironment env) {
+	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(FunctionName.getInstance(Arrays
 				.asList(new FunctionToken("the"), new FunctionToken(
 						field.name), new FunctionToken("of"),
 						FunctionArgument.INSTANCE)), Arrays
-				.asList(from.type), outputType(env));
+				.asList(from.type), outputType());
 	}
 }

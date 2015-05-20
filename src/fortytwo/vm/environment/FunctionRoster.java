@@ -5,9 +5,9 @@ import java.util.List;
 
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.library.standard.FunctionFieldAccess;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.constructions.Function42;
-import fortytwo.vm.constructions.FunctionFieldAccess;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralObject;
 
@@ -25,6 +25,9 @@ public class FunctionRoster {
 					((LiteralObject) inputs.get(1)).struct);
 		}
 		return functions.get(signature);
+	}
+	public void add(Function42 function) {
+		functions.put(function.signature(), function);
 	}
 	public static FunctionRoster getDefault() {
 		FunctionRoster funcs = new FunctionRoster();

@@ -17,6 +17,17 @@ public class LiteralArray extends LiteralExpression {
 	public void set(int i, LiteralExpression e) {
 		if (e.resolveType().equals(contents))
 			throw new RuntimeException(/* LOWPRI-E */);
-		elements[i] = e;
+		try {
+			elements[i - 1] = e;
+		} catch (ArrayIndexOutOfBoundsException exc) {
+			throw new RuntimeException(/* LOWPRI-E */);
+		}
+	}
+	public LiteralExpression get(int i) {
+		try {
+			return elements[i - 1];
+		} catch (ArrayIndexOutOfBoundsException exc) {
+			throw new RuntimeException(/* LOWPRI-E */);
+		}
 	}
 }

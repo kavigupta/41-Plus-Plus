@@ -8,7 +8,6 @@ import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -35,11 +34,11 @@ public class FunctionImplemented extends Function42 {
 		return output == null ? null : output.literalValue(local);
 	}
 	@Override
-	public GenericType outputType(StaticEnvironment env) {
+	public GenericType outputType() {
 		return output == null ? PrimitiveType.VOID : output.resolveType();
 	}
 	@Override
-	public FunctionSignature signature(StaticEnvironment env) {
+	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(f.name, f.parameterTypes,
 				f.outputType);
 	}

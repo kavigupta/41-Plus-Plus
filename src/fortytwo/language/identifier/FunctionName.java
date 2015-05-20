@@ -1,12 +1,24 @@
 package fortytwo.language.identifier;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
+import fortytwo.language.identifier.functioncomponent.FunctionToken;
 
 public class FunctionName {
 	public final List<FunctionComponent> function;
-	public static FunctionName getInstance(List<FunctionComponent> function) {
+	public static FunctionName getInstance(String... name) {
+		return getInstance(Arrays
+				.asList(name)
+				.stream()
+				.map(x -> x.length() == 0 ? FunctionArgument.INSTANCE
+						: new FunctionToken(x))
+				.collect(Collectors.toList()));
+	}
+	private static FunctionName getInstance(List<FunctionComponent> function) {
 		return new FunctionName(function);
 	}
 	private FunctionName(List<FunctionComponent> function) {
