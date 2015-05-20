@@ -1,5 +1,6 @@
 package fortytwo.vm.expressions;
 
+import fortytwo.language.SourceCode;
 import fortytwo.language.type.ArrayType;
 import fortytwo.language.type.ConcreteType;
 
@@ -32,5 +33,9 @@ public class LiteralArray extends LiteralExpression {
 	}
 	public int length() {
 		return elements.length;
+	}
+	@Override
+	public String toSourceCode() {
+		return SourceCode.display(this);
 	}
 }

@@ -1,5 +1,6 @@
 package fortytwo.compiler.parsed.declaration;
 
+import fortytwo.language.SourceCode;
 import fortytwo.vm.constructions.GenericStructure;
 
 public class StructureDeclaration implements Declaration {
@@ -13,5 +14,9 @@ public class StructureDeclaration implements Declaration {
 	@Override
 	public SentenceType type() {
 		return SentenceType.DECLARATION_STRUCT;
+	}
+	@Override
+	public String toSourceCode() {
+		return SourceCode.display(this);
 	}
 }

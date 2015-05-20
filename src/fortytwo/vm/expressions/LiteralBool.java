@@ -1,5 +1,6 @@
 package fortytwo.vm.expressions;
 
+import fortytwo.language.SourceCode;
 import fortytwo.language.type.PrimitiveType;
 
 public class LiteralBool extends LiteralExpression {
@@ -12,5 +13,9 @@ public class LiteralBool extends LiteralExpression {
 	@Override
 	public PrimitiveType resolveType() {
 		return PrimitiveType.BOOL;
+	}
+	@Override
+	public String toSourceCode() {
+		return SourceCode.display(this);
 	}
 }

@@ -2,6 +2,7 @@ package fortytwo.compiler.parsed.declaration;
 
 import java.util.List;
 
+import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
@@ -23,5 +24,9 @@ public class FunctionDefinition implements Declaration {
 	@Override
 	public SentenceType type() {
 		return SentenceType.DECLARATION_FUNCT;
+	}
+	@Override
+	public String toSourceCode() {
+		return SourceCode.display(this);
 	}
 }

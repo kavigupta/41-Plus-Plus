@@ -5,6 +5,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
@@ -41,5 +42,9 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 	@Override
 	public SentenceType type() {
 		return SentenceType.FUNCTION_CALL;
+	}
+	@Override
+	public String toSourceCode() {
+		return SourceCode.display(this);
 	}
 }

@@ -2,6 +2,7 @@ package fortytwo.language.identifier;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.Language;
+import fortytwo.language.SourceCode;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
@@ -45,6 +46,11 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 		return env.types.typeOf(this);
 	}
 	@Override
+	public boolean typeCheck() {
+		// a variable's type automatically works
+		return true;
+	}
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -63,8 +69,11 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 		return true;
 	}
 	@Override
-	public boolean typeCheck() {
-		// a variable's type automatically works
-		return true;
+	public String toString() {
+		return name;
+	}
+	@Override
+	public String toSourceCode() {
+		return SourceCode.display(this);
 	}
 }

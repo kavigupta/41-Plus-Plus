@@ -16,4 +16,5 @@ public interface ConcreteType extends GenericType {
 	public default ConcreteType resolve(TypeVariableRoster roster) {
 		return this;
 	}
+	public String toSourceCode();
 }

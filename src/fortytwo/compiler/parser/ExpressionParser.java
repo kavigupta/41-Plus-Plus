@@ -47,6 +47,11 @@ public class ExpressionParser {
 				// should never be called
 				return null;
 			}
+			@Override
+			public String toSourceCode() {
+				// should never be called
+				return operator.toSourceCode();
+			}
 		}
 		List<ParsedExpression> expressions = new ArrayList<>();
 		for (String token : list) {

@@ -1,6 +1,7 @@
 package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.FieldAssignment;
@@ -20,5 +21,9 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		return new FieldAssignment(name, environment.structs.typeOf(
 				environment.types.typeOf(name), field),
 				value.contextualize(environment));
+	}
+	@Override
+	public String toSourceCode() {
+		return SourceCode.display(this);
 	}
 }

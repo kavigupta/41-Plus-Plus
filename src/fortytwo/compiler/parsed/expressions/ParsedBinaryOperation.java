@@ -37,4 +37,9 @@ public class ParsedBinaryOperation implements ParsedExpression {
 			return SentenceType.PURE_EXPRESSION;
 		return SentenceType.IMPURE_EXPRESSION;
 	}
+	@Override
+	public String toSourceCode() {
+		return "(" + first.toSourceCode() + ") " + operation.toSourceCode()
+				+ " (" + second.toSourceCode() + ")";
+	}
 }

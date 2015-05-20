@@ -7,5 +7,5 @@ public interface Sentence {
 		CONTROL_FLOW, IMPURE_EXPRESSION
 	}
 	public SentenceType type();
-	// public String toSourceCode()
+	public String toSourceCode();
 }
