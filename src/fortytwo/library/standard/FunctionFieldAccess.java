@@ -7,8 +7,6 @@ import fortytwo.language.field.Field;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.language.identifier.functioncomponent.FunctionArgument;
-import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.Structure;
@@ -41,10 +39,8 @@ public class FunctionFieldAccess extends Function42 {
 	}
 	@Override
 	public FunctionSignature signature() {
-		return FunctionSignature.getInstance(FunctionName.getInstance(Arrays
-				.asList(new FunctionToken("the"), new FunctionToken(
-						field.name), new FunctionToken("of"),
-						FunctionArgument.INSTANCE)), Arrays
-				.asList(from.type), outputType());
+		return FunctionSignature.getInstance(
+				FunctionName.getInstance("the", field.name, "of", ""),
+				Arrays.asList(from.type), outputType());
 	}
 }
