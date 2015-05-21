@@ -39,7 +39,11 @@ public class ParsedBinaryOperation implements ParsedExpression {
 	}
 	@Override
 	public String toSourceCode() {
-		return "(" + first.toSourceCode() + ") " + operation.toSourceCode()
-				+ " (" + second.toSourceCode() + ")";
+		return "(" + first.toSourceCode() + operation.toSourceCode()
+				+ second.toSourceCode() + ")";
+	}
+	@Override
+	public String toString() {
+		return toSourceCode();
 	}
 }

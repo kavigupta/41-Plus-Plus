@@ -9,7 +9,8 @@ import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class VariableIdentifier implements ParsedExpression, Expression {
-	public static final VariableIdentifier VALUE = getInstance("value");
+	public static final VariableIdentifier VALUE = new VariableIdentifier(
+			"value");
 	// LOWPRI quick and dirty solution. Fix later
 	private StaticEnvironment env;
 	public final String name;

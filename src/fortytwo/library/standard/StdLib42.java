@@ -54,9 +54,9 @@ public class StdLib42 {
 				new GenericStructureType(Arrays.asList("a", "pair"), Arrays
 						.asList(_k, _v)), Arrays.asList(
 						new GenericField(VariableIdentifier
-								.getInstance("key"), _k),
+								.getInstance("_key"), _k),
 						new GenericField(VariableIdentifier
-								.getInstance("value"), _v))));
+								.getInstance("_value"), _v))));
 	}
 	public static Pair<FunctionName, List<ParsedExpression>> parseFunction(
 			List<FunctionComponent> name, List<ParsedExpression> arguments) {

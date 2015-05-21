@@ -5,9 +5,17 @@ import java.util.function.Function;
 
 public class Language {
 	public static String articleized(String word) {
-		if (isVowel(word.charAt(0)))
+		if (startsWithVowel(word))
 			return "an " + word;
 		else return "a " + word;
+	}
+	private static boolean startsWithVowel(String word) {
+		for (int i = 0; i < word.length(); i++) {
+			if (isVowel(word.charAt(i)))
+				return true;
+			else if (Character.isAlphabetic(word.charAt(i))) return false;
+		}
+		return false;
 	}
 	public static boolean isVowel(char c) {
 		c = Character.toLowerCase(c);
@@ -39,6 +47,7 @@ public class Language {
 	public static boolean isExpression(String token) {
 		if (token.equals("true") || token.equals("false")) return true;
 		char start = token.charAt(0);
+		System.out.println(token + "\t" + start);
 		return start == '(' || start == '+' || start == '-' || start == '*'
 				|| start == '/' || Character.isDigit(start)
 				|| start == '\'' || start == '_';
@@ -55,5 +64,8 @@ public class Language {
 			s.append(l).append(" ");
 		}
 		return s.append(")").toString();
+	}
+	public static boolean isListElement(String token) {
+		return token.equals(",") || token.equals("and");
 	}
 }

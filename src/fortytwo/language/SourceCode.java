@@ -47,9 +47,11 @@ public class SourceCode {
 	public static String display(ParsedDefinition parsedDefinition) {
 		return "Define "
 				+ Language.articleized(parsedDefinition.name.type
-						.toSourceCode()) + " called "
-				+ Language.articleized(parsedDefinition.name.name.name)
-				+ " with " + displayFieldList(parsedDefinition.fields);
+						.toSourceCode())
+				+ " called "
+				+ parsedDefinition.name.name.name
+				+ (parsedDefinition.fields.pairs.size() == 0 ? ""
+						: (" with " + displayFieldList(parsedDefinition.fields)));
 	}
 	public static String display(ParsedFieldAssignment parsedFieldAssignment) {
 		return "Set the " + parsedFieldAssignment.field.name + " of "
@@ -57,8 +59,9 @@ public class SourceCode {
 				+ parsedFieldAssignment.value.toSourceCode();
 	}
 	public static String display(ParsedFunctionCall parsedFunctionCall) {
-		return displayFunctionSignature(parsedFunctionCall.name,
-				parsedFunctionCall.arguments);
+		return "("
+				+ displayFunctionSignature(parsedFunctionCall.name,
+						parsedFunctionCall.arguments).trim() + ")";
 	}
 	public static String display(ParsedIfElse parsedIfElse) {
 		return "If "
@@ -70,8 +73,8 @@ public class SourceCode {
 								.toSourceCode()));
 	}
 	public static String display(ParsedRedefinition parsedRedefinition) {
-		return "Set " + parsedRedefinition.name.toSourceCode() + " to "
-				+ parsedRedefinition.expr.toSourceCode();
+		return "Set the value of " + parsedRedefinition.name.toSourceCode()
+				+ " to " + parsedRedefinition.expr.toSourceCode();
 	}
 	public static String display(ParsedStatementSeries parsedStatementSeries) {
 		return parsedStatementSeries.statements.stream()
@@ -110,27 +113,34 @@ public class SourceCode {
 		return "\"" + literalString.contents + "\"";
 	}
 	public static String display(StructureType st) {
+		if (st.types.size() == 0) return parenthesizedName(st.name);
 		StringBuffer buff = new StringBuffer("(");
 		for (String s : st.name) {
 			buff.append(s).append(" ");
 		}
-		if (st.types.size() == 0)
-			return buff.append(")").toString()
-					.substring(0, buff.length() - 1);
-		return buff
-				.append("of ")
-				.append(displayList(st.types.stream()
-						.map(x -> x.toSourceCode())
-						.collect(Collectors.toList()))).append(")")
+		List<String> types = st.types.stream().map(x -> x.toSourceCode())
+				.collect(Collectors.toList());
+		System.out.println("types: " + types);
+		return buff.append("of ").append(displayList(types)).append(")")
 				.toString();
+	}
+	private static String parenthesizedName(List<String> name) {
+		if (name.size() == 0) return "()";
+		if (name.size() == 1) return name.get(0);
+		StringBuffer buff = new StringBuffer("(");
+		for (String s : name) {
+			buff.append(s).append(" ");
+		}
+		return buff.substring(0, buff.length() - 1) + ")";
 	}
 	private static String displayFieldList(ParsedVariableRoster fields) {
 		List<String> items = new ArrayList<>();
 		for (Entry<VariableIdentifier, ParsedExpression> e : fields.pairs
 				.entrySet()) {
-			items.add(Language.articleized(e.getKey() + " of "
-					+ e.getValue()));
+			items.add(Language.articleized(e.getKey().toSourceCode()
+					+ " of " + e.getValue().toSourceCode()));
 		}
+		System.out.println(items);
 		return displayList(items);
 	}
 	private static String displayReturn(ParsedExpression output) {
@@ -139,7 +149,8 @@ public class SourceCode {
 	}
 	private static String displayOutputType(ConcreteType outputType) {
 		if (outputType == PrimitiveType.VOID) return "";
-		return " and outputs " + Language.articleized(outputType.toString());
+		return " and outputs "
+				+ Language.articleized(outputType.toSourceCode());
 	}
 	private static String displayFieldList(List<GenericType> parameterTypes,
 			List<VariableIdentifier> parameterVariables) {
@@ -159,6 +170,7 @@ public class SourceCode {
 		return displayField(field.type, field.name);
 	}
 	private static String displayList(List<String> items) {
+		System.out.println("List to Display: " + items);
 		switch (items.size()) {
 			case 0:
 				return "";
@@ -171,6 +183,7 @@ public class SourceCode {
 		for (int i = 0; i < items.size() - 1; i++) {
 			s += items.get(i) + ", ";
 		}
+		System.out.println(s + "and " + items.get(items.size() - 1));
 		return s + "and " + items.get(items.size() - 1);
 	}
 	private static String displayFunctionSignature(FunctionName name,
@@ -181,10 +194,10 @@ public class SourceCode {
 			if (tok instanceof FunctionToken) {
 				s += ((FunctionToken) tok).token + " ";
 			} else {
-				s += parameterVariables.get(i).toSourceCode();
+				s += parameterVariables.get(i).toSourceCode() + " ";
 				i++;
 			}
 		}
-		return s.substring(0, s.length() - 1);
+		return s.trim();
 	}
 }

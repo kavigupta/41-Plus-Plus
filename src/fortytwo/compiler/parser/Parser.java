@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
-import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.compiler.parsed.sentences.Sentence;
 
 public class Parser {
 	private Parser() {}
-	public static List<ParsedStatement> parse(String text) {
+	public static List<Sentence> parse(String text) {
 		List<String> tokens = tokenize42(text);
 		List<List<String>> phrases = new ArrayList<>();
 		List<String> current = new ArrayList<>();
@@ -21,7 +21,7 @@ public class Parser {
 				current = new ArrayList<>();
 			}
 		}
-		List<ParsedStatement> statements = new ArrayList<>();
+		List<Sentence> statements = new ArrayList<>();
 		List<List<String>> currentPhrases = new ArrayList<>();
 		for (int i = 0; i < phrases.size(); i++) {
 			currentPhrases.add(phrases.get(i));

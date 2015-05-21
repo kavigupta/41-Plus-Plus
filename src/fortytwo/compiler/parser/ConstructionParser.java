@@ -1,7 +1,9 @@
 package fortytwo.compiler.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
@@ -16,10 +18,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
-import fortytwo.language.type.ConcreteType;
-import fortytwo.language.type.GenericStructureType;
-import fortytwo.language.type.GenericType;
-import fortytwo.language.type.TypeVariable;
+import fortytwo.language.type.*;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.constructions.GenericStructure;
 
@@ -82,14 +81,14 @@ public class ConstructionParser {
 		if (!line.get(i).equals("takes")) throw new RuntimeException(/*
 														 * LOWPRI-E
 														 */);
-		List<GenericType> types = new ArrayList<>();
+		Map<VariableIdentifier, GenericType> vars = new HashMap<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).equals("called")) continue;
-			GenericType type = ExpressionParser.parseType(line.get(i + 1));
+			GenericType type = ExpressionParser.parseType(line.get(i - 1));
 			// LOWPRI allow generic typing in functions... later
 			if (!(type instanceof ConcreteType))
 				throw new RuntimeException(/* LOWPRI-E */);
-			types.add(type);
+			vars.put(VariableIdentifier.getInstance(line.get(i + 1)), type);
 		}
 		int outputloc = line.indexOf("outputs");
 		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(funcExpress);
@@ -100,8 +99,15 @@ public class ConstructionParser {
 						throw new RuntimeException(/* LOWPRI-E */);
 					return (VariableIdentifier) x;
 				}).collect(Collectors.toList());
+		List<GenericType> types = new ArrayList<>();
+		for (VariableIdentifier vid : variables) {
+			GenericType gt = vars.get(vid);
+			if (gt == null) throw new RuntimeException(/* LOWPRI-E */);
+			types.add(gt);
+		}
 		if (outputloc < 0)
-			return new FunctionDefinition(sig.key, variables, types, null);
+			return new FunctionDefinition(sig.key, variables, types,
+					PrimitiveType.VOID);
 		if (!Language.isArticle(line.get(outputloc + 1)))
 			throw new RuntimeException(/* LOWPRI-E */);
 		line.subList(0, outputloc + 2).clear();

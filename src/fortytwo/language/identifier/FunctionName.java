@@ -43,4 +43,8 @@ public class FunctionName {
 		} else if (!function.equals(other.function)) return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return function.toString();
+	}
 }

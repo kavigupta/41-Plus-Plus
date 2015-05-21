@@ -6,6 +6,10 @@ public class FunctionToken implements FunctionComponent {
 		this.token = token;
 	}
 	@Override
+	public String toString() {
+		return token;
+	}
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

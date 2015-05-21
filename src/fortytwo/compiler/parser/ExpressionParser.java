@@ -25,35 +25,79 @@ public class ExpressionParser {
 	public static ParsedExpression parseExpression(List<String> list) {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
+		System.out.println("Function Name: " + function.name);
 		if (function.name.function.size() == 1
 				&& function.name.function.get(0) instanceof FunctionArgument)
 			return function.arguments.get(0);
 		return function;
 	}
 	public static ParsedExpression parsePureExpression(List<String> list) {
-		boolean expectsValue = true;
-		class UnevaluatedOperator implements ParsedExpression {
-			public Operation operator;
-			public UnevaluatedOperator(Operation operator) {
-				this.operator = operator;
-			}
-			@Override
-			public Expression contextualize(StaticEnvironment env) {
-				return null;
-				// Should never be called
-			}
-			@Override
-			public SentenceType type() {
-				// should never be called
-				return null;
-			}
-			@Override
-			public String toSourceCode() {
-				// should never be called
-				return operator.toSourceCode();
+		ArrayList<ParsedExpression> expressions = tokenize(list);
+		System.out.println("Original Expression List: " + expressions);
+		expressions = removeUnary(expressions);
+		System.out.println("Expression List without unary +/-: "
+				+ expressions);
+		for (int precendence = 0; precendence <= Operation.MAX_PRECDENCE; precendence++) {
+			expressions = removeBinary(expressions, precendence);
+			System.out.println("With next pass: " + expressions);
+		}
+		if (expressions.size() != 1)
+			throw new RuntimeException(/* LOWPRI-E */);
+		return expressions.get(0);
+	}
+	private static ArrayList<ParsedExpression> removeBinary(
+			ArrayList<ParsedExpression> expressions, int precendence) {
+		Stack<ParsedExpression> exp = new Stack<>();
+		for (int i = 0; i < expressions.size(); i++) {
+			ParsedExpression token = expressions.get(i);
+			if (token instanceof UnevaluatedOperator
+					&& ((UnevaluatedOperator) token).operator.precendence <= precendence) {
+				if (exp.size() == 0)
+					throw new RuntimeException(/* LOWPRI-E */);
+				System.out.println("Unevaluated Operator: " + token);
+				ParsedExpression first = exp.pop();
+				i++;
+				ParsedExpression second = expressions.get(i);
+				UnevaluatedOperator op = (UnevaluatedOperator) token;
+				exp.push(new ParsedBinaryOperation(first, second,
+						op.operator));
+			} else {
+				exp.push(token);
 			}
 		}
-		List<ParsedExpression> expressions = new ArrayList<>();
+		return new ArrayList<>(exp);
+	}
+	private static ArrayList<ParsedExpression> removeUnary(
+			ArrayList<ParsedExpression> expressions) {
+		ArrayList<ParsedExpression> expressionsWoUO = new ArrayList<>();
+		for (int i = 0; i < expressions.size(); i++) {
+			if (expressions.get(i) instanceof UnevaluatedOperator) {
+				UnevaluatedOperator uneop = (UnevaluatedOperator) expressions
+						.get(i);
+				if (i == 0
+						|| expressions.get(i - 1) instanceof UnevaluatedOperator) {
+					if (uneop.operator.equals("+")) {
+						i++;
+						continue;
+					} else if (uneop.operator.equals("-")) {
+						i++;
+						ParsedExpression next = expressions.get(i);
+						expressionsWoUO.add(ParsedBinaryOperation
+								.getNegation(next));
+					}
+				} else {
+					expressionsWoUO.add(expressions.get(i));
+				}
+			} else {
+				expressionsWoUO.add(expressions.get(i));
+			}
+		}
+		return expressionsWoUO;
+	}
+	private static ArrayList<ParsedExpression> tokenize(List<String> list) {
+		boolean expectsValue = true;
+		ArrayList<ParsedExpression> expressions = new ArrayList<>();
+		System.out.println("Parsing " + list);
 		for (String token : list) {
 			switch (token.charAt(0)) {
 				case '0':
@@ -113,81 +157,29 @@ public class ExpressionParser {
 					break;
 				case '_':
 					expressions.add(VariableIdentifier.getInstance(token));
+					break;
+				case '(':
+					expressions
+							.add(parseExpression(Parser
+									.tokenize42(Language
+											.deparenthesize(token))));
+					break;
 			}
 		}
-		ArrayList<ParsedExpression> expressionsWoUO = new ArrayList<>();
-		for (int i = 0; i < expressions.size(); i++) {
-			if (expressions.get(i) instanceof UnevaluatedOperator) {
-				UnevaluatedOperator uneop = (UnevaluatedOperator) expressions
-						.get(i);
-				if (i == 0
-						|| expressions.get(i - 1) instanceof UnevaluatedOperator) {
-					if (uneop.operator.equals("+")) {
-						i++;
-						continue;
-					} else if (uneop.operator.equals("-")) {
-						i++;
-						ParsedExpression next = expressions.get(i);
-						expressionsWoUO.add(ParsedBinaryOperation
-								.getNegation(next));
-					}
-				}
-			}
-		}
-		Stack<ParsedExpression> exp = new Stack<>();
-		for (int i = 0; i < expressionsWoUO.size(); i++) {
-			ParsedExpression token = expressionsWoUO.get(i);
-			if (token instanceof UnevaluatedOperator) {
-				if (exp.size() == 0)
-					throw new RuntimeException(/* LOWPRI-E */);
-				ParsedExpression first = exp.pop();
-				i++;
-				ParsedExpression second = expressionsWoUO.get(i);
-				UnevaluatedOperator op = (UnevaluatedOperator) token;
-				exp.push(new ParsedBinaryOperation(first, second,
-						op.operator));
-			} else {
-				exp.push(token);
-			}
-		}
-		ArrayList<ParsedExpression> expressionsApartfromPM = new ArrayList<>(
-				exp);
-		exp = new Stack<>();
-		for (int i = 0; i < expressionsApartfromPM.size(); i++) {
-			ParsedExpression token = expressionsApartfromPM.get(i);
-			if (token instanceof UnevaluatedOperator) {
-				if (exp.size() == 0)
-					throw new RuntimeException(/* LOWPRI-E */);
-				ParsedExpression first = exp.pop();
-				i++;
-				ParsedExpression second = expressionsApartfromPM.get(i);
-				UnevaluatedOperator op = (UnevaluatedOperator) token;
-				exp.push(new ParsedBinaryOperation(first, second,
-						op.operator));
-			} else {
-				exp.push(token);
-			}
-		}
-		if (exp.size() != 1) throw new RuntimeException(/* LOWPRI-E */);
-		return exp.pop();
+		return expressions;
 	}
 	public static GenericType parseType(String name) {
 		if (name.startsWith("_"))
 			return new TypeVariable(VariableIdentifier.getInstance(name));
-		else if (name.startsWith("(")) {
+		while (name.startsWith("("))
 			name = Language.deparenthesize(name);
-			return parseStructType(Parser.tokenize42(name));
-		} else {
-			return parsePrimitiveType(name);
-		}
-	}
-	private static PrimitiveType parsePrimitiveType(String name) {
 		for (PrimitiveType type : PrimitiveType.values()) {
 			if (type.typeID().equals(name)) return type;
 		}
-		throw new RuntimeException(/* LOWPRI-E */);
+		return parseStructType(Parser.tokenize42(name));
 	}
 	private static GenericType parseStructType(List<String> line) {
+		System.out.println("Parsing struct type = " + line);
 		ArrayList<String> structExpression = new ArrayList<>();
 		int i = 0;
 		for (; i < line.size() && !line.get(i).equals(";")
@@ -199,9 +191,10 @@ public class ExpressionParser {
 		// what would a structure that takes a (array of _k) as a type
 		// variable be?)
 		Kind arguments = null;
-		if (line.get(i).equals("of")) {
+		if (i < line.size() && line.get(i).equals("of")) {
 			i++;
 			for (; i < line.size() && !line.get(i).equals(";"); i++) {
+				if (Language.isListElement(line.get(i))) continue;
 				GenericType var = parseType(line.get(i));
 				switch (var.kind()) {
 					case CONCRETE:
@@ -236,5 +229,30 @@ public class ExpressionParser {
 		return new GenericStructureType(structExpression, typeVariables
 				.stream().map(x -> (TypeVariable) x)
 				.collect(Collectors.toList()));
+	}
+	private static class UnevaluatedOperator implements ParsedExpression {
+		public Operation operator;
+		public UnevaluatedOperator(Operation operator) {
+			this.operator = operator;
+		}
+		@Override
+		public Expression contextualize(StaticEnvironment env) {
+			return null;
+			// Should never be called
+		}
+		@Override
+		public SentenceType type() {
+			// should never be called
+			return null;
+		}
+		@Override
+		public String toSourceCode() {
+			// should never be called
+			return operator.toSourceCode();
+		}
+		@Override
+		public String toString() {
+			return toSourceCode();
+		}
 	}
 }

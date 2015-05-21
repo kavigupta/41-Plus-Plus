@@ -17,7 +17,7 @@ import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 
 public class StatementParser {
-	public static ParsedStatement parseCompleteStatement(
+	public static Sentence parseCompleteStatement(
 			List<List<String>> currentPhrases) {
 		ParsedExpression condition;
 		switch (currentPhrases.get(0).get(0)) {
@@ -71,20 +71,23 @@ public class StatementParser {
 						new ParsedStatementSeries(ifso),
 						new ParsedStatementSeries(ifelse));
 		}
+		if (currentPhrases.size() == 1)
+			return parseStatement(currentPhrases.get(0));
 		List<ParsedStatement> statements = new ArrayList<>();
 		for (int i = 0; i < currentPhrases.size(); i++) {
 			Sentence s = parseStatement(currentPhrases.get(i));
 			if (!(s instanceof ParsedStatement))
 				throw new RuntimeException(/*
-									 * LOWPRI-E Declarations
-									 * are not allowed in if
-									 * statements.
+									 * Compound statements do not allow
+									 * declarations
 									 */);
 			statements.add((ParsedStatement) s);
 		}
 		return new ParsedStatementSeries(statements);
 	}
 	private static Sentence parseStatement(List<String> line) {
+		line = new ArrayList<>(line);
+		line.remove(line.size() - 1);
 		switch (line.get(0)) {
 			case "Run":
 				line.remove(0);
@@ -128,19 +131,20 @@ public class StatementParser {
 				|| !line.get(5).equals("to"))
 			throw new RuntimeException(/* LOWPRI-E */);
 		String field = line.get(2);
-		ParsedExpression expr = ExpressionParser.parseExpression(line);
 		VariableIdentifier name = VariableIdentifier.getInstance(line.get(4));
 		line.subList(0, 6).clear();
+		ParsedExpression expr = ExpressionParser.parseExpression(line);
 		return field.equals("value") ? new ParsedRedefinition(name, expr)
 				: new ParsedFieldAssignment(name,
 						VariableIdentifier.getInstance(field), expr);
 	}
 	private static Sentence parseDefinition(List<String> line) {
+		System.out.println("Line:" + line);
 		/*
 		 * Define a[n] <type> called <name>( with a <field1> of <value1>, a
 		 * <field2> of <value2>, ...)?.
 		 */
-		if (!Language.isArticle(line.get(1)) || line.get(3).equals("called"))
+		if (!Language.isArticle(line.get(1)) || !line.get(3).equals("called"))
 			throw new RuntimeException(/* LOWPRI-E */);
 		String type = Language.deparenthesize(line.get(2));
 		if (type.equals("function"))
@@ -154,13 +158,15 @@ public class StatementParser {
 			String field = line.get(i - 1);
 			ArrayList<String> tokens = new ArrayList<>();
 			i++;
-			while (!line.get(i).equals(",")) {
+			while (i < line.size() && !line.get(i).equals(",")
+					&& !line.get(i).equals("and")) {
 				tokens.add(line.get(i));
 				i++;
 			}
 			fields.add(VariableIdentifier.getInstance(field),
 					ExpressionParser.parseExpression(tokens));
 		}
+		System.out.println(fields.pairs);
 		GenericType genericType = ExpressionParser.parseType(type);
 		if (!(genericType instanceof ConcreteType))
 			throw new RuntimeException(/* LOWPRI-E */);
