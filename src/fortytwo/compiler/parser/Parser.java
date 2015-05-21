@@ -8,6 +8,7 @@ import lib.standard.collections.Pair;
 import fortytwo.compiler.parsed.sentences.Sentence;
 
 public class Parser {
+	// TODO implement VB
 	private Parser() {}
 	public static List<Sentence> parse(String text) {
 		List<String> tokens = tokenize42(text);
