@@ -1,7 +1,6 @@
 package fortytwo.compiler.parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
@@ -18,80 +17,7 @@ import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 
 public class StatementParser {
-	public static Sentence parseCompleteStatement(
-			List<List<String>> currentPhrases) {
-		if (currentPhrases.size() == 0)
-			return new ParsedStatementSeries(Arrays.asList());
-		ParsedExpression condition;
-		switch (currentPhrases.get(0).get(0)) {
-			case "While":
-				currentPhrases.get(0).remove(0);
-				condition = ExpressionParser.parseExpression(currentPhrases
-						.get(0));
-				List<ParsedStatement> statements = new ArrayList<>();
-				for (int i = 1; i < currentPhrases.size(); i++) {
-					Sentence s = parseStatement(currentPhrases.get(i));
-					if (!(s instanceof ParsedStatement))
-						throw new RuntimeException(/*
-											 * LOWPRI-E Declarations
-											 * are not allowed in
-											 * while statements.
-											 */);
-					statements.add((ParsedStatement) s);
-				}
-				return new ParsedWhileLoop(condition,
-						new ParsedStatementSeries(statements));
-			case "If":
-				return parseIfStatement(currentPhrases);
-		}
-		if (currentPhrases.size() == 1)
-			return parseStatement(currentPhrases.get(0));
-		List<ParsedStatement> statements = new ArrayList<>();
-		for (int i = 0; i < currentPhrases.size(); i++) {
-			Sentence s = parseStatement(currentPhrases.get(i));
-			if (!(s instanceof ParsedStatement))
-				throw new RuntimeException(/*
-									 * Compound statements do not allow
-									 * declarations
-									 */);
-			statements.add((ParsedStatement) s);
-		}
-		return new ParsedStatementSeries(statements);
-	}
-	private static ParsedIfElse parseIfStatement(
-			List<List<String>> currentPhrases) {
-		currentPhrases.get(0).remove(0);
-		ParsedExpression condition = ExpressionParser
-				.parseExpression(currentPhrases.get(0));
-		List<List<String>> ifso = new ArrayList<>();
-		int i = 1;
-		int ifnest = 1;
-		for (; i < currentPhrases.size(); i++) {
-			System.out.println("IFNest" + ifnest + "\t"
-					+ currentPhrases.get(i));
-			if (currentPhrases.get(i).get(0).equals("If"))
-				ifnest++;
-			else if (currentPhrases.get(i).get(0).equals("otherwise")) {
-				ifnest--;
-				if (ifnest == 0) break;
-			}
-			ifso.add(currentPhrases.get(i));
-		}
-		List<List<String>> ifelse = new ArrayList<>();
-		for (i++; i < currentPhrases.size(); i++) {
-			ifelse.add(currentPhrases.get(i));
-		}
-		Sentence ifsoS = parseCompleteStatement(ifso);
-		Sentence ifelseS = parseCompleteStatement(ifelse);
-		if (!(ifsoS instanceof ParsedStatement)
-				|| !(ifelseS instanceof ParsedStatement))
-			throw new RuntimeException(/* LOWPRI-E */);
-		return ParsedIfElse.getInstance(condition, ParsedStatementSeries
-				.getInstance((ParsedStatement) ifsoS),
-				ParsedStatementSeries
-						.getInstance((ParsedStatement) ifelseS));
-	}
-	private static Sentence parseStatement(List<String> line) {
+	public static Sentence parseStatement(List<String> line) {
 		line = new ArrayList<>(line);
 		line.remove(line.size() - 1);
 		switch (line.get(0)) {

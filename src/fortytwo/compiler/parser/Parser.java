@@ -1,14 +1,20 @@
 package fortytwo.compiler.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
+import fortytwo.compiler.parsed.statements.ParsedIfElse;
+import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.compiler.parsed.statements.ParsedStatementSeries;
+import fortytwo.compiler.parsed.statements.ParsedWhileLoop;
+import fortytwo.language.Language;
 
 public class Parser {
-	// TODO implement VB
 	private Parser() {}
 	public static List<Sentence> parse(String text) {
 		List<String> tokens = tokenize42(text);
@@ -22,17 +28,73 @@ public class Parser {
 				current = new ArrayList<>();
 			}
 		}
-		List<Sentence> statements = new ArrayList<>();
-		List<List<String>> currentPhrases = new ArrayList<>();
-		for (int i = 0; i < phrases.size(); i++) {
-			currentPhrases.add(phrases.get(i));
-			if (phrases.get(i).get(phrases.get(i).size() - 1).equals(".")) {
-				statements.add(StatementParser
-						.parseCompleteStatement(currentPhrases));
-				currentPhrases.clear();
-			}
+		return parse(phrases);
+	}
+	public static List<Sentence> parse(List<List<String>> phrases) {
+		List<Sentence> sentences = new ArrayList<>();
+		while (phrases.size() != 0) {
+			sentences.add(pop(phrases));
 		}
-		return statements;
+		return sentences;
+	}
+	public static Sentence pop(List<List<String>> phrases) {
+		switch (phrases.get(0).get(0)) {
+			case "If":
+				return popIf(phrases);
+			case "While":
+				return popWhile(phrases);
+			case "Do":
+				return popSeries(phrases);
+			default:
+				return popSentence(phrases);
+		}
+	}
+	public static Sentence popSentence(List<List<String>> phrases) {
+		return StatementParser.parseStatement(phrases.remove(0));
+	}
+	public static Sentence popIf(List<List<String>> phrases) {
+		List<String> IF = phrases.remove(0);
+		IF.remove(0);
+		ParsedExpression condition = ExpressionParser.parseExpression(IF);
+		ParsedStatementSeries ifso = popSeries(phrases);
+		ParsedStatementSeries ifelse = new ParsedStatementSeries(
+				Arrays.asList());
+		if (phrases.get(0).get(0).equals("Otherwise")) {
+			phrases.remove(0); // This should just be "Otherwise:"
+			ifelse = popSeries(phrases);
+		}
+		return ParsedIfElse.getInstance(condition, ifso, ifelse);
+	}
+	private static Sentence popWhile(List<List<String>> phrases) {
+		List<String> WHILE = phrases.remove(0);
+		WHILE.remove(0);
+		ParsedStatementSeries whileTrue = popSeries(phrases);
+		return new ParsedWhileLoop(ExpressionParser.parseExpression(WHILE),
+				whileTrue);
+	}
+	private static ParsedStatementSeries popSeries(List<List<String>> phrases) {
+		phrases.remove(0); // remove brace
+		List<List<String>> inBraces = new ArrayList<>();
+		int braces = 1;
+		for (int i = 0; i < phrases.size(); i++) {
+			if (Language.isOpeningBrace(phrases.get(i))) braces++;
+			if (Language.isClosingBrace(phrases.get(i))) {
+				braces--;
+				if (braces == 0) {
+					List<Sentence> sentences = parse(inBraces);
+					List<ParsedStatement> statements = sentences
+							.stream()
+							.map(x -> {
+								if (x instanceof ParsedStatement)
+									return (ParsedStatement) x;
+								throw new RuntimeException(/* LOWPRI-E */);
+							}).collect(Collectors.toList());
+					return new ParsedStatementSeries(statements);
+				}
+			}
+			inBraces.add(phrases.remove(0));
+		}
+		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	public static List<String> tokenize42(String text) {
 		text = text.replaceAll("(?<op>(//)|\\+|-|\\*|/|%)", " ${op} ")

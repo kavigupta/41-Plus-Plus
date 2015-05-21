@@ -1,5 +1,6 @@
 package fortytwo.language;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -72,5 +73,11 @@ public class Language {
 	}
 	public static boolean isListElement(String token) {
 		return token.equals(",") || token.equals("and");
+	}
+	public static boolean isOpeningBrace(List<String> list) {
+		return list.equals(Arrays.asList("Do", "the", "following", "."));
+	}
+	public static boolean isClosingBrace(List<String> list) {
+		return list.equals(Arrays.asList("That's", "all", "."));
 	}
 }
