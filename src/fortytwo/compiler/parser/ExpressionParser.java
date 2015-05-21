@@ -11,6 +11,7 @@ import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
 import fortytwo.language.Language;
 import fortytwo.language.Operation;
+import fortytwo.language.Resources;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.*;
@@ -25,7 +26,6 @@ public class ExpressionParser {
 	public static ParsedExpression parseExpression(List<String> list) {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
-		System.out.println("Function Name: " + function.name);
 		if (function.name.function.size() == 1
 				&& function.name.function.get(0) instanceof FunctionArgument)
 			return function.arguments.get(0);
@@ -33,13 +33,9 @@ public class ExpressionParser {
 	}
 	public static ParsedExpression parsePureExpression(List<String> list) {
 		ArrayList<ParsedExpression> expressions = tokenize(list);
-		System.out.println("Original Expression List: " + expressions);
 		expressions = removeUnary(expressions);
-		System.out.println("Expression List without unary +/-: "
-				+ expressions);
 		for (int precendence = 0; precendence <= Operation.MAX_PRECDENCE; precendence++) {
 			expressions = removeBinary(expressions, precendence);
-			System.out.println("With next pass: " + expressions);
 		}
 		if (expressions.size() != 1)
 			throw new RuntimeException(/* LOWPRI-E */);
@@ -54,7 +50,6 @@ public class ExpressionParser {
 					&& ((UnevaluatedOperator) token).operator.precendence <= precendence) {
 				if (exp.size() == 0)
 					throw new RuntimeException(/* LOWPRI-E */);
-				System.out.println("Unevaluated Operator: " + token);
 				ParsedExpression first = exp.pop();
 				i++;
 				ParsedExpression second = expressions.get(i);
@@ -76,10 +71,11 @@ public class ExpressionParser {
 						.get(i);
 				if (i == 0
 						|| expressions.get(i - 1) instanceof UnevaluatedOperator) {
-					if (uneop.operator.equals("+")) {
+					if (uneop.operator.equals(Resources.ADDITION_SIGN)) {
 						i++;
 						continue;
-					} else if (uneop.operator.equals("-")) {
+					} else if (uneop.operator
+							.equals(Resources.SUBTRACTION_SIGN)) {
 						i++;
 						ParsedExpression next = expressions.get(i);
 						expressionsWoUO.add(ParsedBinaryOperation
@@ -97,7 +93,6 @@ public class ExpressionParser {
 	private static ArrayList<ParsedExpression> tokenize(List<String> list) {
 		boolean expectsValue = true;
 		ArrayList<ParsedExpression> expressions = new ArrayList<>();
-		System.out.println("Parsing " + list);
 		for (String token : list) {
 			switch (token.charAt(0)) {
 				case '0':
@@ -118,7 +113,7 @@ public class ExpressionParser {
 								.getInstance(new BigDecimal(token)));
 						break;
 					} catch (NumberFormatException e) {
-						throw new RuntimeException(/* LOWPRI-E */);
+						throw new RuntimeException(/* LOWPRI-E */token);
 					}
 				case '\'':
 					expressions.add(LiteralString.getInstance(token
@@ -147,10 +142,10 @@ public class ExpressionParser {
 							.add(new UnevaluatedOperator(Operation.MOD));
 					break;
 				case '/':
-					if (token.equals("//"))
+					if (token.equals(Resources.FLOORDIV_SIGN))
 						expressions.add(new UnevaluatedOperator(
 								Operation.DIVIDE_FLOOR));
-					else if (token.equals("/"))
+					else if (token.equals(Resources.DIV_SIGN))
 						expressions.add(new UnevaluatedOperator(
 								Operation.DIVIDE));
 					else throw new RuntimeException(/* LOWPRI-E */);
@@ -169,9 +164,9 @@ public class ExpressionParser {
 		return expressions;
 	}
 	public static GenericType parseType(String name) {
-		if (name.startsWith("_"))
+		if (name.startsWith(Resources.VARIABLE_START))
 			return new TypeVariable(VariableIdentifier.getInstance(name));
-		while (name.startsWith("("))
+		while (name.startsWith(Resources.OPEN_PAREN))
 			name = Language.deparenthesize(name);
 		for (PrimitiveType type : PrimitiveType.values()) {
 			if (type.typeID().equals(name)) return type;
@@ -179,11 +174,9 @@ public class ExpressionParser {
 		return parseStructType(Parser.tokenize42(name));
 	}
 	private static GenericType parseStructType(List<String> line) {
-		System.out.println("Parsing struct type = " + line);
 		ArrayList<String> structExpression = new ArrayList<>();
 		int i = 0;
-		for (; i < line.size() && !line.get(i).equals(";")
-				&& !line.get(i).equals("of"); i++) {
+		for (; i < line.size() && !line.get(i).equals(Resources.OF); i++) {
 			structExpression.add(line.get(i));
 		}
 		List<GenericType> typeVariables = new ArrayList<>();
@@ -191,9 +184,9 @@ public class ExpressionParser {
 		// what would a structure that takes a (array of _k) as a type
 		// variable be?)
 		Kind arguments = null;
-		if (i < line.size() && line.get(i).equals("of")) {
+		if (i < line.size() && line.get(i).equals(Resources.OF)) {
 			i++;
-			for (; i < line.size() && !line.get(i).equals(";"); i++) {
+			for (; i < line.size(); i++) {
 				if (Language.isListElement(line.get(i))) continue;
 				GenericType var = parseType(line.get(i));
 				switch (var.kind()) {

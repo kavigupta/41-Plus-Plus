@@ -8,6 +8,7 @@ import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
+import fortytwo.vm.expressions.LiteralArray;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralString;
 
@@ -17,8 +18,14 @@ public class FunctionStringToArray extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		env.machine.println(((LiteralString) arguments.get(0)).contents);
-		return null;
+		String val = ((LiteralString) arguments.get(0)).contents;
+		LiteralArray larray = new LiteralArray(PrimitiveType.STRING,
+				val.length());
+		for (int i = 0; i < val.length(); i++) {
+			larray.set(i + 1,
+					new LiteralString(Character.toString(val.charAt(i))));
+		}
+		return larray;
 	}
 	@Override
 	public PrimitiveType outputType() {

@@ -3,6 +3,7 @@ package fortytwo.compiler.parsed.expressions;
 import java.math.BigDecimal;
 
 import fortytwo.language.Operation;
+import fortytwo.language.SourceCode;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.BinaryOperation;
 import fortytwo.vm.expressions.Expression;
@@ -39,8 +40,7 @@ public class ParsedBinaryOperation implements ParsedExpression {
 	}
 	@Override
 	public String toSourceCode() {
-		return "(" + first.toSourceCode() + operation.toSourceCode()
-				+ second.toSourceCode() + ")";
+		return SourceCode.display(this);
 	}
 	@Override
 	public String toString() {

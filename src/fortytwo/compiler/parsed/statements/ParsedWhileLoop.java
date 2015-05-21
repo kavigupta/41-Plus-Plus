@@ -27,4 +27,8 @@ public class ParsedWhileLoop implements ParsedStatement {
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}
+	@Override
+	public boolean isSimple() {
+		return false;
+	}
 }

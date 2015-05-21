@@ -19,4 +19,8 @@ public class StructureDeclaration implements Declaration {
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}
+	@Override
+	public boolean isSimple() {
+		return true;
+	}
 }

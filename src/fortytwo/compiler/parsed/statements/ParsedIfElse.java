@@ -32,4 +32,8 @@ public class ParsedIfElse implements ParsedStatement {
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}
+	@Override
+	public boolean isSimple() {
+		return false;
+	}
 }

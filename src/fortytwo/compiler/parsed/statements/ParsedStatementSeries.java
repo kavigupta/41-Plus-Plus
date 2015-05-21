@@ -33,4 +33,10 @@ public class ParsedStatementSeries implements ParsedStatement {
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}
+	@Override
+	public boolean isSimple() {
+		if (statements.size() > 1) return false;
+		if (statements.size() == 0) return true;
+		return statements.get(0).isSimple();
+	}
 }

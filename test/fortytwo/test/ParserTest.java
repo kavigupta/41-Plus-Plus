@@ -17,8 +17,8 @@ public class ParserTest {
 				Parser.tokenize42("Define a number called _x."));
 		assertEquals(
 				Arrays.asList("If", "4.0", "+", "4.0", "=", "2", ":",
-						"Dothis", ";", "otherwise", ":", "Dothat", "."),
-				Parser.tokenize42("If 4.0 + 4.0 = 2: Dothis; otherwise: Dothat."));
+						"Dothis", ".", "Otherwise", ":", "Dothat", "."),
+				Parser.tokenize42("If 4.0 + 4.0 = 2: Dothis. Otherwise: Dothat."));
 		assertEquals(
 				Arrays.asList("Define", "a", "string", "called", "_x",
 						"with", "a", "value", "of", "'()[]'\r\n'", "."),
@@ -105,14 +105,24 @@ public class ParserTest {
 	@Test
 	public void ifTest() {
 		validateLineParse("If (_x is greater than 0): Set the value of _x to 1.");
-		validateLineParse("If (_x is greater than 0): If (_y is greater than 2):"
-				+ " Set the value of _x to 1; otherwise: Do nothing; otherwise: Set the value of _y to 3.");
-		validateLineParse("If (_x is greater than 0): Set the value of _x to 1; otherwise: Set the value of _x to 2.");
-		validateLineParse("If (_x is greater than 0): Set the value of _x to 1; Tell me what _x is; otherwise: Set the value of _x to 2.");
+		validateLineParse("If (_x is greater than 0): Do the following: If (_y is greater than 2):"
+				+ " Set the value of _x to 1. That's all. Otherwise: Set the value of _y to 3.");
+		validateLineParse("If (_x is greater than 0): Set the value of _x to 1. Otherwise: Set the value of _x to 2.");
+		validateLineParse("If (_x is greater than 0): Do the following: Set the value of _x to 1. Tell me what _x is. That's all. Otherwise: Set the value of _x to 2.");
 	}
 	@Test
 	public void whileTest() {
-		validateLineParse("While (_i is at most 10): If (i is greater than 2): Perform some function on _i; Set the value of _i to (_i+1).");
+		assertEquals(
+				"While (_i is at most 10): "
+						+ "Do the following: If (i is greater than 2): "
+						+ "Do the following: "
+						+ "Perform some function on _i. Set the value of _i to (_i+1). "
+						+ "That's all. That's all.",
+				cdLoopLine("While (_i is at most 10): "
+						+ "If (i is greater than 2): "
+						+ "Do the following: "
+						+ "Perform some function on _i. Set the value of _i to (_i+1). "
+						+ "That's all."));
 	}
 	public static void validateLineParse(String line) {
 		assertEquals(line, cdLoopLine(line));

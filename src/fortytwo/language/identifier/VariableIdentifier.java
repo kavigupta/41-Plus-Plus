@@ -2,6 +2,7 @@ package fortytwo.language.identifier;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.Language;
+import fortytwo.language.Resources;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
@@ -10,12 +11,12 @@ import fortytwo.vm.expressions.LiteralExpression;
 
 public class VariableIdentifier implements ParsedExpression, Expression {
 	public static final VariableIdentifier VALUE = new VariableIdentifier(
-			"value");
+			Resources.VALUE);
 	// LOWPRI quick and dirty solution. Fix later
 	private StaticEnvironment env;
 	public final String name;
 	public static VariableIdentifier getInstance(String name) {
-		if (name.equals("value")) return VALUE;
+		if (name.equals(Resources.VALUE)) return VALUE;
 		if (!Language.isValidVariableIdentifier(name))
 			throw new RuntimeException(/* LOWPRI-E */);
 		return new VariableIdentifier(name);

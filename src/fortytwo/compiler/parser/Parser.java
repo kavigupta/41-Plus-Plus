@@ -13,6 +13,7 @@ import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parsed.statements.ParsedStatementSeries;
 import fortytwo.compiler.parsed.statements.ParsedWhileLoop;
 import fortytwo.language.Language;
+import fortytwo.language.Resources;
 
 public class Parser {
 	private Parser() {}
@@ -23,7 +24,8 @@ public class Parser {
 		for (int i = 0; i < tokens.size(); i++) {
 			String token = tokens.get(i);
 			current.add(token);
-			if (token.equals(".") || token.equals(";") || token.equals(":")) {
+			if (token.equals(Resources.PERIOD)
+					|| token.equals(Resources.COLON)) {
 				phrases.add(current);
 				current = new ArrayList<>();
 			}
@@ -38,12 +40,14 @@ public class Parser {
 		return sentences;
 	}
 	public static Sentence pop(List<List<String>> phrases) {
+		if (phrases.size() == 0)
+			return new ParsedStatementSeries(Arrays.asList());
 		switch (phrases.get(0).get(0)) {
-			case "If":
+			case Resources.IF:
 				return popIf(phrases);
-			case "While":
+			case Resources.WHILE:
 				return popWhile(phrases);
-			case "Do":
+			case Resources.DO:
 				return popSeries(phrases);
 			default:
 				return popSentence(phrases);
@@ -59,7 +63,8 @@ public class Parser {
 		ParsedStatementSeries ifso = popSeries(phrases);
 		ParsedStatementSeries ifelse = new ParsedStatementSeries(
 				Arrays.asList());
-		if (phrases.get(0).get(0).equals("Otherwise")) {
+		if (phrases.size() > 0
+				&& phrases.get(0).get(0).equals(Resources.OTHERWISE)) {
 			phrases.remove(0); // This should just be "Otherwise:"
 			ifelse = popSeries(phrases);
 		}
@@ -73,12 +78,21 @@ public class Parser {
 				whileTrue);
 	}
 	private static ParsedStatementSeries popSeries(List<List<String>> phrases) {
+		if (phrases.size() == 0)
+			return new ParsedStatementSeries(Arrays.asList());
+		if (!Language.isOpeningBrace(phrases.get(0))) {
+			Sentence sent = pop(phrases);
+			if (!(sent instanceof ParsedStatement))
+				throw new RuntimeException(/* LOWPRI-E */);
+			return ParsedStatementSeries.getInstance((ParsedStatement) sent);
+		}
 		phrases.remove(0); // remove brace
 		List<List<String>> inBraces = new ArrayList<>();
 		int braces = 1;
-		for (int i = 0; i < phrases.size(); i++) {
-			if (Language.isOpeningBrace(phrases.get(i))) braces++;
-			if (Language.isClosingBrace(phrases.get(i))) {
+		while (phrases.size() > 0) {
+			if (Language.isOpeningBrace(phrases.get(0))) braces++;
+			if (Language.isClosingBrace(phrases.get(0))) {
+				phrases.remove(0);
 				braces--;
 				if (braces == 0) {
 					List<Sentence> sentences = parse(inBraces);
@@ -97,13 +111,15 @@ public class Parser {
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	public static List<String> tokenize42(String text) {
-		text = text.replaceAll("(?<op>(//)|\\+|-|\\*|/|%)", " ${op} ")
-				.replaceAll("\\s+", " ")
-				.replaceAll("(?<punct>\\.|;|:|,)(?!\\d)", " ${punct} ")
+		text = text.replaceAll(Resources.OP_FIND, Resources.OP_REPLACE)
+				.replaceAll(Resources.WHITESPACE, Resources.SPACE)
+				.replaceAll(Resources.PUNCT_FIND, Resources.PUNCT_REPLACE)
 				.trim()
-				+ " ";
-		return tokenizeRecursive(text).stream()
-				.filter(x -> x.replaceAll("\\s", "").length() != 0)
+				+ Resources.SPACE;
+		return tokenizeRecursive(text)
+				.stream()
+				.filter(x -> x.replaceAll(Resources.WHITESPACE,
+						Resources.SPACE).length() != 0)
 				.collect(Collectors.toList());
 	}
 	private static List<String> tokenizeRecursive(String text) {

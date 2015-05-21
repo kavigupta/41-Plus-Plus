@@ -11,4 +11,5 @@ public interface Sentence extends ParsedConstruct {
 	public SentenceType type();
 	@Override
 	public String toSourceCode();
+	public boolean isSimple();
 }

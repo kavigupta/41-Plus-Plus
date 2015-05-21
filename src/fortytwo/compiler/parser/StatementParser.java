@@ -10,6 +10,7 @@ import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.compiler.parsed.sentences.Sentence.SentenceType;
 import fortytwo.compiler.parsed.statements.*;
 import fortytwo.language.Language;
+import fortytwo.language.Resources;
 import fortytwo.language.field.Field;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
@@ -21,17 +22,17 @@ public class StatementParser {
 		line = new ArrayList<>(line);
 		line.remove(line.size() - 1);
 		switch (line.get(0)) {
-			case "Run":
+			case Resources.RUN:
 				line.remove(0);
 				ParsedExpression e = ExpressionParser.parseExpression(line);
 				if (e.type() == SentenceType.PURE_EXPRESSION)
 					throw new RuntimeException(/* LOWPRI-E */);
 				return e;
-			case "Define":
+			case Resources.DEFINE:
 				return parseDefinition(line);
-			case "Set":
+			case Resources.SET:
 				return parseAssignment(line);
-			case "Exit":
+			case Resources.EXIT:
 				return parseReturn(line);
 			default:
 				return parseVoidFunctionCall(line);
@@ -39,10 +40,12 @@ public class StatementParser {
 	}
 	private static FunctionReturn parseReturn(List<String> line) {
 		/* Exit the function( and output <output>)?. */
-		if (!line.get(1).equals("the") || !line.get(2).equals("function"))
+		if (!line.get(1).equals(Resources.THE)
+				|| !line.get(2).equals(Resources.DECL_FUNCTION))
 			throw new RuntimeException(/* LOWPRI-E */);
 		if (line.size() == 3) return new FunctionReturn(null);
-		if (!line.get(3).equals("and") || !line.get(4).equals("output"))
+		if (!line.get(3).equals(Resources.AND)
+				|| !line.get(4).equals(Resources.OUTPUT))
 			throw new RuntimeException(/* LOWPRI-E */);
 		line.subList(0, 5).clear();
 		return new FunctionReturn(ExpressionParser.parseExpression(line));
@@ -59,46 +62,45 @@ public class StatementParser {
 		/*
 		 * Set the <field> of <name> to <value>.
 		 */
-		if (!line.get(1).equals("the") || !line.get(3).equals("of")
-				|| !line.get(5).equals("to"))
+		if (!line.get(1).equals(Resources.THE)
+				|| !line.get(3).equals(Resources.OF)
+				|| !line.get(5).equals(Resources.TO))
 			throw new RuntimeException(/* LOWPRI-E */);
 		String field = line.get(2);
 		VariableIdentifier name = VariableIdentifier.getInstance(line.get(4));
 		line.subList(0, 6).clear();
 		ParsedExpression expr = ExpressionParser.parseExpression(line);
-		return field.equals("value") ? new ParsedRedefinition(name, expr)
-				: new ParsedFieldAssignment(name,
-						VariableIdentifier.getInstance(field), expr);
+		return field.equals(Resources.VALUE) ? new ParsedRedefinition(name,
+				expr) : new ParsedFieldAssignment(name,
+				VariableIdentifier.getInstance(field), expr);
 	}
 	private static Sentence parseDefinition(List<String> line) {
-		System.out.println("Line:" + line);
 		/*
 		 * Define a[n] <type> called <name>( with a <field1> of <value1>, a
 		 * <field2> of <value2>, ...)?.
 		 */
-		if (!Language.isArticle(line.get(1)) || !line.get(3).equals("called"))
+		if (!Language.isArticle(line.get(1))
+				|| !line.get(3).equals(Resources.CALLED))
 			throw new RuntimeException(/* LOWPRI-E */);
 		String type = Language.deparenthesize(line.get(2));
-		if (type.equals("function"))
+		if (type.equals(Resources.DECL_FUNCTION))
 			return ConstructionParser.parseFunctionDefinition(line);
-		if (type.equals("type"))
+		if (type.equals(Resources.TYPE))
 			return ConstructionParser.parseStructDefinition(line);
 		String name = line.get(4);
 		ParsedVariableRoster fields = new ParsedVariableRoster();
 		for (int i = 5; i < line.size(); i++) {
-			if (!line.get(i).equals("of")) continue;
+			if (!line.get(i).equals(Resources.OF)) continue;
 			String field = line.get(i - 1);
 			ArrayList<String> tokens = new ArrayList<>();
 			i++;
-			while (i < line.size() && !line.get(i).equals(",")
-					&& !line.get(i).equals("and")) {
+			while (i < line.size() && !Language.isListElement(line.get(i))) {
 				tokens.add(line.get(i));
 				i++;
 			}
 			fields.add(VariableIdentifier.getInstance(field),
 					ExpressionParser.parseExpression(tokens));
 		}
-		System.out.println(fields.pairs);
 		GenericType genericType = ExpressionParser.parseType(type);
 		if (!(genericType instanceof ConcreteType))
 			throw new RuntimeException(/* LOWPRI-E */);

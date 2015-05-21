@@ -1,8 +1,11 @@
 package fortytwo.language;
 
+import static fortytwo.language.Resources.*;
+
 public enum Operation {
-	ADD(false, "+", 2), SUBTRACT(false, "-", 2), MULTIPLY(false, "*", 1),
-	DIVIDE(true, "/", 1), DIVIDE_FLOOR(true, "//", 1), MOD(true, "%", 1);
+	ADD(false, ADDITION_SIGN, 2), SUBTRACT(false, SUBTRACTION_SIGN, 2),
+	MULTIPLY(false, MULTIPLICATION_SIGN, 1), DIVIDE(true, DIV_SIGN, 1),
+	DIVIDE_FLOOR(true, FLOORDIV_SIGN, 1), MOD(true, MOD_SIGN, 1);
 	public static final int MAX_PRECDENCE = 2;
 	public final boolean requiresSecondArgumentNotZero;
 	public final String display;

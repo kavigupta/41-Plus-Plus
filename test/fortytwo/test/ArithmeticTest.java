@@ -4,5 +4,5 @@ import org.junit.Test;
 
 public class ArithmeticTest {
 	@Test
-	public void arithmeticTest() {}
+	public void basicsTest() {}
 }

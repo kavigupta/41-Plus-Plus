@@ -9,7 +9,9 @@ import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.FunctionReturn;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
+import fortytwo.compiler.parsed.expressions.ParsedBinaryOperation;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.compiler.parsed.statements.*;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
@@ -64,14 +66,12 @@ public class SourceCode {
 		return "(" + func + ")";
 	}
 	public static String display(ParsedIfElse parsedIfElse) {
-		System.out.println("Condition: "
-				+ parsedIfElse.condition.toSourceCode());
 		return "If "
 				+ parsedIfElse.condition.toSourceCode()
 				+ ": "
-				+ parsedIfElse.ifso.toSourceCode()
+				+ wrapInBraces(parsedIfElse.ifso)
 				+ (parsedIfElse.ifelse.statements.size() == 0 ? ""
-						: ("; otherwise: " + parsedIfElse.ifelse
+						: (". Otherwise: " + parsedIfElse.ifelse
 								.toSourceCode()));
 	}
 	public static String display(ParsedRedefinition parsedRedefinition) {
@@ -79,13 +79,21 @@ public class SourceCode {
 				+ " to " + parsedRedefinition.expr.toSourceCode();
 	}
 	public static String display(ParsedStatementSeries parsedStatementSeries) {
-		return parsedStatementSeries.statements.stream()
+		if (parsedStatementSeries.statements.size() == 0) return "";
+		if (parsedStatementSeries.statements.size() == 1)
+			return parsedStatementSeries.statements.get(0).toSourceCode();
+		String total = parsedStatementSeries.statements.stream()
 				.map(x -> x.toSourceCode())
-				.reduce("", (a, b) -> a + "; " + b).substring(2);
+				.reduce("", (a, b) -> a + ". " + b);
+		return total.substring(2);
 	}
 	public static String display(ParsedWhileLoop parsedWhileLoop) {
 		return "While " + parsedWhileLoop.condition.toSourceCode() + ": "
-				+ parsedWhileLoop.statement.toSourceCode();
+				+ wrapInBraces(parsedWhileLoop.statement);
+	}
+	public static String display(ParsedBinaryOperation op) {
+		return "(" + op.first.toSourceCode() + op.operation.toSourceCode()
+				+ op.second.toSourceCode() + ")";
 	}
 	public static String display(LiteralArray literalArray) {
 		StringBuffer sbuff = new StringBuffer("[");
@@ -122,7 +130,6 @@ public class SourceCode {
 		}
 		List<String> types = st.types.stream().map(x -> x.toSourceCode())
 				.collect(Collectors.toList());
-		System.out.println("types: " + types);
 		return buff.append("of ").append(displayList(types)).append(")")
 				.toString();
 	}
@@ -134,6 +141,11 @@ public class SourceCode {
 				.map(x -> x.toSourceCode()).collect(Collectors.toList()));
 		return name.toString().trim()
 				+ (list.length() == 0 ? "" : (" of " + list));
+	}
+	private static String wrapInBraces(Sentence statement) {
+		String s = statement.toSourceCode();
+		if (statement.isSimple()) return s;
+		return "Do the following: " + s + "." + " That's all";
 	}
 	private static String parenthesizedName(List<String> name) {
 		if (name.size() == 0) return "()";
@@ -151,7 +163,6 @@ public class SourceCode {
 			items.add(Language.articleized(e.getKey().toSourceCode()
 					+ " of " + e.getValue().toSourceCode()));
 		}
-		System.out.println(items);
 		return displayList(items);
 	}
 	private static String displayReturn(ParsedExpression output) {
@@ -182,7 +193,6 @@ public class SourceCode {
 		return displayField(field.type, field.name);
 	}
 	private static String displayList(List<String> items) {
-		System.out.println("List to Display: " + items);
 		switch (items.size()) {
 			case 0:
 				return "";
@@ -195,7 +205,6 @@ public class SourceCode {
 		for (int i = 0; i < items.size() - 1; i++) {
 			s += items.get(i) + ", ";
 		}
-		System.out.println(s + "and " + items.get(items.size() - 1));
 		return s + "and " + items.get(items.size() - 1);
 	}
 	private static String displayFunctionSignature(FunctionName name,

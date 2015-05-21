@@ -7,4 +7,8 @@ import fortytwo.vm.expressions.Expression;
 public interface ParsedExpression extends ParsedStatement {
 	@Override
 	public Expression contextualize(StaticEnvironment env);
+	@Override
+	public default boolean isSimple() {
+		return true;
+	}
 }
