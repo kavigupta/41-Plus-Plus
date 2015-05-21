@@ -3,6 +3,7 @@ package fortytwo.language.type;
 import java.util.ArrayList;
 import java.util.List;
 
+import fortytwo.language.SourceCode;
 import fortytwo.vm.environment.TypeVariableRoster;
 
 public class GenericStructureType implements GenericType {
@@ -65,8 +66,8 @@ public class GenericStructureType implements GenericType {
 		} else if (!typeVariables.equals(other.typeVariables)) return false;
 		return true;
 	}
+	@Override
 	public String toSourceCode() {
-		// TODO Auto-generated method stub
-		return null;
+		return SourceCode.display(this);
 	}
 }

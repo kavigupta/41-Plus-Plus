@@ -56,6 +56,11 @@ public class Language {
 		if (name.contains(" ")) return false;
 		return name.startsWith("_");
 	}
+	public static boolean isFunctionToken(String token) {
+		if (!Character.isAlphabetic(token.charAt(0))) return false;
+		// LOWPRI rest of this: it should be fine for now
+		return true;
+	}
 	public static String parenthesize(List<String> line) {
 		if (line.size() == 0) return "";
 		if (line.size() == 1) return line.get(0);

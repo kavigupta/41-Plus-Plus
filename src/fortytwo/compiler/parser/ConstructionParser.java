@@ -28,9 +28,10 @@ public class ConstructionParser {
 		return ParsedFunctionCall.getInstance(fsig.key, fsig.value);
 	}
 	public static StructureDeclaration parseStructDefinition(List<String> line) {
+		System.out.println("Structdec " + line);
 		/*
 		 * Define a structure called <structure> of <typevar1>, <typevar2>,
-		 * and <typevar3> ; which contains a[n] <type> called <field> , a[n]
+		 * and <typevar3> which contains a[n] <type> called <field> , a[n]
 		 * <type> called <field>, ...
 		 */
 		if (!line.get(1).equals("a") || !line.get(3).equals("called"))
@@ -38,14 +39,15 @@ public class ConstructionParser {
 		line.subList(0, 4).clear();
 		ArrayList<String> structExpression = new ArrayList<>();
 		int i = 0;
-		for (; i < line.size() && !line.get(i).equals(";")
+		for (; i < line.size() && !line.get(i).equals("which")
 				&& !line.get(i).equals("of"); i++) {
 			structExpression.add(line.get(i));
 		}
+		System.out.println("StructExpress:" + structExpression);
 		List<TypeVariable> typeVariables = new ArrayList<>();
-		if (line.get(i).equals("of")) {
+		if (i < line.size() && line.get(i).equals("of")) {
 			i++;
-			for (; i < line.size() && !line.get(i).equals(";"); i++) {
+			for (; i < line.size() && !line.get(i).equals("which"); i++) {
 				if (Language.isValidVariableIdentifier(line.get(i))) {
 					typeVariables.add(new TypeVariable(VariableIdentifier
 							.getInstance(line.get(i))));
@@ -78,17 +80,29 @@ public class ConstructionParser {
 			funcExpress.add(line.get(i));
 		}
 		i++;
-		if (!line.get(i).equals("takes")) throw new RuntimeException(/*
-														 * LOWPRI-E
-														 */);
 		Map<VariableIdentifier, GenericType> vars = new HashMap<>();
-		for (; i < line.size(); i++) {
-			if (!line.get(i).equals("called")) continue;
-			GenericType type = ExpressionParser.parseType(line.get(i - 1));
-			// LOWPRI allow generic typing in functions... later
-			if (!(type instanceof ConcreteType))
-				throw new RuntimeException(/* LOWPRI-E */);
-			vars.put(VariableIdentifier.getInstance(line.get(i + 1)), type);
+		if (i < line.size()) {
+			switch (line.get(i)) {
+				case "takes":
+					for (; i < line.size(); i++) {
+						if (!line.get(i).equals("called")) continue;
+						GenericType type = ExpressionParser
+								.parseType(line.get(i - 1));
+						// LOWPRI allow generic typing in functions...
+						// later
+						if (!(type instanceof ConcreteType))
+							throw new RuntimeException(/* LOWPRI-E */);
+						vars.put(VariableIdentifier.getInstance(line
+								.get(i + 1)), type);
+					}
+					break;
+				case "outputs":
+					break;
+				default:
+					throw new RuntimeException(/*
+										 * LOWPRI-E
+										 */);
+			}
 		}
 		int outputloc = line.indexOf("outputs");
 		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(funcExpress);
@@ -126,7 +140,7 @@ public class ConstructionParser {
 		for (String token : list) {
 			if (Language.isExpression(token)) {
 				currentExpression.add(token);
-			} else {
+			} else if (Language.isFunctionToken(token)) {
 				if (currentExpression.size() != 0) {
 					ParsedExpression argument = ExpressionParser
 							.parsePureExpression(currentExpression);
@@ -135,6 +149,9 @@ public class ConstructionParser {
 					currentExpression.clear();
 				}
 				function.add(new FunctionToken(token));
+			} else {
+				System.err.println(token);
+				break;
 			}
 		}
 		if (currentExpression.size() != 0) {

@@ -1,5 +1,6 @@
 package fortytwo.compiler.parsed.statements;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,11 @@ import fortytwo.vm.statements.StatementSeries;
 
 public class ParsedStatementSeries implements ParsedStatement {
 	public final List<ParsedStatement> statements;
+	public static ParsedStatementSeries getInstance(ParsedStatement s) {
+		if (s instanceof ParsedStatementSeries)
+			return (ParsedStatementSeries) s;
+		return new ParsedStatementSeries(Arrays.asList(s));
+	}
 	public ParsedStatementSeries(List<ParsedStatement> statements) {
 		this.statements = statements;
 	}
