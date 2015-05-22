@@ -6,4 +6,5 @@ import fortytwo.vm.statements.Statement;
 
 public interface ParsedStatement extends Sentence {
 	public Statement contextualize(StaticEnvironment environment);
+	public void decontextualize(StaticEnvironment environment);
 }

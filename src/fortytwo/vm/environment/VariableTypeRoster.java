@@ -12,6 +12,9 @@ public class VariableTypeRoster {
 			ConcreteType expression) {
 		pairs.put(variableIdentifier, expression);
 	}
+	public void remove(VariableIdentifier name, ConcreteType type) {
+		pairs.remove(name, type);
+	}
 	public void add(Field field) {
 		add(field.name, field.type);
 	}

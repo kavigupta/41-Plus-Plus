@@ -21,6 +21,10 @@ public class ParsedDefinition implements ParsedStatement {
 				environment.structs);
 	}
 	@Override
+	public void decontextualize(StaticEnvironment environment) {
+		environment.types.remove(name.name, name.type);
+	}
+	@Override
 	public SentenceType type() {
 		return SentenceType.DEFINITION;
 	}

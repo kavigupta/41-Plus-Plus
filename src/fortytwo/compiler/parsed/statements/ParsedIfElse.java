@@ -3,6 +3,7 @@ package fortytwo.compiler.parsed.statements;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.statements.IfElse;
 import fortytwo.vm.statements.Statement;
 
@@ -21,8 +22,16 @@ public class ParsedIfElse implements ParsedStatement {
 	}
 	@Override
 	public Statement contextualize(StaticEnvironment env) {
-		return IfElse.getInstance(condition.contextualize(env),
-				ifso.contextualize(env), ifelse.contextualize(env));
+		Expression cond = condition.contextualize(env);
+		Statement ifsoS = ifso.contextualize(env), ifsoE = ifelse
+				.contextualize(env);
+		ifso.decontextualize(env);
+		ifelse.decontextualize(env);
+		return IfElse.getInstance(cond, ifsoS, ifsoE);
+	}
+	@Override
+	public void decontextualize(StaticEnvironment environment) {
+		// already decontextualized
 	}
 	@Override
 	public SentenceType type() {

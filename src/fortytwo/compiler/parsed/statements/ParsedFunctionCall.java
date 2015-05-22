@@ -43,6 +43,10 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 						.collect(Collectors.toList()));
 	}
 	@Override
+	public void decontextualize(StaticEnvironment env) {
+		arguments.stream().forEach(x -> x.decontextualize(env));
+	}
+	@Override
 	public SentenceType type() {
 		return SentenceType.FUNCTION_CALL;
 	}

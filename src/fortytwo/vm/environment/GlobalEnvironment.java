@@ -100,6 +100,7 @@ public class GlobalEnvironment {
 		for (ParsedFunction func : functions) {
 			FunctionImplemented impl = func.contextualize(environment);
 			impl.body.forEach(Statement::typeCheck);
+			func.decontextualize(environment);
 			implFunctions.put(FunctionSignature.getInstance(func.f.name,
 					func.f.parameterTypes, func.f.outputType), impl);
 		}

@@ -8,6 +8,7 @@ import fortytwo.compiler.parsed.declaration.FunctionReturn;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.vm.constructions.FunctionImplemented;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.statements.Statement;
 
 public class ParsedFunction {
 	public final FunctionDefinition f;
@@ -21,10 +22,15 @@ public class ParsedFunction {
 	}
 	public FunctionImplemented contextualize(StaticEnvironment environment) {
 		f.addTypes(environment);
-		return new FunctionImplemented(f, body.stream()
-				.map(x -> x.contextualize(environment))
-				.collect(Collectors.toList()), r.output == null ? null
+		List<Statement> bodyS = body.stream().map(x -> {
+			System.out.println(environment.types);
+			return x.contextualize(environment);
+		}).collect(Collectors.toList());
+		return new FunctionImplemented(f, bodyS, r.output == null ? null
 				: r.output.contextualize(environment));
+	}
+	public void decontextualize(StaticEnvironment env) {
+		body.stream().forEach(x -> x.decontextualize(env));
 	}
 	@Override
 	public int hashCode() {

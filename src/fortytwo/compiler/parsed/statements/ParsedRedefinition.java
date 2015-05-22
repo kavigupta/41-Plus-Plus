@@ -20,6 +20,10 @@ public class ParsedRedefinition extends ParsedAssignment {
 				environment.types);
 	}
 	@Override
+	public void decontextualize(StaticEnvironment environment) {
+		// doesn't do anything
+	}
+	@Override
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}

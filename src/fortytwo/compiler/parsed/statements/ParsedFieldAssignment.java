@@ -23,6 +23,10 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 				value.contextualize(environment));
 	}
 	@Override
+	public void decontextualize(StaticEnvironment environment) {
+		value.decontextualize(environment);
+	}
+	@Override
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}
