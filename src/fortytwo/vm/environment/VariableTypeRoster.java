@@ -18,7 +18,8 @@ public class VariableTypeRoster {
 	public ConcreteType typeOf(VariableIdentifier name) {
 		ConcreteType type = pairs.get(name);
 		if (type == null)
-			throw new RuntimeException(/* LOWPRI-E */name.toSourceCode());
+			throw new RuntimeException(/* LOWPRI-E */name.toSourceCode()
+					+ "\t" + pairs);
 		return type;
 	}
 	@Override
