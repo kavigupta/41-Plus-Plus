@@ -106,7 +106,6 @@ public class ConstructionParser {
 										 */);
 			}
 		}
-		System.out.println(vars);
 		int outputloc = line.indexOf(Resources.OUTPUTS);
 		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(funcExpress);
 		List<VariableIdentifier> variables = sig.value

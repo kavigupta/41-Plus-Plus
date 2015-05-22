@@ -14,7 +14,17 @@ public class FunctionsTest {
 	public static final String TEST_FUNCTIONS = ""
 			+ "Define a function called _x doubled that takes a number called _x and outputs a number. Exit the function and output (_x*2)."
 			+ "Define a function called _x is prime that takes a number called _x and outputs a bool. Define a number called _i with a value of 2. Define a bool called _isPrimeForNow with a value of (_x is at least 2). While (_i * _i is at most _x) and _isPrimeForNow: Do the following: Set the value of _i to _i+1. If (_x % _i) is equal to 0: Set the value of _isPrimeForNow to false. That's all. Exit the function and output _isPrimeForNow."
-			+ "Define a function called _str with spaces intersperced that takes a string called _str and outputs a string. Define an (array of string) called _strLet with a value of (_str split into individual letters). Define an (array of string) called _strInter with a _length of (2*(the _length of strInter)-1). Exit the function and output _strInter.";
+			+ "Define a function called _str with spaces intersperced that takes a string called _str and outputs a string. "
+			+ "	Define an (array of string) called _strLet with a value of (_str split into individual letters). "
+			+ "	Define an (array of string) called _strInter with a _length of (2*(the _length of _strLet)-1)."
+			+ "	Define a number called _i with a value of 1."
+			+ "	While _i is less than (the _length of _str): Do the following:"
+			+ "		Set the (2*_i-1) th element of _strInter to (the _i th element of _strLet)."
+			+ "		Set the (2*_i) th element of _strInter to ' '."
+			+ "		Set the value of _i to (_i+1)."
+			+ "	That's all."
+			+ "	Set the (2*_i-1) th element of _strInter to (the _i th element of _strLet)."
+			+ "	Exit the function and output (the letters _strInter combined to form a string).";
 	GlobalEnvironment env;
 	String buffer;
 	@Before
@@ -37,7 +47,11 @@ public class FunctionsTest {
 		assertEquivalence("false", "(199*199) is prime");
 	}
 	@Test
-	public void stringManipTest() {}
+	public void stringManipTest() {
+		assertEquivalence("'a b c'", "'abc' with spaces intersperced");
+		assertEquivalence("'H e l l o ,   W o r l d'",
+				"'Hello, World' with spaces intersperced");
+	}
 	public void assertEquivalence(String result, String toEvaluate) {
 		assertEquals(
 				result,

@@ -47,8 +47,9 @@ public class FunctionArrayModification extends Function42 {
 		TypeVariable contents = new TypeVariable(
 				VariableIdentifier.getInstance("_contents"));
 		return FunctionSignature.getInstance(FunctionName.getInstance("Set",
-				"the", "", suffix, "of", "", "to", ""), Arrays.asList(
-				PrimitiveType.NUMBER, new GenericArrayType(contents),
-				contents), outputType());
+				"the", "", suffix, "element", "of", "", "to", ""), Arrays
+				.asList(PrimitiveType.NUMBER,
+						new GenericArrayType(contents), contents),
+				outputType());
 	}
 }

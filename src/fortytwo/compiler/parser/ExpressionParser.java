@@ -24,7 +24,6 @@ import fortytwo.vm.expressions.LiteralString;
 
 public class ExpressionParser {
 	public static ParsedExpression parseExpression(List<String> list) {
-		System.out.println(list);
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() == 1
@@ -33,7 +32,6 @@ public class ExpressionParser {
 		return function;
 	}
 	public static ParsedExpression parsePureExpression(List<String> list) {
-		System.out.println("PureExp: " + list);
 		ArrayList<ParsedExpression> expressions = tokenize(list);
 		expressions = removeUnary(expressions);
 		for (int precendence = 0; precendence <= Operation.MAX_PRECDENCE; precendence++) {
@@ -66,7 +64,6 @@ public class ExpressionParser {
 	}
 	private static ArrayList<ParsedExpression> removeUnary(
 			ArrayList<ParsedExpression> expressions) {
-		System.out.println("RM Unary from: " + expressions);
 		ArrayList<ParsedExpression> expressionsWoUO = new ArrayList<>();
 		for (int i = 0; i < expressions.size(); i++) {
 			if (expressions.get(i) instanceof UnevaluatedOperator) {
@@ -74,13 +71,11 @@ public class ExpressionParser {
 						.get(i);
 				if (i == 0
 						|| expressions.get(i - 1) instanceof UnevaluatedOperator) {
-					System.out.println(i + "\t" + uneop);
 					if (uneop.operator.equals(Operation.ADD)) {
 						continue;
 					} else if (uneop.operator.equals(Operation.SUBTRACT)) {
 						i++;
 						ParsedExpression next = expressions.get(i);
-						System.out.println("Negating: " + next);
 						expressionsWoUO.add(ParsedBinaryOperation
 								.getNegation(next));
 					}

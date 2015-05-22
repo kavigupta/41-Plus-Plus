@@ -12,9 +12,13 @@ public class FunctionSignatureRoster {
 	public final ArrayList<FunctionSignature> funcs = new ArrayList<>();
 	public FunctionSignature referenceTo(FunctionName name,
 			List<ConcreteType> inputs) {
-		for (FunctionSignature f : funcs)
-			if (f.name.equals(name) && f.accepts(inputs)) return f;
-		throw new RuntimeException(/* LOWPRI-E */);
+		for (FunctionSignature f : funcs) {
+			if (f.name.equals(name)) {
+				if (f.accepts(inputs)) return f;
+			}
+		}
+		funcs.forEach(System.out::println);
+		throw new RuntimeException(/* LOWPRI-E */name.toString());
 	}
 	public void putReference(FunctionDefinition f) {
 		funcs.add(FunctionSignature.getInstance(f.name, f.parameterTypes,

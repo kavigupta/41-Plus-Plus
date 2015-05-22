@@ -7,7 +7,7 @@ import fortytwo.language.field.Field;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.language.type.GenericType;
+import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.environment.GlobalEnvironment;
@@ -31,7 +31,7 @@ public class FunctionFieldAccess extends Function42 {
 		return obj.fields.referenceTo(field);
 	}
 	@Override
-	public GenericType outputType() {
+	public ConcreteType outputType() {
 		for (Field f : from.fields) {
 			if (f.name.equals(field)) return f.type;
 		}

@@ -3,34 +3,32 @@ package fortytwo.vm.environment;
 import java.util.HashMap;
 import java.util.List;
 
+import lib.standard.collections.Pair;
 import fortytwo.language.identifier.FunctionSignature;
-import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.library.standard.FunctionFieldAccess;
+import fortytwo.language.type.ConcreteType;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.expressions.Expression;
-import fortytwo.vm.expressions.LiteralObject;
 
 public class FunctionRoster {
+	private final StaticEnvironment env;
 	public final HashMap<FunctionSignature, Function42> functions = new HashMap<>();
-	private FunctionRoster() {}
+	private FunctionRoster(StaticEnvironment env) {
+		this.env = env;
+	}
 	public Function42 get(FunctionSignature signature, List<Expression> inputs) {
-		if (StdLib42.matchesFieldAccess(signature.name)) {
-			if (!(inputs.get(0) instanceof VariableIdentifier))
-				throw new RuntimeException(/* LOWPRI-E */);
-			if (!(inputs.get(1) instanceof LiteralObject))
-				throw new RuntimeException(/* LOWPRI-E */);
-			return new FunctionFieldAccess(
-					(VariableIdentifier) inputs.get(0),
-					((LiteralObject) inputs.get(1)).struct);
-		}
+		Pair<Function42, ConcreteType> func = StdLib42.matchFieldAccess(env,
+				signature.name, inputs);
+		if (func != null) return func.getKey();
+		System.out.println("Getting function for signature = " + signature);
+		functions.forEach((fs, f) -> System.out.println(fs));
 		return functions.get(signature);
 	}
 	public void add(Function42 function) {
 		functions.put(function.signature(), function);
 	}
-	public static FunctionRoster getDefault() {
-		FunctionRoster funcs = new FunctionRoster();
+	public static FunctionRoster getDefault(StaticEnvironment env) {
+		FunctionRoster funcs = new FunctionRoster(env);
 		StdLib42.defaultFunctions(funcs);
 		return funcs;
 	}

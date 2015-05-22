@@ -31,12 +31,15 @@ public class StatementParser {
 			case Resources.DEFINE:
 				return parseDefinition(line);
 			case Resources.SET:
-				return parseAssignment(line);
+				if (line.get(1).equals(Resources.THE)
+						&& line.get(3).equals(Resources.OF)
+						&& line.get(5).equals(Resources.TO))
+					return parseAssignment(line);
+				else break;
 			case Resources.EXIT:
 				return parseReturn(line);
-			default:
-				return parseVoidFunctionCall(line);
 		}
+		return parseVoidFunctionCall(line);
 	}
 	private static FunctionReturn parseReturn(List<String> line) {
 		/* Exit the function( and output <output>)?. */

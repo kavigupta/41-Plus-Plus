@@ -13,8 +13,7 @@ public class GenericArrayType implements GenericType {
 	}
 	@Override
 	public TypeVariableRoster match(ConcreteType toMatch) {
-		if (!(toMatch instanceof ArrayType))
-			throw new RuntimeException(/* LOWPRI-E */);
+		if (!(toMatch instanceof ArrayType)) return null;
 		return contents.match(((ArrayType) toMatch).contentType);
 	}
 	@Override

@@ -23,7 +23,6 @@ public class ParsedFunction {
 	public FunctionImplemented contextualize(StaticEnvironment environment) {
 		f.addTypes(environment);
 		List<Statement> bodyS = body.stream().map(x -> {
-			System.out.println(environment.types);
 			return x.contextualize(environment);
 		}).collect(Collectors.toList());
 		return new FunctionImplemented(f, bodyS, r.output == null ? null

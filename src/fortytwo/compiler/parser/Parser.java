@@ -181,7 +181,6 @@ public class Parser {
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	private static Pair<String, Integer> popStringLiteral(String text) {
-		System.out.println("Popping: " + text);
 		String unes = "";
 		for (int i = 0; i < text.length(); i++) {
 			switch (text.charAt(i)) {

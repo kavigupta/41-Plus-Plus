@@ -6,20 +6,20 @@ import java.util.List;
 
 import lib.standard.collections.Pair;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
-import fortytwo.language.Language;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
-import fortytwo.language.type.GenericStructureType;
-import fortytwo.language.type.TypeVariable;
+import fortytwo.language.type.*;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.GenericStructure;
 import fortytwo.vm.environment.FunctionRoster;
 import fortytwo.vm.environment.FunctionSignatureRoster;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.StructureRoster;
+import fortytwo.vm.expressions.Expression;
 
 public class StdLib42 {
 	public static final StructureRoster DEF_STRUCT = new StructureRoster();
@@ -38,9 +38,14 @@ public class StdLib42 {
 	public static final List<Function42> DEFAULT_FUNCTIONS = new ArrayList<>(
 			Arrays.asList(FunctionArrayAccess.ST, FunctionArrayAccess.ND,
 					FunctionArrayAccess.RD, FunctionArrayAccess.TH,
-					FunctionPrint.INSTANCE, FunctionStringAppend.INSTANCE,
+					FunctionArrayModification.ST,
+					FunctionArrayModification.ND,
+					FunctionArrayModification.RD,
+					FunctionArrayModification.TH, FunctionPrint.INSTANCE,
+					FunctionStringAppend.INSTANCE,
 					FunctionStringSplit.INSTANCE,
 					FunctionLetterCombine.INSTANCE,
+					FunctionStrlen.INSTANCE, FunctionArrayLength.INSTANCE,
 					FunctionLogicalOperator.AND,
 					FunctionLogicalOperator.OR,
 					FunctionLogicalOperator.NOT, FunctionEquivalence.DF,
@@ -52,7 +57,8 @@ public class StdLib42 {
 				.forEach(x -> DEFAULT_FUNCTIONS.add(new FunctionCompare(x)));
 	}
 	public static FunctionName functArrayAccess(String suffix) {
-		return FunctionName.getInstance("the", "", suffix, "of", "");
+		return FunctionName.getInstance("the", "", suffix, "element", "of",
+				"");
 	}
 	static {
 		addPair();
@@ -86,17 +92,29 @@ public class StdLib42 {
 	public static FunctionName getFieldAccess(String name) {
 		return FunctionName.getInstance("the", name, "of", "");
 	}
-	public static boolean matchesFieldAccess(FunctionName name) {
-		if (name.function.size() != 4) return false;
-		if (!name.function.get(0).equals("the")) return false;
-		if (!(name.function.get(1) instanceof FunctionToken)
-				&& Language
-						.isValidVariableIdentifier(((FunctionToken) name.function
-								.get(1)).token)) return false;
-		if (!name.function.get(2).equals("of")) return false;
-		if (!(name.function.get(3) instanceof FunctionArgument))
-			return false;
-		return true;
+	public static Pair<Function42, ConcreteType> matchFieldAccess(
+			StaticEnvironment se, FunctionName name, List<Expression> inputs) {
+		if (name.function.size() != 4) return null;
+		if (!name.function.get(0).equals(new FunctionToken("the")))
+			return null;
+		if (!(name.function.get(1) instanceof FunctionArgument)) return null;
+		if (!name.function.get(2).equals(new FunctionToken("of")))
+			return null;
+		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
+		if (!(inputs.get(0) instanceof VariableIdentifier)) return null;
+		VariableIdentifier field = (VariableIdentifier) inputs.get(0);
+		ConcreteType type = inputs.get(1).resolveType();
+		if (type instanceof ArrayType) {
+			if (field.equals(VariableIdentifier.getInstance("_length")))
+				return Pair.getInstance(FunctionArrayLength.INSTANCE,
+						PrimitiveType.NUMBER);
+		} else if (type == PrimitiveType.STRING)
+			return Pair.getInstance(FunctionStrlen.INSTANCE,
+					PrimitiveType.NUMBER);
+		if (!(type instanceof StructureType)) return null;
+		FunctionFieldAccess f = new FunctionFieldAccess(field,
+				se.structs.getStructure((StructureType) type));
+		return Pair.getInstance(f, f.outputType());
 	}
 	public static void defaultFunctions(FunctionRoster funcs) {
 		for (Function42 f : DEFAULT_FUNCTIONS)

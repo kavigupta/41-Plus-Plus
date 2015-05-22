@@ -30,9 +30,18 @@ public class FunctionImplemented extends Function42 {
 		for (int i = 0; i < f.parameterVariables.size(); i++) {
 			local.vars.assign(f.parameterVariables.get(i), arguments.get(i));
 		}
-		body.stream().forEach(x -> x.execute(local));
+		body.stream().forEach(x -> {
+			System.out.println("State: " + local.vars);
+			System.out.println(x.toString());
+			x.execute(local);
+		});
+		LiteralExpression out = output == null ? null : output
+				.literalValue(local);
 		body.stream().forEach(x -> x.clean(local));
-		return output == null ? null : output.literalValue(local);
+		for (int i = 0; i < f.parameterVariables.size(); i++) {
+			f.parameterVariables.stream().forEach(local.vars::deregister);
+		}
+		return out;
 	}
 	@Override
 	public GenericType outputType() {

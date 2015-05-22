@@ -18,7 +18,8 @@ public class LiteralVariableRoster {
 	}
 	public LiteralExpression referenceTo(VariableIdentifier id) {
 		LiteralExpression le = pairs.get(id);
-		if (le == null) throw new RuntimeException(/* LOWPRI-E */);
+		if (le == null)
+			throw new RuntimeException(/* LOWPRI-E */id.name + "\t" + this);
 		return le;
 	}
 	public void redefine(VariableIdentifier name, LiteralExpression express) {
@@ -56,5 +57,9 @@ public class LiteralVariableRoster {
 			if (other.pairs != null) return false;
 		} else if (!pairs.equals(other.pairs)) return false;
 		return true;
+	}
+	@Override
+	public String toString() {
+		return "LiteralVariableRoster [pairs=" + pairs + "]";
 	}
 }

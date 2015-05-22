@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -32,14 +33,16 @@ public class FunctionCall implements Expression, Statement {
 		if (function.inputTypes.size() != arguments.size())
 			throw new RuntimeException(/* LOWPRI-E */);
 		for (int i = 0; i < function.inputTypes.size(); i++) {
-			if (!function.inputTypes.get(i).equals(
-					arguments.get(i).resolveType()))
-				throw new RuntimeException(/* LOWPRI-E */);
+			TypeVariableRoster tvr = function.inputTypes.get(i).match(
+					arguments.get(i).resolveType());
+			if (tvr == null) throw new RuntimeException(/* LOWPRI-E */);
 		}
 		return true;
 	}
 	@Override
 	public LiteralExpression literalValue(LocalEnvironment environment) {
+		System.out.println("Calling " + function + " with arguments = "
+				+ arguments);
 		return environment.global.funcs.get(function, arguments).apply(
 				environment.global,
 				arguments.stream().map(x -> x.literalValue(environment))

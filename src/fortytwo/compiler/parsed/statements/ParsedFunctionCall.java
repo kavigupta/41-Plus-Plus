@@ -1,14 +1,18 @@
 package fortytwo.compiler.parsed.statements;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import lib.standard.collections.Pair;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
+import fortytwo.library.standard.StdLib42;
+import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.statements.FunctionCall;
@@ -27,12 +31,18 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 	}
 	@Override
 	public Expression contextualize(StaticEnvironment env) {
+		Pair<Function42, ConcreteType> func = StdLib42.matchFieldAccess(env,
+				this.name,
+				this.arguments.stream().map(x -> x.contextualize(env))
+						.collect(Collectors.toList()));
+		if (func != null)
+			return FunctionCall.getInstance(func.key.signature(),
+					func.value,
+					Arrays.asList(arguments.get(1).contextualize(env)));
 		Function<ParsedExpression, ConcreteType> typeResolver = x -> x
 				.contextualize(env).resolveType();
 		List<ConcreteType> types = arguments.stream().map(typeResolver)
 				.collect(Collectors.toList());
-		System.out.println(arguments);
-		System.out.println(types);
 		FunctionSignature sig = env.funcs.referenceTo(name, types);
 		return FunctionCall.getInstance(
 				sig,

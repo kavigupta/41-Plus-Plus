@@ -71,7 +71,7 @@ public class BinaryOperation implements Expression {
 		if (!second.resolveType().equals(PrimitiveType.NUMBER))
 			throw new RuntimeException(/*
 								 * LOWPRI-E
-								 */);
+								 */second.resolveType().toString());
 		return true;
 	}
 	@Override

@@ -16,11 +16,9 @@ public class GenericStructureType implements GenericType {
 	}
 	@Override
 	public TypeVariableRoster match(ConcreteType toMatch) {
-		if (!(toMatch instanceof StructureType))
-			throw new RuntimeException(/* LOWPRI-E */);
+		if (!(toMatch instanceof StructureType)) return null;
 		StructureType type = (StructureType) toMatch;
-		if (type.types.size() != typeVariables.size())
-			throw new RuntimeException(/* LOWPRI-E */);
+		if (type.types.size() != typeVariables.size()) return null;
 		TypeVariableRoster roster = new TypeVariableRoster();
 		for (int i = 0; i < type.types.size(); i++) {
 			roster.assign(typeVariables.get(i), type.types.get(i));
