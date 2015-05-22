@@ -21,6 +21,10 @@ public class Redefinition implements Statement {
 		environment.vars.redefine(name, value.literalValue(environment));
 	}
 	@Override
+	public void clean(LocalEnvironment environment) {
+		// no variables created
+	}
+	@Override
 	public boolean typeCheck() {
 		if (types.typeOf(name).equals(value.resolveType())) return true;
 		throw new RuntimeException(/* LOWPRI-E */);

@@ -19,9 +19,17 @@ public class IfElse implements Statement {
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
-		if (((LiteralBool) condition.literalValue(environment)).contents)
+		if (((LiteralBool) condition.literalValue(environment)).contents) {
 			ifso.execute(environment);
-		else ifelse.execute(environment);
+			ifso.clean(environment);
+		} else {
+			ifelse.execute(environment);
+			ifelse.clean(environment);
+		}
+	}
+	@Override
+	public void clean(LocalEnvironment environment) {
+		// Forms a closure, no need to clean once done
 	}
 	@Override
 	public boolean typeCheck() {

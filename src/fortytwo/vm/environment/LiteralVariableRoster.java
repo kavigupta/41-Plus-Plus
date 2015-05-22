@@ -13,6 +13,9 @@ public class LiteralVariableRoster {
 			throw new RuntimeException(/* LOWPRI-E */);
 		pairs.put(name, express);
 	}
+	public void deregister(VariableIdentifier name) {
+		pairs.remove(name);
+	}
 	public LiteralExpression referenceTo(VariableIdentifier id) {
 		LiteralExpression le = pairs.get(id);
 		if (le == null) throw new RuntimeException(/* LOWPRI-E */);

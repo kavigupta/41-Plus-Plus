@@ -23,6 +23,10 @@ public class Definition implements Statement {
 						toCreate.type, fields.literalValue(environment)));
 	}
 	@Override
+	public void clean(LocalEnvironment environment) {
+		environment.vars.deregister(toCreate.name);
+	}
+	@Override
 	public boolean typeCheck() {
 		// everything had to be typechecked on input,
 		// LocalEnvironment.instance checks if the fields can be coerced

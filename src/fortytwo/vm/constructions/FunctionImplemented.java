@@ -31,6 +31,7 @@ public class FunctionImplemented extends Function42 {
 			local.vars.assign(f.parameterVariables.get(i), arguments.get(i));
 		}
 		body.stream().forEach(x -> x.execute(local));
+		body.stream().forEach(x -> x.clean(local));
 		return output == null ? null : output.literalValue(local);
 	}
 	@Override

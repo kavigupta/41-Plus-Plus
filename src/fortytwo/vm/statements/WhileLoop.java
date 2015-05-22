@@ -17,6 +17,11 @@ public class WhileLoop implements Statement {
 		while (((LiteralBool) condition.literalValue(environment)).contents) {
 			statement.execute(environment);
 		}
+		statement.clean(environment);
+	}
+	@Override
+	public void clean(LocalEnvironment environment) {
+		// forms a closure, no need to clean
 	}
 	@Override
 	public boolean typeCheck() {

@@ -26,6 +26,10 @@ public class FieldAssignment implements Statement {
 		obj.fields.redefine(field.name, value.literalValue(environment));
 	}
 	@Override
+	public void clean(LocalEnvironment environment) {
+		// nothing to clean.
+	}
+	@Override
 	public boolean typeCheck() {
 		if (!field.type.equals(value.resolveType()))
 			throw new RuntimeException(/* LOWPRI-E */);

@@ -14,6 +14,10 @@ public class StatementSeries implements Statement {
 		statements.forEach(s -> s.execute(environment));
 	}
 	@Override
+	public void clean(LocalEnvironment environment) {
+		statements.forEach(s -> s.clean(environment));
+	}
+	@Override
 	public boolean typeCheck() {
 		statements.forEach(s -> s.typeCheck());
 		return true;
