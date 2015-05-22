@@ -1,5 +1,6 @@
 package fortytwo.library.standard;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,11 +35,20 @@ public class StdLib42 {
 	public static final FunctionName FUNC_LETTER_COMBINE = FunctionName
 			.getInstance("the", "letters", "", "combined", "to", "form",
 					"a", "string");
-	public static final Function42[] DEFAULT_FUNCTIONS = {
-			FunctionArrayAccess.ST, FunctionArrayAccess.ND,
-			FunctionArrayAccess.RD, FunctionArrayAccess.TH,
-			FunctionPrint.INSTANCE, FunctionStringAppend.INSTANCE,
-			FunctionStringSplit.INSTANCE };
+	public static final List<Function42> DEFAULT_FUNCTIONS = new ArrayList<>(
+			Arrays.asList(FunctionArrayAccess.ST, FunctionArrayAccess.ND,
+					FunctionArrayAccess.RD, FunctionArrayAccess.TH,
+					FunctionPrint.INSTANCE, FunctionStringAppend.INSTANCE,
+					FunctionStringSplit.INSTANCE,
+					FunctionLetterCombine.INSTANCE,
+					FunctionLogicalOperator.AND,
+					FunctionLogicalOperator.OR,
+					FunctionLogicalOperator.NOT));
+	static {
+		Arrays.asList(FunctionCompare.Comparator.values())
+				.stream()
+				.forEach(x -> DEFAULT_FUNCTIONS.add(new FunctionCompare(x)));
+	}
 	public static FunctionName functArrayAccess(String suffix) {
 		return FunctionName.getInstance("the", "", suffix, "of", "");
 	}

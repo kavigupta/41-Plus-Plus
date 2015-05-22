@@ -52,8 +52,8 @@ public class FunctionSignature {
 			GenericType expected = this.inputTypes.get(i);
 			switch (expected.kind()) {
 				case CONCRETE:
-					if (!expected.equals(this))
-						throw new RuntimeException(/* LOWPRI-E */);
+					if (!expected.equals(arg)) throw new RuntimeException(
+					/* LOWPRI-E */);
 					break;
 				case CONSTRUCTOR:
 				case VARIABLE:

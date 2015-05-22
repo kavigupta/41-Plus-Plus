@@ -98,7 +98,8 @@ public class SourceCode {
 	public static String display(LiteralArray literalArray) {
 		StringBuffer sbuff = new StringBuffer("[");
 		for (int i = 0; i < literalArray.length(); i++) {
-			sbuff.append(literalArray.get(i + 1)).append(", ");
+			sbuff.append(literalArray.get(i + 1).toSourceCode())
+					.append(", ");
 		}
 		return sbuff.delete(sbuff.length() - 2, sbuff.length()).append("]")
 				.toString();
