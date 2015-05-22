@@ -31,7 +31,7 @@ public class ConstructionParser {
 	public static StructureDeclaration parseStructDefinition(List<String> line) {
 		/*
 		 * Define a structure called <structure> of <typevar1>, <typevar2>,
-		 * and <typevar3> which contains a[n] <type> called <field> , a[n]
+		 * and <typevar3> that contains a[n] <type> called <field> , a[n]
 		 * <type> called <field>, ...
 		 */
 		if (!line.get(1).equals(Resources.A)
@@ -40,14 +40,14 @@ public class ConstructionParser {
 		line.subList(0, 4).clear();
 		ArrayList<String> structExpression = new ArrayList<>();
 		int i = 0;
-		for (; i < line.size() && !line.get(i).equals(Resources.WHICH)
+		for (; i < line.size() && !line.get(i).equals(Resources.THAT)
 				&& !line.get(i).equals(Resources.OF); i++) {
 			structExpression.add(line.get(i));
 		}
 		List<TypeVariable> typeVariables = new ArrayList<>();
 		if (i < line.size() && line.get(i).equals(Resources.OF)) {
 			i++;
-			for (; i < line.size() && !line.get(i).equals(Resources.WHICH); i++) {
+			for (; i < line.size() && !line.get(i).equals(Resources.THAT); i++) {
 				if (Language.isValidVariableIdentifier(line.get(i))) {
 					typeVariables.add(new TypeVariable(VariableIdentifier
 							.getInstance(line.get(i))));
@@ -106,6 +106,7 @@ public class ConstructionParser {
 										 */);
 			}
 		}
+		System.out.println(vars);
 		int outputloc = line.indexOf(Resources.OUTPUTS);
 		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(funcExpress);
 		List<VariableIdentifier> variables = sig.value
@@ -151,8 +152,7 @@ public class ConstructionParser {
 					currentExpression.clear();
 				}
 				function.add(new FunctionToken(token));
-			} else 
-				break;
+			} else break;
 		}
 		if (currentExpression.size() != 0) {
 			ParsedExpression argument = ExpressionParser

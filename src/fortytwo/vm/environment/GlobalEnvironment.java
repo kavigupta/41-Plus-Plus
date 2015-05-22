@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import fortytwo.compiler.parsed.constructions.ParsedFunction;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
@@ -37,10 +38,13 @@ public class GlobalEnvironment {
 		return new GlobalEnvironment(staticEnv, vm,
 				FunctionRoster.getDefault());
 	}
-	public static GlobalEnvironment interpret(List<Sentence> sentences) {
+	public static GlobalEnvironment interpret(List<Sentence> sentences,
+			VirtualMachine vm) {
+		System.out.println(sentences.stream().map(x -> x.toSourceCode())
+				.collect(Collectors.toList()));
 		StaticEnvironment environment = StaticEnvironment.getDefault();
 		GlobalEnvironment global = GlobalEnvironment.getDefaultEnvironment(
-				environment, VirtualMachine.defaultVM);
+				environment, vm);
 		LocalEnvironment local = global.minimalLocalEnvironment();
 		ArrayList<ParsedFunction> functions = new ArrayList<>();
 		for (int i = 0; i < sentences.size(); i++) {
@@ -104,5 +108,33 @@ public class GlobalEnvironment {
 	}
 	public LocalEnvironment minimalLocalEnvironment() {
 		return new LocalEnvironment(this);
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((funcs == null) ? 0 : funcs.hashCode());
+		result = prime * result
+				+ ((machine == null) ? 0 : machine.hashCode());
+		result = prime * result
+				+ ((staticEnv == null) ? 0 : staticEnv.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		GlobalEnvironment other = (GlobalEnvironment) obj;
+		if (funcs == null) {
+			if (other.funcs != null) return false;
+		} else if (!funcs.equals(other.funcs)) return false;
+		if (machine == null) {
+			if (other.machine != null) return false;
+		} else if (!machine.equals(other.machine)) return false;
+		if (staticEnv == null) {
+			if (other.staticEnv != null) return false;
+		} else if (!staticEnv.equals(other.staticEnv)) return false;
+		return true;
 	}
 }

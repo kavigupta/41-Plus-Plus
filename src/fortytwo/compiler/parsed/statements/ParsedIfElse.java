@@ -36,4 +36,31 @@ public class ParsedIfElse implements ParsedStatement {
 	public boolean isSimple() {
 		return false;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((condition == null) ? 0 : condition.hashCode());
+		result = prime * result + ((ifelse == null) ? 0 : ifelse.hashCode());
+		result = prime * result + ((ifso == null) ? 0 : ifso.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		ParsedIfElse other = (ParsedIfElse) obj;
+		if (condition == null) {
+			if (other.condition != null) return false;
+		} else if (!condition.equals(other.condition)) return false;
+		if (ifelse == null) {
+			if (other.ifelse != null) return false;
+		} else if (!ifelse.equals(other.ifelse)) return false;
+		if (ifso == null) {
+			if (other.ifso != null) return false;
+		} else if (!ifso.equals(other.ifso)) return false;
+		return true;
+	}
 }

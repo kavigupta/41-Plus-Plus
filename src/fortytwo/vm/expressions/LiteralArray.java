@@ -1,5 +1,6 @@
 package fortytwo.vm.expressions;
 
+import java.util.Arrays;
 import java.util.List;
 
 import fortytwo.language.SourceCode;
@@ -47,5 +48,10 @@ public class LiteralArray extends LiteralExpression {
 	@Override
 	public String toSourceCode() {
 		return SourceCode.display(this);
+	}
+	@Override
+	public boolean typedEquals(LiteralExpression other) {
+		return Arrays.deepEquals(this.elements,
+				((LiteralArray) other).elements);
 	}
 }

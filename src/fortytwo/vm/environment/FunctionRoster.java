@@ -34,4 +34,23 @@ public class FunctionRoster {
 		StdLib42.defaultFunctions(funcs);
 		return funcs;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((functions == null) ? 0 : functions.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		FunctionRoster other = (FunctionRoster) obj;
+		if (functions == null) {
+			if (other.functions != null) return false;
+		} else if (!functions.equals(other.functions)) return false;
+		return true;
+	}
 }

@@ -37,7 +37,7 @@ public class SourceCode {
 	public static String display(StructureDeclaration structureDeclaration) {
 		String fields = displayFieldList(structureDeclaration.structure.fields);
 		if (fields.length() != 0) {
-			fields = " which contains " + fields;
+			fields = " that contains " + fields;
 		}
 		return "Define a type called "
 				+ structureDeclaration.structure.type.toSourceCode()
@@ -92,6 +92,10 @@ public class SourceCode {
 				+ wrapInBraces(parsedWhileLoop.statement);
 	}
 	public static String display(ParsedBinaryOperation op) {
+		if (op.operation == Operation.ADD
+				|| op.operation == Operation.SUBTRACT)
+			if (op.first.toSourceCode().equals("0"))
+				return op.operation.toSourceCode() + op.second;
 		return "(" + op.first.toSourceCode() + op.operation.toSourceCode()
 				+ op.second.toSourceCode() + ")";
 	}

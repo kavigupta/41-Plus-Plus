@@ -26,4 +26,22 @@ public class FunctionSignatureRoster {
 		other.funcs.addAll(funcs);
 		return other;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((funcs == null) ? 0 : funcs.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		FunctionSignatureRoster other = (FunctionSignatureRoster) obj;
+		if (funcs == null) {
+			if (other.funcs != null) return false;
+		} else if (!funcs.equals(other.funcs)) return false;
+		return true;
+	}
 }

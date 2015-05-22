@@ -23,4 +23,23 @@ public class StructureDeclaration implements Declaration {
 	public boolean isSimple() {
 		return true;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((structure == null) ? 0 : structure.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		StructureDeclaration other = (StructureDeclaration) obj;
+		if (structure == null) {
+			if (other.structure != null) return false;
+		} else if (!structure.equals(other.structure)) return false;
+		return true;
+	}
 }

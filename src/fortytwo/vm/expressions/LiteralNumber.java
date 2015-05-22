@@ -21,4 +21,12 @@ public class LiteralNumber extends LiteralExpression {
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}
+	@Override
+	public String toString() {
+		return toSourceCode();
+	}
+	@Override
+	public boolean typedEquals(LiteralExpression other) {
+		return this.contents.compareTo(((LiteralNumber) other).contents) == 0;
+	}
 }

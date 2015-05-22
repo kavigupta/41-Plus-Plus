@@ -28,6 +28,8 @@ public class FunctionSignature {
 		result = prime * result
 				+ ((inputTypes == null) ? 0 : inputTypes.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((outputType == null) ? 0 : outputType.hashCode());
 		return result;
 	}
 	@Override
@@ -42,7 +44,15 @@ public class FunctionSignature {
 		if (name == null) {
 			if (other.name != null) return false;
 		} else if (!name.equals(other.name)) return false;
+		if (outputType == null) {
+			if (other.outputType != null) return false;
+		} else if (!outputType.equals(other.outputType)) return false;
 		return true;
+	}
+	@Override
+	public String toString() {
+		return "FunctionSignature [name=" + name + ", inputTypes="
+				+ inputTypes + ", outputType=" + outputType + "]";
 	}
 	public final TypeVariableRoster typeVariables(
 			List<? extends Expression> arguments) {

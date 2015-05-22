@@ -20,9 +20,36 @@ public class ParsedFunction {
 		this.r = r;
 	}
 	public FunctionImplemented contextualize(StaticEnvironment environment) {
+		f.addTypes(environment);
 		return new FunctionImplemented(f, body.stream()
 				.map(x -> x.contextualize(environment))
 				.collect(Collectors.toList()), r.output == null ? null
 				: r.output.contextualize(environment));
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((body == null) ? 0 : body.hashCode());
+		result = prime * result + ((f == null) ? 0 : f.hashCode());
+		result = prime * result + ((r == null) ? 0 : r.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		ParsedFunction other = (ParsedFunction) obj;
+		if (body == null) {
+			if (other.body != null) return false;
+		} else if (!body.equals(other.body)) return false;
+		if (f == null) {
+			if (other.f != null) return false;
+		} else if (!f.equals(other.f)) return false;
+		if (r == null) {
+			if (other.r != null) return false;
+		} else if (!r.equals(other.r)) return false;
+		return true;
 	}
 }

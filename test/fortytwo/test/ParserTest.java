@@ -8,8 +8,14 @@ import org.junit.Test;
 
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
+import fortytwo.language.Resources;
 
 public class ParserTest {
+	@Test
+	public void padderTest() {
+		assertEquals("Hello ,  World", "Hello, World".replaceAll(
+				Resources.PAD_FIND, Resources.PAD_REPLACE));
+	}
 	@Test
 	public void tokenizerTest() {
 		assertEquals(
@@ -39,6 +45,9 @@ public class ParserTest {
 		validateExprParse("_x");
 		validateExprParse("'2345'");
 		validateExprParse("2345.345");
+		validateExprParse("(40+3)");
+		validateExprParse("(40+-3)");
+		validateExprParse("(40%3)");
 		validateExprParse("(true and false)");
 		validateExprParse("((the _n th element of (the 3 rd element of _matrix))*23)");
 	}
@@ -89,11 +98,11 @@ public class ParserTest {
 	}
 	@Test
 	public void structDefTest() {
-		validateLineParse("Define a type called vector which"
+		validateLineParse("Define a type called vector that"
 				+ " contains a number called _x, a number called _y, and a number called _z.");
-		validateLineParse("Define a type called pair of _k and _v which contains a _k called _key and a _v called _value.");
+		validateLineParse("Define a type called pair of _k and _v that contains a _k called _key and a _v called _value.");
 		validateLineParse("Define a type called pair of _k and _v.");
-		validateLineParse("Define a type called triple of _a, _b, and _c which contains an (array of _a) called _arr.");
+		validateLineParse("Define a type called triple of _a, _b, and _c that contains an (array of _a) called _arr.");
 		validateLineParse("Define a type called null.");
 	}
 	@Test

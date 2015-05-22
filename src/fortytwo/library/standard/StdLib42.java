@@ -43,7 +43,9 @@ public class StdLib42 {
 					FunctionLetterCombine.INSTANCE,
 					FunctionLogicalOperator.AND,
 					FunctionLogicalOperator.OR,
-					FunctionLogicalOperator.NOT));
+					FunctionLogicalOperator.NOT, FunctionEquivalence.DF,
+					FunctionEquivalence.EQ, FunctionEquivalence.NEQ,
+					FunctionEquivalence.SA));
 	static {
 		Arrays.asList(FunctionCompare.Comparator.values())
 				.stream()

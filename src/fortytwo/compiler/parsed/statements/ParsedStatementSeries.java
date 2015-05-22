@@ -39,4 +39,23 @@ public class ParsedStatementSeries implements ParsedStatement {
 		if (statements.size() == 0) return true;
 		return statements.get(0).isSimple();
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((statements == null) ? 0 : statements.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		ParsedStatementSeries other = (ParsedStatementSeries) obj;
+		if (statements == null) {
+			if (other.statements != null) return false;
+		} else if (!statements.equals(other.statements)) return false;
+		return true;
+	}
 }

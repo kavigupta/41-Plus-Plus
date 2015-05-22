@@ -7,7 +7,6 @@ public final class Resources {
 	public static final String THE = "the";
 	/* Conjunctions */
 	public static final String CALLED = "called";
-	public static final String WHICH = "which";
 	public static final String OF = "of";
 	public static final String TO = "to";
 	public static final String ALL = "all";
@@ -48,11 +47,11 @@ public final class Resources {
 	public static final String DO = "Do";
 	public static final String THATS = "That's";
 	/* Regex */
-	public static final String OP_FIND = "(?<op>(//)|\\+|-|\\*|/|%)";
-	public static final String OP_REPLACE = " ${op} ";
-	public static final String PUNCT_FIND = "(?<punct>\\.|:|,)(?!\\d)";
-	public static final String PUNCT_REPLACE = " ${punct} ";
-	public static final String WHITESPACE = "\\s+";
 	public static final String SPACE = " ";
+	public static final String PAD_FIND = "(?<toreplace>(//)|\\+|-|\\*|/|%|((\\.|:|,)(?!\\d)))";
+	public static final String UNPAD_REPLACE = "${toreplace}";
+	public static final String PAD_REPLACE = SPACE + UNPAD_REPLACE + SPACE;
+	public static final String WHITESPACE = "\\s+";
+	public static final String UNPAD_FIND = SPACE + PAD_FIND + SPACE;
 	private Resources() {}
 }

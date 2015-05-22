@@ -12,6 +12,25 @@ import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.expressions.*;
 
 public class StructureRoster {
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((structs == null) ? 0 : structs.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		StructureRoster other = (StructureRoster) obj;
+		if (structs == null) {
+			if (other.structs != null) return false;
+		} else if (!structs.equals(other.structs)) return false;
+		return true;
+	}
 	public List<GenericStructure> structs;
 	public StructureRoster() {
 		this.structs = new ArrayList<>();
@@ -82,13 +101,18 @@ public class StructureRoster {
 	}
 	public boolean typeCheckConstructor(ConcreteType type,
 			VariableRoster fields) {
+		if (fields.value() != null) {
+			if (fields.value().resolveType().equals(type)) return true;
+			throw new RuntimeException(/* LOWPRI-E */);
+		}
 		if (type instanceof ArrayType) {
 			if (fields.pairs.size() != 1) throw new RuntimeException(/*
 														 * LOWPRI-E
 														 */);
 			Expression length = fields.pairs.get(VariableIdentifier
 					.getInstance("_length"));
-			if (length == null || length.resolveType() != PrimitiveType.BOOL)
+			if (length == null
+					|| length.resolveType() != PrimitiveType.NUMBER)
 				throw new RuntimeException(/* LOWPRI-E */);
 			return true;
 		}

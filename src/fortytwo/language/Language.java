@@ -52,7 +52,7 @@ public class Language {
 		if (token.equals(TRUE) || token.equals(FALSE)) return true;
 		char start = token.charAt(0);
 		return start == '(' || start == '+' || start == '-' || start == '*'
-				|| start == '/' || Character.isDigit(start)
+				|| start == '/' || start == '%' || Character.isDigit(start)
 				|| start == '\'' || start == '_';
 	}
 	public static boolean isValidVariableIdentifier(String name) {

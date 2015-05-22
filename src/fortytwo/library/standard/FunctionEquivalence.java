@@ -1,6 +1,5 @@
 package fortytwo.library.standard;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,54 +7,59 @@ import java.util.stream.Collectors;
 
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.TypeVariable;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
-import fortytwo.vm.expressions.LiteralNumber;
 
 public class FunctionEquivalence extends Function42 {
+	public static final TypeVariable TO_BE_COMPARED = new TypeVariable(
+			VariableIdentifier.getInstance("_FunctionEquivalence_compare"));
 	public static enum Comparator {
-		EQUALS(false, true, false, "is", "equal", "to"), NOT_EQUALS(true,
-				false, true, "is", "not", "equal", "to"), SAME_AS(false,
-				true, false, "is", "the", "same", "as"), DIFFERENT_FROM(
-				true, false, true, "is", "different", "from");
+		EQUALS(true, "is", "equal", "to"), NOT_EQUALS(false, "is", "not",
+				"equal", "to"), SAME_AS(true, "is", "the", "same", "as"),
+		DIFFERENT_FROM(false, "is", "different", "from");
 		public FunctionSignature sig;
-		public boolean lt, eq, gt;
-		private Comparator(boolean lt, boolean eq, boolean gt, String... name) {
+		public boolean eq;
+		private Comparator(boolean eq, String... name) {
 			List<FunctionComponent> s = new ArrayList<>();
 			s.add(FunctionArgument.INSTANCE);
 			s.addAll(Arrays.asList(name).stream()
 					.map(x -> new FunctionToken(x))
 					.collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
-			this.sig = FunctionSignature.getInstance(FunctionName
-					.getInstance(s), Arrays.asList(PrimitiveType.NUMBER,
-					PrimitiveType.NUMBER), PrimitiveType.BOOL);
-			this.lt = lt;
+			this.sig = FunctionSignature.getInstance(
+					FunctionName.getInstance(s),
+					Arrays.asList(TO_BE_COMPARED, TO_BE_COMPARED),
+					PrimitiveType.BOOL);
 			this.eq = eq;
-			this.gt = gt;
 		}
 	}
+	public static final FunctionEquivalence EQ = new FunctionEquivalence(
+			Comparator.EQUALS);
+	public static final FunctionEquivalence SA = new FunctionEquivalence(
+			Comparator.SAME_AS);
+	public static final FunctionEquivalence NEQ = new FunctionEquivalence(
+			Comparator.NOT_EQUALS);
+	public static final FunctionEquivalence DF = new FunctionEquivalence(
+			Comparator.DIFFERENT_FROM);
 	public final Comparator compare;
-	public FunctionEquivalence(Comparator compare) {
+	private FunctionEquivalence(Comparator compare) {
 		this.compare = compare;
 	}
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		BigDecimal a = ((LiteralNumber) arguments.get(0)).contents;
-		BigDecimal b = ((LiteralNumber) arguments.get(1)).contents;
-		int comp = a.compareTo(b);
-		if (comp == 0) return LiteralBool.getInstance(compare.eq);
-		if (comp > 0) return LiteralBool.getInstance(compare.gt);
-		return LiteralBool.getInstance(compare.lt);
+		return LiteralBool.getInstance(arguments.get(0).equals(
+				arguments.get(1)) == compare.eq);
 	}
 	@Override
 	public GenericType outputType() {

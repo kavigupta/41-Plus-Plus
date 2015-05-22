@@ -21,4 +21,8 @@ public class LiteralBool extends LiteralExpression {
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}
+	@Override
+	public boolean typedEquals(LiteralExpression other) {
+		return this.contents == ((LiteralBool) other).contents;
+	}
 }

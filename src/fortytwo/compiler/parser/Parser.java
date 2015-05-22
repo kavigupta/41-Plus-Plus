@@ -111,15 +111,10 @@ public class Parser {
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	public static List<String> tokenize42(String text) {
-		text = text.replaceAll(Resources.OP_FIND, Resources.OP_REPLACE)
-				.replaceAll(Resources.WHITESPACE, Resources.SPACE)
-				.replaceAll(Resources.PUNCT_FIND, Resources.PUNCT_REPLACE)
-				.trim()
-				+ Resources.SPACE;
-		return tokenizeRecursive(text)
-				.stream()
-				.filter(x -> x.replaceAll(Resources.WHITESPACE,
-						Resources.SPACE).length() != 0)
+		text = text.replaceAll(Resources.PAD_FIND, Resources.PAD_REPLACE)
+				.trim() + Resources.SPACE;
+		return tokenizeRecursive(text).stream()
+				.filter(x -> x.trim().length() != 0)
 				.collect(Collectors.toList());
 	}
 	private static List<String> tokenizeRecursive(String text) {
@@ -157,7 +152,7 @@ public class Parser {
 		}
 	}
 	private static Pair<String, Integer> popToken(String text) {
-		int space = text.indexOf(' ');
+		int space = text.replaceAll("\\s", " ").indexOf(' ');
 		if (space == -1) return Pair.getInstance(text, text.length());
 		return Pair.getInstance(text.substring(0, space), space + 1);
 	}
@@ -186,6 +181,7 @@ public class Parser {
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	private static Pair<String, Integer> popStringLiteral(String text) {
+		System.out.println("Popping: " + text);
 		String unes = "";
 		for (int i = 0; i < text.length(); i++) {
 			switch (text.charAt(i)) {
@@ -196,7 +192,9 @@ public class Parser {
 					unes += pair.key;
 					break;
 				case '\'':
-					return Pair.getInstance('\'' + unes + '\'', i + 2);
+					return Pair.getInstance('\'' + unes.replaceAll(
+							Resources.UNPAD_FIND,
+							Resources.UNPAD_REPLACE) + '\'', i + 2);
 				default:
 					unes += text.charAt(i);
 			}
