@@ -13,6 +13,9 @@ public class LiteralArray extends LiteralExpression {
 	public LiteralArray(ConcreteType contents, int length) {
 		this.contents = contents;
 		this.elements = new LiteralExpression[length];
+		for (int i = 0; i < elements.length; i++) {
+			elements[i] = contents.defaultValue();
+		}
 	}
 	public static LiteralArray getInstance(ConcreteType contents,
 			List<? extends LiteralExpression> elements) {

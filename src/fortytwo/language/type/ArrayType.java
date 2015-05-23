@@ -1,5 +1,7 @@
 package fortytwo.language.type;
 
+import fortytwo.vm.expressions.LiteralExpression;
+
 public class ArrayType implements ConcreteType {
 	public final ConcreteType contentType;
 	public ArrayType(ConcreteType contentType) {
@@ -27,5 +29,9 @@ public class ArrayType implements ConcreteType {
 	@Override
 	public String toSourceCode() {
 		return "(array of " + contentType.toSourceCode() + ")";
+	}
+	@Override
+	public LiteralExpression defaultValue() {
+		return null;
 	}
 }

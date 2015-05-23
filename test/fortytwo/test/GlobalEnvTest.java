@@ -36,20 +36,18 @@ public class GlobalEnvTest {
 				.tokenize42("Tell me what 'Hello, World' is.")))
 				.contextualize(env.staticEnv).execute(
 						env.minimalLocalEnvironment());
-		// assertEquals("Hello, World", buffer);
-		assertEquals("Hello, World", buffer);
+		assertEquals("'Hello, World'", buffer);
 		((ParsedStatement) StatementParser.parseStatement(Parser
 				.tokenize42("Tell me what 'Hello. World' is.")))
 				.contextualize(env.staticEnv).execute(
 						env.minimalLocalEnvironment());
-		assertEquals("Hello. World", buffer);
+		assertEquals("'Hello. World'", buffer);
 		((ParsedStatement) StatementParser
 				.parseStatement(Parser
 						.tokenize42("Tell me what 'a + b = c + d-e+f=g,dsad. asde.3452,2' is.")))
 				.contextualize(env.staticEnv).execute(
 						env.minimalLocalEnvironment());
-		assertEquals("a + b = c + d-e+f=g,dsad. asde.3452,2", buffer);
-		// fix this nonsense. TODO
+		assertEquals("'a + b = c + d-e+f=g,dsad. asde.3452,2'", buffer);
 	}
 	@Test
 	public void compareTest() {

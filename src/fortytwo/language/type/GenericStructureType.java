@@ -68,4 +68,8 @@ public class GenericStructureType implements GenericType {
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}
+	@Override
+	public String toString() {
+		return toSourceCode();
+	}
 }

@@ -27,7 +27,7 @@ public class FunctionFieldAccess extends Function42 {
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		if (!(arguments.get(0) instanceof LiteralObject))
 			throw new RuntimeException(/* LOWPRI-E */);
-		LiteralObject obj = (LiteralObject) arguments.get(1);
+		LiteralObject obj = (LiteralObject) arguments.get(0);
 		return obj.fields.referenceTo(field);
 	}
 	@Override

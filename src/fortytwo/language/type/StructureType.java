@@ -3,6 +3,7 @@ package fortytwo.language.type;
 import java.util.List;
 
 import fortytwo.language.SourceCode;
+import fortytwo.vm.expressions.LiteralExpression;
 
 public class StructureType implements ConcreteType {
 	public final List<String> name;
@@ -36,5 +37,13 @@ public class StructureType implements ConcreteType {
 	@Override
 	public String toSourceCode() {
 		return SourceCode.display(this);
+	}
+	@Override
+	public LiteralExpression defaultValue() {
+		return null;
+	}
+	@Override
+	public String toString() {
+		return toSourceCode();
 	}
 }

@@ -28,8 +28,6 @@ public class Definition implements Statement {
 	}
 	@Override
 	public boolean typeCheck() {
-		// everything had to be typechecked on input,
-		// LocalEnvironment.instance checks if the fields can be coerced
 		return structs.typeCheckConstructor(toCreate.type, fields);
 	}
 }

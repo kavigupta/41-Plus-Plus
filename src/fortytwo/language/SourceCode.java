@@ -115,14 +115,17 @@ public class SourceCode {
 		return literalNumber.contents.toPlainString();
 	}
 	public static String display(LiteralObject literalObject) {
-		StringBuffer sbuff = new StringBuffer("{").append(
-				literalObject.struct.type.toSourceCode()).append(":");
+		StringBuffer sbuff = new StringBuffer("{")
+				.append(literalObject.struct.type.toSourceCode());
+		if (literalObject.fields.pairs.size() != 0) sbuff.append(": ");
 		for (Entry<VariableIdentifier, LiteralExpression> e : literalObject.fields.pairs
 				.entrySet()) {
-			sbuff.append(e.getKey().toSourceCode()).append(" <- ")
-					.append(e.getValue().toSourceCode()).append(",");
+			sbuff.append(e.getKey().toSourceCode()).append(" <= ")
+					.append(e.getValue().toSourceCode()).append(", ");
 		}
-		return sbuff.append("}").toString();
+		return literalObject.fields.pairs.size() == 0 ? sbuff.append("}")
+				.toString() : sbuff.substring(0, sbuff.length() - 2)
+				+ ("}");
 	}
 	public static String display(LiteralString literalString) {
 		return "'" + literalString.contents + "'";

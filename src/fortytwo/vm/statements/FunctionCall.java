@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
+import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.Expression;
@@ -41,15 +42,20 @@ public class FunctionCall implements Expression, Statement {
 	}
 	@Override
 	public LiteralExpression literalValue(LocalEnvironment environment) {
-		System.out.println("Calling " + function + " with arguments = "
-				+ arguments);
-		return environment.global.funcs.get(function, arguments).apply(
-				environment.global,
+		System.out.println(this);
+		Function42 f = environment.global.funcs.get(function, arguments);
+		if (f == null) throw new RuntimeException(function.name.toString());
+		return f.apply(environment.global,
 				arguments.stream().map(x -> x.literalValue(environment))
 						.collect(Collectors.toList()));
 	}
 	@Override
 	public ConcreteType resolveType() {
 		return outputType;
+	}
+	@Override
+	public String toString() {
+		return "FunctionCall [function=" + function + ", outputType="
+				+ outputType + ", arguments=" + arguments + "]";
 	}
 }

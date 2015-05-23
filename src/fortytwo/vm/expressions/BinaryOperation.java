@@ -28,8 +28,6 @@ public class BinaryOperation implements Expression {
 	public LiteralExpression literalValue(LocalEnvironment environment) {
 		LiteralExpression f = first.literalValue(environment);
 		LiteralExpression s = second.literalValue(environment);
-		System.out.println(f.toSourceCode() + "" + operation
-				+ s.toSourceCode());
 		if (!(f instanceof LiteralNumber) || !(s instanceof LiteralNumber))
 			throw new RuntimeException(/* LOWPRI-E */);
 		BigDecimal bdfirst = ((LiteralNumber) f).contents;

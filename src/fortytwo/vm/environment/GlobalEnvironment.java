@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import fortytwo.compiler.parsed.constructions.ParsedFunction;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
@@ -40,8 +39,6 @@ public class GlobalEnvironment {
 	}
 	public static GlobalEnvironment interpret(List<Sentence> sentences,
 			VirtualMachine vm) {
-		System.out.println(sentences.stream().map(x -> x.toSourceCode())
-				.collect(Collectors.toList()));
 		StaticEnvironment environment = StaticEnvironment.getDefault();
 		GlobalEnvironment global = GlobalEnvironment.getDefaultEnvironment(
 				environment, vm);
@@ -100,6 +97,7 @@ public class GlobalEnvironment {
 		for (ParsedFunction func : functions) {
 			FunctionImplemented impl = func.contextualize(environment);
 			impl.body.forEach(Statement::typeCheck);
+			System.out.println(impl.body + "'s typecheck complete");
 			func.decontextualize(environment);
 			implFunctions.put(FunctionSignature.getInstance(func.f.name,
 					func.f.parameterTypes, func.f.outputType), impl);

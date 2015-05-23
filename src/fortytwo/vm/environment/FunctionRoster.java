@@ -17,11 +17,9 @@ public class FunctionRoster {
 		this.env = env;
 	}
 	public Function42 get(FunctionSignature signature, List<Expression> inputs) {
-		Pair<Function42, ConcreteType> func = StdLib42.matchFieldAccess(env,
-				signature.name, inputs);
+		Pair<Function42, ConcreteType> func = StdLib42
+				.matchCompiledFieldAccess(env, signature.name, inputs);
 		if (func != null) return func.getKey();
-		System.out.println("Getting function for signature = " + signature);
-		functions.forEach((fs, f) -> System.out.println(fs));
 		return functions.get(signature);
 	}
 	public void add(Function42 function) {

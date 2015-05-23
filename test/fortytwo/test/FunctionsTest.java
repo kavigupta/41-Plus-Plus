@@ -6,8 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fortytwo.compiler.Compiler42;
+import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
+import fortytwo.compiler.parser.StatementParser;
 import fortytwo.vm.environment.GlobalEnvironment;
 
 public class FunctionsTest {
@@ -24,14 +26,24 @@ public class FunctionsTest {
 			+ "		Set the value of _i to (_i+1)."
 			+ "	That's all."
 			+ "	Set the (2*_i-1) th element of _strInter to (the _i th element of _strLet)."
-			+ "	Exit the function and output (the letters _strInter combined to form a string).";
+			+ "	Exit the function and output (the letters _strInter combined to form a string)."
+			+ "Define a function called Test procedures. Define a (pair of number and number) called _pair with a _key of 2 and a _value of 3. Tell me what _pair is. Exit the function.";
 	GlobalEnvironment env;
 	String buffer;
 	@Before
 	public void init() {
 		env = Compiler42.compile(TEST_FUNCTIONS, x -> {
 			buffer = x;
+			System.out.println(x);
 		});
+	}
+	@Test
+	public void pairTest() {
+		((ParsedStatement) StatementParser.parseStatement(Parser
+				.tokenize42("Test procedures."))).contextualize(
+				env.staticEnv).execute(env.minimalLocalEnvironment());
+		assertEquals("{(pair of number and number): _key <= 2, _value <= 3}",
+				buffer);
 	}
 	@Test
 	public void xdoubleTest() {

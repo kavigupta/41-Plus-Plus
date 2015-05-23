@@ -35,4 +35,8 @@ public class GenericStructure {
 		} else if (!type.equals(other.type)) return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return "GenericStructure [type=" + type + ", fields=" + fields + "]";
+	}
 }

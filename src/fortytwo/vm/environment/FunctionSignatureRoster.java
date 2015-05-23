@@ -17,7 +17,6 @@ public class FunctionSignatureRoster {
 				if (f.accepts(inputs)) return f;
 			}
 		}
-		funcs.forEach(System.out::println);
 		throw new RuntimeException(/* LOWPRI-E */name.toString());
 	}
 	public void putReference(FunctionDefinition f) {

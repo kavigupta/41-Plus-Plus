@@ -2,6 +2,7 @@ package fortytwo.vm.environment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import fortytwo.language.field.Field;
 import fortytwo.language.field.GenericField;
@@ -12,25 +13,6 @@ import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.expressions.*;
 
 public class StructureRoster {
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((structs == null) ? 0 : structs.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		StructureRoster other = (StructureRoster) obj;
-		if (structs == null) {
-			if (other.structs != null) return false;
-		} else if (!structs.equals(other.structs)) return false;
-		return true;
-	}
 	public List<GenericStructure> structs;
 	public StructureRoster() {
 		this.structs = new ArrayList<>();
@@ -50,7 +32,8 @@ public class StructureRoster {
 		for (Field f : getStructure((StructureType) type).fields) {
 			if (f.name.equals(field)) { return f; }
 		}
-		throw new RuntimeException(/* LOWPRI-E */);
+		throw new RuntimeException(/* LOWPRI-E */field + " is not in "
+				+ getStructure((StructureType) type).fields);
 	}
 	public LiteralExpression instance(ConcreteType type,
 			LiteralVariableRoster fieldValues) {
@@ -71,25 +54,37 @@ public class StructureRoster {
 		}
 		if (!(type instanceof StructureType))
 			throw new RuntimeException(/* LOWPRI-E */);
-		return new LiteralObject(getStructure((StructureType) type),
-				fieldValues);
+		Structure struct = getStructure((StructureType) type);
+		fieldValues.pairs
+				.forEach((k, v) -> {
+					if (!struct.containsField(k))
+						throw new RuntimeException(struct.toString()
+								+ "\t" + k/*
+										 * LOWPRI-E
+										 */);
+				});
+		struct.fields.stream()
+				.filter(f -> !fieldValues.pairs.containsKey(f.name))
+				.forEach(f -> {
+					throw new RuntimeException(/* LOWPRI-E */);
+				});
+		return new LiteralObject(struct, fieldValues);
 	}
 	public Structure getStructure(StructureType struct) {
 		GenericStructureType genericType = genericVersionOf(struct);
-		GenericStructure baseStructure = getStructure(genericType);
-		List<GenericField> fieldsGeneric = baseStructure.fields;
+		List<ConcreteType> typeParameters = new ArrayList<>(struct.types);
 		List<Field> fields = new ArrayList<>();
-		for (int i = 0; i < struct.types.size(); i++) {
-			for (GenericField f : fieldsGeneric) {
-				if (f.equals(genericType.typeVariables.get(i))) {
-					fields.add(new Field(f.name, struct.types.get(i)));
-				}
+		for (GenericField f : getGenericStructure(genericType).fields) {
+			if (f.type instanceof ConcreteType) {
+				fields.add(new Field(f.name, (ConcreteType) f.type));
+				continue;
 			}
+			fields.add(new Field(f.name, typeParameters.remove(0)));
 		}
-		Structure structure = new Structure(struct, fields);
-		return structure;
+		return new Structure(struct, fields);
 	}
-	private GenericStructure getStructure(GenericStructureType genericType) {
+	private GenericStructure getGenericStructure(
+			GenericStructureType genericType) {
 		for (GenericStructure gs : structs)
 			if (gs.type.equals(genericType)) return gs;
 		throw new RuntimeException(/* LOWPRI-E */);
@@ -97,7 +92,10 @@ public class StructureRoster {
 	private GenericStructureType genericVersionOf(StructureType type) {
 		for (GenericStructure gs : structs)
 			if (gs.type.name.equals(type.name)) return gs.type;
-		throw new RuntimeException(/* LOWPRI-E */);
+		throw new RuntimeException(/* LOWPRI-E */type.name.toString()
+				+ "\t"
+				+ structs.stream().map(x -> x.type.name)
+						.collect(Collectors.toList()));
 	}
 	public boolean typeCheckConstructor(ConcreteType type,
 			VariableRoster fields) {
@@ -117,7 +115,7 @@ public class StructureRoster {
 			return true;
 		}
 		if (!(type instanceof StructureType)) {
-			if (fields.value().resolveType().equals(type)) return true;
+			// nothing but a structure or array has anything but a value
 			throw new RuntimeException(/* LOWPRI-E */);
 		}
 		Structure struct = getStructure((StructureType) type);
@@ -125,6 +123,15 @@ public class StructureRoster {
 			if (!fields.referenceTo(f.name).resolveType().equals(f.type))
 				throw new RuntimeException(/* LOWPRI-E */);
 		}
+		fields.pairs.forEach((k, v) -> {
+			if (!struct.containsField(k)) throw new RuntimeException(/*
+														 * LOWPRI-E
+														 */);
+		});
+		struct.fields.stream().filter(f -> !fields.pairs.containsKey(f.name))
+				.forEach(f -> {
+					throw new RuntimeException(/* LOWPRI-E */);
+				});
 		return true;
 	}
 	@Override
@@ -132,5 +139,24 @@ public class StructureRoster {
 		StructureRoster other = new StructureRoster();
 		other.structs.addAll(structs);
 		return other;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((structs == null) ? 0 : structs.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		StructureRoster other = (StructureRoster) obj;
+		if (structs == null) {
+			if (other.structs != null) return false;
+		} else if (!structs.equals(other.structs)) return false;
+		return true;
 	}
 }

@@ -1,6 +1,7 @@
 package fortytwo.language.type;
 
 import fortytwo.vm.environment.TypeVariableRoster;
+import fortytwo.vm.expressions.LiteralExpression;
 
 public interface ConcreteType extends GenericType {
 	@Override
@@ -18,4 +19,5 @@ public interface ConcreteType extends GenericType {
 	}
 	@Override
 	public String toSourceCode();
+	public LiteralExpression defaultValue();
 }

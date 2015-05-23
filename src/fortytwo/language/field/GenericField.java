@@ -32,4 +32,8 @@ public class GenericField {
 		} else if (!type.equals(other.type)) return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return "GenericField [name=" + name + ", type=" + type + "]";
+	}
 }

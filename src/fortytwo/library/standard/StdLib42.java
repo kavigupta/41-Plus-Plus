@@ -6,6 +6,7 @@ import java.util.List;
 
 import lib.standard.collections.Pair;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.language.Resources;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -69,7 +70,7 @@ public class StdLib42 {
 		TypeVariable _v = new TypeVariable(
 				VariableIdentifier.getInstance("_v"));
 		DEF_STRUCT.addStructure(new GenericStructure(
-				new GenericStructureType(Arrays.asList("a", "pair"), Arrays
+				new GenericStructureType(Arrays.asList("pair"), Arrays
 						.asList(_k, _v)), Arrays.asList(
 						new GenericField(VariableIdentifier
 								.getInstance("_key"), _k),
@@ -104,6 +105,33 @@ public class StdLib42 {
 		if (!(inputs.get(0) instanceof VariableIdentifier)) return null;
 		VariableIdentifier field = (VariableIdentifier) inputs.get(0);
 		ConcreteType type = inputs.get(1).resolveType();
+		if (type instanceof ArrayType) {
+			if (field.equals(VariableIdentifier.getInstance("_length")))
+				return Pair.getInstance(FunctionArrayLength.INSTANCE,
+						PrimitiveType.NUMBER);
+		} else if (type == PrimitiveType.STRING)
+			return Pair.getInstance(FunctionStrlen.INSTANCE,
+					PrimitiveType.NUMBER);
+		if (!(type instanceof StructureType)) return null;
+		FunctionFieldAccess f = new FunctionFieldAccess(field,
+				se.structs.getStructure((StructureType) type));
+		return Pair.getInstance(f, f.outputType());
+	}
+	public static Pair<Function42, ConcreteType> matchCompiledFieldAccess(
+			StaticEnvironment se, FunctionName name, List<Expression> inputs) {
+		if (name.function.size() != 4) return null;
+		if (!name.function.get(0).equals(new FunctionToken("the")))
+			return null;
+		if (!(name.function.get(1) instanceof FunctionToken)
+				|| !((FunctionToken) name.function.get(1)).token
+						.startsWith(Resources.VARIABLE_START))
+			return null;
+		if (!name.function.get(2).equals(new FunctionToken("of")))
+			return null;
+		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
+		VariableIdentifier field = VariableIdentifier
+				.getInstance(((FunctionToken) name.function.get(1)).token);
+		ConcreteType type = inputs.get(0).resolveType();
 		if (type instanceof ArrayType) {
 			if (field.equals(VariableIdentifier.getInstance("_length")))
 				return Pair.getInstance(FunctionArrayLength.INSTANCE,
