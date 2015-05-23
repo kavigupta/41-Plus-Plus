@@ -11,8 +11,4 @@ public interface ParsedExpression extends ParsedStatement {
 	public default boolean isSimple() {
 		return true;
 	}
-	@Override
-	public default void decontextualize(StaticEnvironment environment) {
-		// no op because expresssions should not modify a static environment
-	}
 }

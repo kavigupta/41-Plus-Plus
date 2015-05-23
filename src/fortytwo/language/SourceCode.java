@@ -49,7 +49,7 @@ public class SourceCode {
 						.toSourceCode())
 				+ " called "
 				+ parsedDefinition.name.name.name
-				+ (parsedDefinition.fields.pairs.size() == 0 ? ""
+				+ (parsedDefinition.fields.size() == 0 ? ""
 						: (" with " + displayFieldList(parsedDefinition.fields)));
 	}
 	public static String display(ParsedFieldAssignment parsedFieldAssignment) {
@@ -166,8 +166,8 @@ public class SourceCode {
 	}
 	private static String displayFieldList(ParsedVariableRoster fields) {
 		List<String> items = new ArrayList<>();
-		for (Entry<VariableIdentifier, ParsedExpression> e : fields.pairs
-				.entrySet()) {
+		for (Entry<VariableIdentifier, ParsedExpression> e : fields
+				.entryIterator()) {
 			items.add(Language.articleized(e.getKey().toSourceCode()
 					+ " of " + e.getValue().toSourceCode()));
 		}

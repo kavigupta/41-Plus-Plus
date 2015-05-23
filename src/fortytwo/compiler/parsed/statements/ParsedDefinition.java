@@ -16,17 +16,11 @@ public class ParsedDefinition implements ParsedStatement {
 	}
 	@Override
 	public Statement contextualize(StaticEnvironment environment) {
-		environment.types.add(name.name, name.type);
+		environment.addType(name.name, name.type);
 		System.out.println("Assigning var " + name.name + " to type "
 				+ name.type);
 		return new Definition(name, fields.contextualize(environment),
 				environment.structs);
-	}
-	@Override
-	public void decontextualize(StaticEnvironment environment) {
-		System.out.println("Removing var " + name.name + " to type "
-				+ name.type);
-		environment.types.remove(name.name, name.type);
 	}
 	@Override
 	public SentenceType type() {

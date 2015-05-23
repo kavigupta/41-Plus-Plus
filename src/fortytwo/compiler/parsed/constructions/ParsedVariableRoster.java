@@ -9,7 +9,7 @@ import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.VariableRoster;
 
 public class ParsedVariableRoster {
-	public final HashMap<VariableIdentifier, ParsedExpression> pairs = new HashMap<>();
+	private final HashMap<VariableIdentifier, ParsedExpression> pairs = new HashMap<>();
 	public void add(VariableIdentifier id, ParsedExpression expr) {
 		pairs.put(id, expr);
 	}
@@ -20,9 +20,12 @@ public class ParsedVariableRoster {
 		VariableRoster roster = new VariableRoster();
 		pairs.entrySet()
 				.stream()
-				.forEach(p -> roster.assign(p.getKey(), p.getValue()
-						.contextualize(env)));
+				.forEach(p -> roster.assign(p.getKey().contextualize(env),
+						p.getValue().contextualize(env)));
 		return roster;
+	}
+	public int size() {
+		return pairs.size();
 	}
 	@Override
 	public int hashCode() {

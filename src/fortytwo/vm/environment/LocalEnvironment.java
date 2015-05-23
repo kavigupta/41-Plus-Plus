@@ -14,21 +14,20 @@ public class LocalEnvironment {
 	public LiteralExpression referenceTo(VariableIdentifier id) {
 		LiteralExpression localE = vars.referenceTo(id);
 		if (localE != null) return localE;
-		LiteralExpression globalE = global.staticEnv.globalVariables
-				.referenceTo(id);
+		LiteralExpression globalE = global.staticEnv.referenceTo(id);
 		return globalE;
 	}
 	public ConcreteType typeOf(VariableIdentifier name) {
 		ConcreteType type = vars.typeOf(name);
 		if (type != null) return type;
-		type = global.staticEnv.globalVariables.typeOf(name);
+		type = global.staticEnv.typeOf(name);
 		if (type != null) return type;
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	public StaticEnvironment staticEnvironment() {
-		StaticEnvironment env = global.staticEnv.clone();
+		StaticEnvironment env = StaticEnvironment.getChild(global.staticEnv);
 		vars.pairs.entrySet().forEach(
-				variable -> env.types.add(variable.getKey(), variable
+				variable -> env.addType(variable.getKey(), variable
 						.getValue().resolveType()));
 		return env;
 	}

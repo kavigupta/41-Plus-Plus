@@ -1,20 +1,21 @@
 package fortytwo.vm.environment;
 
-import fortytwo.language.field.Field;
+import java.util.List;
+
+import fortytwo.compiler.parsed.declaration.FunctionDefinition;
+import fortytwo.language.identifier.FunctionName;
+import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.ConcreteType;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class StaticEnvironment {
+	private final StaticEnvironment container;
 	public final StructureRoster structs;
-	public final FunctionSignatureRoster funcs;
-	public final LiteralVariableRoster globalVariables;
-	public final VariableTypeRoster types;
-	public void addGlobalVariable(VariableIdentifier name,
-			LiteralExpression express) {
-		this.globalVariables.assign(name, express);
-		this.types.add(new Field(name, express.resolveType()));
-	}
+	private final FunctionSignatureRoster funcs;
+	private final LiteralVariableRoster globalVariables;
+	private final VariableTypeRoster types;
 	public static StaticEnvironment getDefault() {
 		StructureRoster structs = StdLib42.DEF_STRUCT;
 		FunctionSignatureRoster funcs = new FunctionSignatureRoster();
@@ -23,6 +24,16 @@ public class StaticEnvironment {
 		VariableTypeRoster types = new VariableTypeRoster();
 		return new StaticEnvironment(structs, funcs, globalVariables, types);
 	}
+	public static StaticEnvironment getChild(StaticEnvironment environment) {
+		return new StaticEnvironment(environment);
+	}
+	private StaticEnvironment(StaticEnvironment env) {
+		this.structs = env.structs;
+		this.funcs = new FunctionSignatureRoster();
+		this.globalVariables = new LiteralVariableRoster();
+		this.types = new VariableTypeRoster();
+		this.container = env;
+	}
 	private StaticEnvironment(StructureRoster structureRoster,
 			FunctionSignatureRoster sigRost, LiteralVariableRoster global,
 			VariableTypeRoster types) {
@@ -30,11 +41,38 @@ public class StaticEnvironment {
 		this.funcs = sigRost;
 		this.globalVariables = global;
 		this.types = types;
+		this.container = null;
 	}
-	@Override
-	public StaticEnvironment clone() {
-		return new StaticEnvironment(structs.clone(), funcs.clone(),
-				globalVariables.clone(), types.clone());
+	public void addGlobalVariable(VariableIdentifier name,
+			LiteralExpression express) {
+		this.globalVariables.assign(name, express);
+		this.addType(name, express.resolveType());
+	}
+	public void addType(VariableIdentifier variableIdentifier,
+			ConcreteType concreteType) {
+		types.add(variableIdentifier, concreteType);
+	}
+	public ConcreteType typeOf(VariableIdentifier name) {
+		ConcreteType type = types.typeOf(name);
+		if (type != null) return type;
+		if (container == null) throw new RuntimeException(/* LOWPRI-E */);
+		return container.typeOf(name);
+	}
+	public FunctionSignature referenceTo(FunctionName name,
+			List<ConcreteType> types) {
+		FunctionSignature sig = funcs.referenceTo(name, types);
+		if (sig != null) return sig;
+		if (container == null) throw new RuntimeException(/* LOWPRI-E */);
+		return container.referenceTo(name, types);
+	}
+	public void putReference(FunctionDefinition f) {
+		funcs.putReference(f);
+	}
+	public LiteralExpression referenceTo(VariableIdentifier name) {
+		LiteralExpression expr = globalVariables.referenceTo(name);
+		if (expr != null) return expr;
+		if (container == null) throw new RuntimeException(/* LOWPRI-E */);
+		return container.referenceTo(name);
 	}
 	@Override
 	public int hashCode() {

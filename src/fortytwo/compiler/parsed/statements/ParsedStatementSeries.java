@@ -26,10 +26,6 @@ public class ParsedStatementSeries implements ParsedStatement {
 				.collect(Collectors.toList()));
 	}
 	@Override
-	public void decontextualize(StaticEnvironment environment) {
-		statements.stream().forEach(x -> x.decontextualize(environment));
-	}
-	@Override
 	public SentenceType type() {
 		return SentenceType.COMPOUND;
 	}

@@ -2,7 +2,6 @@ package fortytwo.compiler.parsed.statements;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
@@ -31,30 +30,19 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 	}
 	@Override
 	public Expression contextualize(StaticEnvironment env) {
+		List<Expression> args = this.arguments.stream()
+				.map(x -> x.contextualize(env))
+				.collect(Collectors.toList());
 		Pair<Function42, ConcreteType> func = StdLib42.matchFieldAccess(env,
-				this.name,
-				this.arguments.stream().map(x -> x.contextualize(env))
-						.collect(Collectors.toList()));
+				this.name, args);
 		if (func != null)
 			return FunctionCall.getInstance(func.key.signature(),
-					func.value,
-					Arrays.asList(arguments.get(1).contextualize(env)));
-		Function<ParsedExpression, ConcreteType> typeResolver = x -> x
-				.contextualize(env).resolveType();
-		List<ConcreteType> types = arguments.stream().map(typeResolver)
+					func.value, Arrays.asList(args.get(1)));
+		List<ConcreteType> types = args.stream().map(Expression::resolveType)
 				.collect(Collectors.toList());
-		FunctionSignature sig = env.funcs.referenceTo(name, types);
-		return FunctionCall.getInstance(
-				sig,
-				sig.outputType.resolve(sig.typeVariables(arguments.stream()
-						.map(x -> x.contextualize(env))
-						.collect(Collectors.toList()))),
-				arguments.stream().map(x -> x.contextualize(env))
-						.collect(Collectors.toList()));
-	}
-	@Override
-	public void decontextualize(StaticEnvironment env) {
-		arguments.stream().forEach(x -> x.decontextualize(env));
+		FunctionSignature sig = env.referenceTo(name, types);
+		return FunctionCall.getInstance(sig,
+				sig.outputType.resolve(sig.typeVariables(args)), args);
 	}
 	@Override
 	public SentenceType type() {

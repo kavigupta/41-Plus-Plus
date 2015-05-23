@@ -25,7 +25,7 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 		this.name = name;
 	}
 	@Override
-	public Expression contextualize(StaticEnvironment env) {
+	public VariableIdentifier contextualize(StaticEnvironment env) {
 		this.env = env;
 		return this;
 	}
@@ -44,7 +44,7 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 	@Override
 	public ConcreteType resolveType() {
 		if (env == null) throw new RuntimeException(/* LOWPRI-E */);
-		return env.types.typeOf(this);
+		return env.typeOf(this);
 	}
 	@Override
 	public boolean typeCheck() {

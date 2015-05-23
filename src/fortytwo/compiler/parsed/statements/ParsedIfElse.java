@@ -23,15 +23,9 @@ public class ParsedIfElse implements ParsedStatement {
 	@Override
 	public Statement contextualize(StaticEnvironment env) {
 		Expression cond = condition.contextualize(env);
-		Statement ifsoS = ifso.contextualize(env), ifsoE = ifelse
-				.contextualize(env);
-		ifso.decontextualize(env);
-		ifelse.decontextualize(env);
+		Statement ifsoS = ifso.contextualize(StaticEnvironment.getChild(env)), ifsoE = ifelse
+				.contextualize(StaticEnvironment.getChild(env));
 		return IfElse.getInstance(cond, ifsoS, ifsoE);
-	}
-	@Override
-	public void decontextualize(StaticEnvironment environment) {
-		// already decontextualized
 	}
 	@Override
 	public SentenceType type() {

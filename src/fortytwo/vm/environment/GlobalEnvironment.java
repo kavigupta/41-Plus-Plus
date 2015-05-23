@@ -49,7 +49,7 @@ public class GlobalEnvironment {
 			switch (s.type()) {
 				case DECLARATION_FUNCT:
 					FunctionDefinition f = (FunctionDefinition) s;
-					environment.funcs.putReference(f);
+					environment.putReference(f);
 					FunctionReturn r = null;
 					i++;
 					ArrayList<ParsedStatement> body = new ArrayList<>();
@@ -98,9 +98,9 @@ public class GlobalEnvironment {
 			FunctionImplemented impl = func.contextualize(environment);
 			impl.body.forEach(Statement::typeCheck);
 			System.out.println(impl.body + "'s typecheck complete");
-			func.decontextualize(environment);
-			implFunctions.put(FunctionSignature.getInstance(func.f.name,
-					func.f.parameterTypes, func.f.outputType), impl);
+			FunctionDefinition f = func.definition();
+			implFunctions.put(FunctionSignature.getInstance(f.name,
+					f.parameterTypes, f.outputType), impl);
 		}
 		global.funcs.functions.putAll(implFunctions);
 		return global;

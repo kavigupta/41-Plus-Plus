@@ -11,9 +11,9 @@ import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.Statement;
 
 public class ParsedFunction {
-	public final FunctionDefinition f;
-	public final List<ParsedStatement> body;
-	public final FunctionReturn r;
+	private final FunctionDefinition f;
+	private final List<ParsedStatement> body;
+	private final FunctionReturn r;
 	public ParsedFunction(FunctionDefinition f, List<ParsedStatement> body,
 			FunctionReturn r) {
 		this.f = f;
@@ -21,15 +21,16 @@ public class ParsedFunction {
 		this.r = r;
 	}
 	public FunctionImplemented contextualize(StaticEnvironment environment) {
-		f.addTypes(environment);
+		StaticEnvironment local = StaticEnvironment.getChild(environment);
+		f.addTypes(local);
 		List<Statement> bodyS = body.stream().map(x -> {
-			return x.contextualize(environment);
+			return x.contextualize(local);
 		}).collect(Collectors.toList());
 		return new FunctionImplemented(f, bodyS, r.output == null ? null
-				: r.output.contextualize(environment));
+				: r.output.contextualize(local));
 	}
-	public void decontextualize(StaticEnvironment env) {
-		body.stream().forEach(x -> x.decontextualize(env));
+	public FunctionDefinition definition() {
+		return f;
 	}
 	@Override
 	public int hashCode() {

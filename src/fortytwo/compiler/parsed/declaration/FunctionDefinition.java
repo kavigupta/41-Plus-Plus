@@ -35,7 +35,7 @@ public class FunctionDefinition implements Declaration {
 			// LOWPRI allow user-defined generic functions.
 			if (!(parameterTypes.get(i) instanceof ConcreteType))
 				throw new RuntimeException(/* LOWPRI-E */);
-			environment.types.add(parameterVariables.get(i),
+			environment.addType(parameterVariables.get(i),
 					(ConcreteType) parameterTypes.get(i));
 		}
 	}

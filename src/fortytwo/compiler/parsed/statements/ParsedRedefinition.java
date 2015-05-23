@@ -17,11 +17,7 @@ public class ParsedRedefinition extends ParsedAssignment {
 	@Override
 	public Statement contextualize(StaticEnvironment environment) {
 		return new Redefinition(name, expr.contextualize(environment),
-				environment.types);
-	}
-	@Override
-	public void decontextualize(StaticEnvironment environment) {
-		// doesn't do anything
+				environment);
 	}
 	@Override
 	public String toSourceCode() {

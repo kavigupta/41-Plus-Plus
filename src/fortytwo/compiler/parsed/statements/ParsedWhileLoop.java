@@ -17,12 +17,8 @@ public class ParsedWhileLoop implements ParsedStatement {
 	@Override
 	public Statement contextualize(StaticEnvironment environment) {
 		Statement statementS = statement.contextualize(environment);
-		statement.decontextualize(environment);
-		return new WhileLoop(condition.contextualize(environment), statementS);
-	}
-	@Override
-	public void decontextualize(StaticEnvironment environment) {
-		// forms a closure, so no decontextualization.
+		return new WhileLoop(condition.contextualize(StaticEnvironment
+				.getChild(environment)), statementS);
 	}
 	@Override
 	public SentenceType type() {

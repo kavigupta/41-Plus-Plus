@@ -69,13 +69,14 @@ public class StructTest {
 	@Test
 	public void genericStructureTest() {
 		assertPrint(
-				"{triple: _x <= 2, _y <= 'abc', _z <= true}\r\n",
+				"{(triple of number, string, and bool): _x <= 2, _y <= 'abc', _z <= true}\r\n",
 				"Define a (triple of number, string, and bool) called _st with a _x of 2, a _y of 'abc', and a _z of true. Tell me what _st is.");
 		assertPrint(
-				"{triple: _x <= 2, _y <= 'abc', _z <= true}\r\n",
+				"true\r\n",
 				""
-						+ "Define a (triple of number, string, and bool) called _st with a _x of 2, a _y of 'abc', and a _z of true. Tell me what _st is."
-						+ "Define a (triple of number, string, and bool) called _st with a _x of 2, a _y of 'abc', and a _z of true. Tell me what _st is.");
+						+ "Define a (triple of number, string, and bool) called _st with a _x of 2, a _y of 'abc', and a _z of true."
+						+ "Define a (triple of number, string, and bool) called _st2 with a _x of 2, a _y of 'abc', and a _z of true."
+						+ "Tell me what (_st is equal to _st2) is.");
 	}
 	public void assertPrint(String result, String statement) {
 		LocalEnvironment loc = env.minimalLocalEnvironment();
