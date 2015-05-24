@@ -32,9 +32,8 @@ public class FunctionsTest {
 	String buffer;
 	@Before
 	public void init() {
-		env = Compiler42.compile(TEST_FUNCTIONS, x -> {
-			buffer = x;
-			System.out.println(x);
+		env = Compiler42.compile(TEST_FUNCTIONS, s -> {
+			buffer = s;
 		});
 	}
 	@Test

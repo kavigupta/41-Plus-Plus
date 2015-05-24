@@ -42,7 +42,6 @@ public class FunctionCall implements Expression, Statement {
 	}
 	@Override
 	public LiteralExpression literalValue(LocalEnvironment environment) {
-		System.out.println(this);
 		Function42 f = environment.global.funcs.get(function, arguments);
 		if (f == null) throw new RuntimeException(function.name.toString());
 		return f.apply(environment.global,

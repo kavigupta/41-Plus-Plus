@@ -7,6 +7,8 @@ import fortytwo.language.Operation;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.errors.RuntimeErrors;
+import fortytwo.vm.errors.TypingErrors;
 
 public class BinaryOperation implements Expression {
 	public static final BigDecimal PRECISION = BigDecimal.TEN.pow(100);
@@ -28,13 +30,12 @@ public class BinaryOperation implements Expression {
 	public LiteralExpression literalValue(LocalEnvironment environment) {
 		LiteralExpression f = first.literalValue(environment);
 		LiteralExpression s = second.literalValue(environment);
-		if (!(f instanceof LiteralNumber) || !(s instanceof LiteralNumber))
-			throw new RuntimeException(/* LOWPRI-E */);
+		// has already been typechecked.
 		BigDecimal bdfirst = ((LiteralNumber) f).contents;
 		BigDecimal bdsecond = ((LiteralNumber) s).contents;
 		if (operation.requiresSecondArgumentNotZero
 				&& bdsecond.compareTo(BigDecimal.ZERO) == 0)
-			throw new RuntimeException(/* LOWPRI-E */);
+			RuntimeErrors.divideByZero(this, null); // TODO fix
 		switch (operation) {
 			case ADD:
 				return LiteralNumber.getInstance(bdfirst.add(bdsecond));
@@ -57,19 +58,17 @@ public class BinaryOperation implements Expression {
 						.remainder(bdsecond));
 		}
 		// This should never happen.
-		throw new RuntimeException(/* LOWPRI-E */);
+		RuntimeErrors.unrecognizedOperator(this, null);// TODO FIX
+		return null;
 	}
 	@Override
 	public boolean typeCheck() {
 		if (!first.resolveType().equals(PrimitiveType.NUMBER))
-			throw new RuntimeException(/*
-								 * LOWPRI
-								 * -E
-								 */);
+			TypingErrors.nonNumberInArithmeticOperator(this, 1, null);// TODO
+															// FIX
 		if (!second.resolveType().equals(PrimitiveType.NUMBER))
-			throw new RuntimeException(/*
-								 * LOWPRI-E
-								 */second.resolveType().toString());
+			TypingErrors.nonNumberInArithmeticOperator(this, 2, null);// TODO
+															// FIX
 		return true;
 	}
 	@Override

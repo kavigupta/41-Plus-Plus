@@ -17,8 +17,6 @@ public class ParsedDefinition implements ParsedStatement {
 	@Override
 	public Statement contextualize(StaticEnvironment environment) {
 		environment.addType(name.name, name.type);
-		System.out.println("Assigning var " + name.name + " to type "
-				+ name.type);
 		return new Definition(name, fields.contextualize(environment),
 				environment.structs);
 	}

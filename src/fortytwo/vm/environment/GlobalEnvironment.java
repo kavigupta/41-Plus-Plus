@@ -97,7 +97,6 @@ public class GlobalEnvironment {
 		for (ParsedFunction func : functions) {
 			FunctionImplemented impl = func.contextualize(environment);
 			impl.body.forEach(Statement::typeCheck);
-			System.out.println(impl.body + "'s typecheck complete");
 			FunctionDefinition f = func.definition();
 			implFunctions.put(FunctionSignature.getInstance(f.name,
 					f.parameterTypes, f.outputType), impl);

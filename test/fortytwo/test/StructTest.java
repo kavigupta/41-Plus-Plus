@@ -77,6 +77,25 @@ public class StructTest {
 						+ "Define a (triple of number, string, and bool) called _st with a _x of 2, a _y of 'abc', and a _z of true."
 						+ "Define a (triple of number, string, and bool) called _st2 with a _x of 2, a _y of 'abc', and a _z of true."
 						+ "Tell me what (_st is equal to _st2) is.");
+		assertPrint(
+				"false\r\n",
+				""
+						+ "Define a (triple of number, string, and bool) called _st with a _x of 2, a _y of 'abc', and a _z of true."
+						+ "Define a (triple of number, string, and bool) called _st2 with a _x of 12345, a _y of 'abc', and a _z of true."
+						+ "Tell me what (_st is equal to _st2) is.");
+		assertPrint(
+				"false\r\n",
+				""
+						+ "Define a (triple of string, string, and bool) called _st with a _x of '2', a _y of 'abc', and a _z of true."
+						+ "Define a (triple of number, string, and bool) called _st2 with a _x of 12345, a _y of 'abc', and a _z of true."
+						+ "Tell me what (_st is equal to _st2) is.");
+		assertPrint(
+				"true\r\n",
+				""
+						+ "Define a (triple of number, string, and bool) called _st with a _x of 2, a _y of 'abc', and a _z of true."
+						+ "Define a (triple of number, string, and bool) called _st2 with a _x of 12345, a _y of 'def', and a _z of false."
+						+ "Set the _x of _st2 to 2. Set the _y of _st2 to 'abc'. Set the _z of _st2 to true."
+						+ "Tell me what (_st is equal to _st2) is.");
 	}
 	public void assertPrint(String result, String statement) {
 		LocalEnvironment loc = env.minimalLocalEnvironment();

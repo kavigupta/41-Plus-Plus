@@ -16,6 +16,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
+import fortytwo.vm.errors.CompilerError;
 
 public class StatementParser {
 	public static Sentence parseStatement(List<String> line) {
@@ -58,7 +59,8 @@ public class StatementParser {
 				.composeFunction(list);
 		if (function.name.function.size() == 1
 				&& function.name.function.get(0) instanceof FunctionArgument)
-			throw new RuntimeException(/* LOWPRI-E non-void function call */);
+			CompilerError.expectedStatementButReceivedExpression(list, null);// TODO
+																// FIX
 		return function;
 	}
 	private static ParsedAssignment parseAssignment(List<String> line) {

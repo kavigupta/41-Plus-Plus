@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.compiler.parsed.statements.ParsedIfElse;
@@ -111,10 +112,13 @@ public class Parser {
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
 	public static List<String> tokenize42(String text) {
-		text = text.replaceAll(Resources.PAD_FIND, Resources.PAD_REPLACE)
-				.trim() + Resources.SPACE;
-		return tokenizeRecursive(text).stream()
-				.filter(x -> x.trim().length() != 0)
+		// text = text.replaceAll(Resources.PAD_FIND, Resources.PAD_REPLACE)
+		// .trim() + Resources.SPACE;
+		// return tokenizeRecursive(text).stream()
+		// .filter(x -> x.trim().length() != 0)
+		// .collect(Collectors.toList());
+		return Tokenizer.tokenize(Context.minimal(), text).stream()
+				.map(t -> t.token).filter(s -> s.trim().length() != 0)
 				.collect(Collectors.toList());
 	}
 	private static List<String> tokenizeRecursive(String text) {
