@@ -157,6 +157,8 @@ public class ExpressionParser {
 									.tokenize42(Language
 											.deparenthesize(token))));
 					break;
+				case '[':
+					break;
 			}
 		}
 		return expressions;

@@ -30,7 +30,7 @@ public class Tokenizer {
 					// dump anything between parenthesis into an single
 					// token
 					tokens.add(new Token(input
-							.substring(i + 1, closeparen), Context
+							.substring(i, closeparen + 1), Context
 							.construct(parent, i, closeparen + 1)));
 					i = closeparen;
 					continue loop;
@@ -57,6 +57,7 @@ public class Tokenizer {
 								i, i + 1)));
 						continue loop;
 					}
+					break;
 				case '/':
 					add(parent, i, token, tokens);
 					String divOrFloorDiv;
@@ -68,13 +69,23 @@ public class Tokenizer {
 							parent, i, i + 1)));
 					continue loop;
 				case '\'':
-					add(parent, i, token, tokens);
-					int closequote = findCloseQuote(input, i);
-					tokens.add(new Token(unescape(input.substring(i + 1,
-							closequote)), Context.construct(parent, i,
-							closequote + 1)));
-					i = closequote;
-					continue loop;
+					if (i - 1 < 0
+							|| Character.isWhitespace(input
+									.charAt(i - 1))) {
+						add(parent, i, token, tokens);
+						int closequote = findCloseQuote(input, i);
+						System.out.println("Quote mark in " + input
+								+ " quote = " + i + "; : closequote = "
+								+ closequote);
+						tokens.add(new Token("'"
+								+ unescape(input.substring(i + 1,
+										closequote)) + "'" + "",
+								Context.construct(parent, i,
+										closequote + 1)));
+						i = closequote;
+						continue loop;
+					}
+					break;
 			}
 			if (Character.isWhitespace(input.charAt(i))) {
 				add(parent, i, token, tokens);
@@ -86,14 +97,14 @@ public class Tokenizer {
 		return tokens;
 	}
 	private static int findCloseQuote(String input, int i) {
-		for (int j = i + 1; j < input.length(); i++) {
+		for (int j = i + 1; j < input.length(); j++) {
 			if (input.charAt(j) != '\'') continue;
 			if (input.charAt(j - 1) != '\\') return j;
 		}
 		return -1;
 	}
 	private static int findCloseParen(String input, int i) {
-		for (int j = i + 1; j < input.length(); i++) {
+		for (int j = i + 1; j < input.length(); j++) {
 			if (input.charAt(j) == ')') return j;
 			if (input.charAt(j) == '\'' && input.charAt(j - 1) != '\\') {
 				j = findCloseQuote(input, j);
@@ -119,26 +130,28 @@ public class Tokenizer {
 	private static int findCloseBracket(String input, int i) {
 		return input.indexOf(']', i);
 	}
-	private static String unescape(String str) {
-		str = str.replaceAll("\\\\b", "\b");
-		str = str.replaceAll("\\\\t", "\t");
-		str = str.replaceAll("\\\\n", "\n");
-		str = str.replaceAll("\\\\r", "\r");
-		str = str.replaceAll("\\\\f", "\f");
-		str = str.replaceAll("\\\\'", "\'");
-		str = str.replaceAll("\\\\\\\\", "\\");
-		Matcher mat = Pattern.compile(
-				"\\\\u(?<hexcode>[0-9A-Fa-f][0-9A-Fa-f])").matcher(str);
+	public static String unescape(String str) {
+		str = str.replace("\\b", "\b");
+		str = str.replace("\\t", "\t");
+		str = str.replace("\\n", "\n");
+		str = str.replace("\\r", "\r");
+		str = str.replace("\\f", "\f");
+		str = str.replace("\\'", "\'");
+		str = str.replace("\\\\", "\\");
+		Matcher mat = Pattern
+				.compile("\\\\u(?<hexcode>[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])")
+				.matcher(str);
 		int i = 0;
 		StringBuffer sbuff = new StringBuffer();
 		while (mat.find()) {
 			int start = mat.start();
 			int end = mat.end();
+			int c = Integer.parseInt(mat.group("hexcode").toUpperCase(), 16);
 			sbuff.append(str.substring(i, start)).append(
-					Integer.parseInt(mat.group("hexcode").toUpperCase(),
-							16));
+					Character.toString((char) c));
 			i = end;
 		}
+		sbuff.append(str.substring(i));
 		return sbuff.toString();
 	}
 }

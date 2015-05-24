@@ -2,8 +2,6 @@ package fortytwo.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-
 import org.junit.Test;
 
 import fortytwo.compiler.parser.ExpressionParser;
@@ -17,30 +15,6 @@ public class ParserTest {
 				Resources.PAD_FIND, Resources.PAD_REPLACE));
 	}
 	@Test
-	public void tokenizerTest() {
-		assertEquals(
-				Arrays.asList("Define", "a", "number", "called", "_x", "."),
-				Parser.tokenize42("Define a number called _x."));
-		assertEquals(
-				Arrays.asList("If", "4.0", "+", "4.0", "=", "2", ":",
-						"Dothis", ".", "Otherwise", ":", "Dothat", "."),
-				Parser.tokenize42("If 4.0 + 4.0 = 2: Dothis. Otherwise: Dothat."));
-		assertEquals(
-				Arrays.asList("Define", "a", "string", "called", "_x",
-						"with", "a", "value", "of", "'()[]'\r\n'", "."),
-				Parser.tokenize42("Define a string called _x with a value of '()[]\\'\\r\\n'."));
-		assertEquals(
-				Arrays.asList("Define", "a", "number", "called", "_x", "."),
-				Parser.tokenize42("Define a [COMPILER ERROR HERE ''''''''''''] number called _x."));
-		assertEquals(
-				Arrays.asList("Set", "the", "value", "of", "_x", "to",
-						"((1 % 2) + (2 + 3) * (3 // 4))", "."),
-				Parser.tokenize42("Set the value of _x to ((1%2)+(2+3)*(3//4))."));
-		assertEquals(
-				Arrays.asList("_technically_this_is_a_valid_var''iable_name'"),
-				Parser.tokenize42("_technically_this_is_a_valid_var''iable_name'"));
-	}
-	@Test
 	public void expressionParserTest() {
 		validateExprParse("_x");
 		validateExprParse("'2345'");
@@ -50,6 +24,7 @@ public class ParserTest {
 		validateExprParse("(40%3)");
 		validateExprParse("(true and false)");
 		validateExprParse("((the _n th element of (the 3 rd element of _matrix))*23)");
+		assertEquals("", cdLoopExpr("[2345.345]"));
 	}
 	@Test
 	public void definitionParserTest() {
