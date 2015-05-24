@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lib.standard.collections.Pair;
 import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.compiler.parsed.statements.ParsedIfElse;
@@ -111,126 +111,14 @@ public class Parser {
 		}
 		throw new RuntimeException(/* LOWPRI-E */);
 	}
-	public static List<String> tokenize42(String text) {
+	public static List<Token> tokenize42(String text) {
 		// text = text.replaceAll(Resources.PAD_FIND, Resources.PAD_REPLACE)
 		// .trim() + Resources.SPACE;
 		// return tokenizeRecursive(text).stream()
 		// .filter(x -> x.trim().length() != 0)
 		// .collect(Collectors.toList());
 		return Tokenizer.tokenize(Context.minimal(), text).stream()
-				.map(t -> t.token).filter(s -> s.trim().length() != 0)
+				.filter(t -> t.token.trim().length() != 0)
 				.collect(Collectors.toList());
-	}
-	private static List<String> tokenizeRecursive(String text) {
-		if (text.length() == 0) return new ArrayList<>();
-		switch (text.charAt(0)) {
-			case '\'':
-				Pair<String, Integer> poppedString = popStringLiteral(text
-						.substring(1));
-				return merge(poppedString.key,
-						tokenizeRecursive(text
-								.substring(poppedString.value)));
-			case '[':
-				int endb = text.indexOf(']');
-				if (endb < 0) throw new RuntimeException(/* LOWPRI-E */);
-				return tokenizeRecursive(text.substring(endb + 1));
-			case '(':
-				Pair<String, Integer> poppedParenthetical = popParenthetical(text
-						.substring(1));
-				return merge(poppedParenthetical.key,
-						tokenizeRecursive(text
-								.substring(poppedParenthetical.value)));
-			case ']':
-			case ')':
-				throw new RuntimeException(/* LOWPRI-E */);
-			case ':':
-			case '.':
-			case ';':
-			case ',':
-				return merge(Character.toString(text.charAt(0)),
-						tokenizeRecursive(text.substring(1)));
-			default:
-				Pair<String, Integer> token = popToken(text);
-				return merge(token.key,
-						tokenizeRecursive(text.substring(token.value)));
-		}
-	}
-	private static Pair<String, Integer> popToken(String text) {
-		int space = text.replaceAll("\\s", " ").indexOf(' ');
-		if (space == -1) return Pair.getInstance(text, text.length());
-		return Pair.getInstance(text.substring(0, space), space + 1);
-	}
-	private static List<String> merge(String key,
-			List<String> tokenizeRecursive) {
-		ArrayList<String> list = new ArrayList<>();
-		list.add(key);
-		list.addAll(tokenizeRecursive);
-		return list;
-	}
-	private static Pair<String, Integer> popParenthetical(String text) {
-		int paren = 1;
-		for (int i = 0; i < text.length(); i++) {
-			switch (text.charAt(i)) {
-				case '(':
-					paren++;
-					break;
-				case ')':
-					paren--;
-					break;
-			}
-			if (paren == 0)
-				return Pair.getInstance('(' + text.substring(0, i) + ')',
-						i + 2);
-		}
-		throw new RuntimeException(/* LOWPRI-E */);
-	}
-	private static Pair<String, Integer> popStringLiteral(String text) {
-		String unes = "";
-		for (int i = 0; i < text.length(); i++) {
-			switch (text.charAt(i)) {
-				case '\\':
-					Pair<Character, Integer> pair = popEscape(text
-							.substring(i + 1));
-					i += pair.value;
-					unes += pair.key;
-					break;
-				case '\'':
-					return Pair.getInstance('\'' + unes.replaceAll(
-							Resources.UNPAD_FIND,
-							Resources.UNPAD_REPLACE) + '\'', i + 2);
-				default:
-					unes += text.charAt(i);
-			}
-		}
-		throw new RuntimeException(/* LOWPRI-E */);
-	}
-	private static Pair<Character, Integer> popEscape(String text) {
-		if (text.length() == 0) throw new RuntimeException(/* LOWPRI-E */);
-		switch (text.charAt(0)) {
-			case 'n':
-				return Pair.getInstance('\n', 1);
-			case 'r':
-				return Pair.getInstance('\r', 1);
-			case 'b':
-				return Pair.getInstance('\b', 1);
-			case 't':
-				return Pair.getInstance('\t', 1);
-			case 'f':
-				return Pair.getInstance('\f', 1);
-			case '\'':
-				return Pair.getInstance('\'', 1);
-			case '\\':
-				return Pair.getInstance('\\', 1);
-			case 'u':
-				try {
-					return Pair.getInstance((char) Integer.parseInt(
-							text.substring(1, 5), 16), 5);
-				} catch (NumberFormatException
-						| ArrayIndexOutOfBoundsException e) {
-					throw new RuntimeException(/* LOWPRI-E */);
-				}
-			default:
-				throw new RuntimeException(/* LOWPRI-E */);
-		}
 	}
 }
