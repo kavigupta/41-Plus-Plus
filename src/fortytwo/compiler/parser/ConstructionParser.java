@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
+import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
@@ -24,31 +25,32 @@ import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.constructions.GenericStructure;
 
 public class ConstructionParser {
-	public static ParsedFunctionCall composeFunction(List<String> list) {
+	public static ParsedFunctionCall composeFunction(List<Token> list) {
 		Pair<FunctionName, List<ParsedExpression>> fsig = parseFunctionSignature(list);
 		return ParsedFunctionCall.getInstance(fsig.key, fsig.value);
 	}
-	public static StructureDeclaration parseStructDefinition(List<String> line) {
+	public static StructureDeclaration parseStructDefinition(List<Token> line) {
 		/*
 		 * Define a structure called <structure> of <typevar1>, <typevar2>,
 		 * and <typevar3> that contains a[n] <type> called <field> , a[n]
 		 * <type> called <field>, ...
 		 */
-		if (!line.get(1).equals(Resources.A)
-				|| !line.get(3).equals(Resources.CALLED))
+		if (!line.get(1).token.equals(Resources.A)
+				|| !line.get(3).token.equals(Resources.CALLED))
 			throw new RuntimeException(/* LOWPRI-E */);
 		line.subList(0, 4).clear();
-		ArrayList<String> structExpression = new ArrayList<>();
+		ArrayList<Token> structExpression = new ArrayList<>();
 		int i = 0;
-		for (; i < line.size() && !line.get(i).equals(Resources.THAT)
-				&& !line.get(i).equals(Resources.OF); i++) {
+		for (; i < line.size() && !line.get(i).token.equals(Resources.THAT)
+				&& !line.get(i).token.equals(Resources.OF); i++) {
 			structExpression.add(line.get(i));
 		}
 		List<TypeVariable> typeVariables = new ArrayList<>();
-		if (i < line.size() && line.get(i).equals(Resources.OF)) {
+		if (i < line.size() && line.get(i).token.equals(Resources.OF)) {
 			i++;
-			for (; i < line.size() && !line.get(i).equals(Resources.THAT); i++) {
-				if (Language.isValidVariableIdentifier(line.get(i))) {
+			for (; i < line.size()
+					&& !line.get(i).token.equals(Resources.THAT); i++) {
+				if (Language.isValidVariableIdentifier(line.get(i).token)) {
 					typeVariables.add(new TypeVariable(VariableIdentifier
 							.getInstance(line.get(i))));
 				}
@@ -56,7 +58,7 @@ public class ConstructionParser {
 		}
 		ArrayList<GenericField> fields = new ArrayList<>();
 		for (; i < line.size(); i++) {
-			if (!line.get(i).equals(Resources.CALLED)) continue;
+			if (!line.get(i).token.equals(Resources.CALLED)) continue;
 			fields.add(new GenericField(VariableIdentifier.getInstance(line
 					.get(i + 1)), ExpressionParser.parseType(line
 					.get(i - 1))));
@@ -65,28 +67,28 @@ public class ConstructionParser {
 				new GenericStructureType(structExpression, typeVariables),
 				fields));
 	}
-	public static FunctionDefinition parseFunctionDefinition(List<String> line) {
+	public static FunctionDefinition parseFunctionDefinition(List<Token> line) {
 		/*
 		 * Define a function called <function expression> that takes a[n]
 		 * <type1> called <field1>, a[n] <type2> called <field2>, and a[n]
 		 * <type3> called <field3>( and outputs a <return type>)?.
 		 */
-		if (!line.get(1).equals(Resources.A)
-				|| !line.get(2).equals(Resources.DECL_FUNCTION)
-				|| !line.get(3).equals(Resources.CALLED))
+		if (!line.get(1).token.equals(Resources.A)
+				|| !line.get(2).token.equals(Resources.DECL_FUNCTION)
+				|| !line.get(3).token.equals(Resources.CALLED))
 			throw new RuntimeException(/* LOWPRI-E */);
 		int i = 4;
-		ArrayList<String> funcExpress = new ArrayList<>();
-		for (; i < line.size() && !line.get(i).equals(Resources.THAT); i++) {
+		ArrayList<Token> funcExpress = new ArrayList<>();
+		for (; i < line.size() && !line.get(i).token.equals(Resources.THAT); i++) {
 			funcExpress.add(line.get(i));
 		}
 		i++;
 		Map<VariableIdentifier, GenericType> vars = new HashMap<>();
 		if (i < line.size()) {
-			switch (line.get(i)) {
+			switch (line.get(i).token) {
 				case Resources.TAKES:
 					for (; i < line.size(); i++) {
-						if (!line.get(i).equals(Resources.CALLED))
+						if (!line.get(i).token.equals(Resources.CALLED))
 							continue;
 						GenericType type = ExpressionParser
 								.parseType(line.get(i - 1));
@@ -106,7 +108,7 @@ public class ConstructionParser {
 										 */);
 			}
 		}
-		int outputloc = line.indexOf(Resources.OUTPUTS);
+		int outputloc = Token.indexOf(line, Resources.OUTPUTS);
 		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(funcExpress);
 		List<VariableIdentifier> variables = sig.value
 				.stream()
@@ -124,7 +126,7 @@ public class ConstructionParser {
 		if (outputloc < 0)
 			return new FunctionDefinition(sig.key, variables, types,
 					PrimitiveType.VOID);
-		if (!Language.isArticle(line.get(outputloc + 1)))
+		if (!Language.isArticle(line.get(outputloc + 1).token))
 			throw new RuntimeException(/* LOWPRI-E */);
 		line.subList(0, outputloc + 2).clear();
 		GenericType outputType = ExpressionParser.parseType(Language
@@ -135,14 +137,14 @@ public class ConstructionParser {
 				(ConcreteType) outputType);
 	}
 	private static Pair<FunctionName, List<ParsedExpression>> parseFunctionSignature(
-			List<String> list) {
+			List<Token> list) {
 		List<FunctionComponent> function = new ArrayList<>();
-		List<String> currentExpression = new ArrayList<>();
+		List<Token> currentExpression = new ArrayList<>();
 		List<ParsedExpression> arguments = new ArrayList<>();
-		for (String token : list) {
-			if (Language.isExpression(token)) {
-				currentExpression.add(token);
-			} else if (Language.isFunctionToken(token)) {
+		for (Token tok : list) {
+			if (Language.isExpression(tok.token)) {
+				currentExpression.add(tok);
+			} else if (Language.isFunctionToken(tok.token)) {
 				if (currentExpression.size() != 0) {
 					ParsedExpression argument = ExpressionParser
 							.parsePureExpression(currentExpression);
@@ -150,7 +152,7 @@ public class ConstructionParser {
 					function.add(FunctionArgument.INSTANCE);
 					currentExpression.clear();
 				}
-				function.add(new FunctionToken(token));
+				function.add(new FunctionToken(tok.token));
 			} else break;
 		}
 		if (currentExpression.size() != 0) {

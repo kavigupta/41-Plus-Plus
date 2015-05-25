@@ -39,8 +39,9 @@ public class FunctionFieldAccess extends Function42 {
 	}
 	@Override
 	public FunctionSignature signature() {
-		return FunctionSignature.getInstance(
-				FunctionName.getInstance("the", field.name, "of", ""),
-				Arrays.asList(from.type), outputType());
+		return FunctionSignature
+				.getInstance(FunctionName.getInstance("the",
+						field.name.token, "of", ""), Arrays
+						.asList(from.type), outputType());
 	}
 }

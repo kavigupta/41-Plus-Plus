@@ -3,10 +3,13 @@ package fortytwo.test;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
-import fortytwo.compiler.parser.Parser;
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.compiler.parser.Tokenizer;
 
 public class TokenizerTest {
@@ -21,38 +24,48 @@ public class TokenizerTest {
 	}
 	@Test
 	public void stringTest() {
-		assertEquals(Arrays.asList("'abc def ghi'"),
-				Parser.tokenize42("'abc def ghi'"));
-		assertEquals(Arrays.asList("'( [)] 'unmatched'"),
-				Parser.tokenize42("'( [)] \\'unmatched'"));
+		assertListEquals(Arrays.asList("'abc def ghi'"),
+				Tokenizer.tokenize(Context.synthetic(), "'abc def ghi'"));
+		assertListEquals(Arrays.asList("'( [)] 'unmatched'"),
+				Tokenizer.tokenize(Context.synthetic(),
+						"'( [)] \\'unmatched'"));
 	}
 	@Test
 	public void groupingTest() {
-		assertEquals(Arrays.asList("(([(]))", "(')[][')"),
-				Parser.tokenize42("(([(])) (')[][')"));
+		assertListEquals(Arrays.asList("(([(]))", "(')[][')"),
+				Tokenizer.tokenize(Context.synthetic(), "(([(])) (')[][')"));
 	}
 	@Test
 	public void statementTests() {
-		assertEquals(
-				Arrays.asList("Define", "a", "number", "called", "_x", "."),
-				Parser.tokenize42("Define a number called _x."));
-		assertEquals(
-				Arrays.asList("If", "4.0", "+", "4.0", "=", "2", ":",
-						"Dothis", ".", "Otherwise", ":", "Dothat", "."),
-				Parser.tokenize42("If 4.0 + 4.0 = 2: Dothis. Otherwise: Dothat."));
-		assertEquals(
+		assertListEquals(Arrays.asList("Define", "a", "number", "called",
+				"_x", "."), Tokenizer.tokenize(Context.synthetic(),
+				"Define a number called _x."));
+		assertListEquals(Arrays.asList("If", "4.0", "+", "4.0", "=", "2",
+				":", "Dothis", ".", "Otherwise", ":", "Dothat", "."),
+				Tokenizer.tokenize(Context.synthetic(),
+						"If 4.0 + 4.0 = 2: Dothis. Otherwise: Dothat."));
+		assertListEquals(
 				Arrays.asList("Define", "a", "string", "called", "_x",
 						"with", "a", "value", "of", "'()[]'\r\n'", "."),
-				Parser.tokenize42("Define a string called _x with a value of '()[]\\'\\r\\n'."));
-		assertEquals(
+				Tokenizer.tokenize(Context.synthetic(),
+						"Define a string called _x with a value of '()[]\\'\\r\\n'."));
+		assertListEquals(
 				Arrays.asList("Define", "a", "number", "called", "_x", "."),
-				Parser.tokenize42("Define a [COMPILER ERROR HERE ''''''''''''] number called _x."));
-		assertEquals(
-				Arrays.asList("Set", "the", "value", "of", "_x", "to",
-						"((1%2)+(2+3)*(3//4))", "."),
-				Parser.tokenize42("Set the value of _x to ((1%2)+(2+3)*(3//4))."));
-		assertEquals(
+				Tokenizer.tokenize(Context.synthetic(),
+						"Define a [COMPILER ERROR HERE ''''''''''''] number called _x."));
+		assertListEquals(Arrays.asList("Set", "the", "value", "of", "_x",
+				"to", "((1%2)+(2+3)*(3//4))", "."), Tokenizer.tokenize(
+				Context.synthetic(),
+				"Set the value of _x to ((1%2)+(2+3)*(3//4))."));
+		assertListEquals(
 				Arrays.asList("_technically_this_is_a_valid_var''iable_name'"),
-				Parser.tokenize42("_technically_this_is_a_valid_var''iable_name'"));
+				Tokenizer.tokenize(Context.synthetic(),
+						"_technically_this_is_a_valid_var''iable_name'"));
+	}
+	private void assertListEquals(List<String> expected, List<Token> actual) {
+		assertEquals(
+				expected,
+				actual.stream().map(x -> x.token)
+						.collect(Collectors.toList()));
 	}
 }

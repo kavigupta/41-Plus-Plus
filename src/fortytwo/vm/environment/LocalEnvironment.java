@@ -26,9 +26,8 @@ public class LocalEnvironment {
 	}
 	public StaticEnvironment staticEnvironment() {
 		StaticEnvironment env = StaticEnvironment.getChild(global.staticEnv);
-		vars.pairs.entrySet().forEach(
-				variable -> env.addType(variable.getKey(), variable
-						.getValue().resolveType()));
+		vars.forEach(variable -> env.addType(variable.getKey(), variable
+				.getValue().resolveType()));
 		return env;
 	}
 	@Override

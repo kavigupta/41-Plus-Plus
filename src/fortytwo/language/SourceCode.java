@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.FunctionReturn;
@@ -117,13 +119,11 @@ public class SourceCode {
 	public static String display(LiteralObject literalObject) {
 		StringBuffer sbuff = new StringBuffer("{")
 				.append(literalObject.struct.type.toSourceCode());
-		if (literalObject.fields.pairs.size() != 0) sbuff.append(": ");
-		for (Entry<VariableIdentifier, LiteralExpression> e : literalObject.fields.pairs
-				.entrySet()) {
-			sbuff.append(e.getKey().toSourceCode()).append(" <= ")
-					.append(e.getValue().toSourceCode()).append(", ");
-		}
-		return literalObject.fields.pairs.size() == 0 ? sbuff.append("}")
+		if (literalObject.fields.size() != 0) sbuff.append(": ");
+		literalObject.fields.forEach(e -> sbuff
+				.append(e.getKey().toSourceCode()).append(" <= ")
+				.append(e.getValue().toSourceCode()).append(", "));
+		return literalObject.fields.size() == 0 ? sbuff.append("}")
 				.toString() : sbuff.substring(0, sbuff.length() - 2)
 				+ ("}");
 	}
@@ -131,9 +131,9 @@ public class SourceCode {
 		return "'" + literalString.contents + "'";
 	}
 	public static String display(StructureType st) {
-		if (st.types.size() == 0) return parenthesizedName(st.name);
+		if (st.types.size() == 0) return parenthesizedName(st.name).token;
 		StringBuffer buff = new StringBuffer("(");
-		for (String s : st.name) {
+		for (Token s : st.name) {
 			buff.append(s).append(" ");
 		}
 		List<String> types = st.types.stream().map(x -> x.toSourceCode())
@@ -143,7 +143,7 @@ public class SourceCode {
 	}
 	public static String display(GenericStructureType type) {
 		StringBuffer name = new StringBuffer();
-		for (String s : type.name)
+		for (Token s : type.name)
 			name.append(s).append(' ');
 		String list = displayList(type.typeVariables.stream()
 				.map(x -> x.toSourceCode()).collect(Collectors.toList()));
@@ -155,14 +155,15 @@ public class SourceCode {
 		if (statement.isSimple()) return s;
 		return "Do the following: " + s + "." + " That's all";
 	}
-	private static String parenthesizedName(List<String> name) {
-		if (name.size() == 0) return "()";
+	private static Token parenthesizedName(List<Token> name) {
+		if (name.size() == 0) return new Token("()", Context.synthetic());
 		if (name.size() == 1) return name.get(0);
 		StringBuffer buff = new StringBuffer("(");
-		for (String s : name) {
-			buff.append(s).append(" ");
+		for (Token s : name) {
+			buff.append(s.token).append(" ");
 		}
-		return buff.substring(0, buff.length() - 1) + ")";
+		return new Token(buff.substring(0, buff.length() - 1) + ")", Context
+				.sum(name).inParen());
 	}
 	private static String displayFieldList(ParsedVariableRoster fields) {
 		List<String> items = new ArrayList<>();

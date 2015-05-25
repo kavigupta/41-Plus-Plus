@@ -4,8 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
+import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.language.Resources;
 
 public class ParserTest {
@@ -118,7 +120,8 @@ public class ParserTest {
 		return Parser.parse(line).get(0).toSourceCode() + ".";
 	}
 	private static String cdLoopExpr(String line) {
-		return ExpressionParser.parseExpression(Parser.tokenize42(line))
+		return ExpressionParser.parseExpression(
+				Tokenizer.tokenize(Context.synthetic(), line))
 				.toSourceCode();
 	}
 }

@@ -3,15 +3,16 @@ package fortytwo.language.type;
 import java.util.ArrayList;
 import java.util.List;
 
+import fortytwo.compiler.Token;
 import fortytwo.language.SourceCode;
 import fortytwo.vm.environment.TypeVariableRoster;
 
 public class GenericStructureType implements GenericType {
-	public final List<String> name;
+	public final List<Token> name;
 	public final List<TypeVariable> typeVariables;
-	public GenericStructureType(List<String> name,
+	public GenericStructureType(List<Token> structName,
 			List<TypeVariable> typeVariables) {
-		this.name = name;
+		this.name = structName;
 		this.typeVariables = typeVariables;
 	}
 	@Override
@@ -45,7 +46,8 @@ public class GenericStructureType implements GenericType {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((name == null) ? 0 : name.hashCode());
 		result = prime * result
 				+ ((typeVariables == null) ? 0 : typeVariables.hashCode());
 		return result;

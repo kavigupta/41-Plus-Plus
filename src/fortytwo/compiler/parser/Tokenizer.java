@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
@@ -94,7 +95,8 @@ public class Tokenizer {
 			token.append(input.charAt(i));
 			continue loop;
 		}
-		return tokens;
+		return tokens.stream().filter(t -> t.token.trim().length() != 0)
+				.collect(Collectors.toList());
 	}
 	private static int findCloseQuote(String input, int i) {
 		for (int j = i + 1; j < input.length(); j++) {

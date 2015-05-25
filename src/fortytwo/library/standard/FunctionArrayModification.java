@@ -5,7 +5,6 @@ import java.util.List;
 
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
-import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericArrayType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.TypeVariable;
@@ -44,12 +43,10 @@ public class FunctionArrayModification extends Function42 {
 	}
 	@Override
 	public FunctionSignature signature() {
-		TypeVariable contents = new TypeVariable(
-				VariableIdentifier.getInstance("_contents"));
 		return FunctionSignature.getInstance(FunctionName.getInstance("Set",
 				"the", "", suffix, "element", "of", "", "to", ""), Arrays
-				.asList(PrimitiveType.NUMBER,
-						new GenericArrayType(contents), contents),
+				.asList(PrimitiveType.NUMBER, new GenericArrayType(
+						TypeVariable.LENGTH), TypeVariable.LENGTH),
 				outputType());
 	}
 }

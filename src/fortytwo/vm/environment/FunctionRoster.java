@@ -2,6 +2,7 @@ package fortytwo.vm.environment;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
 import fortytwo.language.identifier.FunctionSignature;
@@ -18,7 +19,10 @@ public class FunctionRoster {
 	}
 	public Function42 get(FunctionSignature signature, List<Expression> inputs) {
 		Pair<Function42, ConcreteType> func = StdLib42
-				.matchCompiledFieldAccess(env, signature.name, inputs);
+				.matchCompiledFieldAccess(env, signature.name,
+						inputs.stream().map(Expression::resolveType)
+								.collect(Collectors.toList()));
+		System.out.println("Sig: " + signature + "\t" + func);
 		if (func != null) return func.getKey();
 		return functions.get(signature);
 	}

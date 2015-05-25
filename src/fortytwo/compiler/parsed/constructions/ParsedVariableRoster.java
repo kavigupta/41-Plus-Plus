@@ -1,27 +1,26 @@
 package fortytwo.compiler.parsed.constructions;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
+import lib.standard.collections.Pair;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.VariableRoster;
 
 public class ParsedVariableRoster {
-	private final HashMap<VariableIdentifier, ParsedExpression> pairs = new HashMap<>();
+	private final ArrayList<Pair<VariableIdentifier, ParsedExpression>> pairs = new ArrayList<>();
 	public void add(VariableIdentifier id, ParsedExpression expr) {
-		pairs.put(id, expr);
+		pairs.add(Pair.getInstance(id, expr));
 	}
-	public Iterable<Map.Entry<VariableIdentifier, ParsedExpression>> entryIterator() {
-		return pairs.entrySet();
+	public Iterable<Pair<VariableIdentifier, ParsedExpression>> entryIterator() {
+		return pairs;
 	}
 	public VariableRoster contextualize(StaticEnvironment env) {
 		VariableRoster roster = new VariableRoster();
-		pairs.entrySet()
-				.stream()
-				.forEach(p -> roster.assign(p.getKey().contextualize(env),
-						p.getValue().contextualize(env)));
+		pairs.stream().forEach(
+				p -> roster.assign(p.getKey().contextualize(env), p
+						.getValue().contextualize(env)));
 		return roster;
 	}
 	public int size() {
@@ -44,5 +43,9 @@ public class ParsedVariableRoster {
 			if (other.pairs != null) return false;
 		} else if (!pairs.equals(other.pairs)) return false;
 		return true;
+	}
+	@Override
+	public String toString() {
+		return "ParsedVariableRoster [pairs=" + pairs + "]";
 	}
 }

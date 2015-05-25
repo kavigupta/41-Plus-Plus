@@ -8,11 +8,13 @@ import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parser.ExpressionParser;
-import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.StatementParser;
+import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.GlobalEnvironment;
@@ -32,19 +34,19 @@ public class GlobalEnvTest {
 	}
 	@Test
 	public void printTest() {
-		((ParsedStatement) StatementParser.parseStatement(Parser
-				.tokenize42("Tell me what 'Hello, World' is.")))
+		((ParsedStatement) StatementParser.parseStatement(Tokenizer.tokenize(
+				Context.minimal(), "Tell me what 'Hello, World' is.")))
 				.contextualize(env.staticEnv).execute(
 						env.minimalLocalEnvironment());
 		assertEquals("'Hello, World'", buffer);
-		((ParsedStatement) StatementParser.parseStatement(Parser
-				.tokenize42("Tell me what 'Hello. World' is.")))
+		((ParsedStatement) StatementParser.parseStatement(Tokenizer.tokenize(
+				Context.minimal(), "Tell me what 'Hello. World' is.")))
 				.contextualize(env.staticEnv).execute(
 						env.minimalLocalEnvironment());
 		assertEquals("'Hello. World'", buffer);
 		((ParsedStatement) StatementParser
-				.parseStatement(Parser
-						.tokenize42("Tell me what 'a + b = c + d-e+f=g,dsad. asde.3452,2' is.")))
+				.parseStatement(Tokenizer.tokenize(Context.minimal(),
+						"Tell me what 'a + b = c + d-e+f=g,dsad. asde.3452,2' is.")))
 				.contextualize(env.staticEnv).execute(
 						env.minimalLocalEnvironment());
 		assertEquals("'a + b = c + d-e+f=g,dsad. asde.3452,2'", buffer);
@@ -87,7 +89,9 @@ public class GlobalEnvTest {
 												PrimitiveType.STRING,
 												"world".chars()
 														.mapToObj(x -> new LiteralString(
-																Character.toString((char) x)))
+																new Token(
+																		Character.toString((char) x),
+																		Context.synthetic())))
 														.collect(Collectors
 																.toList()))))
 						.contextualize(env.staticEnv)
@@ -98,7 +102,9 @@ public class GlobalEnvTest {
 		assertEquals(
 				result,
 				ExpressionParser
-						.parseExpression(Parser.tokenize42(toEvaluate))
+						.parseExpression(
+								Tokenizer.tokenize(Context.synthetic(),
+										toEvaluate))
 						.contextualize(env.staticEnv)
 						.literalValue(env.minimalLocalEnvironment())
 						.toSourceCode());

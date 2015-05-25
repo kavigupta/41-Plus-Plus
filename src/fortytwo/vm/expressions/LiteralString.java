@@ -1,14 +1,15 @@
 package fortytwo.vm.expressions;
 
+import fortytwo.compiler.Token;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.PrimitiveType;
 
 public class LiteralString extends LiteralExpression {
-	public final String contents;
-	public static LiteralString getInstance(String contents) {
+	public final Token contents;
+	public static LiteralString getInstance(Token contents) {
 		return new LiteralString(contents);
 	}
-	public LiteralString(String contents) {
+	public LiteralString(Token contents) {
 		this.contents = contents;
 	}
 	@Override

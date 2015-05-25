@@ -2,12 +2,14 @@ package fortytwo.vm.environment;
 
 import java.util.List;
 
+import lib.standard.collections.Pair;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.library.standard.StdLib42;
+import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class StaticEnvironment {
@@ -60,9 +62,13 @@ public class StaticEnvironment {
 	}
 	public FunctionSignature referenceTo(FunctionName name,
 			List<ConcreteType> types) {
+		Pair<Function42, ConcreteType> func = StdLib42
+				.matchCompiledFieldAccess(this, name, types);
+		if (func != null) return func.key.signature();
 		FunctionSignature sig = funcs.referenceTo(name, types);
 		if (sig != null) return sig;
-		if (container == null) throw new RuntimeException(/* LOWPRI-E */);
+		if (container == null)
+			throw new RuntimeException(/* LOWPRI-E */funcs.funcs + ";" + name);
 		return container.referenceTo(name, types);
 	}
 	public void putReference(FunctionDefinition f) {

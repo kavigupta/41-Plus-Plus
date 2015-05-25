@@ -5,8 +5,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parser.ExpressionParser;
-import fortytwo.compiler.parser.Parser;
+import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
@@ -47,7 +48,9 @@ public class ArithmeticTest {
 		assertEquals(
 				result,
 				((LiteralNumber) ExpressionParser
-						.parseExpression(Parser.tokenize42(toEvaluate))
+						.parseExpression(
+								Tokenizer.tokenize(Context.synthetic(),
+										toEvaluate))
 						.contextualize(env.staticEnv)
 						.literalValue(env.minimalLocalEnvironment())).contents
 						.doubleValue(), Math.ulp(result));

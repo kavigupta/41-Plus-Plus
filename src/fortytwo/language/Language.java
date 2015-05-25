@@ -5,6 +5,9 @@ import static fortytwo.language.Resources.*;
 import java.util.List;
 import java.util.function.Function;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
+
 public class Language {
 	public static String articleized(String word) {
 		if (startsWithVowel(word))
@@ -38,15 +41,15 @@ public class Language {
 	public static boolean isArticle(String word) {
 		return word.equals(A) || word.equals(AN);
 	}
-	public static String deparenthesize(String word) {
-		if (word.startsWith(OPEN_PAREN)) {
-			if (!word.endsWith(CLOSE_PAREN))
+	public static Token deparenthesize(Token token) {
+		if (token.token.startsWith(OPEN_PAREN)) {
+			if (!token.token.endsWith(CLOSE_PAREN))
 				throw new RuntimeException(/*
 									 * LOWPRI-E
 									 */);
-			return word.substring(1, word.length() - 1);
+			return token.subToken(1, token.token.length() - 1);
 		}
-		return word;
+		return token;
 	}
 	public static boolean isExpression(String token) {
 		if (token.equals(TRUE) || token.equals(FALSE)) return true;
@@ -64,14 +67,15 @@ public class Language {
 		// LOWPRI rest of this: it should be fine for now
 		return true;
 	}
-	public static String parenthesize(List<String> line) {
-		if (line.size() == 0) return new String();
+	public static Token parenthesize(List<Token> line) {
+		if (line.size() == 0) return new Token("", Context.synthetic());
 		if (line.size() == 1) return line.get(0);
 		StringBuilder s = new StringBuilder(OPEN_PAREN);
-		for (String l : line) {
-			s.append(l).append(SPACE);
+		for (Token l : line) {
+			s.append(l.token).append(SPACE);
 		}
-		return s.append(CLOSE_PAREN).toString();
+		return new Token(s.append(CLOSE_PAREN).toString(), Context.sum(line)
+				.inParen());
 	}
 	public static boolean isListElement(String token) {
 		return token.equals(COMMA) || token.equals(AND);

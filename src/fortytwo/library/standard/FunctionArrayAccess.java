@@ -3,6 +3,8 @@ package fortytwo.library.standard;
 import java.util.Arrays;
 import java.util.List;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericArrayType;
@@ -17,6 +19,9 @@ import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
 
 public class FunctionArrayAccess extends Function42 {
+	private static final TypeVariable CONTENTS = new TypeVariable(
+			VariableIdentifier.getInstance(new Token("_contents", Context
+					.synthetic())));
 	public static final FunctionArrayAccess ST = new FunctionArrayAccess("st");
 	public static final FunctionArrayAccess ND = new FunctionArrayAccess("nd");
 	public static final FunctionArrayAccess RD = new FunctionArrayAccess("rd");
@@ -34,15 +39,13 @@ public class FunctionArrayAccess extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return new TypeVariable(VariableIdentifier.getInstance("_contents"));
+		return CONTENTS;
 	}
 	@Override
 	public FunctionSignature signature() {
-		TypeVariable contents = new TypeVariable(
-				VariableIdentifier.getInstance("_contents"));
 		return FunctionSignature.getInstance(StdLib42
 				.functArrayAccess(suffix), Arrays.asList(
-				PrimitiveType.NUMBER, new GenericArrayType(contents)),
-				contents);
+				PrimitiveType.NUMBER, new GenericArrayType(CONTENTS)),
+				CONTENTS);
 	}
 }

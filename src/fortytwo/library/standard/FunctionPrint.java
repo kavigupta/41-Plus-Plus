@@ -3,6 +3,8 @@ package fortytwo.library.standard;
 import java.util.Arrays;
 import java.util.List;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.PrimitiveType;
@@ -14,6 +16,9 @@ import fortytwo.vm.expressions.LiteralExpression;
 
 public class FunctionPrint extends Function42 {
 	public static final FunctionPrint INSTANCE = new FunctionPrint();
+	public static final TypeVariable TO_PRINT = new TypeVariable(
+			VariableIdentifier.getInstance(new Token("_toPrint", Context
+					.synthetic())));
 	private FunctionPrint() {}
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
@@ -27,8 +32,7 @@ public class FunctionPrint extends Function42 {
 	}
 	@Override
 	public FunctionSignature signature() {
-		return FunctionSignature.getInstance(StdLib42.FUNC_PRINT, Arrays
-				.asList(new TypeVariable(VariableIdentifier
-						.getInstance("_toPrint"))), outputType());
+		return FunctionSignature.getInstance(StdLib42.FUNC_PRINT,
+				Arrays.asList(TO_PRINT), outputType());
 	}
 }

@@ -21,7 +21,7 @@ public class FunctionStrlen extends Function42 {
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		return new LiteralNumber(
-				BigDecimal.valueOf(((LiteralString) arguments.get(0)).contents
+				BigDecimal.valueOf(((LiteralString) arguments.get(0)).contents.token
 						.length()));
 	}
 	@Override

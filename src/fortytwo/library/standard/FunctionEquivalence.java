@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -22,7 +24,8 @@ import fortytwo.vm.expressions.LiteralExpression;
 
 public class FunctionEquivalence extends Function42 {
 	public static final TypeVariable TO_BE_COMPARED = new TypeVariable(
-			VariableIdentifier.getInstance("_FunctionEquivalence_compare"));
+			VariableIdentifier.getInstance(new Token(
+					"_FunctionEquivalence_compare", Context.minimal())));
 	public static enum Comparator {
 		EQUALS(true, "is", "equal", "to"), NOT_EQUALS(false, "is", "not",
 				"equal", "to"), SAME_AS(true, "is", "the", "same", "as"),

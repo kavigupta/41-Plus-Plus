@@ -3,6 +3,7 @@ package fortytwo.library.standard;
 import java.util.Arrays;
 import java.util.List;
 
+import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ArrayType;
 import fortytwo.language.type.PrimitiveType;
@@ -19,12 +20,11 @@ public class FunctionStringSplit extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		String string = ((LiteralString) arguments.get(0)).contents;
+		Token token = ((LiteralString) arguments.get(0)).contents;
 		LiteralArray array = new LiteralArray(PrimitiveType.STRING,
-				string.length());
-		for (int i = 0; i < string.length(); i++) {
-			array.set(i + 1,
-					new LiteralString(Character.toString(string.charAt(i))));
+				token.token.length());
+		for (int i = 0; i < token.token.length(); i++) {
+			array.set(i + 1, new LiteralString(token.subToken(i, i + 1)));
 		}
 		return array;
 	}

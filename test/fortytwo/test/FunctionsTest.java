@@ -6,10 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fortytwo.compiler.Compiler42;
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parser.ExpressionParser;
-import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.StatementParser;
+import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.environment.GlobalEnvironment;
 
 public class FunctionsTest {
@@ -38,8 +39,8 @@ public class FunctionsTest {
 	}
 	@Test
 	public void pairTest() {
-		((ParsedStatement) StatementParser.parseStatement(Parser
-				.tokenize42("Test procedures."))).contextualize(
+		((ParsedStatement) StatementParser.parseStatement(Tokenizer.tokenize(
+				Context.minimal(), "Test procedures."))).contextualize(
 				env.staticEnv).execute(env.minimalLocalEnvironment());
 		assertEquals("{(pair of number and number): _key <= 2, _value <= 3}",
 				buffer);
@@ -67,7 +68,9 @@ public class FunctionsTest {
 		assertEquals(
 				result,
 				ExpressionParser
-						.parseExpression(Parser.tokenize42(toEvaluate))
+						.parseExpression(
+								Tokenizer.tokenize(Context.minimal(),
+										toEvaluate))
 						.contextualize(env.staticEnv)
 						.literalValue(env.minimalLocalEnvironment())
 						.toSourceCode());

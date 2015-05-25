@@ -40,13 +40,13 @@ public class StructureRoster {
 		LiteralExpression exp = fieldValues.value();
 		if (exp != null) return exp;
 		if (type instanceof ArrayType) {
-			if (fieldValues.pairs.size() != 1)
+			if (fieldValues.size() != 1) throw new RuntimeException(/*
+														 * LOWPRI-E
+														 */);
+			if (!fieldValues.assigned(TypeVariable.LENGTH.name))
 				throw new RuntimeException(/* LOWPRI-E */);
-			if (!fieldValues.pairs.containsKey(VariableIdentifier
-					.getInstance("_length")))
-				throw new RuntimeException(/* LOWPRI-E */);
-			LiteralExpression length = fieldValues.pairs
-					.get(VariableIdentifier.getInstance("_length"));
+			LiteralExpression length = fieldValues
+					.referenceTo(TypeVariable.LENGTH.name);
 			if (length.resolveType() != PrimitiveType.NUMBER)
 				throw new RuntimeException(/* LOWPRI-E */);
 			return new LiteralArray(((ArrayType) type).contentType,
@@ -55,16 +55,14 @@ public class StructureRoster {
 		if (!(type instanceof StructureType))
 			throw new RuntimeException(/* LOWPRI-E */);
 		Structure struct = getStructure((StructureType) type);
-		fieldValues.pairs
-				.forEach((k, v) -> {
-					if (!struct.containsField(k))
-						throw new RuntimeException(struct.toString()
-								+ "\t" + k/*
-										 * LOWPRI-E
-										 */);
-				});
-		struct.fields.stream()
-				.filter(f -> !fieldValues.pairs.containsKey(f.name))
+		fieldValues.forEach(entry -> {
+			if (!struct.containsField(entry.key))
+				throw new RuntimeException(struct.toString() + "\t"
+						+ entry.key/*
+								 * LOWPRI-E
+								 */);
+		});
+		struct.fields.stream().filter(f -> !fieldValues.assigned(f.name))
 				.forEach(f -> {
 					throw new RuntimeException(/* LOWPRI-E */);
 				});
@@ -104,11 +102,10 @@ public class StructureRoster {
 			throw new RuntimeException(/* LOWPRI-E */);
 		}
 		if (type instanceof ArrayType) {
-			if (fields.pairs.size() != 1) throw new RuntimeException(/*
-														 * LOWPRI-E
-														 */);
-			Expression length = fields.pairs.get(VariableIdentifier
-					.getInstance("_length"));
+			if (fields.size() != 1) throw new RuntimeException(/*
+													 * LOWPRI-E
+													 */);
+			Expression length = fields.referenceTo(TypeVariable.LENGTH.name);
 			if (length == null
 					|| length.resolveType() != PrimitiveType.NUMBER)
 				throw new RuntimeException(/* LOWPRI-E */);
@@ -123,12 +120,13 @@ public class StructureRoster {
 			if (!fields.referenceTo(f.name).resolveType().equals(f.type))
 				throw new RuntimeException(/* LOWPRI-E */);
 		}
-		fields.pairs.forEach((k, v) -> {
-			if (!struct.containsField(k)) throw new RuntimeException(/*
-														 * LOWPRI-E
-														 */);
+		fields.forEach(x -> {
+			if (!struct.containsField(x.key))
+				throw new RuntimeException(/*
+									 * LOWPRI-E
+									 */);
 		});
-		struct.fields.stream().filter(f -> !fields.pairs.containsKey(f.name))
+		struct.fields.stream().filter(f -> !fields.assigned(f.name))
 				.forEach(f -> {
 					throw new RuntimeException(/* LOWPRI-E */);
 				});

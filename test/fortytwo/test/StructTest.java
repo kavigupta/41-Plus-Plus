@@ -6,9 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fortytwo.compiler.Compiler42;
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
+import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.LocalEnvironment;
 
@@ -111,7 +113,9 @@ public class StructTest {
 		assertEquals(
 				result,
 				ExpressionParser
-						.parseExpression(Parser.tokenize42(toEvaluate))
+						.parseExpression(
+								Tokenizer.tokenize(Context.synthetic(),
+										toEvaluate))
 						.contextualize(env.staticEnv).literalValue(loc)
 						.toSourceCode());
 	}

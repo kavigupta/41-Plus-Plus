@@ -3,6 +3,8 @@ package fortytwo.library.standard;
 import java.util.Arrays;
 import java.util.List;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.constructions.Function42;
@@ -17,9 +19,10 @@ public class FunctionStringAppend extends Function42 {
 	@Override
 	protected LiteralString apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		String a = ((LiteralString) arguments.get(0)).contents;
-		String b = ((LiteralString) arguments.get(1)).contents;
-		return new LiteralString(a + b);
+		Token a = ((LiteralString) arguments.get(0)).contents;
+		Token b = ((LiteralString) arguments.get(1)).contents;
+		return new LiteralString(new Token(a.token + b.token,
+				Context.sum(Arrays.asList(a, b))));
 	}
 	@Override
 	public PrimitiveType outputType() {

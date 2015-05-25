@@ -1,5 +1,7 @@
 package fortytwo.language.identifier;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
@@ -11,17 +13,17 @@ import fortytwo.vm.expressions.LiteralExpression;
 
 public class VariableIdentifier implements ParsedExpression, Expression {
 	public static final VariableIdentifier VALUE = new VariableIdentifier(
-			Resources.VALUE);
+			new Token(Resources.VALUE, Context.synthetic()));
 	// LOWPRI quick and dirty solution. Fix later
 	private StaticEnvironment env;
-	public final String name;
-	public static VariableIdentifier getInstance(String name) {
-		if (name.equals(Resources.VALUE)) return VALUE;
-		if (!Language.isValidVariableIdentifier(name))
+	public final Token name;
+	public static VariableIdentifier getInstance(Token token) {
+		if (token.token.equals(Resources.VALUE)) return VALUE;
+		if (!Language.isValidVariableIdentifier(token.token))
 			throw new RuntimeException(/* LOWPRI-E */);
-		return new VariableIdentifier(name);
+		return new VariableIdentifier(token);
 	}
-	private VariableIdentifier(String name) {
+	private VariableIdentifier(Token name) {
 		this.name = name;
 	}
 	@Override
@@ -53,10 +55,7 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 	}
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+		return name.token.hashCode();
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -64,17 +63,14 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		VariableIdentifier other = (VariableIdentifier) obj;
-		if (name == null) {
-			if (other.name != null) return false;
-		} else if (!name.equals(other.name)) return false;
-		return true;
+		return this.name.token.equals(other.name.token);
 	}
 	@Override
 	public String toString() {
-		return name;
+		return name.token;
 	}
 	@Override
 	public String toSourceCode() {
-		return name;
+		return name.token;
 	}
 }

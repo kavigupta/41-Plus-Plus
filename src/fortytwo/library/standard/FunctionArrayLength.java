@@ -6,7 +6,6 @@ import java.util.List;
 
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
-import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericArrayType;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
@@ -20,8 +19,6 @@ import fortytwo.vm.expressions.LiteralNumber;
 
 public class FunctionArrayLength extends Function42 {
 	public static final FunctionArrayLength INSTANCE = new FunctionArrayLength();
-	public static final TypeVariable CONTENTS = new TypeVariable(
-			VariableIdentifier.getInstance("_length"));
 	private FunctionArrayLength() {}
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
@@ -35,9 +32,9 @@ public class FunctionArrayLength extends Function42 {
 	}
 	@Override
 	public FunctionSignature signature() {
-		return FunctionSignature
-				.getInstance(FunctionName.getInstance("the", "_length",
-						"of", ""), Arrays.asList(new GenericArrayType(
-						CONTENTS)), outputType());
+		return FunctionSignature.getInstance(
+				FunctionName.getInstance("the", "_length", "of", ""),
+				Arrays.asList(new GenericArrayType(TypeVariable.LENGTH)),
+				outputType());
 	}
 }

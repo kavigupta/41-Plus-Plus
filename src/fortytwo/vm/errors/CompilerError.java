@@ -2,11 +2,10 @@ package fortytwo.vm.errors;
 
 import java.util.List;
 
-import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 
 public class CompilerError {
-	public static void expectedStatementButReceivedExpression(
-			List<String> tokens, Context context) {
+	public static void expectedStatementButReceivedExpression(List<Token> list) {
 		// TODO Auto-generated method stub
 	}
 }

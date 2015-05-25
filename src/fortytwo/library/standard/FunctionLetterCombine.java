@@ -3,6 +3,8 @@ package fortytwo.library.standard;
 import java.util.Arrays;
 import java.util.List;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ArrayType;
 import fortytwo.language.type.PrimitiveType;
@@ -22,9 +24,10 @@ public class FunctionLetterCombine extends Function42 {
 		LiteralArray array = (LiteralArray) arguments.get(0);
 		char[] c = new char[array.length()];
 		for (int i = 0; i < array.length(); i++) {
-			c[i] = ((LiteralString) array.get(i + 1)).contents.charAt(0);
+			c[i] = ((LiteralString) array.get(i + 1)).contents.token
+					.charAt(0);
 		}
-		return new LiteralString(new String(c));
+		return new LiteralString(new Token(new String(c), Context.minimal()));
 	}
 	@Override
 	public PrimitiveType outputType() {

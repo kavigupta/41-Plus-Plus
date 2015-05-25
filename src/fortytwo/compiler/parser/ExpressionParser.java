@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.expressions.ParsedBinaryOperation;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
@@ -23,7 +24,7 @@ import fortytwo.vm.expressions.LiteralNumber;
 import fortytwo.vm.expressions.LiteralString;
 
 public class ExpressionParser {
-	public static ParsedExpression parseExpression(List<String> list) {
+	public static ParsedExpression parseExpression(List<Token> list) {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() == 1
@@ -31,8 +32,10 @@ public class ExpressionParser {
 			return function.arguments.get(0);
 		return function;
 	}
-	public static ParsedExpression parsePureExpression(List<String> list) {
-		ArrayList<ParsedExpression> expressions = tokenize(list);
+	public static ParsedExpression parsePureExpression(
+			List<Token> currentExpression) {
+		System.out.println("Parsing Pure expression: " + currentExpression);
+		ArrayList<ParsedExpression> expressions = tokenize(currentExpression);
 		expressions = removeUnary(expressions);
 		for (int precendence = 0; precendence <= Operation.MAX_PRECDENCE; precendence++) {
 			expressions = removeBinary(expressions, precendence);
@@ -88,11 +91,11 @@ public class ExpressionParser {
 		}
 		return expressionsWoUO;
 	}
-	private static ArrayList<ParsedExpression> tokenize(List<String> list) {
+	private static ArrayList<ParsedExpression> tokenize(List<Token> exp) {
 		boolean expectsValue = true;
 		ArrayList<ParsedExpression> expressions = new ArrayList<>();
-		for (String token : list) {
-			switch (token.charAt(0)) {
+		for (Token token : exp) {
+			switch (token.token.charAt(0)) {
 				case '0':
 				case '1':
 				case '2':
@@ -107,15 +110,18 @@ public class ExpressionParser {
 														 * LOWPRI-E
 														 */);
 					try {
-						expressions.add(LiteralNumber
-								.getInstance(new BigDecimal(token)));
+						expressions
+								.add(LiteralNumber
+										.getInstance(new BigDecimal(
+												token.token)));
 						break;
 					} catch (NumberFormatException e) {
-						throw new RuntimeException(/* LOWPRI-E */token);
+						throw new RuntimeException(
+						/* LOWPRI-E */token.token);
 					}
 				case '\'':
 					expressions.add(LiteralString.getInstance(token
-							.substring(1, token.length() - 1)));
+							.subToken(1, token.token.length() - 1)));
 					break;
 				case 't':
 					expressions.add(LiteralBool.TRUE);
@@ -140,10 +146,10 @@ public class ExpressionParser {
 							.add(new UnevaluatedOperator(Operation.MOD));
 					break;
 				case '/':
-					if (token.equals(Resources.FLOORDIV_SIGN))
+					if (token.token.equals(Resources.FLOORDIV_SIGN))
 						expressions.add(new UnevaluatedOperator(
 								Operation.DIVIDE_FLOOR));
-					else if (token.equals(Resources.DIV_SIGN))
+					else if (token.token.equals(Resources.DIV_SIGN))
 						expressions.add(new UnevaluatedOperator(
 								Operation.DIVIDE));
 					else throw new RuntimeException(/* LOWPRI-E */);
@@ -152,10 +158,9 @@ public class ExpressionParser {
 					expressions.add(VariableIdentifier.getInstance(token));
 					break;
 				case '(':
-					expressions
-							.add(parseExpression(Parser
-									.tokenize42(Language
-											.deparenthesize(token))));
+					Token depar = Language.deparenthesize(token);
+					expressions.add(parseExpression(Tokenizer.tokenize(
+							depar.context, depar.token)));
 					break;
 				case '[':
 					break;
@@ -163,32 +168,32 @@ public class ExpressionParser {
 		}
 		return expressions;
 	}
-	public static GenericType parseType(String name) {
-		if (name.startsWith(Resources.VARIABLE_START))
-			return new TypeVariable(VariableIdentifier.getInstance(name));
-		while (name.startsWith(Resources.OPEN_PAREN))
-			name = Language.deparenthesize(name);
+	public static GenericType parseType(Token token) {
+		if (token.token.startsWith(Resources.VARIABLE_START))
+			return new TypeVariable(VariableIdentifier.getInstance(token));
+		while (token.token.startsWith(Resources.OPEN_PAREN))
+			token = Language.deparenthesize(token);
 		for (PrimitiveType type : PrimitiveType.values()) {
-			if (type.typeID().equals(name)) return type;
+			if (type.typeID().equals(token.token)) return type;
 		}
-		return parseStructType(Parser.tokenize42(name));
+		return parseStructType(Tokenizer.tokenize(token.context, token.token));
 	}
-	private static GenericType parseStructType(List<String> line) {
-		ArrayList<String> structExpression = new ArrayList<>();
+	private static GenericType parseStructType(List<Token> tokens) {
+		ArrayList<Token> struct = new ArrayList<>();
 		int i = 0;
-		for (; i < line.size() && !line.get(i).equals(Resources.OF); i++) {
-			structExpression.add(line.get(i));
+		for (; i < tokens.size() && !tokens.get(i).token.equals(Resources.OF); i++) {
+			struct.add(tokens.get(i));
 		}
 		List<GenericType> typeVariables = new ArrayList<>();
 		// Type constructors are not allowed in the post-of clause. (e.g.,
 		// what would a structure that takes a (array of _k) as a type
 		// variable be?)
 		Kind arguments = null;
-		if (i < line.size() && line.get(i).equals(Resources.OF)) {
+		if (i < tokens.size() && tokens.get(i).token.equals(Resources.OF)) {
 			i++;
-			for (; i < line.size(); i++) {
-				if (Language.isListElement(line.get(i))) continue;
-				GenericType var = parseType(line.get(i));
+			for (; i < tokens.size(); i++) {
+				if (Language.isListElement(tokens.get(i).token)) continue;
+				GenericType var = parseType(tokens.get(i));
 				switch (var.kind()) {
 					case CONCRETE:
 						if (arguments == Kind.VARIABLE)
@@ -205,7 +210,8 @@ public class ExpressionParser {
 				typeVariables.add(var);
 			}
 		}
-		if (structExpression.equals(StdLib42.STRUCT_ARRAY)) {
+		if (struct.stream().map(x -> x.token).collect(Collectors.toList())
+				.equals(StdLib42.STRUCT_ARRAY)) {
 			if (typeVariables.size() != 1) throw new RuntimeException(/*
 														 * LOWPRI-E
 														 */);
@@ -214,14 +220,13 @@ public class ExpressionParser {
 			return new GenericArrayType(typeVariables.get(0));
 		}
 		if (typeVariables.size() == 0)
-			return new StructureType(structExpression, new ArrayList<>());
+			return new StructureType(struct, new ArrayList<>());
 		if (arguments == Kind.CONCRETE)
-			return new StructureType(structExpression, typeVariables
-					.stream().map(x -> (ConcreteType) x)
+			return new StructureType(struct, typeVariables.stream()
+					.map(x -> (ConcreteType) x)
 					.collect(Collectors.toList()));
-		return new GenericStructureType(structExpression, typeVariables
-				.stream().map(x -> (TypeVariable) x)
-				.collect(Collectors.toList()));
+		return new GenericStructureType(struct, typeVariables.stream()
+				.map(x -> (TypeVariable) x).collect(Collectors.toList()));
 	}
 	private static class UnevaluatedOperator implements ParsedExpression {
 		public Operation operator;
