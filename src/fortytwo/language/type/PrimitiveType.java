@@ -10,9 +10,10 @@ import fortytwo.vm.expressions.LiteralNumber;
 import fortytwo.vm.expressions.LiteralString;
 
 public enum PrimitiveType implements ConcreteType {
-	NUMBER(LiteralNumber.getInstance(BigDecimal.ZERO)), STRING(
-			new LiteralString(new Token("", Context.minimal()))), BOOL(
-			LiteralBool.FALSE), TYPE(null), VOID(null);
+	NUMBER(LiteralNumber.getInstance(BigDecimal.ZERO, Context.synthetic())),
+	STRING(new LiteralString(new Token("", Context.minimal()))), BOOL(
+			LiteralBool.getInstance(false, Context.synthetic())),
+	TYPE(null), VOID(null);
 	public final LiteralExpression def;
 	private PrimitiveType(LiteralExpression def) {
 		this.def = def;

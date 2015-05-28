@@ -7,6 +7,7 @@ import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.VariableRoster;
+import fortytwo.vm.expressions.Expression;
 
 public class ParsedVariableRoster {
 	private final ArrayList<Pair<VariableIdentifier, ParsedExpression>> pairs = new ArrayList<>();
@@ -16,8 +17,8 @@ public class ParsedVariableRoster {
 	public Iterable<Pair<VariableIdentifier, ParsedExpression>> entryIterator() {
 		return pairs;
 	}
-	public VariableRoster contextualize(StaticEnvironment env) {
-		VariableRoster roster = new VariableRoster();
+	public VariableRoster<Expression> contextualize(StaticEnvironment env) {
+		VariableRoster<Expression> roster = new VariableRoster<>();
 		pairs.stream().forEach(
 				p -> roster.assign(p.getKey().contextualize(env), p
 						.getValue().contextualize(env)));

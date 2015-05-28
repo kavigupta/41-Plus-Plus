@@ -2,6 +2,7 @@ package fortytwo.compiler.parsed.expressions;
 
 import java.math.BigDecimal;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.Operation;
 import fortytwo.language.SourceCode;
 import fortytwo.vm.environment.StaticEnvironment;
@@ -12,24 +13,24 @@ import fortytwo.vm.expressions.LiteralNumber;
 public class ParsedBinaryOperation implements ParsedExpression {
 	public final ParsedExpression first, second;
 	public final Operation operation;
+	private final Context context;
 	public ParsedBinaryOperation(ParsedExpression first,
-			ParsedExpression second, Operation operation) {
+			ParsedExpression second, Operation operation, Context context) {
 		this.first = first;
 		this.second = second;
 		this.operation = operation;
+		this.context = context;
 	}
 	public static ParsedBinaryOperation getNegation(ParsedExpression contents) {
-		return new ParsedBinaryOperation(
-				LiteralNumber.getInstance(BigDecimal.ZERO), contents,
-				Operation.SUBTRACT);
+		return new ParsedBinaryOperation(LiteralNumber.getInstance(
+				BigDecimal.ZERO, Context.synthetic()), contents,
+				Operation.SUBTRACT, contents.context().unary());
 	}
 	@Override
 	public Expression contextualize(StaticEnvironment env) {
 		Expression firstE = first.contextualize(env), secondE = second
 				.contextualize(env);
-		if (firstE == null || secondE == null)
-			throw new RuntimeException(/* LOWPRI-E */);
-		return new BinaryOperation(firstE, secondE, operation);
+		return new BinaryOperation(firstE, secondE, operation, context);
 	}
 	@Override
 	public SentenceType type() {
@@ -41,6 +42,10 @@ public class ParsedBinaryOperation implements ParsedExpression {
 	@Override
 	public String toSourceCode() {
 		return SourceCode.display(this);
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public String toString() {

@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
@@ -34,9 +36,11 @@ public class FunctionCompare extends Function42 {
 		private Comparator(boolean lt, boolean eq, boolean gt, String... name) {
 			List<FunctionComponent> s = new ArrayList<>();
 			s.add(FunctionArgument.INSTANCE);
-			s.addAll(Arrays.asList(name).stream()
-					.map(x -> new FunctionToken(x))
-					.collect(Collectors.toList()));
+			s.addAll(Arrays
+					.asList(name)
+					.stream()
+					.map(x -> new FunctionToken(new Token(x, Context
+							.synthetic()))).collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
 			this.sig = FunctionSignature.getInstance(FunctionName
 					.getInstance(s), Arrays.asList(PrimitiveType.NUMBER,
@@ -56,9 +60,11 @@ public class FunctionCompare extends Function42 {
 		BigDecimal a = ((LiteralNumber) arguments.get(0)).contents;
 		BigDecimal b = ((LiteralNumber) arguments.get(1)).contents;
 		int comp = a.compareTo(b);
-		if (comp == 0) return LiteralBool.getInstance(compare.eq);
-		if (comp > 0) return LiteralBool.getInstance(compare.gt);
-		return LiteralBool.getInstance(compare.lt);
+		if (comp == 0)
+			return LiteralBool.getInstance(compare.eq, Context.synthetic());
+		if (comp > 0)
+			return LiteralBool.getInstance(compare.gt, Context.synthetic());
+		return LiteralBool.getInstance(compare.lt, Context.synthetic());
 	}
 	@Override
 	public GenericType outputType() {

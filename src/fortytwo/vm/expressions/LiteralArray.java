@@ -3,6 +3,7 @@ package fortytwo.vm.expressions;
 import java.util.Arrays;
 import java.util.List;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.ArrayType;
 import fortytwo.language.type.ConcreteType;
@@ -10,7 +11,8 @@ import fortytwo.language.type.ConcreteType;
 public class LiteralArray extends LiteralExpression {
 	public final ConcreteType contents;
 	private final LiteralExpression[] elements;
-	public LiteralArray(ConcreteType contents, int length) {
+	public LiteralArray(ConcreteType contents, int length, Context context) {
+		super(context);
 		this.contents = contents;
 		this.elements = new LiteralExpression[length];
 		for (int i = 0; i < elements.length; i++) {
@@ -18,8 +20,9 @@ public class LiteralArray extends LiteralExpression {
 		}
 	}
 	public static LiteralArray getInstance(ConcreteType contents,
-			List<? extends LiteralExpression> elements) {
-		LiteralArray array = new LiteralArray(contents, elements.size());
+			List<? extends LiteralExpression> elements, Context context) {
+		LiteralArray array = new LiteralArray(contents, elements.size(),
+				context);
 		for (int i = 0; i < elements.size(); i++) {
 			array.elements[i] = elements.get(i);
 		}

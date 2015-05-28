@@ -1,16 +1,36 @@
 package fortytwo.vm.expressions;
 
+import java.util.function.Consumer;
+
+import lib.standard.collections.Pair;
+import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.environment.LiteralVariableRoster;
+import fortytwo.vm.environment.VariableRoster;
 
 public class LiteralObject extends LiteralExpression {
 	public final Structure struct;
-	public final LiteralVariableRoster fields;
-	public LiteralObject(Structure struct, LiteralVariableRoster fields) {
+	private final VariableRoster<LiteralExpression> fields;
+	public LiteralObject(Structure struct,
+			VariableRoster<LiteralExpression> fields, Context context) {
+		super(context);
 		this.struct = struct;
 		this.fields = fields;
+	}
+	public void redefine(VariableIdentifier name, LiteralExpression express) {
+		fields.redefine(name, express);
+	}
+	public int nFields() {
+		return fields.size();
+	}
+	public void forEachField(
+			Consumer<Pair<VariableIdentifier, LiteralExpression>> le) {
+		fields.forEach(le);
+	}
+	public LiteralExpression valueOf(VariableIdentifier field) {
+		return fields.referenceTo(field);
 	}
 	@Override
 	public ConcreteType resolveType() {

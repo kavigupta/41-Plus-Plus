@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.GenericArrayType;
@@ -24,7 +25,7 @@ public class FunctionArrayLength extends Function42 {
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		return new LiteralNumber(BigDecimal.valueOf(((LiteralArray) arguments
-				.get(0)).length()));
+				.get(0)).length()), Context.synthetic());
 	}
 	@Override
 	public GenericType outputType() {

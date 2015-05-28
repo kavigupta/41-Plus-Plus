@@ -74,8 +74,8 @@ public class Language {
 		for (Token l : line) {
 			s.append(l.token).append(SPACE);
 		}
-		return new Token(s.append(CLOSE_PAREN).toString(), Context.sum(line)
-				.inParen());
+		return new Token(s.append(CLOSE_PAREN).toString(), Context.tokenSum(
+				line).inParen());
 	}
 	public static boolean isListElement(String token) {
 		return token.equals(COMMA) || token.equals(AND);

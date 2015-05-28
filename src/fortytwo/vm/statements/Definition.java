@@ -4,13 +4,14 @@ import fortytwo.language.field.Field;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.environment.VariableRoster;
+import fortytwo.vm.expressions.Expression;
 
 public class Definition implements Statement {
 	public final Field toCreate;
-	public final VariableRoster fields;
+	public final VariableRoster<Expression> fields;
 	// LOWPRI quick/dirty solution. Fix.
 	private StructureRoster structs;
-	public Definition(Field toCreate, VariableRoster fields,
+	public Definition(Field toCreate, VariableRoster<Expression> fields,
 			StructureRoster structs) {
 		this.toCreate = toCreate;
 		this.fields = fields;

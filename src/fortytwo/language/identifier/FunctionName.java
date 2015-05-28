@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
@@ -15,6 +17,15 @@ public class FunctionName {
 				.asList(name)
 				.stream()
 				.map(x -> x.length() == 0 ? FunctionArgument.INSTANCE
+						: new FunctionToken(new Token(x, Context
+								.minimal())))
+				.collect(Collectors.toList()));
+	}
+	public static FunctionName getInstance(Token... name) {
+		return getInstance(Arrays
+				.asList(name)
+				.stream()
+				.map(x -> x.token.length() == 0 ? FunctionArgument.INSTANCE
 						: new FunctionToken(x))
 				.collect(Collectors.toList()));
 	}
@@ -46,5 +57,9 @@ public class FunctionName {
 	@Override
 	public String toString() {
 		return function.toString();
+	}
+	public Context context() {
+		return Context.sum(function.stream().map(FunctionComponent::context)
+				.collect(Collectors.toList()));
 	}
 }

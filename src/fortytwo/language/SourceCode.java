@@ -119,13 +119,12 @@ public class SourceCode {
 	public static String display(LiteralObject literalObject) {
 		StringBuffer sbuff = new StringBuffer("{")
 				.append(literalObject.struct.type.toSourceCode());
-		if (literalObject.fields.size() != 0) sbuff.append(": ");
-		literalObject.fields.forEach(e -> sbuff
+		if (literalObject.nFields() != 0) sbuff.append(": ");
+		literalObject.forEachField(e -> sbuff
 				.append(e.getKey().toSourceCode()).append(" <= ")
 				.append(e.getValue().toSourceCode()).append(", "));
-		return literalObject.fields.size() == 0 ? sbuff.append("}")
-				.toString() : sbuff.substring(0, sbuff.length() - 2)
-				+ ("}");
+		return literalObject.nFields() == 0 ? sbuff.append("}").toString()
+				: sbuff.substring(0, sbuff.length() - 2) + ("}");
 	}
 	public static String display(LiteralString literalString) {
 		return "'" + literalString.contents + "'";
@@ -163,7 +162,7 @@ public class SourceCode {
 			buff.append(s.token).append(" ");
 		}
 		return new Token(buff.substring(0, buff.length() - 1) + ")", Context
-				.sum(name).inParen());
+				.tokenSum(name).inParen());
 	}
 	private static String displayFieldList(ParsedVariableRoster fields) {
 		List<String> items = new ArrayList<>();

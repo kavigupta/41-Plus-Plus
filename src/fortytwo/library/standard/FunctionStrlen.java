@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.PrimitiveType;
@@ -22,7 +23,7 @@ public class FunctionStrlen extends Function42 {
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		return new LiteralNumber(
 				BigDecimal.valueOf(((LiteralString) arguments.get(0)).contents.token
-						.length()));
+						.length()), Context.synthetic());
 	}
 	@Override
 	public PrimitiveType outputType() {

@@ -104,10 +104,12 @@ public class StdLib42 {
 	public static Pair<Function42, ConcreteType> matchFieldAccess(
 			StaticEnvironment se, FunctionName name, List<Expression> inputs) {
 		if (name.function.size() != 4) return null;
-		if (!name.function.get(0).equals(new FunctionToken("the")))
+		if (!name.function.get(0).equals(
+				new FunctionToken(new Token("the", Context.synthetic()))))
 			return null;
 		if (!(name.function.get(1) instanceof FunctionArgument)) return null;
-		if (!name.function.get(2).equals(new FunctionToken("of")))
+		if (!name.function.get(2).equals(
+				new FunctionToken(new Token("of", Context.synthetic()))))
 			return null;
 		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
 		if (!(inputs.get(0) instanceof VariableIdentifier)) return null;
@@ -129,18 +131,19 @@ public class StdLib42 {
 			StaticEnvironment se, FunctionName name,
 			List<ConcreteType> inputs) {
 		if (name.function.size() != 4) return null;
-		if (!name.function.get(0).equals(new FunctionToken("the")))
+		if (!name.function.get(0).equals(
+				new FunctionToken(new Token("the", Context.synthetic()))))
 			return null;
 		if (!(name.function.get(1) instanceof FunctionToken)
-				|| !((FunctionToken) name.function.get(1)).token
+				|| !((FunctionToken) name.function.get(1)).token.token
 						.startsWith(Resources.VARIABLE_START))
 			return null;
-		if (!name.function.get(2).equals(new FunctionToken("of")))
+		if (!name.function.get(2).equals(
+				new FunctionToken(new Token("of", Context.synthetic()))))
 			return null;
 		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
-		VariableIdentifier field = VariableIdentifier.getInstance(new Token(
-				((FunctionToken) name.function.get(1)).token, Context
-						.minimal()));
+		VariableIdentifier field = VariableIdentifier
+				.getInstance(((FunctionToken) name.function.get(1)).token);
 		ConcreteType type = inputs.get(0);
 		if (type instanceof ArrayType) {
 			if (field.equals(TypeVariable.LENGTH.name))

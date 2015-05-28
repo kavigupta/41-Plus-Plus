@@ -1,30 +1,39 @@
 package fortytwo.compiler;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Context {
 	public static Context construct(Context parent, int start, int end) {
-		// TODO Auto-generated method stub
+		// TODO 0 implement this
 		return new Context();
 	}
 	public static Context minimal() {
-		// TODO Auto-generated method stub
+		// TODO 0 implement this
 		return new Context();
 	}
 	public static Context synthetic() {
-		// TODO Auto-generated method stub
+		// TODO 0 implement this
 		return new Context();
 	}
-	public static Context sum(List<Token> items) {
-		// TODO Auto-generated method stub
+	public static Context tokenSum(List<Token> tokens) {
+		return sum(tokens.stream().map(t -> t.context)
+				.collect(Collectors.toList()));
+	}
+	public static Context sum(List<Context> asList) {
+		// TODO 0 implement this
 		return new Context();
 	}
 	public Context inParen() {
-		// TODO Auto-generated method stub
+		// TODO 0 implement this
 		return new Context();
 	}
 	public Context subContext(int i, int j) {
-		// TODO Auto-generated method stub
+		// TODO 0 implement this
 		return new Context();
+	}
+	public Context unary() {
+		// TODO 0 implement this
+		return null;
 	}
 }

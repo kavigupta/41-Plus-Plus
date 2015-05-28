@@ -1,16 +1,16 @@
 package fortytwo.vm.expressions;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.PrimitiveType;
 
 public class LiteralBool extends LiteralExpression {
-	public static final LiteralBool TRUE = new LiteralBool(true);
-	public static final LiteralBool FALSE = new LiteralBool(false);
 	public final boolean contents;
-	public static LiteralBool getInstance(boolean contents) {
-		return contents ? TRUE : FALSE;
+	public static LiteralBool getInstance(boolean contents, Context context) {
+		return new LiteralBool(contents, context);
 	}
-	private LiteralBool(boolean contents) {
+	private LiteralBool(boolean contents, Context context) {
+		super(context);
 		this.contents = contents;
 	}
 	@Override

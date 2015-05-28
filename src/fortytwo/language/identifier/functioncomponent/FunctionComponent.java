@@ -1,3 +1,7 @@
 package fortytwo.language.identifier.functioncomponent;
 
-public interface FunctionComponent {}
+import fortytwo.compiler.Context;
+
+public interface FunctionComponent {
+	public Context context();
+}

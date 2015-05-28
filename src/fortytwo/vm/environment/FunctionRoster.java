@@ -22,7 +22,6 @@ public class FunctionRoster {
 				.matchCompiledFieldAccess(env, signature.name,
 						inputs.stream().map(Expression::resolveType)
 								.collect(Collectors.toList()));
-		System.out.println("Sig: " + signature + "\t" + func);
 		if (func != null) return func.getKey();
 		return functions.get(signature);
 	}

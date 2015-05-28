@@ -2,10 +2,12 @@ package fortytwo.compiler.parser;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.expressions.ParsedBinaryOperation;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
@@ -34,7 +36,6 @@ public class ExpressionParser {
 	}
 	public static ParsedExpression parsePureExpression(
 			List<Token> currentExpression) {
-		System.out.println("Parsing Pure expression: " + currentExpression);
 		ArrayList<ParsedExpression> expressions = tokenize(currentExpression);
 		expressions = removeUnary(expressions);
 		for (int precendence = 0; precendence <= Operation.MAX_PRECDENCE; precendence++) {
@@ -58,7 +59,9 @@ public class ExpressionParser {
 				ParsedExpression second = expressions.get(i);
 				UnevaluatedOperator op = (UnevaluatedOperator) token;
 				exp.push(new ParsedBinaryOperation(first, second,
-						op.operator));
+						op.operator, Context.sum(Arrays.asList(
+								first.context(), op.context(),
+								second.context()))));
 			} else {
 				exp.push(token);
 			}
@@ -110,10 +113,9 @@ public class ExpressionParser {
 														 * LOWPRI-E
 														 */);
 					try {
-						expressions
-								.add(LiteralNumber
-										.getInstance(new BigDecimal(
-												token.token)));
+						expressions.add(LiteralNumber.getInstance(
+								new BigDecimal(token.token),
+								Context.synthetic()));
 						break;
 					} catch (NumberFormatException e) {
 						throw new RuntimeException(
@@ -124,34 +126,36 @@ public class ExpressionParser {
 							.subToken(1, token.token.length() - 1)));
 					break;
 				case 't':
-					expressions.add(LiteralBool.TRUE);
+					expressions.add(LiteralBool.getInstance(true,
+							Context.synthetic()));
 					break;
 				case 'f':
-					expressions.add(LiteralBool.FALSE);
+					expressions.add(LiteralBool.getInstance(false,
+							Context.synthetic()));
 					break;
 				case '+':
-					expressions
-							.add(new UnevaluatedOperator(Operation.ADD));
+					expressions.add(new UnevaluatedOperator(Operation.ADD,
+							token.context));
 					break;
 				case '-':
 					expressions.add(new UnevaluatedOperator(
-							Operation.SUBTRACT));
+							Operation.SUBTRACT, token.context));
 					break;
 				case '*':
 					expressions.add(new UnevaluatedOperator(
-							Operation.MULTIPLY));
+							Operation.MULTIPLY, token.context));
 					break;
 				case '%':
-					expressions
-							.add(new UnevaluatedOperator(Operation.MOD));
+					expressions.add(new UnevaluatedOperator(Operation.MOD,
+							token.context));
 					break;
 				case '/':
 					if (token.token.equals(Resources.FLOORDIV_SIGN))
 						expressions.add(new UnevaluatedOperator(
-								Operation.DIVIDE_FLOOR));
+								Operation.DIVIDE_FLOOR, token.context));
 					else if (token.token.equals(Resources.DIV_SIGN))
 						expressions.add(new UnevaluatedOperator(
-								Operation.DIVIDE));
+								Operation.DIVIDE, token.context));
 					else throw new RuntimeException(/* LOWPRI-E */);
 					break;
 				case '_':
@@ -230,8 +234,10 @@ public class ExpressionParser {
 	}
 	private static class UnevaluatedOperator implements ParsedExpression {
 		public Operation operator;
-		public UnevaluatedOperator(Operation operator) {
+		public Context context;
+		public UnevaluatedOperator(Operation operator, Context context) {
 			this.operator = operator;
+			this.context = context;
 		}
 		@Override
 		public Expression contextualize(StaticEnvironment env) {
@@ -251,6 +257,10 @@ public class ExpressionParser {
 		@Override
 		public String toString() {
 			return toSourceCode();
+		}
+		@Override
+		public Context context() {
+			return context;
 		}
 	}
 }

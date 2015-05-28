@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.TypeVariable;
+import fortytwo.vm.errors.CompilerErrors;
+import fortytwo.vm.errors.CriticalErrors;
 
 public class TypeVariableRoster {
 	@Override
@@ -26,18 +28,21 @@ public class TypeVariableRoster {
 	}
 	public final HashMap<TypeVariable, ConcreteType> pairs = new HashMap<>();
 	public void assign(TypeVariable name, ConcreteType express) {
-		if (pairs.containsKey(name))
-			throw new RuntimeException(/* LOWPRI-E */);
+		if (pairs.containsKey(name)) {
+			// should never happen
+			CriticalErrors
+					.assignedTypeVariableBeingReassigned(name, express);
+		}
 		pairs.put(name, express);
 	}
 	public ConcreteType referenceTo(TypeVariable id) {
 		ConcreteType le = pairs.get(id);
-		if (le == null) throw new RuntimeException(/* LOWPRI-E */);
+		if (le == null) CompilerErrors.variableNotFound(id, pairs);
 		return le;
 	}
 	public void redefine(TypeVariable name, ConcreteType express) {
 		if (!pairs.containsKey(name))
-			throw new RuntimeException(/* LOWPRI-E */);
+			CompilerErrors.variableNotFound(name, pairs);
 		pairs.put(name, express);
 	}
 }

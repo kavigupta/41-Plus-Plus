@@ -2,6 +2,7 @@ package fortytwo.vm.statements;
 
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
 
@@ -27,7 +28,7 @@ public class WhileLoop implements Statement {
 	public boolean typeCheck() {
 		condition.typeCheck();
 		if (!condition.resolveType().equals(PrimitiveType.BOOL))
-			throw new RuntimeException(/* LOWPRI-E */);
+			TypingErrors.nonBoolInWhileLoopDeclr(condition);
 		statement.typeCheck();
 		return false;
 	}

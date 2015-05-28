@@ -22,6 +22,8 @@ public class GenericStructureType implements GenericType {
 		if (type.types.size() != typeVariables.size()) return null;
 		TypeVariableRoster roster = new TypeVariableRoster();
 		for (int i = 0; i < type.types.size(); i++) {
+			// this doesn't worry about reassigning an existing variable for
+			// obvious reasons.
 			roster.assign(typeVariables.get(i), type.types.get(i));
 		}
 		return roster;
@@ -46,8 +48,7 @@ public class GenericStructureType implements GenericType {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result
 				+ ((typeVariables == null) ? 0 : typeVariables.hashCode());
 		return result;

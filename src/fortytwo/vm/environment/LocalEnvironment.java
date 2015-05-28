@@ -6,10 +6,10 @@ import fortytwo.vm.expressions.LiteralExpression;
 
 public class LocalEnvironment {
 	public final GlobalEnvironment global;
-	public final LiteralVariableRoster vars;
+	public final VariableRoster<LiteralExpression> vars;
 	public LocalEnvironment(GlobalEnvironment global) {
 		this.global = global;
-		vars = new LiteralVariableRoster();
+		vars = new VariableRoster<>();
 	}
 	public LiteralExpression referenceTo(VariableIdentifier id) {
 		LiteralExpression localE = vars.referenceTo(id);

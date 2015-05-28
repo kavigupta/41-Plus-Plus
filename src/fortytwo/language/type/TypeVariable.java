@@ -20,6 +20,7 @@ public class TypeVariable implements GenericType {
 	@Override
 	public TypeVariableRoster match(ConcreteType toMatch) {
 		TypeVariableRoster roster = new TypeVariableRoster();
+		// doesn't worry about reassigning for obvious reasons
 		roster.assign(this, toMatch);
 		return roster;
 	}

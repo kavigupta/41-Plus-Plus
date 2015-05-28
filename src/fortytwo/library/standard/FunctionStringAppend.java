@@ -22,7 +22,7 @@ public class FunctionStringAppend extends Function42 {
 		Token a = ((LiteralString) arguments.get(0)).contents;
 		Token b = ((LiteralString) arguments.get(1)).contents;
 		return new LiteralString(new Token(a.token + b.token,
-				Context.sum(Arrays.asList(a, b))));
+				Context.sum(Arrays.asList(a.context, b.context))));
 	}
 	@Override
 	public PrimitiveType outputType() {

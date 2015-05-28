@@ -3,6 +3,7 @@ package fortytwo.library.standard;
 import java.util.Arrays;
 import java.util.List;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.PrimitiveType;
@@ -21,7 +22,7 @@ public class FunctionStringToArray extends Function42 {
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		Token tokenVal = ((LiteralString) arguments.get(0)).contents;
 		LiteralArray larray = new LiteralArray(PrimitiveType.STRING,
-				tokenVal.token.length());
+				tokenVal.token.length(), Context.synthetic());
 		for (int i = 0; i < tokenVal.token.length(); i++) {
 			larray.set(i + 1, new LiteralString(tokenVal.subToken(i, i + 1)));
 		}

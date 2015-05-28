@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.field.Field;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.*;
 import fortytwo.vm.constructions.GenericStructure;
 import fortytwo.vm.constructions.Structure;
+import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.*;
 
 public class StructureRoster {
@@ -24,49 +26,32 @@ public class StructureRoster {
 		for (GenericStructure struct : structs) {
 			if (struct.type.equals(type)) return struct;
 		}
-		throw new RuntimeException(/* LOWPRI-E */);
+		TypingErrors.structureNotFound(type, this);
+		// should not be reachable.
+		return null;
 	}
 	public Field typeOf(ConcreteType type, VariableIdentifier field) {
 		if (!(type instanceof StructureType))
-			throw new RuntimeException(/* LOWPRI-E */);
+			TypingErrors.fieldAccessCalledOnPrimitive(type, field);
 		for (Field f : getStructure((StructureType) type).fields) {
 			if (f.name.equals(field)) { return f; }
 		}
-		throw new RuntimeException(/* LOWPRI-E */field + " is not in "
-				+ getStructure((StructureType) type).fields);
+		TypingErrors.fieldNotFound(type, field, this);
+		// should not be reachable.
+		return null;
 	}
 	public LiteralExpression instance(ConcreteType type,
-			LiteralVariableRoster fieldValues) {
-		LiteralExpression exp = fieldValues.value();
-		if (exp != null) return exp;
-		if (type instanceof ArrayType) {
-			if (fieldValues.size() != 1) throw new RuntimeException(/*
-														 * LOWPRI-E
-														 */);
-			if (!fieldValues.assigned(TypeVariable.LENGTH.name))
-				throw new RuntimeException(/* LOWPRI-E */);
-			LiteralExpression length = fieldValues
-					.referenceTo(TypeVariable.LENGTH.name);
-			if (length.resolveType() != PrimitiveType.NUMBER)
-				throw new RuntimeException(/* LOWPRI-E */);
-			return new LiteralArray(((ArrayType) type).contentType,
-					((LiteralNumber) length).contents.intValue());
-		}
-		if (!(type instanceof StructureType))
-			throw new RuntimeException(/* LOWPRI-E */);
-		Structure struct = getStructure((StructureType) type);
-		fieldValues.forEach(entry -> {
-			if (!struct.containsField(entry.key))
-				throw new RuntimeException(struct.toString() + "\t"
-						+ entry.key/*
-								 * LOWPRI-E
-								 */);
-		});
-		struct.fields.stream().filter(f -> !fieldValues.assigned(f.name))
-				.forEach(f -> {
-					throw new RuntimeException(/* LOWPRI-E */);
-				});
-		return new LiteralObject(struct, fieldValues);
+			VariableRoster<LiteralExpression> fieldValues) {
+		LiteralExpression value = fieldValues.value();
+		if (value != null) return value;
+		typeCheckConstructor(type, fieldValues);
+		if (type instanceof StructureType)
+			return new LiteralObject(getStructure((StructureType) type),
+					fieldValues, Context.synthetic());
+		return new LiteralArray(((ArrayType) type).contentType,
+				((LiteralNumber) fieldValues
+						.referenceTo(TypeVariable.LENGTH.name)).contents
+						.intValue(), Context.synthetic());
 	}
 	public Structure getStructure(StructureType struct) {
 		GenericStructureType genericType = genericVersionOf(struct);
@@ -96,7 +81,7 @@ public class StructureRoster {
 						.collect(Collectors.toList()));
 	}
 	public boolean typeCheckConstructor(ConcreteType type,
-			VariableRoster fields) {
+			VariableRoster<?> fields) {
 		if (fields.value() != null) {
 			if (fields.value().resolveType().equals(type)) return true;
 			throw new RuntimeException(/* LOWPRI-E */);
@@ -113,7 +98,7 @@ public class StructureRoster {
 		}
 		if (!(type instanceof StructureType)) {
 			// nothing but a structure or array has anything but a value
-			throw new RuntimeException(/* LOWPRI-E */);
+			TypingErrors.fieldAccessCalledOnPrimitive(type, fields);
 		}
 		Structure struct = getStructure((StructureType) type);
 		for (Field f : struct.fields) {

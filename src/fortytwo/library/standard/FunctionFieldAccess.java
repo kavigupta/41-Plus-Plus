@@ -28,7 +28,7 @@ public class FunctionFieldAccess extends Function42 {
 		if (!(arguments.get(0) instanceof LiteralObject))
 			throw new RuntimeException(/* LOWPRI-E */);
 		LiteralObject obj = (LiteralObject) arguments.get(0);
-		return obj.fields.referenceTo(field);
+		return obj.valueOf(field);
 	}
 	@Override
 	public ConcreteType outputType() {

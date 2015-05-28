@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
@@ -24,7 +25,7 @@ public class FunctionLogicalOperator extends Function42 {
 		for (int k = 0; k < arguments.size(); k++) {
 			array[k] = ((LiteralBool) arguments.get(k)).contents;
 		}
-		return LiteralBool.getInstance(op.apply(array));
+		return LiteralBool.getInstance(op.apply(array), Context.synthetic());
 	}
 	public static final FunctionLogicalOperator AND = new FunctionLogicalOperator(
 			x -> x[0] && x[1], "", "and", "");

@@ -27,7 +27,8 @@ public class FunctionLetterCombine extends Function42 {
 			c[i] = ((LiteralString) array.get(i + 1)).contents.token
 					.charAt(0);
 		}
-		return new LiteralString(new Token(new String(c), Context.minimal()));
+		return new LiteralString(
+				new Token(new String(c), Context.synthetic()));
 	}
 	@Override
 	public PrimitiveType outputType() {

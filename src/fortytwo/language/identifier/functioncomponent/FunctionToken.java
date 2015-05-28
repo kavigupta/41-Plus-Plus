@@ -1,13 +1,20 @@
 package fortytwo.language.identifier.functioncomponent;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
+
 public class FunctionToken implements FunctionComponent {
-	public final String token;
-	public FunctionToken(String token) {
+	public final Token token;
+	public FunctionToken(Token token) {
 		this.token = token;
 	}
 	@Override
+	public Context context() {
+		return token.context;
+	}
+	@Override
 	public String toString() {
-		return token;
+		return token.token;
 	}
 	@Override
 	public int hashCode() {

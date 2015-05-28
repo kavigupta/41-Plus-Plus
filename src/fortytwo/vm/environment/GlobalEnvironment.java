@@ -19,6 +19,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.FunctionImplemented;
+import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.statements.Statement;
 
@@ -73,7 +74,7 @@ public class GlobalEnvironment {
 					break;
 				case DEFINITION:
 					ParsedDefinition def = (ParsedDefinition) s;
-					VariableRoster fieldValues = new VariableRoster();
+					VariableRoster<Expression> fieldValues = new VariableRoster<Expression>();
 					for (Entry<VariableIdentifier, ParsedExpression> pair : def.fields
 							.entryIterator()) {
 						LiteralExpression applied = pair

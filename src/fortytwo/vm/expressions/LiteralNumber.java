@@ -2,15 +2,18 @@ package fortytwo.vm.expressions;
 
 import java.math.BigDecimal;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.PrimitiveType;
 
 public class LiteralNumber extends LiteralExpression {
 	public final BigDecimal contents;
-	public static LiteralNumber getInstance(BigDecimal contents) {
-		return new LiteralNumber(contents);
+	public static LiteralNumber getInstance(BigDecimal contents,
+			Context context) {
+		return new LiteralNumber(contents, context);
 	}
-	public LiteralNumber(BigDecimal contents) {
+	public LiteralNumber(BigDecimal contents, Context context) {
+		super(context);
 		this.contents = contents;
 	}
 	@Override

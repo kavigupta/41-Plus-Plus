@@ -54,6 +54,10 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 		return true;
 	}
 	@Override
+	public Context context() {
+		return name.context;
+	}
+	@Override
 	public int hashCode() {
 		return name.token.hashCode();
 	}

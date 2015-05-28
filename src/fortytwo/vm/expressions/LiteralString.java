@@ -10,6 +10,7 @@ public class LiteralString extends LiteralExpression {
 		return new LiteralString(contents);
 	}
 	public LiteralString(Token contents) {
+		super(contents.context);
 		this.contents = contents;
 	}
 	@Override

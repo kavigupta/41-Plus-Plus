@@ -3,10 +3,12 @@ package fortytwo.vm.expressions;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.Operation;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.errors.CriticalErrors;
 import fortytwo.vm.errors.RuntimeErrors;
 import fortytwo.vm.errors.TypingErrors;
 
@@ -14,11 +16,13 @@ public class BinaryOperation implements Expression {
 	public static final BigDecimal PRECISION = BigDecimal.TEN.pow(100);
 	public final Expression first, second;
 	public final Operation operation;
+	private final Context context;
 	public BinaryOperation(Expression firstE, Expression secondE,
-			Operation operation) {
+			Operation operation, Context context) {
 		this.first = firstE;
 		this.second = secondE;
 		this.operation = operation;
+		this.context = context;
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
@@ -35,30 +39,32 @@ public class BinaryOperation implements Expression {
 		BigDecimal bdsecond = ((LiteralNumber) s).contents;
 		if (operation.requiresSecondArgumentNotZero
 				&& bdsecond.compareTo(BigDecimal.ZERO) == 0)
-			RuntimeErrors.divideByZero(this, null); // TODO fix
+			RuntimeErrors.divideByZero(this, context);
 		switch (operation) {
 			case ADD:
-				return LiteralNumber.getInstance(bdfirst.add(bdsecond));
+				return LiteralNumber.getInstance(bdfirst.add(bdsecond),
+						context);
 			case SUBTRACT:
-				return LiteralNumber
-						.getInstance(bdfirst.subtract(bdsecond));
+				return LiteralNumber.getInstance(
+						bdfirst.subtract(bdsecond), context);
 			case MULTIPLY:
-				return LiteralNumber
-						.getInstance(bdfirst.multiply(bdsecond));
+				return LiteralNumber.getInstance(
+						bdfirst.multiply(bdsecond), context);
 			case DIVIDE:
-				return LiteralNumber.getInstance(bdfirst
-						.multiply(PRECISION)
-						.divide(bdsecond, RoundingMode.HALF_EVEN)
-						.divide(PRECISION));
+				return LiteralNumber.getInstance(
+						bdfirst.multiply(PRECISION)
+								.divide(bdsecond,
+										RoundingMode.HALF_EVEN)
+								.divide(PRECISION), context);
 			case DIVIDE_FLOOR:
-				return LiteralNumber.getInstance(bdfirst
-						.divideToIntegralValue(bdsecond));
+				return LiteralNumber.getInstance(
+						bdfirst.divideToIntegralValue(bdsecond), context);
 			case MOD:
-				return LiteralNumber.getInstance(bdfirst
-						.remainder(bdsecond));
+				return LiteralNumber.getInstance(
+						bdfirst.remainder(bdsecond), context);
 		}
 		// This should never happen.
-		RuntimeErrors.unrecognizedOperator(this, null);// TODO FIX
+		CriticalErrors.unrecognizedOperator(this, context);
 		return null;
 	}
 	@Override

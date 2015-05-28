@@ -17,7 +17,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
-import fortytwo.vm.errors.CompilerError;
+import fortytwo.vm.errors.CompilerErrors;
 
 public class StatementParser {
 	public static Sentence parseStatement(List<Token> line) {
@@ -60,7 +60,7 @@ public class StatementParser {
 				.composeFunction(list);
 		if (function.name.function.size() == 1
 				&& function.name.function.get(0) instanceof FunctionArgument)
-			CompilerError.expectedStatementButReceivedExpression(list);// TODO
+			CompilerErrors.expectedStatementButReceivedExpression(list);// TODO
 															// FIX
 		return function;
 	}
@@ -81,7 +81,6 @@ public class StatementParser {
 				VariableIdentifier.getInstance(fieldT), expr);
 	}
 	private static Sentence parseDefinition(List<Token> line) {
-		System.out.println("Parsing: " + line.toString());
 		/*
 		 * Define a[n] <type> called <name>( with a <field1> of <value1>, a
 		 * <field2> of <value2>, ...)?.
@@ -112,8 +111,6 @@ public class StatementParser {
 		GenericType genericType = ExpressionParser.parseType(type);
 		if (!(genericType instanceof ConcreteType))
 			throw new RuntimeException(/* LOWPRI-E */);
-		System.out.println("Name = " + name + "; Type = " + type
-				+ "; fields = " + fields);
 		return new ParsedDefinition(new Field(
 				VariableIdentifier.getInstance(name),
 				(ConcreteType) genericType), fields);

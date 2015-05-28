@@ -93,7 +93,8 @@ public class GlobalEnvTest {
 																		Character.toString((char) x),
 																		Context.synthetic())))
 														.collect(Collectors
-																.toList()))))
+																.toList()),
+												Context.minimal())))
 						.contextualize(env.staticEnv)
 						.literalValue(env.minimalLocalEnvironment())
 						.toSourceCode());

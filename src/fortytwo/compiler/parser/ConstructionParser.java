@@ -152,7 +152,7 @@ public class ConstructionParser {
 					function.add(FunctionArgument.INSTANCE);
 					currentExpression.clear();
 				}
-				function.add(new FunctionToken(tok.token));
+				function.add(new FunctionToken(tok));
 			} else break;
 		}
 		if (currentExpression.size() != 0) {

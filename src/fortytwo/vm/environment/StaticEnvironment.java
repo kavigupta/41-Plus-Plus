@@ -16,13 +16,13 @@ public class StaticEnvironment {
 	private final StaticEnvironment container;
 	public final StructureRoster structs;
 	private final FunctionSignatureRoster funcs;
-	private final LiteralVariableRoster globalVariables;
+	private final VariableRoster<LiteralExpression> globalVariables;
 	private final VariableTypeRoster types;
 	public static StaticEnvironment getDefault() {
 		StructureRoster structs = StdLib42.DEF_STRUCT;
 		FunctionSignatureRoster funcs = new FunctionSignatureRoster();
 		StdLib42.defaultSignatures(funcs);
-		LiteralVariableRoster globalVariables = new LiteralVariableRoster();
+		VariableRoster<LiteralExpression> globalVariables = new VariableRoster<>();
 		VariableTypeRoster types = new VariableTypeRoster();
 		return new StaticEnvironment(structs, funcs, globalVariables, types);
 	}
@@ -32,12 +32,13 @@ public class StaticEnvironment {
 	private StaticEnvironment(StaticEnvironment env) {
 		this.structs = env.structs;
 		this.funcs = new FunctionSignatureRoster();
-		this.globalVariables = new LiteralVariableRoster();
+		this.globalVariables = new VariableRoster<>();
 		this.types = new VariableTypeRoster();
 		this.container = env;
 	}
 	private StaticEnvironment(StructureRoster structureRoster,
-			FunctionSignatureRoster sigRost, LiteralVariableRoster global,
+			FunctionSignatureRoster sigRost,
+			VariableRoster<LiteralExpression> global,
 			VariableTypeRoster types) {
 		this.structs = structureRoster;
 		this.funcs = sigRost;

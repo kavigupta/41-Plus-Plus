@@ -1,10 +1,12 @@
 package fortytwo.compiler.parsed.statements;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.FunctionName;
@@ -33,11 +35,15 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 		List<Expression> args = this.arguments.stream()
 				.map(x -> x.contextualize(env))
 				.collect(Collectors.toList());
-		Pair<Function42, ConcreteType> func = StdLib42.matchFieldAccess(env,
-				this.name, args);
+		Pair<Function42, ConcreteType> func = StdLib42
+				.matchCompiledFieldAccess(
+						env,
+						this.name,
+						args.stream().map(x -> x.resolveType())
+								.collect(Collectors.toList()));
 		if (func != null)
 			return FunctionCall.getInstance(func.key.signature(),
-					func.value, Arrays.asList(args.get(1)));
+					func.value, Arrays.asList(args.get(0)));
 		List<ConcreteType> types = args.stream().map(Expression::resolveType)
 				.collect(Collectors.toList());
 		FunctionSignature sig = env.referenceTo(name, types);
@@ -51,6 +57,13 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 	@Override
 	public String toSourceCode() {
 		return SourceCode.display(this);
+	}
+	@Override
+	public Context context() {
+		ArrayList<Context> contexts = new ArrayList<>();
+		contexts.add(name.context());
+		arguments.forEach(x -> contexts.add(x.context()));
+		return Context.sum(contexts);
 	}
 	@Override
 	public int hashCode() {

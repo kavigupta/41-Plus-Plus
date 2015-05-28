@@ -35,9 +35,11 @@ public class FunctionEquivalence extends Function42 {
 		private Comparator(boolean eq, String... name) {
 			List<FunctionComponent> s = new ArrayList<>();
 			s.add(FunctionArgument.INSTANCE);
-			s.addAll(Arrays.asList(name).stream()
-					.map(x -> new FunctionToken(x))
-					.collect(Collectors.toList()));
+			s.addAll(Arrays
+					.asList(name)
+					.stream()
+					.map(x -> new FunctionToken(new Token(x, Context
+							.synthetic()))).collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
 			this.sig = FunctionSignature.getInstance(
 					FunctionName.getInstance(s),
@@ -61,8 +63,9 @@ public class FunctionEquivalence extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		return LiteralBool.getInstance(arguments.get(0).equals(
-				arguments.get(1)) == compare.eq);
+		return LiteralBool.getInstance(
+				arguments.get(0).equals(arguments.get(1)) == compare.eq,
+				Context.synthetic());
 	}
 	@Override
 	public GenericType outputType() {
