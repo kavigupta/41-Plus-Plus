@@ -18,6 +18,8 @@ import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.errors.CompilerErrors;
+import fortytwo.vm.errors.ParserErrors;
+import fortytwo.vm.errors.TypingErrors;
 
 public class StatementParser {
 	public static Sentence parseStatement(List<Token> line) {
@@ -28,7 +30,7 @@ public class StatementParser {
 				line.remove(0);
 				ParsedExpression e = ExpressionParser.parseExpression(line);
 				if (e.type() == SentenceType.PURE_EXPRESSION)
-					throw new RuntimeException(/* LOWPRI-E */);
+					ParserErrors.runPureExpression(line);
 				return e;
 			case Resources.DEFINE:
 				return parseDefinition(line);
@@ -47,22 +49,25 @@ public class StatementParser {
 		/* Exit the function( and output <output>)?. */
 		if (!line.get(1).token.equals(Resources.THE)
 				|| !line.get(2).token.equals(Resources.DECL_FUNCTION))
-			throw new RuntimeException(/* LOWPRI-E */);
+			ParserErrors.invalidFunctionExit(line);
 		if (line.size() == 3) return new FunctionReturn(null);
 		if (!line.get(3).token.equals(Resources.AND)
 				|| !line.get(4).token.equals(Resources.OUTPUT))
-			throw new RuntimeException(/* LOWPRI-E */);
+			ParserErrors.invalidFunctionExit(line);
 		line.subList(0, 5).clear();
 		return new FunctionReturn(ExpressionParser.parseExpression(line));
 	}
 	private static ParsedStatement parseVoidFunctionCall(List<Token> list) {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
-		if (function.name.function.size() == 1
-				&& function.name.function.get(0) instanceof FunctionArgument)
-			CompilerErrors.expectedStatementButReceivedExpression(list);// TODO
-															// FIX
-		return function;
+		if (function.name.function.size() != 1
+				|| !(function.name.function.get(0) instanceof FunctionArgument))
+			return function;
+		ParsedExpression exp = function.arguments.get(0);
+		if (exp instanceof ParsedFunctionCall) return exp;
+		CompilerErrors.expectedStatementButReceivedExpression(list);
+		// should never get here
+		return null;
 	}
 	private static ParsedAssignment parseAssignment(List<Token> line) {
 		/*
@@ -71,7 +76,7 @@ public class StatementParser {
 		if (!line.get(1).token.equals(Resources.THE)
 				|| !line.get(3).token.equals(Resources.OF)
 				|| !line.get(5).token.equals(Resources.TO))
-			throw new RuntimeException(/* LOWPRI-E */);
+			ParserErrors.invalidAssignment(line);
 		Token fieldT = line.get(2);
 		VariableIdentifier name = VariableIdentifier.getInstance(line.get(4));
 		line.subList(0, 6).clear();
@@ -87,7 +92,7 @@ public class StatementParser {
 		 */
 		if (!Language.isArticle(line.get(1).token)
 				|| !line.get(3).token.equals(Resources.CALLED))
-			throw new RuntimeException(/* LOWPRI-E */);
+			ParserErrors.invalidDefinition(line);
 		Token type = Language.deparenthesize(line.get(2));
 		if (type.token.equals(Resources.DECL_FUNCTION))
 			return ConstructionParser.parseFunctionDefinition(line);
@@ -110,7 +115,8 @@ public class StatementParser {
 		}
 		GenericType genericType = ExpressionParser.parseType(type);
 		if (!(genericType instanceof ConcreteType))
-			throw new RuntimeException(/* LOWPRI-E */);
+			TypingErrors.nonConcreteTypeInVariableDeclaration(line,
+					genericType);
 		return new ParsedDefinition(new Field(
 				VariableIdentifier.getInstance(name),
 				(ConcreteType) genericType), fields);

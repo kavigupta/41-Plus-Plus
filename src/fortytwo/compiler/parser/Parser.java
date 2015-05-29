@@ -15,6 +15,7 @@ import fortytwo.compiler.parsed.statements.ParsedStatementSeries;
 import fortytwo.compiler.parsed.statements.ParsedWhileLoop;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
+import fortytwo.vm.errors.ParserErrors;
 
 public class Parser {
 	private Parser() {}
@@ -85,10 +86,10 @@ public class Parser {
 				.map(x -> x.token).collect(Collectors.toList()))) {
 			Sentence sent = pop(phrases);
 			if (!(sent instanceof ParsedStatement))
-				throw new RuntimeException(/* LOWPRI-E */);
+				ParserErrors.expectedStatement(sent);
 			return ParsedStatementSeries.getInstance((ParsedStatement) sent);
 		}
-		phrases.remove(0); // remove brace
+		List<Token> openingBrace = phrases.remove(0); // remove brace
 		List<List<Token>> inBraces = new ArrayList<>();
 		int braces = 1;
 		while (phrases.size() > 0) {
@@ -103,15 +104,17 @@ public class Parser {
 					List<ParsedStatement> statements = sentences
 							.stream()
 							.map(x -> {
-								if (x instanceof ParsedStatement)
-									return (ParsedStatement) x;
-								throw new RuntimeException(/* LOWPRI-E */);
+								if (!(x instanceof ParsedStatement))
+									ParserErrors.expectedStatement(x);
+								return (ParsedStatement) x;
 							}).collect(Collectors.toList());
 					return new ParsedStatementSeries(statements);
 				}
 			}
 			inBraces.add(phrases.remove(0));
 		}
-		throw new RuntimeException(/* LOWPRI-E */);
+		ParserErrors.closeVerbalBraceNotFound(openingBrace);
+		// should never be reached.
+		return null;
 	}
 }

@@ -2,6 +2,7 @@ package fortytwo.vm.statements;
 
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
 
@@ -34,6 +35,8 @@ public class IfElse implements Statement {
 	@Override
 	public boolean typeCheck() {
 		if (condition.resolveType().equals(PrimitiveType.BOOL)) return true;
-		throw new RuntimeException(/* LOWPRI-E */);
+		TypingErrors.ifConditionNonBool(condition);
+		// unreachable
+		return false;
 	}
 }

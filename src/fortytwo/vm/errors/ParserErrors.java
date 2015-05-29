@@ -5,7 +5,9 @@ import java.util.List;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
+import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.language.Operation;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
@@ -81,6 +83,30 @@ public class ParserErrors {
 	}
 	public static void nonVariableInFieldAccess(
 			ParsedExpression parsedExpression) {
+		// TODO Auto-generated method stub
+	}
+	public static void runPureExpression(List<Token> line) {
+		// TODO Auto-generated method stub
+	}
+	public static void invalidFunctionExit(List<Token> line) {
+		// TODO Auto-generated method stub
+	}
+	public static void invalidAssignment(List<Token> line) {
+		// TODO Auto-generated method stub
+	}
+	public static void invalidDefinition(List<Token> line) {
+		// TODO Auto-generated method stub
+	}
+	public static void closeVerbalBraceNotFound(List<Token> openingBrace) {
+		// TODO Auto-generated method stub
+	}
+	public static void expectedStatement(Sentence x) {
+		// TODO Auto-generated method stub
+	}
+	public static void notAllowedInGlobalEnvironment(Sentence s) {
+		// TODO Auto-generated method stub
+	}
+	public static void noExit(FunctionDefinition f) {
 		// TODO Auto-generated method stub
 	}
 }

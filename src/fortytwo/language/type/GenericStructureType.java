@@ -6,6 +6,7 @@ import java.util.List;
 import fortytwo.compiler.Token;
 import fortytwo.language.SourceCode;
 import fortytwo.vm.environment.TypeVariableRoster;
+import fortytwo.vm.errors.TypingErrors;
 
 public class GenericStructureType implements GenericType {
 	public final List<Token> name;
@@ -33,9 +34,8 @@ public class GenericStructureType implements GenericType {
 		List<ConcreteType> types = new ArrayList<>();
 		for (TypeVariable gt : typeVariables) {
 			ConcreteType typeParameter = roster.referenceTo(gt);
-			if (typeParameter == null) throw new RuntimeException(/*
-														 * LOWPRI-E
-														 */);
+			if (typeParameter == null)
+				TypingErrors.incompleteTypeVariableSystem(this, roster);
 			types.add(typeParameter);
 		}
 		return new StructureType(name, types);

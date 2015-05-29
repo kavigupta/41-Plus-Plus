@@ -25,7 +25,8 @@ public class FunctionStringSplit extends Function42 {
 		LiteralArray array = new LiteralArray(PrimitiveType.STRING,
 				token.token.length(), Context.synthetic());
 		for (int i = 0; i < token.token.length(); i++) {
-			array.set(i + 1, new LiteralString(token.subToken(i, i + 1)));
+			array.set(i + 1, new LiteralString(token.subToken(i, i + 1)),
+					Context.exprSum(arguments));
 		}
 		return array;
 	}

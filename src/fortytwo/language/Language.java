@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
+import fortytwo.vm.errors.ParserErrors;
 
 public class Language {
 	public static String articleized(String word) {
@@ -44,9 +45,8 @@ public class Language {
 	public static Token deparenthesize(Token token) {
 		if (token.token.startsWith(OPEN_PAREN)) {
 			if (!token.token.endsWith(CLOSE_PAREN))
-				throw new RuntimeException(/*
-									 * LOWPRI-E
-									 */);
+				ParserErrors.closingParenNotFound(token.context,
+						token.token, 0);
 			return token.subToken(1, token.token.length() - 1);
 		}
 		return token;

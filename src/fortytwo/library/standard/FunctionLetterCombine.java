@@ -24,7 +24,9 @@ public class FunctionLetterCombine extends Function42 {
 		LiteralArray array = (LiteralArray) arguments.get(0);
 		char[] c = new char[array.length()];
 		for (int i = 0; i < array.length(); i++) {
-			c[i] = ((LiteralString) array.get(i + 1)).contents.token
+			// pass a synthetic context because we know there will be no
+			// error.
+			c[i] = ((LiteralString) array.get(i + 1, Context.synthetic())).contents.token
 					.charAt(0);
 		}
 		return new LiteralString(

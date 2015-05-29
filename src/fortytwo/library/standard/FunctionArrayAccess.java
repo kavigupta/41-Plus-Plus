@@ -35,7 +35,8 @@ public class FunctionArrayAccess extends Function42 {
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		LiteralArray array = (LiteralArray) arguments.get(1);
 		LiteralNumber index = (LiteralNumber) arguments.get(0);
-		return array.get(index.contents.intValue());
+		return array.get(index.contents.intValue(),
+				Context.exprSum(arguments));
 	}
 	@Override
 	public GenericType outputType() {

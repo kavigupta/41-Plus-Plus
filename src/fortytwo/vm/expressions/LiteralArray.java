@@ -7,6 +7,7 @@ import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.ArrayType;
 import fortytwo.language.type.ConcreteType;
+import fortytwo.vm.errors.RuntimeErrors;
 
 public class LiteralArray extends LiteralExpression {
 	public final ConcreteType contents;
@@ -32,20 +33,20 @@ public class LiteralArray extends LiteralExpression {
 	public ConcreteType resolveType() {
 		return new ArrayType(contents);
 	}
-	public void set(int i, LiteralExpression e) {
-		if (!e.resolveType().equals(contents))
-			throw new RuntimeException(/* LOWPRI-E */);
+	public void set(int i, LiteralExpression e, Context context) {
+		// no type checking here --- should have been done earlier
 		try {
 			elements[i - 1] = e;
 		} catch (ArrayIndexOutOfBoundsException exc) {
-			throw new RuntimeException(/* LOWPRI-E */);
+			RuntimeErrors.indexOutOfBoundsException(this, i, context);
 		}
 	}
-	public LiteralExpression get(int i) {
+	public LiteralExpression get(int i, Context context) {
 		try {
 			return elements[i - 1];
 		} catch (ArrayIndexOutOfBoundsException exc) {
-			throw new RuntimeException(/* LOWPRI-E */);
+			RuntimeErrors.indexOutOfBoundsException(this, i, context);
+			return null;
 		}
 	}
 	public int length() {

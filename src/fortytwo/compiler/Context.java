@@ -3,6 +3,8 @@ package fortytwo.compiler;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
+
 public class Context {
 	public static Context construct(Context parent, int start, int end) {
 		// TODO 0 implement this
@@ -18,6 +20,10 @@ public class Context {
 	}
 	public static Context tokenSum(List<Token> tokens) {
 		return sum(tokens.stream().map(t -> t.context)
+				.collect(Collectors.toList()));
+	}
+	public static Context exprSum(List<? extends ParsedExpression> arguments) {
+		return sum(arguments.stream().map(ParsedExpression::context)
 				.collect(Collectors.toList()));
 	}
 	public static Context sum(List<Context> asList) {

@@ -19,6 +19,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.FunctionImplemented;
+import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.statements.Statement;
@@ -61,11 +62,10 @@ public class GlobalEnvironment {
 						}
 						Sentence sC = sentences.get(i);
 						if (!(sC instanceof ParsedStatement))
-							throw new RuntimeException(/* LOWPRI-E */);
+							ParserErrors.expectedStatement(sC);
 						body.add((ParsedStatement) sC);
 					}
-					if (r == null)
-						throw new RuntimeException(/* LOWPRI-E */);
+					if (r == null) ParserErrors.noExit(f);
 					functions.add(new ParsedFunction(f, body, r));
 					break;
 				case DECLARATION_STRUCT:
@@ -82,8 +82,6 @@ public class GlobalEnvironment {
 								.contextualize(environment)
 								.literalValue(
 										new LocalEnvironment(global));
-						if (applied == null)
-							throw new RuntimeException(/* LOWPRI-E */);
 						fieldValues.assign(pair.getKey(), applied);
 					}
 					environment.addGlobalVariable(def.name.name,
@@ -91,7 +89,7 @@ public class GlobalEnvironment {
 									fieldValues.literalValue(local)));
 					break;
 				default:
-					throw new RuntimeException(/* LOWPRI-E */);
+					ParserErrors.notAllowedInGlobalEnvironment(s);
 			}
 		}
 		HashMap<FunctionSignature, Function42> implFunctions = new HashMap<>();

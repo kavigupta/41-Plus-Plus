@@ -3,6 +3,7 @@ package fortytwo.library.standard;
 import java.util.Arrays;
 import java.util.List;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.GenericArrayType;
@@ -34,7 +35,8 @@ public class FunctionArrayModification extends Function42 {
 		LiteralArray array = (LiteralArray) arguments.get(1);
 		LiteralNumber index = (LiteralNumber) arguments.get(0);
 		LiteralExpression value = arguments.get(2);
-		array.set(index.contents.intValue(), value);
+		array.set(index.contents.intValue(), value,
+				Context.exprSum(arguments));
 		return null;
 	}
 	@Override

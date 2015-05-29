@@ -1,12 +1,13 @@
 package fortytwo.vm.errors;
 
+import java.util.List;
+
 import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.language.field.Field;
+import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.language.type.ArrayType;
-import fortytwo.language.type.ConcreteType;
-import fortytwo.language.type.GenericStructureType;
-import fortytwo.language.type.TypeVariable;
+import fortytwo.language.type.*;
 import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -56,6 +57,26 @@ public class TypingErrors {
 	}
 	public static void fieldAssignmentIncomplete(Structure struct,
 			VariableRoster<?> fields) {
+		// TODO Auto-generated method stub
+	}
+	public static void nonConcreteTypeInVariableDeclaration(List<Token> line,
+			GenericType type) {
+		// TODO Auto-generated method stub
+	}
+	public static void redefinitionTypeMismatch(VariableIdentifier name,
+			Expression value) {
+		// TODO Auto-generated method stub
+	}
+	public static void ifConditionNonBool(Expression condition) {
+		// TODO Auto-generated method stub
+	}
+	public static void incompleteTypeVariableSystem(
+			GenericStructureType genericStructureType,
+			TypeVariableRoster roster) {
+		// TODO Auto-generated method stub
+	}
+	public static void functionSigtypeMismatch(FunctionName name,
+			List<? extends Expression> arguments, int i) {
 		// TODO Auto-generated method stub
 	}
 }

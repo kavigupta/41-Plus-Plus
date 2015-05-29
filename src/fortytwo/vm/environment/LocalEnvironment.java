@@ -20,9 +20,7 @@ public class LocalEnvironment {
 	public ConcreteType typeOf(VariableIdentifier name) {
 		ConcreteType type = vars.typeOf(name);
 		if (type != null) return type;
-		type = global.staticEnv.typeOf(name);
-		if (type != null) return type;
-		throw new RuntimeException(/* LOWPRI-E */);
+		return global.staticEnv.typeOf(name);
 	}
 	public StaticEnvironment staticEnvironment() {
 		StaticEnvironment env = StaticEnvironment.getChild(global.staticEnv);

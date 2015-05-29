@@ -24,7 +24,9 @@ public class FunctionStringToArray extends Function42 {
 		LiteralArray larray = new LiteralArray(PrimitiveType.STRING,
 				tokenVal.token.length(), Context.synthetic());
 		for (int i = 0; i < tokenVal.token.length(); i++) {
-			larray.set(i + 1, new LiteralString(tokenVal.subToken(i, i + 1)));
+			larray.set(i + 1,
+					new LiteralString(tokenVal.subToken(i, i + 1)),
+					Context.exprSum(arguments));
 		}
 		return larray;
 	}
