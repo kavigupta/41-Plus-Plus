@@ -20,8 +20,8 @@ public class ParsedVariableRoster {
 	public VariableRoster<Expression> contextualize(StaticEnvironment env) {
 		VariableRoster<Expression> roster = new VariableRoster<>();
 		pairs.stream().forEach(
-				p -> roster.assign(p.getKey().contextualize(env), p
-						.getValue().contextualize(env)));
+				p -> roster.assign(p.getKey(),
+						p.getValue().contextualize(env)));
 		return roster;
 	}
 	public int size() {

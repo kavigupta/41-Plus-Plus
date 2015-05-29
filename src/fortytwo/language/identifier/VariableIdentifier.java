@@ -5,19 +5,14 @@ import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
-import fortytwo.language.type.ConcreteType;
-import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.language.field.Field;
 import fortytwo.vm.environment.StaticEnvironment;
-import fortytwo.vm.errors.CriticalErrors;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.Expression;
-import fortytwo.vm.expressions.LiteralExpression;
 
-public class VariableIdentifier implements ParsedExpression, Expression {
+public class VariableIdentifier implements ParsedExpression {
 	public static final VariableIdentifier VALUE = new VariableIdentifier(
 			new Token(Resources.VALUE, Context.synthetic()));
-	// LOWPRI quick and dirty solution. Fix later
-	private StaticEnvironment env;
 	public final Token name;
 	public static VariableIdentifier getInstance(Token token) {
 		if (token.token.equals(Resources.VALUE)) return VALUE;
@@ -29,32 +24,8 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 		this.name = name;
 	}
 	@Override
-	public VariableIdentifier contextualize(StaticEnvironment env) {
-		this.env = env;
-		return this;
-	}
-	@Override
 	public SentenceType type() {
 		return SentenceType.PURE_EXPRESSION;
-	}
-	@Override
-	public void execute(LocalEnvironment environment) {
-		// no-op
-	}
-	@Override
-	public LiteralExpression literalValue(LocalEnvironment environment) {
-		return environment.referenceTo(this);
-	}
-	@Override
-	public ConcreteType resolveType() {
-		if (env == null)
-			CriticalErrors.uncompiledVariableBeingResolved(this);
-		return env.typeOf(this);
-	}
-	@Override
-	public boolean typeCheck() {
-		// a variable's type automatically works
-		return true;
 	}
 	@Override
 	public Context context() {
@@ -79,5 +50,13 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 	@Override
 	public String toSourceCode() {
 		return name.token;
+	}
+	@Override
+	public boolean isSimple() {
+		return true;
+	}
+	@Override
+	public Expression contextualize(StaticEnvironment env) {
+		return new Field(this, env.typeOf(this));
 	}
 }

@@ -2,13 +2,37 @@ package fortytwo.language.field;
 
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
+import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.expressions.Expression;
+import fortytwo.vm.expressions.LiteralExpression;
 
-public class Field {
+public class Field implements Expression {
 	public final VariableIdentifier name;
 	public final ConcreteType type;
 	public Field(VariableIdentifier name, ConcreteType type) {
 		this.name = name;
 		this.type = type;
+	}
+	@Override
+	public void execute(LocalEnvironment environment) {
+		// no-op
+	}
+	@Override
+	public void clean(LocalEnvironment environment) {
+		environment.vars.deregister(name);
+	}
+	@Override
+	public boolean typeCheck() {
+		// has been typechecked on creation
+		return true;
+	}
+	@Override
+	public LiteralExpression literalValue(LocalEnvironment env) {
+		return env.referenceTo(this.name);
+	}
+	@Override
+	public ConcreteType resolveType() {
+		return type;
 	}
 	@Override
 	public int hashCode() {
