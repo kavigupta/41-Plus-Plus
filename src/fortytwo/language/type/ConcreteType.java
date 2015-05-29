@@ -11,7 +11,7 @@ public interface ConcreteType extends GenericType {
 	@Override
 	public default TypeVariableRoster match(ConcreteType toMatch) {
 		if (toMatch.equals(this)) return new TypeVariableRoster();
-		throw new RuntimeException(/* LOWPRI-E */);
+		return null;
 	}
 	@Override
 	public default ConcreteType resolve(TypeVariableRoster roster) {

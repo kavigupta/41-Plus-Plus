@@ -10,6 +10,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.errors.CompilerErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class StaticEnvironment {
@@ -58,7 +59,7 @@ public class StaticEnvironment {
 	public ConcreteType typeOf(VariableIdentifier name) {
 		ConcreteType type = types.typeOf(name);
 		if (type != null) return type;
-		if (container == null) throw new RuntimeException(/* LOWPRI-E */);
+		if (container == null) CompilerErrors.variableNotFound(name);
 		return container.typeOf(name);
 	}
 	public FunctionSignature referenceTo(FunctionName name,
@@ -69,7 +70,7 @@ public class StaticEnvironment {
 		FunctionSignature sig = funcs.referenceTo(name, types);
 		if (sig != null) return sig;
 		if (container == null)
-			throw new RuntimeException(/* LOWPRI-E */funcs.funcs + ";" + name);
+			CompilerErrors.functionSignatureNotFound(name, types, funcs);
 		return container.referenceTo(name, types);
 	}
 	public void putReference(FunctionDefinition f) {
@@ -78,7 +79,7 @@ public class StaticEnvironment {
 	public LiteralExpression referenceTo(VariableIdentifier name) {
 		LiteralExpression expr = globalVariables.referenceTo(name);
 		if (expr != null) return expr;
-		if (container == null) throw new RuntimeException(/* LOWPRI-E */);
+		if (container == null) CompilerErrors.variableNotFound(name);
 		return container.referenceTo(name);
 	}
 	@Override

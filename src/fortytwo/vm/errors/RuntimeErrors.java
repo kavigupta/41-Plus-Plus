@@ -6,6 +6,6 @@ import fortytwo.vm.expressions.BinaryOperation;
 public class RuntimeErrors {
 	public static void divideByZero(BinaryOperation binaryOperation,
 			Context context) {
-		// TODO Auto-generated method stub
+		// TODO 0 implement
 	}
 }

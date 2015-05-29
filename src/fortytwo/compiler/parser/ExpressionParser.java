@@ -20,6 +20,7 @@ import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.*;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralNumber;
@@ -42,7 +43,7 @@ public class ExpressionParser {
 			expressions = removeBinary(expressions, precendence);
 		}
 		if (expressions.size() != 1)
-			throw new RuntimeException(/* LOWPRI-E */);
+			ParserErrors.errorInParsingArithmetic(currentExpression);
 		return expressions.get(0);
 	}
 	private static ArrayList<ParsedExpression> removeBinary(
@@ -53,7 +54,10 @@ public class ExpressionParser {
 			if (token instanceof UnevaluatedOperator
 					&& ((UnevaluatedOperator) token).operator.precendence <= precendence) {
 				if (exp.size() == 0)
-					throw new RuntimeException(/* LOWPRI-E */);
+					ParserErrors.noPriorToken(
+							((UnevaluatedOperator) token).context,
+							((UnevaluatedOperator) token).operator,
+							expressions);
 				ParsedExpression first = exp.pop();
 				i++;
 				ParsedExpression second = expressions.get(i);
@@ -95,7 +99,6 @@ public class ExpressionParser {
 		return expressionsWoUO;
 	}
 	private static ArrayList<ParsedExpression> tokenize(List<Token> exp) {
-		boolean expectsValue = true;
 		ArrayList<ParsedExpression> expressions = new ArrayList<>();
 		for (Token token : exp) {
 			switch (token.token.charAt(0)) {
@@ -109,17 +112,13 @@ public class ExpressionParser {
 				case '7':
 				case '8':
 				case '9':
-					if (!expectsValue) throw new RuntimeException(/*
-														 * LOWPRI-E
-														 */);
 					try {
 						expressions.add(LiteralNumber.getInstance(
 								new BigDecimal(token.token),
-								Context.synthetic()));
+								token.context));
 						break;
 					} catch (NumberFormatException e) {
-						throw new RuntimeException(
-						/* LOWPRI-E */token.token);
+						ParserErrors.errorInParsingNumber(token);
 					}
 				case '\'':
 					expressions.add(LiteralString.getInstance(token
@@ -156,7 +155,7 @@ public class ExpressionParser {
 					else if (token.token.equals(Resources.DIV_SIGN))
 						expressions.add(new UnevaluatedOperator(
 								Operation.DIVIDE, token.context));
-					else throw new RuntimeException(/* LOWPRI-E */);
+					else ParserErrors.invalidOperator(token);
 					break;
 				case '_':
 					expressions.add(VariableIdentifier.getInstance(token));
@@ -201,24 +200,27 @@ public class ExpressionParser {
 				switch (var.kind()) {
 					case CONCRETE:
 						if (arguments == Kind.VARIABLE)
-							throw new RuntimeException(/* LOWPRI-E */);
+							ParserErrors
+									.expectedVariableButReceivedConcrete(tokens
+											.get(i));
 						arguments = Kind.CONCRETE;
 						break;
 					case VARIABLE:
 						if (arguments == Kind.CONCRETE)
-							throw new RuntimeException(/* LOWPRI-E */);
+							ParserErrors
+									.expectedConcreteButReceivedVariable(tokens
+											.get(i));
 						break;
 					case CONSTRUCTOR:
-						throw new RuntimeException(/* LOWPRI-E */);
+						ParserErrors.constructorInTypeDecl(tokens.get(i));
 				}
 				typeVariables.add(var);
 			}
 		}
 		if (struct.stream().map(x -> x.token).collect(Collectors.toList())
 				.equals(StdLib42.STRUCT_ARRAY)) {
-			if (typeVariables.size() != 1) throw new RuntimeException(/*
-														 * LOWPRI-E
-														 */);
+			if (typeVariables.size() != 1)
+				ParserErrors.invalidArrayDecl(tokens, typeVariables);
 			if (arguments == Kind.CONCRETE)
 				return new ArrayType((ConcreteType) typeVariables.get(0));
 			return new GenericArrayType(typeVariables.get(0));

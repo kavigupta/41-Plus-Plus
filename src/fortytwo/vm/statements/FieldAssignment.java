@@ -1,29 +1,29 @@
 package fortytwo.vm.statements;
 
 import fortytwo.language.field.Field;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.StructureType;
 import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.Expression;
-import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
 
 public class FieldAssignment implements Statement {
-	public final VariableIdentifier name;
+	public final Expression obj;
 	public final Field field;
 	public final Expression value;
-	public FieldAssignment(VariableIdentifier name, Field field,
-			Expression value) {
-		this.name = name;
+	public FieldAssignment(Expression obj, Field field, Expression value) {
+		this.obj = obj;
 		this.field = field;
 		this.value = value;
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
-		LiteralExpression expr = environment.vars.referenceTo(name);
-		if (!(expr instanceof LiteralObject))
-			throw new RuntimeException(/* LOWPRI-E */);
-		LiteralObject obj = (LiteralObject) expr;
-		obj.redefine(field.name, value.literalValue(environment));
+		if (!(obj.resolveType() instanceof StructureType)) {
+			// should never happen.
+			return;
+		}
+		((LiteralObject) obj.literalValue(environment)).redefine(field.name,
+				value.literalValue(environment));
 	}
 	@Override
 	public void clean(LocalEnvironment environment) {
@@ -32,7 +32,7 @@ public class FieldAssignment implements Statement {
 	@Override
 	public boolean typeCheck() {
 		if (!field.type.equals(value.resolveType()))
-			throw new RuntimeException(/* LOWPRI-E */);
+			TypingErrors.fieldAssignmentTypeMismatch(obj, field, value);
 		return true;
 	}
 }

@@ -4,6 +4,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.TypeVariableRoster;
+import fortytwo.vm.errors.TypingErrors;
 
 public class TypeVariable implements GenericType {
 	public static final TypeVariable LENGTH = new TypeVariable(
@@ -27,7 +28,7 @@ public class TypeVariable implements GenericType {
 	@Override
 	public ConcreteType resolve(TypeVariableRoster roster) {
 		ConcreteType type = roster.referenceTo(this);
-		if (type == null) throw new RuntimeException(/* LOWPRI-E */);
+		if (type == null) TypingErrors.variableNotInRoster(this, roster);
 		return type;
 	}
 	@Override

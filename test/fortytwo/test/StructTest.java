@@ -103,8 +103,9 @@ public class StructTest {
 		LocalEnvironment loc = env.minimalLocalEnvironment();
 		Parser.parse(statement)
 				.stream()
-				.forEach(x -> ((ParsedStatement) x).contextualize(
-						env.staticEnv).execute(loc));
+				.map(x -> ((ParsedStatement) x)
+						.contextualize(env.staticEnv))
+				.forEach(x -> x.execute(loc));
 		assertEquals(result, buffer);
 		buffer = "";
 	}

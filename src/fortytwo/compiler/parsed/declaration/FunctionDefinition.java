@@ -8,6 +8,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.errors.CriticalErrors;
 
 public class FunctionDefinition implements Declaration {
 	public final FunctionName name;
@@ -30,11 +31,12 @@ public class FunctionDefinition implements Declaration {
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}
-	public void addTypes(StaticEnvironment environment) {
+	public void registerParameters(StaticEnvironment environment) {
 		for (int i = 0; i < parameterTypes.size(); i++) {
 			// LOWPRI allow user-defined generic functions.
 			if (!(parameterTypes.get(i) instanceof ConcreteType))
-				throw new RuntimeException(/* LOWPRI-E */);
+				CriticalErrors.nonConcreteTypeIn(name, parameterVariables,
+						parameterTypes, i);
 			environment.addType(parameterVariables.get(i),
 					(ConcreteType) parameterTypes.get(i));
 		}

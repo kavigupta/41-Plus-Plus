@@ -7,5 +7,6 @@ public interface GenericType extends ParsedConstruct {
 	public Kind kind();
 	public TypeVariableRoster match(ConcreteType toMatch);
 	public ConcreteType resolve(TypeVariableRoster roster);
+	@Override
 	public String toSourceCode();
 }

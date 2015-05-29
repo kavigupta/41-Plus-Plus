@@ -8,6 +8,8 @@ import fortytwo.language.Resources;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.errors.CriticalErrors;
+import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -20,7 +22,7 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 	public static VariableIdentifier getInstance(Token token) {
 		if (token.token.equals(Resources.VALUE)) return VALUE;
 		if (!Language.isValidVariableIdentifier(token.token))
-			throw new RuntimeException(/* LOWPRI-E */);
+			ParserErrors.invalidVariableIdenitifer(token);
 		return new VariableIdentifier(token);
 	}
 	private VariableIdentifier(Token name) {
@@ -45,7 +47,8 @@ public class VariableIdentifier implements ParsedExpression, Expression {
 	}
 	@Override
 	public ConcreteType resolveType() {
-		if (env == null) throw new RuntimeException(/* LOWPRI-E */);
+		if (env == null)
+			CriticalErrors.uncompiledVariableBeingResolved(this);
 		return env.typeOf(this);
 	}
 	@Override

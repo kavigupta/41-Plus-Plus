@@ -8,6 +8,7 @@ import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
+import fortytwo.vm.errors.CompilerErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -32,11 +33,12 @@ public class FunctionCall implements Expression, Statement {
 	@Override
 	public boolean typeCheck() {
 		if (function.inputTypes.size() != arguments.size())
-			throw new RuntimeException(/* LOWPRI-E */);
+			CompilerErrors.wrongNumberOfArguments(function, arguments);
 		for (int i = 0; i < function.inputTypes.size(); i++) {
 			TypeVariableRoster tvr = function.inputTypes.get(i).match(
 					arguments.get(i).resolveType());
-			if (tvr == null) throw new RuntimeException(/* LOWPRI-E */);
+			if (tvr == null)
+				CompilerErrors.argumentTypeMismatch(function, arguments, i);
 		}
 		return true;
 	}

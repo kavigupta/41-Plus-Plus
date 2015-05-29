@@ -22,7 +22,7 @@ public class ParsedFunction {
 	}
 	public FunctionImplemented contextualize(StaticEnvironment environment) {
 		StaticEnvironment local = StaticEnvironment.getChild(environment);
-		f.addTypes(local);
+		f.registerParameters(local);
 		List<Statement> bodyS = body.stream().map(x -> {
 			return x.contextualize(local);
 		}).collect(Collectors.toList());

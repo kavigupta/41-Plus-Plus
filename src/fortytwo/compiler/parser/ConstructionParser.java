@@ -23,6 +23,7 @@ import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.*;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.constructions.GenericStructure;
+import fortytwo.vm.errors.ParserErrors;
 
 public class ConstructionParser {
 	public static ParsedFunctionCall composeFunction(List<Token> list) {
@@ -31,13 +32,13 @@ public class ConstructionParser {
 	}
 	public static StructureDeclaration parseStructDefinition(List<Token> line) {
 		/*
-		 * Define a structure called <structure> of <typevar1>, <typevar2>,
+		 * Define a type called <structure> of <typevar1>, <typevar2>,
 		 * and <typevar3> that contains a[n] <type> called <field> , a[n]
 		 * <type> called <field>, ...
 		 */
 		if (!line.get(1).token.equals(Resources.A)
 				|| !line.get(3).token.equals(Resources.CALLED))
-			throw new RuntimeException(/* LOWPRI-E */);
+			ParserErrors.invalidStructDefinition(line);
 		line.subList(0, 4).clear();
 		ArrayList<Token> structExpression = new ArrayList<>();
 		int i = 0;
@@ -76,7 +77,7 @@ public class ConstructionParser {
 		if (!line.get(1).token.equals(Resources.A)
 				|| !line.get(2).token.equals(Resources.DECL_FUNCTION)
 				|| !line.get(3).token.equals(Resources.CALLED))
-			throw new RuntimeException(/* LOWPRI-E */);
+			ParserErrors.invalidFunctionDeclaration(line);
 		int i = 4;
 		ArrayList<Token> funcExpress = new ArrayList<>();
 		for (; i < line.size() && !line.get(i).token.equals(Resources.THAT); i++) {
@@ -95,7 +96,8 @@ public class ConstructionParser {
 						// LOWPRI allow generic typing in functions...
 						// later
 						if (!(type instanceof ConcreteType))
-							throw new RuntimeException(/* LOWPRI-E */);
+							ParserErrors.genericTypeInFunctionDecl(type,
+									line);
 						vars.put(VariableIdentifier.getInstance(line
 								.get(i + 1)), type);
 					}
@@ -103,9 +105,7 @@ public class ConstructionParser {
 				case Resources.OUTPUTS:
 					break;
 				default:
-					throw new RuntimeException(/*
-										 * LOWPRI-E
-										 */);
+					ParserErrors.invalidFunctionDeclSuffix(line);
 			}
 		}
 		int outputloc = Token.indexOf(line, Resources.OUTPUTS);
@@ -114,25 +114,24 @@ public class ConstructionParser {
 				.stream()
 				.map(x -> {
 					if (!(x instanceof VariableIdentifier))
-						throw new RuntimeException(/* LOWPRI-E */);
+						ParserErrors.nonVariableInFunctionDecl(x, line);
 					return (VariableIdentifier) x;
 				}).collect(Collectors.toList());
 		List<GenericType> types = new ArrayList<>();
 		for (VariableIdentifier vid : variables) {
 			GenericType gt = vars.get(vid);
-			if (gt == null) throw new RuntimeException(/* LOWPRI-E */);
+			if (gt == null) ParserErrors.incompleteFields(vid, line);
 			types.add(gt);
 		}
 		if (outputloc < 0)
 			return new FunctionDefinition(sig.key, variables, types,
 					PrimitiveType.VOID);
-		if (!Language.isArticle(line.get(outputloc + 1).token))
-			throw new RuntimeException(/* LOWPRI-E */);
-		line.subList(0, outputloc + 2).clear();
+		if (Language.isArticle(line.get(outputloc + 1).token)) outputloc++;
+		line.subList(0, outputloc + 1).clear();
 		GenericType outputType = ExpressionParser.parseType(Language
 				.parenthesize(line));
 		if (!(outputType instanceof ConcreteType))
-			throw new RuntimeException(/* LOWPRI-E */);
+			ParserErrors.genericTypeInFunctionOutput(outputType, line);
 		return new FunctionDefinition(sig.key, variables, types,
 				(ConcreteType) outputType);
 	}

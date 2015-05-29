@@ -37,12 +37,11 @@ public class TypeVariableRoster {
 	}
 	public ConcreteType referenceTo(TypeVariable id) {
 		ConcreteType le = pairs.get(id);
-		if (le == null) CompilerErrors.variableNotFound(id, pairs);
+		if (le == null) CompilerErrors.variableNotFound(id);
 		return le;
 	}
 	public void redefine(TypeVariable name, ConcreteType express) {
-		if (!pairs.containsKey(name))
-			CompilerErrors.variableNotFound(name, pairs);
+		if (!pairs.containsKey(name)) CompilerErrors.variableNotFound(name);
 		pairs.put(name, express);
 	}
 }

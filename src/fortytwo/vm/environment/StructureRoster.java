@@ -2,7 +2,6 @@ package fortytwo.vm.environment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.field.Field;
@@ -11,6 +10,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.*;
 import fortytwo.vm.constructions.GenericStructure;
 import fortytwo.vm.constructions.Structure;
+import fortytwo.vm.errors.CompilerErrors;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.*;
 
@@ -70,31 +70,30 @@ public class StructureRoster {
 			GenericStructureType genericType) {
 		for (GenericStructure gs : structs)
 			if (gs.type.equals(genericType)) return gs;
-		throw new RuntimeException(/* LOWPRI-E */);
+		CompilerErrors.structureDNE(genericType, this);
+		// should never get here
+		return null;
 	}
 	private GenericStructureType genericVersionOf(StructureType type) {
 		for (GenericStructure gs : structs)
 			if (gs.type.name.equals(type.name)) return gs.type;
-		throw new RuntimeException(/* LOWPRI-E */type.name.toString()
-				+ "\t"
-				+ structs.stream().map(x -> x.type.name)
-						.collect(Collectors.toList()));
+		CompilerErrors.structureDNE(type, this);
+		// should never happen
+		return null;
 	}
 	public boolean typeCheckConstructor(ConcreteType type,
 			VariableRoster<?> fields) {
 		if (fields.value() != null) {
 			if (fields.value().resolveType().equals(type)) return true;
-			throw new RuntimeException(/* LOWPRI-E */);
+			TypingErrors.fieldAccessCalledOnPrimitive(type, fields);
 		}
 		if (type instanceof ArrayType) {
-			if (fields.size() != 1) throw new RuntimeException(/*
-													 * LOWPRI-E
-													 */);
 			Expression length = fields.referenceTo(TypeVariable.LENGTH.name);
-			if (length == null
-					|| length.resolveType() != PrimitiveType.NUMBER)
-				throw new RuntimeException(/* LOWPRI-E */);
-			return true;
+			if (fields.size() == 1 && length != null
+					&& length.resolveType() == PrimitiveType.NUMBER)
+				return true;
+			TypingErrors.nonLengthFieldAccessOnArray((ArrayType) type,
+					fields);
 		}
 		if (!(type instanceof StructureType)) {
 			// nothing but a structure or array has anything but a value
@@ -103,18 +102,17 @@ public class StructureRoster {
 		Structure struct = getStructure((StructureType) type);
 		for (Field f : struct.fields) {
 			if (!fields.referenceTo(f.name).resolveType().equals(f.type))
-				throw new RuntimeException(/* LOWPRI-E */);
+				TypingErrors.fieldAssignmentTypeMismatch(struct, f, f.type);
 		}
 		fields.forEach(x -> {
 			if (!struct.containsField(x.key))
-				throw new RuntimeException(/*
-									 * LOWPRI-E
-									 */);
+				TypingErrors.fieldNotFound(type, x.key, this);
 		});
-		struct.fields.stream().filter(f -> !fields.assigned(f.name))
-				.forEach(f -> {
-					throw new RuntimeException(/* LOWPRI-E */);
-				});
+		struct.fields
+				.stream()
+				.filter(f -> !fields.assigned(f.name))
+				.forEach(f -> TypingErrors.fieldAssignmentIncomplete(
+						struct, fields));
 		return true;
 	}
 	@Override

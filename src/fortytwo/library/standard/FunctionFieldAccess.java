@@ -12,6 +12,7 @@ import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
+import fortytwo.vm.errors.CriticalErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
 
@@ -26,7 +27,7 @@ public class FunctionFieldAccess extends Function42 {
 	public LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		if (!(arguments.get(0) instanceof LiteralObject))
-			throw new RuntimeException(/* LOWPRI-E */);
+			CriticalErrors.fieldAccessOnNonObject(this, arguments);
 		LiteralObject obj = (LiteralObject) arguments.get(0);
 		return obj.valueOf(field);
 	}

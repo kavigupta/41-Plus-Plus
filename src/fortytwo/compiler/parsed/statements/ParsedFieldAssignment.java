@@ -18,8 +18,9 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	}
 	@Override
 	public Statement contextualize(StaticEnvironment environment) {
-		return new FieldAssignment(name, environment.structs.typeOf(
-				environment.typeOf(name), field),
+		return new FieldAssignment(
+				name.contextualize(environment),
+				environment.structs.typeOf(environment.typeOf(name), field),
 				value.contextualize(environment));
 	}
 	@Override
