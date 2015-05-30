@@ -113,7 +113,7 @@ public class Parser {
 			}
 			inBraces.add(phrases.remove(0));
 		}
-		ParserErrors.closeVerbalBraceNotFound(openingBrace);
+		ParserErrors.noCloseVB(openingBrace);
 		// should never be reached.
 		return null;
 	}

@@ -1,6 +1,7 @@
 package fortytwo.compiler.parsed.declaration;
 
 import fortytwo.language.SourceCode;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.vm.constructions.GenericStructure;
 
 public class StructureDeclaration implements Declaration {

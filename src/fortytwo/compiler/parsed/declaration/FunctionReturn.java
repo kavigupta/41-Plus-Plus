@@ -2,6 +2,7 @@ package fortytwo.compiler.parsed.declaration;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
+import fortytwo.language.classification.SentenceType;
 
 public class FunctionReturn implements Declaration {
 	public final ParsedExpression output;

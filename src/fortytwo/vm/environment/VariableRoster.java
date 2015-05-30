@@ -1,23 +1,21 @@
 package fortytwo.vm.environment;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
-import fortytwo.vm.errors.CriticalErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class VariableRoster<T extends Expression> {
 	private final ArrayList<Pair<VariableIdentifier, Expression>> pairs = new ArrayList<>();
 	public void assign(VariableIdentifier name, T express) {
-		if (assigned(name)) {
-			// this should never happen if typechecking did its job
-			CriticalErrors.assignedVariableBeingAssigned(pairs, name,
-					express);
-		}
+		// a variable being assigned twice should never happen if typechecking
+		// did its job
 		pairs.add(Pair.getInstance(name, express));
 	}
 	public boolean assigned(VariableIdentifier name) {
@@ -33,7 +31,6 @@ public class VariableRoster<T extends Expression> {
 			return;
 		}
 		// this should never happen if typechecking did its job.
-		CriticalErrors.unassignedVariableBeingDeregistered(pairs, name);
 	}
 	public T referenceTo(VariableIdentifier id) {
 		for (Pair<VariableIdentifier, Expression> entry : pairs) {
@@ -42,7 +39,6 @@ public class VariableRoster<T extends Expression> {
 			if (entry.key.equals(id)) return val;
 		}
 		// this should never happen if typechecking did its job.
-		CriticalErrors.unassignedVariableBeingReferenced(pairs, id);
 		return null;
 	}
 	public void redefine(VariableIdentifier name, T express) {
@@ -52,8 +48,6 @@ public class VariableRoster<T extends Expression> {
 			return;
 		}
 		// this should never happen if typechecking was done.
-		CriticalErrors
-				.unassignedVariableBeingReassigned(pairs, name, express);
 	}
 	public T value() {
 		try {
@@ -81,6 +75,9 @@ public class VariableRoster<T extends Expression> {
 	public void forEach(Consumer<Pair<VariableIdentifier, T>> consumer) {
 		pairs.forEach(x -> consumer.accept(Pair.getInstance(x.key,
 				(T) x.value)));
+	}
+	public List<VariableIdentifier> variables() {
+		return pairs.stream().map(Pair::getKey).collect(Collectors.toList());
 	}
 	public int size() {
 		return pairs.size();

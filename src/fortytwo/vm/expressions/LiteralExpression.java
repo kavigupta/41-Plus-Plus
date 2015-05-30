@@ -2,6 +2,7 @@ package fortytwo.vm.expressions;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;

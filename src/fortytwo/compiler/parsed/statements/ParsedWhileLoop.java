@@ -2,6 +2,7 @@ package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.Statement;
 import fortytwo.vm.statements.WhileLoop;

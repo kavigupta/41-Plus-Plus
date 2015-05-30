@@ -1,6 +1,7 @@
 package fortytwo.vm.environment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import fortytwo.compiler.Context;
@@ -32,7 +33,7 @@ public class StructureRoster {
 	}
 	public Field typeOf(ConcreteType type, VariableIdentifier field) {
 		if (!(type instanceof StructureType))
-			TypingErrors.fieldAccessCalledOnPrimitive(type, field);
+			TypingErrors.fieldAccessOnPrimitive(type, Arrays.asList(field));
 		for (Field f : getStructure((StructureType) type).fields) {
 			if (f.name.equals(field)) { return f; }
 		}
@@ -85,7 +86,7 @@ public class StructureRoster {
 			VariableRoster<?> fields) {
 		if (fields.value() != null) {
 			if (fields.value().resolveType().equals(type)) return true;
-			TypingErrors.fieldAccessCalledOnPrimitive(type, fields);
+			TypingErrors.fieldAccessOnPrimitive(type, fields.variables());
 		}
 		if (type instanceof ArrayType) {
 			Expression length = fields.referenceTo(TypeVariable.LENGTH.name);
@@ -97,12 +98,12 @@ public class StructureRoster {
 		}
 		if (!(type instanceof StructureType)) {
 			// nothing but a structure or array has anything but a value
-			TypingErrors.fieldAccessCalledOnPrimitive(type, fields);
+			TypingErrors.fieldAccessOnPrimitive(type, fields.variables());
 		}
 		Structure struct = getStructure((StructureType) type);
 		for (Field f : struct.fields) {
 			if (!fields.referenceTo(f.name).resolveType().equals(f.type))
-				TypingErrors.fieldAssignmentTypeMismatch(struct, f, f.type);
+				TypingErrors.fieldAssignmentTypeMismatch(struct, f, f);
 		}
 		fields.forEach(x -> {
 			if (!struct.containsField(x.key))

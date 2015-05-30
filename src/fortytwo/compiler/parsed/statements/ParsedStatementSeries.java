@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fortytwo.language.SourceCode;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.Statement;
 import fortytwo.vm.statements.StatementSeries;

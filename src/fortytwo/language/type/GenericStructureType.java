@@ -10,30 +10,33 @@ import fortytwo.vm.errors.TypingErrors;
 
 public class GenericStructureType implements GenericType {
 	public final List<Token> name;
-	public final List<TypeVariable> typeVariables;
+	public final List<GenericType> inputs;
 	public GenericStructureType(List<Token> structName,
-			List<TypeVariable> typeVariables) {
+			List<GenericType> inputs) {
 		this.name = structName;
-		this.typeVariables = typeVariables;
+		this.inputs = inputs;
 	}
 	@Override
 	public TypeVariableRoster match(ConcreteType toMatch) {
 		if (!(toMatch instanceof StructureType)) return null;
 		StructureType type = (StructureType) toMatch;
-		if (type.types.size() != typeVariables.size()) return null;
+		if (type.types.size() != inputs.size()) return null;
 		TypeVariableRoster roster = new TypeVariableRoster();
 		for (int i = 0; i < type.types.size(); i++) {
 			// this doesn't worry about reassigning an existing variable for
 			// obvious reasons.
-			roster.assign(typeVariables.get(i), type.types.get(i));
+			TypeVariableRoster thisone = inputs.get(i).match(
+					type.types.get(i));
+			if (thisone == null) return null;
+			roster.pairs.putAll(thisone.pairs);
 		}
 		return roster;
 	}
 	@Override
 	public ConcreteType resolve(TypeVariableRoster roster) {
 		List<ConcreteType> types = new ArrayList<>();
-		for (TypeVariable gt : typeVariables) {
-			ConcreteType typeParameter = roster.referenceTo(gt);
+		for (GenericType gt : inputs) {
+			ConcreteType typeParameter = gt.resolve(roster);
 			if (typeParameter == null)
 				TypingErrors.incompleteTypeVariableSystem(this, roster);
 			types.add(typeParameter);
@@ -49,8 +52,7 @@ public class GenericStructureType implements GenericType {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result
-				+ ((typeVariables == null) ? 0 : typeVariables.hashCode());
+		result = prime * result + ((inputs == null) ? 0 : inputs.hashCode());
 		return result;
 	}
 	@Override
@@ -62,9 +64,9 @@ public class GenericStructureType implements GenericType {
 		if (name == null) {
 			if (other.name != null) return false;
 		} else if (!name.equals(other.name)) return false;
-		if (typeVariables == null) {
-			if (other.typeVariables != null) return false;
-		} else if (!typeVariables.equals(other.typeVariables)) return false;
+		if (inputs == null) {
+			if (other.inputs != null) return false;
+		} else if (!inputs.equals(other.inputs)) return false;
 		return true;
 	}
 	@Override

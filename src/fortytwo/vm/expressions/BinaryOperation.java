@@ -8,7 +8,6 @@ import fortytwo.language.Operation;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.errors.CriticalErrors;
 import fortytwo.vm.errors.RuntimeErrors;
 import fortytwo.vm.errors.TypingErrors;
 
@@ -64,17 +63,16 @@ public class BinaryOperation implements Expression {
 						bdfirst.remainder(bdsecond), context);
 		}
 		// This should never happen.
-		CriticalErrors.unrecognizedOperator(this, context);
 		return null;
 	}
 	@Override
 	public boolean typeCheck() {
 		if (!first.resolveType().equals(PrimitiveType.NUMBER))
-			TypingErrors.nonNumberInArithmeticOperator(this, 1, null);// TODO
-															// FIX
+			TypingErrors.expectedNumberInArithmeticOperator(this, 1, null);// TODO
+																// FIX
 		if (!second.resolveType().equals(PrimitiveType.NUMBER))
-			TypingErrors.nonNumberInArithmeticOperator(this, 2, null);// TODO
-															// FIX
+			TypingErrors.expectedNumberInArithmeticOperator(this, 2, null);// TODO
+																// FIX
 		return true;
 	}
 	@Override

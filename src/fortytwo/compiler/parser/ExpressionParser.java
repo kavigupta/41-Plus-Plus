@@ -15,12 +15,15 @@ import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
 import fortytwo.language.Language;
 import fortytwo.language.Operation;
 import fortytwo.language.Resources;
+import fortytwo.language.classification.ExpressionType;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.*;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.ParserErrors;
+import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralNumber;
@@ -37,13 +40,14 @@ public class ExpressionParser {
 	}
 	public static ParsedExpression parsePureExpression(
 			List<Token> currentExpression) {
-		ArrayList<ParsedExpression> expressions = tokenize(currentExpression);
-		expressions = removeUnary(expressions);
+		ArrayList<ParsedExpression> originalExpressions = tokenize(currentExpression);
+		ArrayList<ParsedExpression> expressions = removeUnary(originalExpressions);
 		for (int precendence = 0; precendence <= Operation.MAX_PRECDENCE; precendence++) {
 			expressions = removeBinary(expressions, precendence);
 		}
 		if (expressions.size() != 1)
-			ParserErrors.errorInParsingArithmetic(currentExpression);
+			SyntaxErrors.invalidExpression(ExpressionType.ARITHMETIC,
+					currentExpression);
 		return expressions.get(0);
 	}
 	private static ArrayList<ParsedExpression> removeBinary(
@@ -54,10 +58,11 @@ public class ExpressionParser {
 			if (token instanceof UnevaluatedOperator
 					&& ((UnevaluatedOperator) token).operator.precendence <= precendence) {
 				if (exp.size() == 0)
-					ParserErrors.noPriorToken(
-							((UnevaluatedOperator) token).context,
-							((UnevaluatedOperator) token).operator,
-							expressions);
+					SyntaxErrors.invalidExpression(
+							ExpressionType.ARITHMETIC,
+							expressions.stream()
+									.map(ParsedExpression::toToken)
+									.collect(Collectors.toList()));
 				ParsedExpression first = exp.pop();
 				i++;
 				ParsedExpression second = expressions.get(i);
@@ -118,7 +123,9 @@ public class ExpressionParser {
 								token.context));
 						break;
 					} catch (NumberFormatException e) {
-						ParserErrors.errorInParsingNumber(token);
+						SyntaxErrors.invalidExpression(
+								ExpressionType.LITERAL_NUMBER,
+								Arrays.asList(token));
 					}
 				case '\'':
 					expressions.add(LiteralString.getInstance(token
@@ -155,7 +162,7 @@ public class ExpressionParser {
 					else if (token.token.equals(Resources.DIV_SIGN))
 						expressions.add(new UnevaluatedOperator(
 								Operation.DIVIDE, token.context));
-					else ParserErrors.invalidOperator(token);
+					// should not happen.
 					break;
 				case '_':
 					expressions.add(VariableIdentifier.getInstance(token));
@@ -188,9 +195,6 @@ public class ExpressionParser {
 			struct.add(tokens.get(i));
 		}
 		List<GenericType> typeVariables = new ArrayList<>();
-		// Type constructors are not allowed in the post-of clause. (e.g.,
-		// what would a structure that takes a (array of _k) as a type
-		// variable be?)
 		Kind arguments = null;
 		if (i < tokens.size() && tokens.get(i).token.equals(Resources.OF)) {
 			i++;
@@ -200,19 +204,15 @@ public class ExpressionParser {
 				switch (var.kind()) {
 					case CONCRETE:
 						if (arguments == Kind.VARIABLE)
-							ParserErrors
-									.expectedVariableButReceivedConcrete(tokens
-											.get(i));
+							ParserErrors.nonVariableInDecl(false,
+									tokens.get(i), tokens);
 						arguments = Kind.CONCRETE;
 						break;
 					case VARIABLE:
-						if (arguments == Kind.CONCRETE)
-							ParserErrors
-									.expectedConcreteButReceivedVariable(tokens
-											.get(i));
+						arguments = Kind.VARIABLE;
 						break;
 					case CONSTRUCTOR:
-						ParserErrors.constructorInTypeDecl(tokens.get(i));
+						arguments = Kind.VARIABLE;
 				}
 				typeVariables.add(var);
 			}
@@ -220,7 +220,7 @@ public class ExpressionParser {
 		if (struct.stream().map(x -> x.token).collect(Collectors.toList())
 				.equals(StdLib42.STRUCT_ARRAY)) {
 			if (typeVariables.size() != 1)
-				ParserErrors.invalidArrayDecl(tokens, typeVariables);
+				SyntaxErrors.invalidArrayType(tokens, typeVariables);
 			if (arguments == Kind.CONCRETE)
 				return new ArrayType((ConcreteType) typeVariables.get(0));
 			return new GenericArrayType(typeVariables.get(0));
@@ -231,8 +231,7 @@ public class ExpressionParser {
 			return new StructureType(struct, typeVariables.stream()
 					.map(x -> (ConcreteType) x)
 					.collect(Collectors.toList()));
-		return new GenericStructureType(struct, typeVariables.stream()
-				.map(x -> (TypeVariable) x).collect(Collectors.toList()));
+		return new GenericStructureType(struct, typeVariables);
 	}
 	private static class UnevaluatedOperator implements ParsedExpression {
 		public Operation operator;

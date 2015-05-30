@@ -59,7 +59,7 @@ public class StaticEnvironment {
 	public ConcreteType typeOf(VariableIdentifier name) {
 		ConcreteType type = types.typeOf(name);
 		if (type != null) return type;
-		if (container == null) CompilerErrors.variableNotFound(name);
+		if (container == null) CompilerErrors.variableDNE(name);
 		return container.typeOf(name);
 	}
 	public FunctionSignature referenceTo(FunctionName name,
@@ -70,7 +70,7 @@ public class StaticEnvironment {
 		FunctionSignature sig = funcs.referenceTo(name, types);
 		if (sig != null) return sig;
 		if (container == null)
-			CompilerErrors.functionSignatureNotFound(name, types, funcs);
+			CompilerErrors.functionSignatureDNE(name, types, funcs);
 		return container.referenceTo(name, types);
 	}
 	public void putReference(FunctionDefinition f) {
@@ -79,7 +79,7 @@ public class StaticEnvironment {
 	public LiteralExpression referenceTo(VariableIdentifier name) {
 		LiteralExpression expr = globalVariables.referenceTo(name);
 		if (expr != null) return expr;
-		if (container == null) CompilerErrors.variableNotFound(name);
+		if (container == null) CompilerErrors.variableDNE(name);
 		return container.referenceTo(name);
 	}
 	@Override

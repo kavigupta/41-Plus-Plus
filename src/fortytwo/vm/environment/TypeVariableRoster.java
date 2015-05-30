@@ -5,7 +5,6 @@ import java.util.HashMap;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.TypeVariable;
 import fortytwo.vm.errors.CompilerErrors;
-import fortytwo.vm.errors.CriticalErrors;
 
 public class TypeVariableRoster {
 	@Override
@@ -28,20 +27,15 @@ public class TypeVariableRoster {
 	}
 	public final HashMap<TypeVariable, ConcreteType> pairs = new HashMap<>();
 	public void assign(TypeVariable name, ConcreteType express) {
-		if (pairs.containsKey(name)) {
-			// should never happen
-			CriticalErrors
-					.assignedTypeVariableBeingReassigned(name, express);
-		}
 		pairs.put(name, express);
 	}
 	public ConcreteType referenceTo(TypeVariable id) {
 		ConcreteType le = pairs.get(id);
-		if (le == null) CompilerErrors.variableNotFound(id);
+		if (le == null) CompilerErrors.variableDNE(id);
 		return le;
 	}
 	public void redefine(TypeVariable name, ConcreteType express) {
-		if (!pairs.containsKey(name)) CompilerErrors.variableNotFound(name);
+		if (!pairs.containsKey(name)) CompilerErrors.variableDNE(name);
 		pairs.put(name, express);
 	}
 }

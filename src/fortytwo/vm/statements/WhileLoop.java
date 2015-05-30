@@ -28,7 +28,7 @@ public class WhileLoop implements Statement {
 	public boolean typeCheck() {
 		condition.typeCheck();
 		if (!condition.resolveType().equals(PrimitiveType.BOOL))
-			TypingErrors.nonBoolInWhileLoopDeclr(condition);
+			TypingErrors.expectedBoolInWhileLoopCond(condition);
 		statement.typeCheck();
 		return false;
 	}

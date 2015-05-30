@@ -2,6 +2,7 @@ package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.language.SourceCode;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.Field;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.Definition;

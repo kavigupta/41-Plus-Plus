@@ -22,7 +22,7 @@ import fortytwo.vm.environment.FunctionRoster;
 import fortytwo.vm.environment.FunctionSignatureRoster;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.StructureRoster;
-import fortytwo.vm.errors.ParserErrors;
+import fortytwo.vm.errors.CompilerErrors;
 import fortytwo.vm.expressions.Expression;
 
 public class StdLib42 {
@@ -90,7 +90,7 @@ public class StdLib42 {
 		if (FunctionName.getInstance(name).equals(
 				StdLib42.FUNC_FIELD_ACCESS_NAME_APPARENT)) {
 			if (!(arguments.get(0) instanceof VariableIdentifier))
-				ParserErrors.nonVariableInFieldAccess(arguments.get(0));
+				CompilerErrors.nonVariableInFieldAccess(arguments.get(0));
 			return Pair
 					.getInstance(
 							getFieldAccess(((VariableIdentifier) arguments

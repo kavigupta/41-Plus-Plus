@@ -1,13 +1,17 @@
 package fortytwo.language.identifier;
 
+import java.util.Arrays;
+
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
+import fortytwo.language.classification.ExpressionType;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.Field;
 import fortytwo.vm.environment.StaticEnvironment;
-import fortytwo.vm.errors.ParserErrors;
+import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.expressions.Expression;
 
 public class VariableIdentifier implements ParsedExpression {
@@ -17,7 +21,8 @@ public class VariableIdentifier implements ParsedExpression {
 	public static VariableIdentifier getInstance(Token token) {
 		if (token.token.equals(Resources.VALUE)) return VALUE;
 		if (!Language.isValidVariableIdentifier(token.token))
-			ParserErrors.invalidVariableIdenitifer(token);
+			SyntaxErrors.invalidExpression(ExpressionType.VARIABLE,
+					Arrays.asList(token));
 		return new VariableIdentifier(token);
 	}
 	private VariableIdentifier(Token name) {

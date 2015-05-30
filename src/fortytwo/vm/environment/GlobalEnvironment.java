@@ -11,9 +11,9 @@ import fortytwo.compiler.parsed.declaration.FunctionReturn;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
-import fortytwo.compiler.parsed.sentences.Sentence.SentenceType;
 import fortytwo.compiler.parsed.statements.ParsedDefinition;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.VirtualMachine;
@@ -89,7 +89,7 @@ public class GlobalEnvironment {
 									fieldValues.literalValue(local)));
 					break;
 				default:
-					ParserErrors.notAllowedInGlobalEnvironment(s);
+					ParserErrors.expectedDeclarationOrDefinition(s);
 			}
 		}
 		HashMap<FunctionSignature, Function42> implFunctions = new HashMap<>();

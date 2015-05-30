@@ -3,12 +3,12 @@ package fortytwo.compiler.parsed.declaration;
 import java.util.List;
 
 import fortytwo.language.SourceCode;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.StaticEnvironment;
-import fortytwo.vm.errors.CriticalErrors;
 
 public class FunctionDefinition implements Declaration {
 	public final FunctionName name;
@@ -33,12 +33,10 @@ public class FunctionDefinition implements Declaration {
 	}
 	public void registerParameters(StaticEnvironment environment) {
 		for (int i = 0; i < parameterTypes.size(); i++) {
-			// LOWPRI allow user-defined generic functions.
-			if (!(parameterTypes.get(i) instanceof ConcreteType))
-				CriticalErrors.nonConcreteTypeIn(name, parameterVariables,
-						parameterTypes, i);
-			environment.addType(parameterVariables.get(i),
-					(ConcreteType) parameterTypes.get(i));
+			// LOWPRI allow generic typing in functions...
+			environment.addType(parameterVariables.get(i), (ConcreteType)
+			// LOWPRI remove cast
+					parameterTypes.get(i));
 		}
 	}
 	@Override

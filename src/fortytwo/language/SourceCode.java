@@ -146,7 +146,7 @@ public class SourceCode {
 		StringBuffer name = new StringBuffer();
 		for (Token s : type.name)
 			name.append(s).append(' ');
-		String list = displayList(type.typeVariables.stream()
+		String list = displayList(type.inputs.stream()
 				.map(x -> x.toSourceCode()).collect(Collectors.toList()));
 		return name.toString().trim()
 				+ (list.length() == 0 ? "" : (" of " + list));

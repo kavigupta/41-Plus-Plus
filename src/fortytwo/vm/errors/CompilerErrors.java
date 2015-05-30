@@ -2,7 +2,7 @@ package fortytwo.vm.errors;
 
 import java.util.List;
 
-import fortytwo.compiler.Token;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -15,17 +15,10 @@ import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.expressions.Expression;
 
 public class CompilerErrors {
-	public static void expectedStatementButReceivedExpression(List<Token> list) {
+	public static void variableDNE(TypeVariable id) {
 		// TODO 0 implement
 	}
-	public static void variableNotFound(TypeVariable id) {
-		// TODO 0 implement
-	}
-	public static void variableNotFound(VariableIdentifier name) {
-		// TODO Auto-generated method stub
-	}
-	public static void wrongNumberOfArguments(FunctionSignature function,
-			List<Expression> arguments) {
+	public static void variableDNE(VariableIdentifier name) {
 		// TODO Auto-generated method stub
 	}
 	public static void argumentTypeMismatch(FunctionSignature function,
@@ -40,8 +33,16 @@ public class CompilerErrors {
 			StructureRoster structureRoster) {
 		// TODO Auto-generated method stub
 	}
-	public static void functionSignatureNotFound(FunctionName name,
+	public static void functionSignatureDNE(FunctionName name,
 			List<ConcreteType> types, FunctionSignatureRoster funcs) {
+		// TODO Auto-generated method stub
+	}
+	public static void wrongNumberOfArguments(FunctionSignature function,
+			List<Expression> arguments) {
+		// TODO Auto-generated method stub
+	}
+	public static void nonVariableInFieldAccess(
+			ParsedExpression parsedExpression) {
 		// TODO Auto-generated method stub
 	}
 }

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
-import fortytwo.vm.errors.ParserErrors;
+import fortytwo.vm.errors.SyntaxErrors;
 
 public class Tokenizer {
 	public static List<Token> tokenize(Context parent, String input) {
@@ -21,8 +21,7 @@ public class Tokenizer {
 					add(parent, i, token, tokens);
 					int closebracket = findCloseBracket(input, i);
 					if (closebracket < 0)
-						ParserErrors.closingBracketNotFound(parent,
-								input, i);
+						SyntaxErrors.closingMarkDNE(parent, input, i);
 					// ignore everything between brackets.
 					i = closebracket;
 					continue loop;
@@ -30,8 +29,7 @@ public class Tokenizer {
 					add(parent, i, token, tokens);
 					int closeparen = findCloseParen(input, i);
 					if (closeparen < 0)
-						ParserErrors.closingParenNotFound(parent, input,
-								i);
+						SyntaxErrors.closingMarkDNE(parent, input, i);
 					// dump anything between parenthesis into an single
 					// token
 					tokens.add(new Token(input
@@ -41,8 +39,7 @@ public class Tokenizer {
 					continue loop;
 				case ')':
 				case ']':
-					ParserErrors.closeMarkerWithNoOpenMarker(parent,
-							input, i);
+					SyntaxErrors.openMarkDNE(parent, input, i);
 				case '+':
 				case '-':
 				case '*':
@@ -81,8 +78,8 @@ public class Tokenizer {
 						add(parent, i, token, tokens);
 						int closequote = findCloseQuote(input, i);
 						if (closequote < 0)
-							ParserErrors.closingQuoteNotFound(parent,
-									input, i);
+							SyntaxErrors
+									.closingMarkDNE(parent, input, i);
 						tokens.add(new Token("'"
 								+ unescape(input.substring(i + 1,
 										closequote)) + "'" + "",

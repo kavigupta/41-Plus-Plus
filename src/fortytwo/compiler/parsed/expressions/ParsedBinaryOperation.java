@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import fortytwo.compiler.Context;
 import fortytwo.language.Operation;
 import fortytwo.language.SourceCode;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.BinaryOperation;
 import fortytwo.vm.expressions.Expression;

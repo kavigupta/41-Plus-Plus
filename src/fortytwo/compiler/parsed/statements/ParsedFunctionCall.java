@@ -9,6 +9,7 @@ import lib.standard.collections.Pair;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;

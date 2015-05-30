@@ -12,7 +12,6 @@ import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
-import fortytwo.vm.errors.CriticalErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
 
@@ -26,8 +25,8 @@ public class FunctionFieldAccess extends Function42 {
 	@Override
 	public LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		if (!(arguments.get(0) instanceof LiteralObject))
-			CriticalErrors.fieldAccessOnNonObject(this, arguments);
+		// calling on a structure other than the target should not happen if
+		// typechecking did it's job
 		LiteralObject obj = (LiteralObject) arguments.get(0);
 		return obj.valueOf(field);
 	}

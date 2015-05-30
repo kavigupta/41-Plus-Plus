@@ -14,6 +14,7 @@ import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -24,6 +25,7 @@ import fortytwo.language.type.*;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.constructions.GenericStructure;
 import fortytwo.vm.errors.ParserErrors;
+import fortytwo.vm.errors.SyntaxErrors;
 
 public class ConstructionParser {
 	public static ParsedFunctionCall composeFunction(List<Token> list) {
@@ -38,7 +40,8 @@ public class ConstructionParser {
 		 */
 		if (!line.get(1).token.equals(Resources.A)
 				|| !line.get(3).token.equals(Resources.CALLED))
-			ParserErrors.invalidStructDefinition(line);
+			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_STRUCT,
+					line);
 		line.subList(0, 4).clear();
 		ArrayList<Token> structExpression = new ArrayList<>();
 		int i = 0;
@@ -46,7 +49,7 @@ public class ConstructionParser {
 				&& !line.get(i).token.equals(Resources.OF); i++) {
 			structExpression.add(line.get(i));
 		}
-		List<TypeVariable> typeVariables = new ArrayList<>();
+		List<GenericType> typeVariables = new ArrayList<>();
 		if (i < line.size() && line.get(i).token.equals(Resources.OF)) {
 			i++;
 			for (; i < line.size()
@@ -77,7 +80,8 @@ public class ConstructionParser {
 		if (!line.get(1).token.equals(Resources.A)
 				|| !line.get(2).token.equals(Resources.DECL_FUNCTION)
 				|| !line.get(3).token.equals(Resources.CALLED))
-			ParserErrors.invalidFunctionDeclaration(line);
+			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_FUNCT,
+					line);
 		int i = 4;
 		ArrayList<Token> funcExpress = new ArrayList<>();
 		for (; i < line.size() && !line.get(i).token.equals(Resources.THAT); i++) {
@@ -97,7 +101,7 @@ public class ConstructionParser {
 						// later
 						if (!(type instanceof ConcreteType))
 							ParserErrors.genericTypeInFunctionDecl(type,
-									line);
+									line, vars.size());
 						vars.put(VariableIdentifier.getInstance(line
 								.get(i + 1)), type);
 					}
@@ -105,7 +109,8 @@ public class ConstructionParser {
 				case Resources.OUTPUTS:
 					break;
 				default:
-					ParserErrors.invalidFunctionDeclSuffix(line);
+					SyntaxErrors.invalidSentence(
+							SentenceType.DECLARATION_FUNCT, line);
 			}
 		}
 		int outputloc = Token.indexOf(line, Resources.OUTPUTS);
@@ -114,7 +119,8 @@ public class ConstructionParser {
 				.stream()
 				.map(x -> {
 					if (!(x instanceof VariableIdentifier))
-						ParserErrors.nonVariableInFunctionDecl(x, line);
+						ParserErrors.nonVariableInDecl(true, x.toToken(),
+								line);
 					return (VariableIdentifier) x;
 				}).collect(Collectors.toList());
 		List<GenericType> types = new ArrayList<>();
@@ -131,7 +137,7 @@ public class ConstructionParser {
 		GenericType outputType = ExpressionParser.parseType(Language
 				.parenthesize(line));
 		if (!(outputType instanceof ConcreteType))
-			ParserErrors.genericTypeInFunctionOutput(outputType, line);
+			ParserErrors.genericTypeInFunctionDecl(outputType, line, -1);
 		return new FunctionDefinition(sig.key, variables, types,
 				(ConcreteType) outputType);
 	}
