@@ -5,8 +5,10 @@ import java.math.RoundingMode;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.Operation;
+import fortytwo.language.SourceCode;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypes;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.errors.RuntimeErrors;
 import fortytwo.vm.errors.TypingErrors;
@@ -67,17 +69,31 @@ public class BinaryOperation implements Expression {
 	}
 	@Override
 	public boolean typeCheck() {
-		if (!first.resolveType().equals(PrimitiveType.NUMBER))
-			TypingErrors.expectedNumberInArithmeticOperator(this, 1, null);// TODO
-																// FIX
-		if (!second.resolveType().equals(PrimitiveType.NUMBER))
-			TypingErrors.expectedNumberInArithmeticOperator(this, 2, null);// TODO
-																// FIX
+		if (!first.resolveType().equals(
+				new PrimitiveType(PrimitiveTypes.NUMBER, Context
+						.synthetic())))
+			TypingErrors.expectedNumberInArithmeticOperator(this, true);
+		if (!second.resolveType().equals(
+				new PrimitiveType(PrimitiveTypes.NUMBER, Context
+						.synthetic())))
+			TypingErrors.expectedNumberInArithmeticOperator(this, false);
 		return true;
 	}
 	@Override
 	public ConcreteType resolveType() {
 		typeCheck();
-		return PrimitiveType.NUMBER;
+		return new PrimitiveType(PrimitiveTypes.NUMBER, Context.synthetic());
+	}
+	@Override
+	public Context context() {
+		return context;
+	}
+	@Override
+	public boolean isSimple() {
+		return true;
+	}
+	@Override
+	public String toSourceCode() {
+		return SourceCode.display(first, operation, second);
 	}
 }

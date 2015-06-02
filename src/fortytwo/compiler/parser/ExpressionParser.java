@@ -183,12 +183,14 @@ public class ExpressionParser {
 			return new TypeVariable(VariableIdentifier.getInstance(token));
 		while (token.token.startsWith(Resources.OPEN_PAREN))
 			token = Language.deparenthesize(token);
-		for (PrimitiveType type : PrimitiveType.values()) {
-			if (type.typeID().equals(token.token)) return type;
+		for (PrimitiveTypes type : PrimitiveTypes.values()) {
+			if (type.typeID().equals(token.token))
+				return new PrimitiveType(type, token.context);
 		}
 		return parseStructType(Tokenizer.tokenize(token.context, token.token));
 	}
 	private static GenericType parseStructType(List<Token> tokens) {
+		Context context = Context.tokenSum(tokens);
 		ArrayList<Token> struct = new ArrayList<>();
 		int i = 0;
 		for (; i < tokens.size() && !tokens.get(i).token.equals(Resources.OF); i++) {
@@ -222,16 +224,17 @@ public class ExpressionParser {
 			if (typeVariables.size() != 1)
 				SyntaxErrors.invalidArrayType(tokens, typeVariables);
 			if (arguments == Kind.CONCRETE)
-				return new ArrayType((ConcreteType) typeVariables.get(0));
-			return new GenericArrayType(typeVariables.get(0));
+				return new ArrayType((ConcreteType) typeVariables.get(0),
+						context);
+			return new GenericArrayType(typeVariables.get(0), context);
 		}
 		if (typeVariables.size() == 0)
-			return new StructureType(struct, new ArrayList<>());
+			return new StructureType(struct, new ArrayList<>(), context);
 		if (arguments == Kind.CONCRETE)
 			return new StructureType(struct, typeVariables.stream()
 					.map(x -> (ConcreteType) x)
-					.collect(Collectors.toList()));
-		return new GenericStructureType(struct, typeVariables);
+					.collect(Collectors.toList()), context);
+		return new GenericStructureType(struct, typeVariables, context);
 	}
 	private static class UnevaluatedOperator implements ParsedExpression {
 		public Operation operator;

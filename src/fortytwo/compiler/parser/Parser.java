@@ -43,7 +43,8 @@ public class Parser {
 	}
 	public static Sentence pop(List<List<Token>> phrases) {
 		if (phrases.size() == 0)
-			return new ParsedStatementSeries(Arrays.asList());
+			return new ParsedStatementSeries(Arrays.asList(),
+					Context.synthetic());
 		switch (phrases.get(0).get(0).token) {
 			case Resources.IF:
 				return popIf(phrases);
@@ -64,7 +65,7 @@ public class Parser {
 		ParsedExpression condition = ExpressionParser.parseExpression(IF);
 		ParsedStatementSeries ifso = popSeries(phrases);
 		ParsedStatementSeries ifelse = new ParsedStatementSeries(
-				Arrays.asList());
+				Arrays.asList(), Context.synthetic());
 		if (phrases.size() > 0
 				&& phrases.get(0).get(0).token.equals(Resources.OTHERWISE)) {
 			phrases.remove(0); // This should just be "Otherwise:"
@@ -75,19 +76,22 @@ public class Parser {
 	private static Sentence popWhile(List<List<Token>> phrases) {
 		List<Token> WHILE = phrases.remove(0);
 		WHILE.remove(0);
+		ParsedExpression condition = ExpressionParser.parseExpression(WHILE);
 		ParsedStatementSeries whileTrue = popSeries(phrases);
-		return new ParsedWhileLoop(ExpressionParser.parseExpression(WHILE),
-				whileTrue);
+		return new ParsedWhileLoop(condition, whileTrue, Context.sum(Arrays
+				.asList(condition.context(), whileTrue.context())));
 	}
 	private static ParsedStatementSeries popSeries(List<List<Token>> phrases) {
 		if (phrases.size() == 0)
-			return new ParsedStatementSeries(Arrays.asList());
+			return new ParsedStatementSeries(Arrays.asList(),
+					Context.synthetic());
 		if (!Language.isOpeningBrace(phrases.get(0).stream()
 				.map(x -> x.token).collect(Collectors.toList()))) {
 			Sentence sent = pop(phrases);
 			if (!(sent instanceof ParsedStatement))
 				ParserErrors.expectedStatement(sent);
-			return ParsedStatementSeries.getInstance((ParsedStatement) sent);
+			return ParsedStatementSeries.getInstance((ParsedStatement) sent,
+					sent.context());
 		}
 		List<Token> openingBrace = phrases.remove(0); // remove brace
 		List<List<Token>> inBraces = new ArrayList<>();
@@ -108,7 +112,10 @@ public class Parser {
 									ParserErrors.expectedStatement(x);
 								return (ParsedStatement) x;
 							}).collect(Collectors.toList());
-					return new ParsedStatementSeries(statements);
+					return new ParsedStatementSeries(statements,
+							Context.sum(statements.stream()
+									.map(ParsedStatement::context)
+									.collect(Collectors.toList())));
 				}
 			}
 			inBraces.add(phrases.remove(0));

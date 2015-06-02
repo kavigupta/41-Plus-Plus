@@ -7,10 +7,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.language.type.GenericArrayType;
-import fortytwo.language.type.GenericType;
-import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.TypeVariable;
+import fortytwo.language.type.*;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -45,8 +42,9 @@ public class FunctionArrayAccess extends Function42 {
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(StdLib42
-				.functArrayAccess(suffix), Arrays.asList(
-				PrimitiveType.NUMBER, new GenericArrayType(CONTENTS)),
+				.functArrayAccess(suffix), Arrays.asList(new PrimitiveType(
+				PrimitiveTypes.NUMBER, Context.synthetic()),
+				new GenericArrayType(CONTENTS, Context.synthetic())),
 				CONTENTS);
 	}
 }

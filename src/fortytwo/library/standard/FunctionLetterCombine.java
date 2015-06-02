@@ -8,6 +8,7 @@ import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ArrayType;
 import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypes;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -34,12 +35,13 @@ public class FunctionLetterCombine extends Function42 {
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return PrimitiveType.STRING;
+		return new PrimitiveType(PrimitiveTypes.STRING, Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(StdLib42.FUNC_LETTER_COMBINE,
-				Arrays.asList(new ArrayType(PrimitiveType.STRING)),
-				outputType());
+				Arrays.asList(new ArrayType(new PrimitiveType(
+						PrimitiveTypes.STRING, Context.synthetic()),
+						Context.synthetic())), outputType());
 	}
 }

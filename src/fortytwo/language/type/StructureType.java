@@ -2,6 +2,7 @@ package fortytwo.language.type;
 
 import java.util.List;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.SourceCode;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -9,16 +10,22 @@ import fortytwo.vm.expressions.LiteralExpression;
 public class StructureType implements ConcreteType {
 	public final List<Token> name;
 	public final List<ConcreteType> types;
-	public StructureType(List<Token> name, List<ConcreteType> types) {
+	private final Context context;
+	public StructureType(List<Token> name, List<ConcreteType> types,
+			Context context) {
 		this.name = name;
 		this.types = types;
+		this.context = context;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((types == null) ? 0 : types.hashCode());
 		return result;
 	}

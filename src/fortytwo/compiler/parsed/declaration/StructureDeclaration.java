@@ -1,16 +1,19 @@
 package fortytwo.compiler.parsed.declaration;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.vm.constructions.GenericStructure;
 
 public class StructureDeclaration implements Declaration {
 	public final GenericStructure structure;
+	private final Context context;
 	// It may seem strange that a structure declaration would take a generic
 	// structure as an argument. However, a declaration is by definition
 	// generic. What can't be generic is an object definition
-	public StructureDeclaration(GenericStructure structure) {
+	public StructureDeclaration(GenericStructure structure, Context context) {
 		this.structure = structure;
+		this.context = context;
 	}
 	@Override
 	public SentenceType type() {
@@ -23,6 +26,10 @@ public class StructureDeclaration implements Declaration {
 	@Override
 	public boolean isSimple() {
 		return true;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {

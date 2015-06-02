@@ -1,5 +1,6 @@
 package fortytwo.compiler.parsed.statements;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
@@ -10,10 +11,12 @@ import fortytwo.vm.statements.WhileLoop;
 public class ParsedWhileLoop implements ParsedStatement {
 	public final ParsedExpression condition;
 	public final ParsedStatement statement;
+	private final Context context;
 	public ParsedWhileLoop(ParsedExpression condition,
-			ParsedStatement ParsedStatement) {
+			ParsedStatement ParsedStatement, Context context) {
 		this.condition = condition;
 		this.statement = ParsedStatement;
+		this.context = context;
 	}
 	@Override
 	public Statement contextualize(StaticEnvironment environment) {
@@ -32,6 +35,10 @@ public class ParsedWhileLoop implements ParsedStatement {
 	@Override
 	public boolean isSimple() {
 		return false;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {

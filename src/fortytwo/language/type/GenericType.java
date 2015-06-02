@@ -9,4 +9,8 @@ public interface GenericType extends ParsedConstruct {
 	public ConcreteType resolve(TypeVariableRoster roster);
 	@Override
 	public String toSourceCode();
+	@Override
+	public default boolean isSimple() {
+		return true;
+	}
 }

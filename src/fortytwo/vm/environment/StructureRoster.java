@@ -11,7 +11,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.*;
 import fortytwo.vm.constructions.GenericStructure;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.errors.CompilerErrors;
+import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.*;
 
@@ -27,29 +27,31 @@ public class StructureRoster {
 		for (GenericStructure struct : structs) {
 			if (struct.type.equals(type)) return struct;
 		}
-		TypingErrors.structureNotFound(type, this);
+		DNEErrors.structureDNE(type, this);
 		// should not be reachable.
 		return null;
 	}
 	public Field typeOf(ConcreteType type, VariableIdentifier field) {
 		if (!(type instanceof StructureType))
-			TypingErrors.fieldAccessOnPrimitive(type, Arrays.asList(field));
-		for (Field f : getStructure((StructureType) type).fields) {
+			DNEErrors.fieldAccessOnPrimitive(type, Arrays.asList(field));
+		Structure struct = getStructure((StructureType) type);
+		for (Field f : struct.fields) {
 			if (f.name.equals(field)) { return f; }
 		}
-		TypingErrors.fieldNotFound(type, field, this);
+		DNEErrors.fieldDNE(struct, field);
 		// should not be reachable.
 		return null;
 	}
-	public LiteralExpression instance(ConcreteType type,
-			VariableRoster<LiteralExpression> fieldValues) {
+	public LiteralExpression instance(Field name,
+			VariableRoster<LiteralExpression> fieldValues, Context context) {
 		LiteralExpression value = fieldValues.value();
 		if (value != null) return value;
-		typeCheckConstructor(type, fieldValues);
-		if (type instanceof StructureType)
-			return new LiteralObject(getStructure((StructureType) type),
-					fieldValues, Context.synthetic());
-		return new LiteralArray(((ArrayType) type).contentType,
+		typeCheckConstructor(name, fieldValues, context);
+		if (name.type instanceof StructureType)
+			return new LiteralObject(
+					getStructure((StructureType) name.type), fieldValues,
+					Context.synthetic());
+		return new LiteralArray(((ArrayType) name.type).contentType,
 				((LiteralNumber) fieldValues
 						.referenceTo(TypeVariable.LENGTH.name)).contents
 						.intValue(), Context.synthetic());
@@ -71,49 +73,53 @@ public class StructureRoster {
 			GenericStructureType genericType) {
 		for (GenericStructure gs : structs)
 			if (gs.type.equals(genericType)) return gs;
-		CompilerErrors.structureDNE(genericType, this);
+		DNEErrors.structureDNE(genericType, this);
 		// should never get here
 		return null;
 	}
 	private GenericStructureType genericVersionOf(StructureType type) {
 		for (GenericStructure gs : structs)
 			if (gs.type.name.equals(type.name)) return gs.type;
-		CompilerErrors.structureDNE(type, this);
+		DNEErrors.structureDNE(type, this);
 		// should never happen
 		return null;
 	}
-	public boolean typeCheckConstructor(ConcreteType type,
-			VariableRoster<?> fields) {
+	public boolean typeCheckConstructor(Field name, VariableRoster<?> fields,
+			Context context) {
 		if (fields.value() != null) {
-			if (fields.value().resolveType().equals(type)) return true;
-			TypingErrors.fieldAccessOnPrimitive(type, fields.variables());
+			if (fields.value().resolveType().equals(name.type)) return true;
+			TypingErrors.redefinitionTypeMismatch(name, fields.value());
 		}
-		if (type instanceof ArrayType) {
+		if (name.type instanceof ArrayType) {
 			Expression length = fields.referenceTo(TypeVariable.LENGTH.name);
-			if (fields.size() == 1 && length != null
-					&& length.resolveType() == PrimitiveType.NUMBER)
+			if (fields.size() == 1
+					&& length != null
+					&& length.resolveType().equals(
+							new PrimitiveType(PrimitiveTypes.NUMBER,
+									Context.synthetic())))
 				return true;
-			TypingErrors.nonLengthFieldAccessOnArray((ArrayType) type,
-					fields);
+			if (fields.size() == 0)
+				TypingErrors.incompleteArrayConstructor(context);
+			else DNEErrors.fieldDNEInArray(fields.variables().get(0));
 		}
-		if (!(type instanceof StructureType)) {
+		if (!(name.type instanceof StructureType)) {
 			// nothing but a structure or array has anything but a value
-			TypingErrors.fieldAccessOnPrimitive(type, fields.variables());
+			DNEErrors.fieldAccessOnPrimitive(name.type, fields.variables());
 		}
-		Structure struct = getStructure((StructureType) type);
+		Structure struct = getStructure((StructureType) name.type);
 		for (Field f : struct.fields) {
 			if (!fields.referenceTo(f.name).resolveType().equals(f.type))
 				TypingErrors.fieldAssignmentTypeMismatch(struct, f, f);
 		}
 		fields.forEach(x -> {
 			if (!struct.containsField(x.key))
-				TypingErrors.fieldNotFound(type, x.key, this);
+				DNEErrors.fieldDNE(struct, x.key);
 		});
 		struct.fields
 				.stream()
 				.filter(f -> !fields.assigned(f.name))
-				.forEach(f -> TypingErrors.fieldAssignmentIncomplete(
-						struct, fields));
+				.forEach(f -> TypingErrors.incompleteConstructor(struct,
+						fields));
 		return true;
 	}
 	@Override

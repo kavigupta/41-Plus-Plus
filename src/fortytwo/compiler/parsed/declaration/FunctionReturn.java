@@ -1,13 +1,16 @@
 package fortytwo.compiler.parsed.declaration;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 
 public class FunctionReturn implements Declaration {
 	public final ParsedExpression output;
-	public FunctionReturn(ParsedExpression output) {
+	private final Context context;
+	public FunctionReturn(ParsedExpression output, Context context) {
 		this.output = output;
+		this.context = context;
 	}
 	@Override
 	public SentenceType type() {
@@ -20,6 +23,10 @@ public class FunctionReturn implements Declaration {
 	@Override
 	public boolean isSimple() {
 		return true;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {

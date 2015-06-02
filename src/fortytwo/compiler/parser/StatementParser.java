@@ -3,6 +3,7 @@ package fortytwo.compiler.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionReturn;
@@ -45,16 +46,19 @@ public class StatementParser {
 		return parseVoidFunctionCall(line);
 	}
 	private static FunctionReturn parseReturn(List<Token> line) {
+		Context fullContext = Context.tokenSum(line);
 		/* Exit the function( and output <output>)?. */
 		if (!line.get(1).token.equals(Resources.THE)
 				|| !line.get(2).token.equals(Resources.DECL_FUNCTION))
 			SyntaxErrors.invalidSentence(SentenceType.FUNCTION_RETURN, line);
-		if (line.size() == 3) return new FunctionReturn(null);
+		if (line.size() == 3)
+			return new FunctionReturn(null, Context.tokenSum(line));
 		if (!line.get(3).token.equals(Resources.AND)
 				|| !line.get(4).token.equals(Resources.OUTPUT))
 			SyntaxErrors.invalidSentence(SentenceType.FUNCTION_RETURN, line);
 		line.subList(0, 5).clear();
-		return new FunctionReturn(ExpressionParser.parseExpression(line));
+		return new FunctionReturn(ExpressionParser.parseExpression(line),
+				fullContext);
 	}
 	private static ParsedStatement parseVoidFunctionCall(List<Token> list) {
 		ParsedFunctionCall function = ConstructionParser
@@ -69,6 +73,7 @@ public class StatementParser {
 		return null;
 	}
 	private static ParsedAssignment parseAssignment(List<Token> line) {
+		Context fullContext = Context.tokenSum(line);
 		/*
 		 * Set the <field> of <name> to <value>.
 		 */
@@ -81,10 +86,11 @@ public class StatementParser {
 		line.subList(0, 6).clear();
 		ParsedExpression expr = ExpressionParser.parseExpression(line);
 		return fieldT.token.equals(Resources.VALUE) ? new ParsedRedefinition(
-				name, expr) : new ParsedFieldAssignment(name,
-				VariableIdentifier.getInstance(fieldT), expr);
+				name, expr, fullContext) : new ParsedFieldAssignment(name,
+				VariableIdentifier.getInstance(fieldT), expr, fullContext);
 	}
 	private static Sentence parseDefinition(List<Token> line) {
+		Context fullContext = Context.tokenSum(line);
 		/*
 		 * Define a[n] <type> called <name>( with a <field1> of <value1>, a
 		 * <field2> of <value2>, ...)?.
@@ -114,9 +120,9 @@ public class StatementParser {
 		}
 		GenericType genericType = ExpressionParser.parseType(type);
 		if (!(genericType instanceof ConcreteType))
-			ParserErrors.genericTypeInStructConstructor(type);
+			ParserErrors.genericTypeInDefinition(type);
 		return new ParsedDefinition(new Field(
 				VariableIdentifier.getInstance(name),
-				(ConcreteType) genericType), fields);
+				(ConcreteType) genericType), fields, fullContext);
 	}
 }

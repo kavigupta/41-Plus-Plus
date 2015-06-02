@@ -12,7 +12,6 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.Field;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.SyntaxErrors;
-import fortytwo.vm.expressions.Expression;
 
 public class VariableIdentifier implements ParsedExpression {
 	public static final VariableIdentifier VALUE = new VariableIdentifier(
@@ -61,7 +60,7 @@ public class VariableIdentifier implements ParsedExpression {
 		return true;
 	}
 	@Override
-	public Expression contextualize(StaticEnvironment env) {
+	public Field contextualize(StaticEnvironment env) {
 		return new Field(this, env.typeOf(this));
 	}
 }

@@ -2,10 +2,12 @@ package fortytwo.vm.constructions;
 
 import java.util.List;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypes;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -41,7 +43,8 @@ public class FunctionImplemented extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return output == null ? PrimitiveType.VOID : output.resolveType();
+		return output == null ? new PrimitiveType(PrimitiveTypes.VOID,
+				Context.synthetic()) : output.resolveType();
 	}
 	@Override
 	public FunctionSignature signature() {

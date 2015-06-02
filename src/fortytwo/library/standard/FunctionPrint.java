@@ -8,6 +8,7 @@ import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypes;
 import fortytwo.language.type.TypeVariable;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
@@ -28,7 +29,7 @@ public class FunctionPrint extends Function42 {
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return PrimitiveType.VOID;
+		return new PrimitiveType(PrimitiveTypes.VOID, Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {

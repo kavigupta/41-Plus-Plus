@@ -31,7 +31,7 @@ public class LiteralArray extends LiteralExpression {
 	}
 	@Override
 	public ConcreteType resolveType() {
-		return new ArrayType(contents);
+		return new ArrayType(contents, context());
 	}
 	public void set(int i, LiteralExpression e, Context context) {
 		// no type checking here --- should have been done earlier

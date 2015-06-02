@@ -3,6 +3,7 @@ package fortytwo.language.type;
 import java.util.ArrayList;
 import java.util.List;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.SourceCode;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -11,10 +12,12 @@ import fortytwo.vm.errors.TypingErrors;
 public class GenericStructureType implements GenericType {
 	public final List<Token> name;
 	public final List<GenericType> inputs;
+	private final Context context;
 	public GenericStructureType(List<Token> structName,
-			List<GenericType> inputs) {
+			List<GenericType> inputs, Context context) {
 		this.name = structName;
 		this.inputs = inputs;
+		this.context = context;
 	}
 	@Override
 	public TypeVariableRoster match(ConcreteType toMatch) {
@@ -37,15 +40,18 @@ public class GenericStructureType implements GenericType {
 		List<ConcreteType> types = new ArrayList<>();
 		for (GenericType gt : inputs) {
 			ConcreteType typeParameter = gt.resolve(roster);
-			if (typeParameter == null)
-				TypingErrors.incompleteTypeVariableSystem(this, roster);
+			TypingErrors.inresolubleType(gt);
 			types.add(typeParameter);
 		}
-		return new StructureType(name, types);
+		return new StructureType(name, types, context);
 	}
 	@Override
 	public Kind kind() {
 		return Kind.CONSTRUCTOR;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {

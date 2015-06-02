@@ -15,6 +15,7 @@ import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypes;
 import fortytwo.language.type.TypeVariable;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
@@ -41,10 +42,10 @@ public class FunctionEquivalence extends Function42 {
 					.map(x -> new FunctionToken(new Token(x, Context
 							.synthetic()))).collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
-			this.sig = FunctionSignature.getInstance(
-					FunctionName.getInstance(s),
-					Arrays.asList(TO_BE_COMPARED, TO_BE_COMPARED),
-					PrimitiveType.BOOL);
+			this.sig = FunctionSignature.getInstance(FunctionName
+					.getInstance(s), Arrays.asList(TO_BE_COMPARED,
+					TO_BE_COMPARED), new PrimitiveType(
+					PrimitiveTypes.BOOL, Context.synthetic()));
 			this.eq = eq;
 		}
 	}
@@ -69,7 +70,7 @@ public class FunctionEquivalence extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return PrimitiveType.BOOL;
+		return new PrimitiveType(PrimitiveTypes.BOOL, Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {

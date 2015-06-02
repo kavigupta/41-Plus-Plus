@@ -42,7 +42,7 @@ public class ParsedBinaryOperation implements ParsedExpression {
 	}
 	@Override
 	public String toSourceCode() {
-		return SourceCode.display(this);
+		return SourceCode.display(first, operation, second);
 	}
 	@Override
 	public Context context() {

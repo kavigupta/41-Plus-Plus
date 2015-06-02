@@ -3,12 +3,12 @@ package fortytwo.vm.statements;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.Context;
+import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.TypeVariableRoster;
-import fortytwo.vm.errors.CompilerErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -16,15 +16,17 @@ public class FunctionCall implements Expression, Statement {
 	public final FunctionSignature function;
 	public final ConcreteType outputType;
 	public final List<Expression> arguments;
+	private final Context context;
 	public static FunctionCall getInstance(FunctionSignature function,
-			ConcreteType outputType, List<Expression> value) {
-		return new FunctionCall(function, outputType, value);
+			ConcreteType outputType, List<Expression> value, Context context) {
+		return new FunctionCall(function, outputType, value, context);
 	}
 	private FunctionCall(FunctionSignature function, ConcreteType outputType,
-			List<Expression> arguments) {
+			List<Expression> arguments, Context context) {
 		this.function = function;
 		this.outputType = outputType;
 		this.arguments = arguments;
+		this.context = context;
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
@@ -32,14 +34,7 @@ public class FunctionCall implements Expression, Statement {
 	}
 	@Override
 	public boolean typeCheck() {
-		if (function.inputTypes.size() != arguments.size())
-			CompilerErrors.wrongNumberOfArguments(function, arguments);
-		for (int i = 0; i < function.inputTypes.size(); i++) {
-			TypeVariableRoster tvr = function.inputTypes.get(i).match(
-					arguments.get(i).resolveType());
-			if (tvr == null)
-				CompilerErrors.argumentTypeMismatch(function, arguments, i);
-		}
+		// this has already been checked.
 		return true;
 	}
 	@Override
@@ -58,5 +53,17 @@ public class FunctionCall implements Expression, Statement {
 	public String toString() {
 		return "FunctionCall [function=" + function + ", outputType="
 				+ outputType + ", arguments=" + arguments + "]";
+	}
+	@Override
+	public Context context() {
+		return context;
+	}
+	@Override
+	public boolean isSimple() {
+		return true;
+	}
+	@Override
+	public String toSourceCode() {
+		return SourceCode.display(this.function.name, this.arguments);
 	}
 }

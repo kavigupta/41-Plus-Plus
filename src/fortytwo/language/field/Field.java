@@ -1,5 +1,6 @@
 package fortytwo.language.field;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
@@ -33,6 +34,18 @@ public class Field implements Expression {
 	@Override
 	public ConcreteType resolveType() {
 		return type;
+	}
+	@Override
+	public Context context() {
+		return name.context();
+	}
+	@Override
+	public String toSourceCode() {
+		return name.toSourceCode();
+	}
+	@Override
+	public boolean isSimple() {
+		return true;
 	}
 	@Override
 	public int hashCode() {

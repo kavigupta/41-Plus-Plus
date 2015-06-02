@@ -22,11 +22,11 @@ public class ParserErrors {
 			List<Token> line, int argument) {
 		// TODO Auto-generated method stub
 	}
-	public static void incompleteFields(VariableIdentifier vid,
-			List<Token> line) {
+	public static void genericTypeInDefinition(Token type) {
 		// TODO Auto-generated method stub
 	}
-	public static void genericTypeInStructConstructor(Token token) {
+	public static void incompleteFields(VariableIdentifier vid,
+			List<Token> line) {
 		// TODO Auto-generated method stub
 	}
 	public static void noExit(FunctionDefinition f) {
@@ -45,6 +45,10 @@ public class ParserErrors {
 		// TODO Auto-generated method stub
 	}
 	public static void expectedImpureExpression(List<Token> line) {
+		// TODO Auto-generated method stub
+	}
+	public static void nonVariableInFieldAccess(
+			ParsedExpression parsedExpression) {
 		// TODO Auto-generated method stub
 	}
 }

@@ -31,6 +31,12 @@ public final class Resources {
 	public static final String MULTIPLICATION_SIGN = "*";
 	public static final String MOD_SIGN = "%";
 	public static final String DIV_SIGN = "/";
+	public static final String ADDITION = "Addition";
+	public static final String SUBTRACTION = "Subtraction";
+	public static final String FLOORDIV = "Floor Division";
+	public static final String MULTIPLICATION = "Multiplication";
+	public static final String MODULUS = "Remainderation";
+	public static final String DIV = "Division";
 	/* Naming Conventions */
 	public static final String VARIABLE_START = "_";
 	public static final String OPEN_PAREN = "(";

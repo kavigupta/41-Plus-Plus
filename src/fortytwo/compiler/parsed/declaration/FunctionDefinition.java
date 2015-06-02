@@ -2,6 +2,7 @@ package fortytwo.compiler.parsed.declaration;
 
 import java.util.List;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionName;
@@ -15,13 +16,16 @@ public class FunctionDefinition implements Declaration {
 	public final List<VariableIdentifier> parameterVariables;
 	public final List<GenericType> parameterTypes;
 	public final ConcreteType outputType;
+	private final Context context;
 	public FunctionDefinition(FunctionName signature,
 			List<VariableIdentifier> parameterVariables,
-			List<GenericType> parameterTypes, ConcreteType output) {
+			List<GenericType> parameterTypes, ConcreteType output,
+			Context context) {
 		this.name = signature;
 		this.parameterVariables = parameterVariables;
 		this.parameterTypes = parameterTypes;
 		this.outputType = output;
+		this.context = context;
 	}
 	@Override
 	public SentenceType type() {
@@ -42,6 +46,10 @@ public class FunctionDefinition implements Declaration {
 	@Override
 	public boolean isSimple() {
 		return true;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {

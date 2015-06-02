@@ -1,5 +1,6 @@
 package fortytwo.compiler.parsed.statements;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -10,26 +11,33 @@ import fortytwo.vm.statements.Statement;
 public class ParsedFieldAssignment extends ParsedAssignment {
 	public final VariableIdentifier name, field;
 	public final ParsedExpression value;
+	private final Context context;
 	public ParsedFieldAssignment(VariableIdentifier name,
-			VariableIdentifier field, ParsedExpression parseExpression) {
+			VariableIdentifier field, ParsedExpression parseExpression,
+			Context context) {
 		this.name = name;
 		this.field = field;
 		this.value = parseExpression;
+		this.context = context;
 	}
 	@Override
 	public Statement contextualize(StaticEnvironment environment) {
 		return new FieldAssignment(
 				name.contextualize(environment),
 				environment.structs.typeOf(environment.typeOf(name), field),
-				value.contextualize(environment));
+				value.contextualize(environment), context());
 	}
 	@Override
 	public String toSourceCode() {
-		return SourceCode.display(this);
+		return SourceCode.display(name, field, value);
 	}
 	@Override
 	public boolean isSimple() {
 		return true;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {

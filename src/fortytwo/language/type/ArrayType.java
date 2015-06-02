@@ -1,11 +1,18 @@
 package fortytwo.language.type;
 
+import fortytwo.compiler.Context;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class ArrayType implements ConcreteType {
 	public final ConcreteType contentType;
-	public ArrayType(ConcreteType contentType) {
+	private final Context context;
+	public ArrayType(ConcreteType contentType, Context context) {
 		this.contentType = contentType;
+		this.context = context;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {

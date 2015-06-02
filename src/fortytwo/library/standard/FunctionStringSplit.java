@@ -8,6 +8,7 @@ import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ArrayType;
 import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypes;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -22,7 +23,8 @@ public class FunctionStringSplit extends Function42 {
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		Token token = ((LiteralString) arguments.get(0)).contents;
-		LiteralArray array = new LiteralArray(PrimitiveType.STRING,
+		LiteralArray array = new LiteralArray(new PrimitiveType(
+				PrimitiveTypes.STRING, Context.synthetic()),
 				token.token.length(), Context.synthetic());
 		for (int i = 0; i < token.token.length(); i++) {
 			array.set(i + 1, new LiteralString(token.subToken(i, i + 1)),
@@ -32,11 +34,13 @@ public class FunctionStringSplit extends Function42 {
 	}
 	@Override
 	public ArrayType outputType() {
-		return new ArrayType(PrimitiveType.STRING);
+		return new ArrayType(new PrimitiveType(PrimitiveTypes.STRING,
+				Context.synthetic()), Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(StdLib42.FUNC_STRING_SPLIT,
-				Arrays.asList(PrimitiveType.STRING), outputType());
+				Arrays.asList(new PrimitiveType(PrimitiveTypes.STRING,
+						Context.synthetic())), outputType());
 	}
 }

@@ -1,5 +1,8 @@
 package fortytwo.compiler.parsed.statements;
 
+import java.util.Arrays;
+
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
@@ -26,7 +29,7 @@ public class ParsedIfElse implements ParsedStatement {
 		Expression cond = condition.contextualize(env);
 		Statement ifsoS = ifso.contextualize(StaticEnvironment.getChild(env)), ifsoE = ifelse
 				.contextualize(StaticEnvironment.getChild(env));
-		return IfElse.getInstance(cond, ifsoS, ifsoE);
+		return IfElse.getInstance(cond, ifsoS, ifsoE, context());
 	}
 	@Override
 	public SentenceType type() {
@@ -39,6 +42,11 @@ public class ParsedIfElse implements ParsedStatement {
 	@Override
 	public boolean isSimple() {
 		return false;
+	}
+	@Override
+	public Context context() {
+		return Context.sum(Arrays.asList(condition.context(), ifso.context(),
+				ifelse.context()));
 	}
 	@Override
 	public int hashCode() {

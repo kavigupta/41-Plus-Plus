@@ -22,7 +22,7 @@ import fortytwo.vm.environment.FunctionRoster;
 import fortytwo.vm.environment.FunctionSignatureRoster;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.StructureRoster;
-import fortytwo.vm.errors.CompilerErrors;
+import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.Expression;
 
 public class StdLib42 {
@@ -76,8 +76,8 @@ public class StdLib42 {
 						.minimal())));
 		DEF_STRUCT.addStructure(new GenericStructure(
 				new GenericStructureType(Arrays.asList(new Token("pair",
-						Context.minimal())), Arrays.asList(_k, _v)),
-				Arrays.asList(
+						Context.minimal())), Arrays.asList(_k, _v),
+						Context.synthetic()), Arrays.asList(
 						new GenericField(VariableIdentifier
 								.getInstance(new Token("_key", Context
 										.minimal())), _k),
@@ -90,7 +90,7 @@ public class StdLib42 {
 		if (FunctionName.getInstance(name).equals(
 				StdLib42.FUNC_FIELD_ACCESS_NAME_APPARENT)) {
 			if (!(arguments.get(0) instanceof VariableIdentifier))
-				CompilerErrors.nonVariableInFieldAccess(arguments.get(0));
+				ParserErrors.nonVariableInFieldAccess(arguments.get(0));
 			return Pair
 					.getInstance(
 							getFieldAccess(((VariableIdentifier) arguments
@@ -118,11 +118,16 @@ public class StdLib42 {
 		ConcreteType type = inputs.get(1).resolveType();
 		if (type instanceof ArrayType) {
 			if (field.equals(TypeVariable.LENGTH.name))
-				return Pair.getInstance(FunctionArrayLength.INSTANCE,
-						PrimitiveType.NUMBER);
-		} else if (type == PrimitiveType.STRING)
-			return Pair.getInstance(FunctionStrlen.INSTANCE,
-					PrimitiveType.NUMBER);
+				return Pair.getInstance(
+						FunctionArrayLength.INSTANCE,
+						new PrimitiveType(PrimitiveTypes.NUMBER, Context
+								.synthetic()));
+		} else if (type.equals(new PrimitiveType(PrimitiveTypes.STRING,
+				Context.synthetic())))
+			return Pair.getInstance(
+					FunctionStrlen.INSTANCE,
+					new PrimitiveType(PrimitiveTypes.NUMBER, Context
+							.synthetic()));
 		if (!(type instanceof StructureType)) return null;
 		FunctionFieldAccess f = new FunctionFieldAccess(field,
 				se.structs.getStructure((StructureType) type));
@@ -148,11 +153,16 @@ public class StdLib42 {
 		ConcreteType type = inputs.get(0);
 		if (type instanceof ArrayType) {
 			if (field.equals(TypeVariable.LENGTH.name))
-				return Pair.getInstance(FunctionArrayLength.INSTANCE,
-						PrimitiveType.NUMBER);
-		} else if (type == PrimitiveType.STRING)
-			return Pair.getInstance(FunctionStrlen.INSTANCE,
-					PrimitiveType.NUMBER);
+				return Pair.getInstance(
+						FunctionArrayLength.INSTANCE,
+						new PrimitiveType(PrimitiveTypes.NUMBER, Context
+								.synthetic()));
+		} else if (type.equals(new PrimitiveType(PrimitiveTypes.NUMBER,
+				Context.synthetic())))
+			return Pair.getInstance(
+					FunctionStrlen.INSTANCE,
+					new PrimitiveType(PrimitiveTypes.NUMBER, Context
+							.synthetic()));
 		if (!(type instanceof StructureType)) return null;
 		FunctionFieldAccess f = new FunctionFieldAccess(field,
 				se.structs.getStructure((StructureType) type));

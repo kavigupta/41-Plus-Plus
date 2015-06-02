@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
+import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
@@ -33,6 +34,7 @@ public class ConstructionParser {
 		return ParsedFunctionCall.getInstance(fsig.key, fsig.value);
 	}
 	public static StructureDeclaration parseStructDefinition(List<Token> line) {
+		Context context = Context.tokenSum(line);
 		/*
 		 * Define a type called <structure> of <typevar1>, <typevar2>,
 		 * and <typevar3> that contains a[n] <type> called <field> , a[n]
@@ -68,8 +70,8 @@ public class ConstructionParser {
 					.get(i - 1))));
 		}
 		return new StructureDeclaration(new GenericStructure(
-				new GenericStructureType(structExpression, typeVariables),
-				fields));
+				new GenericStructureType(structExpression, typeVariables,
+						context), fields), Context.tokenSum(line));
 	}
 	public static FunctionDefinition parseFunctionDefinition(List<Token> line) {
 		/*
@@ -131,7 +133,9 @@ public class ConstructionParser {
 		}
 		if (outputloc < 0)
 			return new FunctionDefinition(sig.key, variables, types,
-					PrimitiveType.VOID);
+					new PrimitiveType(PrimitiveTypes.VOID, line.get(line
+							.size() - 1).context),
+					Context.tokenSum(line));
 		if (Language.isArticle(line.get(outputloc + 1).token)) outputloc++;
 		line.subList(0, outputloc + 1).clear();
 		GenericType outputType = ExpressionParser.parseType(Language
@@ -139,7 +143,7 @@ public class ConstructionParser {
 		if (!(outputType instanceof ConcreteType))
 			ParserErrors.genericTypeInFunctionDecl(outputType, line, -1);
 		return new FunctionDefinition(sig.key, variables, types,
-				(ConcreteType) outputType);
+				(ConcreteType) outputType, Context.tokenSum(line));
 	}
 	private static Pair<FunctionName, List<ParsedExpression>> parseFunctionSignature(
 			List<Token> list) {

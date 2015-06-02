@@ -11,7 +11,6 @@ import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.FunctionReturn;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
-import fortytwo.compiler.parsed.expressions.ParsedBinaryOperation;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.compiler.parsed.statements.*;
@@ -22,6 +21,8 @@ import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.*;
 import fortytwo.vm.expressions.*;
+import fortytwo.vm.statements.IfElse;
+import fortytwo.vm.statements.StatementSeries;
 
 public class SourceCode {
 	public static String display(FunctionDefinition def) {
@@ -54,14 +55,14 @@ public class SourceCode {
 				+ (parsedDefinition.fields.size() == 0 ? ""
 						: (" with " + displayFieldList(parsedDefinition.fields)));
 	}
-	public static String display(ParsedFieldAssignment parsedFieldAssignment) {
-		return "Set the " + parsedFieldAssignment.field.name + " of "
-				+ parsedFieldAssignment.name.name + " to "
-				+ parsedFieldAssignment.value.toSourceCode();
+	public static String display(ParsedConstruct obj,
+			VariableIdentifier field, ParsedConstruct value) {
+		return "Set the " + field.name + " of " + obj.toSourceCode() + " to "
+				+ value.toSourceCode();
 	}
-	public static String display(ParsedFunctionCall parsedFunctionCall) {
-		String func = displayFunctionSignature(parsedFunctionCall.name,
-				parsedFunctionCall.arguments).trim();
+	public static String display(FunctionName name,
+			List<? extends ParsedConstruct> arguments) {
+		String func = displayFunctionSignature(name, arguments).trim();
 		if (func.length() == 0) return "";
 		if (Character.isUpperCase(func.charAt(0))
 				&& Character.isAlphabetic(func.charAt(0))) return func;
@@ -73,6 +74,16 @@ public class SourceCode {
 				+ ": "
 				+ wrapInBraces(parsedIfElse.ifso)
 				+ (parsedIfElse.ifelse.statements.size() == 0 ? ""
+						: (". Otherwise: " + parsedIfElse.ifelse
+								.toSourceCode()));
+	}
+	public static String display(IfElse parsedIfElse) {
+		return "If "
+				+ parsedIfElse.condition.toSourceCode()
+				+ ": "
+				+ wrapInBraces(parsedIfElse.ifso)
+				+ ((parsedIfElse.ifelse instanceof StatementSeries && ((StatementSeries) parsedIfElse.ifelse).statements
+						.size() == 0) ? ""
 						: (". Otherwise: " + parsedIfElse.ifelse
 								.toSourceCode()));
 	}
@@ -93,13 +104,13 @@ public class SourceCode {
 		return "While " + parsedWhileLoop.condition.toSourceCode() + ": "
 				+ wrapInBraces(parsedWhileLoop.statement);
 	}
-	public static String display(ParsedBinaryOperation op) {
-		if (op.operation == Operation.ADD
-				|| op.operation == Operation.SUBTRACT)
-			if (op.first.toSourceCode().equals("0"))
-				return op.operation.toSourceCode() + op.second;
-		return "(" + op.first.toSourceCode() + op.operation.toSourceCode()
-				+ op.second.toSourceCode() + ")";
+	public static String display(ParsedConstruct first, Operation operation,
+			ParsedConstruct second) {
+		if (operation == Operation.ADD || operation == Operation.SUBTRACT)
+			if (first.toSourceCode().equals("0"))
+				return operation.toSourceCode() + second;
+		return "(" + first.toSourceCode() + operation.toSourceCode()
+				+ second.toSourceCode() + ")";
 	}
 	public static String display(LiteralArray literalArray) {
 		StringBuffer sbuff = new StringBuffer("[");
@@ -156,6 +167,11 @@ public class SourceCode {
 		if (statement.isSimple()) return s;
 		return "Do the following: " + s + "." + " That's all";
 	}
+	private static String wrapInBraces(ParsedConstruct statement) {
+		String s = statement.toSourceCode();
+		if (statement.isSimple()) return s;
+		return "Do the following: " + s + "." + " That's all";
+	}
 	private static Token parenthesizedName(List<Token> name) {
 		if (name.size() == 0) return new Token("()", Context.synthetic());
 		if (name.size() == 1) return name.get(0);
@@ -181,7 +197,9 @@ public class SourceCode {
 	}
 	private static String displayOutputType(ConcreteType outputType,
 			boolean hasFields) {
-		if (outputType == PrimitiveType.VOID) return "";
+		if (outputType instanceof PrimitiveType
+				&& ((PrimitiveType) outputType).types == PrimitiveTypes.VOID)
+			return "";
 		return " " + (hasFields ? "and" : "that") + " outputs "
 				+ Language.articleized(outputType.toSourceCode());
 	}

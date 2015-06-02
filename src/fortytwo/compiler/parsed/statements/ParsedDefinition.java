@@ -1,5 +1,6 @@
 package fortytwo.compiler.parsed.statements;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
@@ -11,15 +12,18 @@ import fortytwo.vm.statements.Statement;
 public class ParsedDefinition implements ParsedStatement {
 	public final Field name;
 	public final ParsedVariableRoster fields;
-	public ParsedDefinition(Field name, ParsedVariableRoster fields) {
+	private final Context context;
+	public ParsedDefinition(Field name, ParsedVariableRoster fields,
+			Context context) {
 		this.name = name;
 		this.fields = fields;
+		this.context = context;
 	}
 	@Override
 	public Statement contextualize(StaticEnvironment environment) {
 		environment.addType(name.name, name.type);
 		return new Definition(name, fields.contextualize(environment),
-				environment.structs);
+				environment.structs, context());
 	}
 	@Override
 	public SentenceType type() {
@@ -32,6 +36,10 @@ public class ParsedDefinition implements ParsedStatement {
 	@Override
 	public boolean isSimple() {
 		return true;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {

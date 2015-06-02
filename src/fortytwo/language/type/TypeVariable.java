@@ -4,7 +4,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.TypeVariableRoster;
-import fortytwo.vm.errors.TypingErrors;
+import fortytwo.vm.errors.DNEErrors;
 
 public class TypeVariable implements GenericType {
 	public static final TypeVariable LENGTH = new TypeVariable(
@@ -19,6 +19,10 @@ public class TypeVariable implements GenericType {
 		return Kind.VARIABLE;
 	}
 	@Override
+	public Context context() {
+		return name.context();
+	}
+	@Override
 	public TypeVariableRoster match(ConcreteType toMatch) {
 		TypeVariableRoster roster = new TypeVariableRoster();
 		// doesn't worry about reassigning for obvious reasons
@@ -28,7 +32,7 @@ public class TypeVariable implements GenericType {
 	@Override
 	public ConcreteType resolve(TypeVariableRoster roster) {
 		ConcreteType type = roster.referenceTo(this);
-		if (type == null) TypingErrors.variableNotInRoster(this, roster);
+		if (type == null) DNEErrors.variableDNE(this);
 		return type;
 	}
 	@Override

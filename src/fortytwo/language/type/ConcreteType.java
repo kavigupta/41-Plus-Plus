@@ -20,4 +20,8 @@ public interface ConcreteType extends GenericType {
 	@Override
 	public String toSourceCode();
 	public LiteralExpression defaultValue();
+	@Override
+	public default boolean isSimple() {
+		return true;
+	}
 }

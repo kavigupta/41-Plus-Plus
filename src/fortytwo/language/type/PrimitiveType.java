@@ -1,32 +1,45 @@
 package fortytwo.language.type;
 
-import java.math.BigDecimal;
-
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
-import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
-import fortytwo.vm.expressions.LiteralNumber;
-import fortytwo.vm.expressions.LiteralString;
 
-public enum PrimitiveType implements ConcreteType {
-	NUMBER(LiteralNumber.getInstance(BigDecimal.ZERO, Context.synthetic())),
-	STRING(new LiteralString(new Token("", Context.minimal()))), BOOL(
-			LiteralBool.getInstance(false, Context.synthetic())),
-	TYPE(null), VOID(null);
-	public final LiteralExpression def;
-	private PrimitiveType(LiteralExpression def) {
-		this.def = def;
+public class PrimitiveType implements ConcreteType {
+	public final PrimitiveTypes types;
+	private final Context context;
+	public PrimitiveType(PrimitiveTypes types, Context context) {
+		this.types = types;
+		this.context = context;
 	}
-	public final String typeID() {
-		return name().toLowerCase();
+	@Override
+	public Kind kind() {
+		return Kind.CONCRETE;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public String toSourceCode() {
-		return typeID();
+		return types.toSourceCode();
 	}
 	@Override
 	public LiteralExpression defaultValue() {
-		return def;
+		return types.def;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((types == null) ? 0 : types.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		PrimitiveType other = (PrimitiveType) obj;
+		if (types != other.types) return false;
+		return true;
 	}
 }

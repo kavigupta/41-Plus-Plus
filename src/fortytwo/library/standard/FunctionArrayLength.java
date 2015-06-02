@@ -7,10 +7,7 @@ import java.util.List;
 import fortytwo.compiler.Context;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
-import fortytwo.language.type.GenericArrayType;
-import fortytwo.language.type.GenericType;
-import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.TypeVariable;
+import fortytwo.language.type.*;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -29,13 +26,12 @@ public class FunctionArrayLength extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return PrimitiveType.NUMBER;
+		return new PrimitiveType(PrimitiveTypes.NUMBER, Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {
-		return FunctionSignature.getInstance(
-				FunctionName.getInstance("the", "_length", "of", ""),
-				Arrays.asList(new GenericArrayType(TypeVariable.LENGTH)),
-				outputType());
+		return FunctionSignature.getInstance(FunctionName.getInstance("the",
+				"_length", "of", ""), Arrays.asList(new GenericArrayType(
+				TypeVariable.LENGTH, Context.synthetic())), outputType());
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.vm.environment.StaticEnvironment;
@@ -12,13 +13,17 @@ import fortytwo.vm.statements.StatementSeries;
 
 public class ParsedStatementSeries implements ParsedStatement {
 	public final List<ParsedStatement> statements;
-	public static ParsedStatementSeries getInstance(ParsedStatement s) {
+	private final Context context;
+	public static ParsedStatementSeries getInstance(ParsedStatement s,
+			Context context) {
 		if (s instanceof ParsedStatementSeries)
 			return (ParsedStatementSeries) s;
-		return new ParsedStatementSeries(Arrays.asList(s));
+		return new ParsedStatementSeries(Arrays.asList(s), context);
 	}
-	public ParsedStatementSeries(List<ParsedStatement> statements) {
+	public ParsedStatementSeries(List<ParsedStatement> statements,
+			Context context) {
 		this.statements = statements;
+		this.context = context;
 	}
 	@Override
 	public Statement contextualize(StaticEnvironment env) {
@@ -39,6 +44,10 @@ public class ParsedStatementSeries implements ParsedStatement {
 		if (statements.size() > 1) return false;
 		if (statements.size() == 0) return true;
 		return statements.get(0).isSimple();
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {

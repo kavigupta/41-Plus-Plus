@@ -1,8 +1,10 @@
 package fortytwo.vm.expressions;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypes;
 
 public class LiteralString extends LiteralExpression {
 	public final Token contents;
@@ -15,7 +17,7 @@ public class LiteralString extends LiteralExpression {
 	}
 	@Override
 	public PrimitiveType resolveType() {
-		return PrimitiveType.STRING;
+		return new PrimitiveType(PrimitiveTypes.STRING, Context.synthetic());
 	}
 	@Override
 	public String toSourceCode() {

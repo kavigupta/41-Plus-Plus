@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.TypeVariable;
-import fortytwo.vm.errors.CompilerErrors;
+import fortytwo.vm.errors.DNEErrors;
 
 public class TypeVariableRoster {
 	@Override
@@ -31,11 +31,11 @@ public class TypeVariableRoster {
 	}
 	public ConcreteType referenceTo(TypeVariable id) {
 		ConcreteType le = pairs.get(id);
-		if (le == null) CompilerErrors.variableDNE(id);
+		if (le == null) DNEErrors.variableDNE(id);
 		return le;
 	}
 	public void redefine(TypeVariable name, ConcreteType express) {
-		if (!pairs.containsKey(name)) CompilerErrors.variableDNE(name);
+		if (!pairs.containsKey(name)) DNEErrors.variableDNE(name);
 		pairs.put(name, express);
 	}
 }

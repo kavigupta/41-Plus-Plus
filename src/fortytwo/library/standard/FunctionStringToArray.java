@@ -7,6 +7,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypes;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -21,7 +22,8 @@ public class FunctionStringToArray extends Function42 {
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		Token tokenVal = ((LiteralString) arguments.get(0)).contents;
-		LiteralArray larray = new LiteralArray(PrimitiveType.STRING,
+		LiteralArray larray = new LiteralArray(new PrimitiveType(
+				PrimitiveTypes.STRING, Context.synthetic()),
 				tokenVal.token.length(), Context.synthetic());
 		for (int i = 0; i < tokenVal.token.length(); i++) {
 			larray.set(i + 1,
@@ -32,11 +34,12 @@ public class FunctionStringToArray extends Function42 {
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return PrimitiveType.VOID;
+		return new PrimitiveType(PrimitiveTypes.VOID, Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {
-		return FunctionSignature.getInstance(StdLib42.FUNC_PRINT,
-				Arrays.asList(PrimitiveType.STRING), outputType());
+		return FunctionSignature.getInstance(StdLib42.FUNC_PRINT, Arrays
+				.asList(new PrimitiveType(PrimitiveTypes.STRING, Context
+						.synthetic())), outputType());
 	}
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.TypeVariableRoster;
-import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.Expression;
 
 public class FunctionSignature {
@@ -63,9 +62,7 @@ public class FunctionSignature {
 			GenericType expected = this.inputTypes.get(i);
 			switch (expected.kind()) {
 				case CONCRETE:
-					if (!expected.equals(arg))
-						TypingErrors.functionSigtypeMismatch(name,
-								arguments, i);
+					// this should be the same because of prior checking.
 					break;
 				case CONSTRUCTOR:
 				case VARIABLE:

@@ -15,6 +15,7 @@ import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypes;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -43,8 +44,12 @@ public class FunctionCompare extends Function42 {
 							.synthetic()))).collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
 			this.sig = FunctionSignature.getInstance(FunctionName
-					.getInstance(s), Arrays.asList(PrimitiveType.NUMBER,
-					PrimitiveType.NUMBER), PrimitiveType.BOOL);
+					.getInstance(s), Arrays.asList(
+					new PrimitiveType(PrimitiveTypes.NUMBER, Context
+							.synthetic()),
+					new PrimitiveType(PrimitiveTypes.NUMBER, Context
+							.synthetic())), new PrimitiveType(
+					PrimitiveTypes.BOOL, Context.synthetic()));
 			this.lt = lt;
 			this.eq = eq;
 			this.gt = gt;
@@ -68,7 +73,7 @@ public class FunctionCompare extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return PrimitiveType.BOOL;
+		return new PrimitiveType(PrimitiveTypes.BOOL, Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {

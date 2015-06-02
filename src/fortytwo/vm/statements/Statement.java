@@ -1,8 +1,9 @@
 package fortytwo.vm.statements;
 
+import fortytwo.language.ParsedConstruct;
 import fortytwo.vm.environment.LocalEnvironment;
 
-public interface Statement {
+public interface Statement extends ParsedConstruct {
 	public void execute(LocalEnvironment environment);
 	public void clean(LocalEnvironment environment);
 	/**

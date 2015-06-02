@@ -1,5 +1,6 @@
 package fortytwo.compiler.parsed.statements;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -10,14 +11,17 @@ import fortytwo.vm.statements.Statement;
 public class ParsedRedefinition extends ParsedAssignment {
 	public final VariableIdentifier name;
 	public final ParsedExpression expr;
-	public ParsedRedefinition(VariableIdentifier name, ParsedExpression expr) {
+	private final Context context;
+	public ParsedRedefinition(VariableIdentifier name, ParsedExpression expr,
+			Context context) {
 		this.name = name;
 		this.expr = expr;
+		this.context = context;
 	}
 	@Override
 	public Statement contextualize(StaticEnvironment environment) {
-		return new Redefinition(name, expr.contextualize(environment),
-				environment);
+		return new Redefinition(name.contextualize(environment),
+				expr.contextualize(environment), context());
 	}
 	@Override
 	public String toSourceCode() {
@@ -26,6 +30,10 @@ public class ParsedRedefinition extends ParsedAssignment {
 	@Override
 	public boolean isSimple() {
 		return true;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {

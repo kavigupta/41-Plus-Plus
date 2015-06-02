@@ -85,8 +85,9 @@ public class GlobalEnvironment {
 						fieldValues.assign(pair.getKey(), applied);
 					}
 					environment.addGlobalVariable(def.name.name,
-							environment.structs.instance(def.name.type,
-									fieldValues.literalValue(local)));
+							environment.structs.instance(def.name,
+									fieldValues.literalValue(local),
+									def.name.name.context()));
 					break;
 				default:
 					ParserErrors.expectedDeclarationOrDefinition(s);

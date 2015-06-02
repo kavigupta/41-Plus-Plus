@@ -1,5 +1,6 @@
 package fortytwo.vm.statements;
 
+import fortytwo.compiler.Context;
 import fortytwo.language.field.Field;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StructureRoster;
@@ -11,17 +12,20 @@ public class Definition implements Statement {
 	public final VariableRoster<Expression> fields;
 	// LOWPRI quick/dirty solution. Fix.
 	private StructureRoster structs;
+	private final Context context;
 	public Definition(Field toCreate, VariableRoster<Expression> fields,
-			StructureRoster structs) {
+			StructureRoster structs, Context context) {
 		this.toCreate = toCreate;
 		this.fields = fields;
 		this.structs = structs;
+		this.context = context;
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
 		environment.vars.assign(toCreate.name,
-				environment.global.staticEnv.structs.instance(
-						toCreate.type, fields.literalValue(environment)));
+				environment.global.staticEnv.structs.instance(toCreate,
+						fields.literalValue(environment),
+						toCreate.name.context()));
 	}
 	@Override
 	public void clean(LocalEnvironment environment) {
@@ -29,6 +33,19 @@ public class Definition implements Statement {
 	}
 	@Override
 	public boolean typeCheck() {
-		return structs.typeCheckConstructor(toCreate.type, fields);
+		return structs.typeCheckConstructor(toCreate, fields,
+				toCreate.name.context());
+	}
+	@Override
+	public boolean isSimple() {
+		return true;
+	}
+	@Override
+	public String toSourceCode() {
+		return null;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 }

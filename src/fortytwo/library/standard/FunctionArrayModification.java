@@ -8,6 +8,7 @@ import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.GenericArrayType;
 import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypes;
 import fortytwo.language.type.TypeVariable;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
@@ -41,14 +42,15 @@ public class FunctionArrayModification extends Function42 {
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return PrimitiveType.VOID;
+		return new PrimitiveType(PrimitiveTypes.VOID, Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(FunctionName.getInstance("Set",
 				"the", "", suffix, "element", "of", "", "to", ""), Arrays
-				.asList(PrimitiveType.NUMBER, new GenericArrayType(
-						TypeVariable.LENGTH), TypeVariable.LENGTH),
-				outputType());
+				.asList(new PrimitiveType(PrimitiveTypes.NUMBER, Context
+						.synthetic()), new GenericArrayType(
+						TypeVariable.LENGTH, Context.synthetic()),
+						TypeVariable.LENGTH), outputType());
 	}
 }

@@ -1,15 +1,22 @@
 package fortytwo.language.type;
 
+import fortytwo.compiler.Context;
 import fortytwo.vm.environment.TypeVariableRoster;
 
 public class GenericArrayType implements GenericType {
 	public final GenericType contents;
-	public GenericArrayType(GenericType contents) {
+	private final Context context;
+	public GenericArrayType(GenericType contents, Context context) {
 		this.contents = contents;
+		this.context = context;
 	}
 	@Override
 	public Kind kind() {
 		return Kind.CONSTRUCTOR;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public TypeVariableRoster match(ConcreteType toMatch) {
@@ -18,7 +25,7 @@ public class GenericArrayType implements GenericType {
 	}
 	@Override
 	public ConcreteType resolve(TypeVariableRoster roster) {
-		return new ArrayType(contents.resolve(roster));
+		return new ArrayType(contents.resolve(roster), context);
 	}
 	@Override
 	public String toSourceCode() {
