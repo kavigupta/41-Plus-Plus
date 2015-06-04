@@ -24,6 +24,7 @@ import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.SyntaxErrors;
+import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralNumber;
@@ -183,7 +184,7 @@ public class ExpressionParser {
 			return new TypeVariable(VariableIdentifier.getInstance(token));
 		while (token.token.startsWith(Resources.OPEN_PAREN))
 			token = Language.deparenthesize(token);
-		for (PrimitiveTypes type : PrimitiveTypes.values()) {
+		for (PrimitiveTypeWithoutContext type : PrimitiveTypeWithoutContext.values()) {
 			if (type.typeID().equals(token.token))
 				return new PrimitiveType(type, token.context);
 		}
@@ -206,7 +207,7 @@ public class ExpressionParser {
 				switch (var.kind()) {
 					case CONCRETE:
 						if (arguments == Kind.VARIABLE)
-							ParserErrors.nonVariableInDecl(false,
+							ParserErrors.expectedVariableInDecl(false,
 									tokens.get(i), tokens);
 						arguments = Kind.CONCRETE;
 						break;
@@ -222,7 +223,7 @@ public class ExpressionParser {
 		if (struct.stream().map(x -> x.token).collect(Collectors.toList())
 				.equals(StdLib42.STRUCT_ARRAY)) {
 			if (typeVariables.size() != 1)
-				SyntaxErrors.invalidArrayType(tokens, typeVariables);
+				TypingErrors.invalidArrayType(tokens, typeVariables);
 			if (arguments == Kind.CONCRETE)
 				return new ArrayType((ConcreteType) typeVariables.get(0),
 						context);

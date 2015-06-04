@@ -7,7 +7,7 @@ import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypes;
+import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -43,7 +43,7 @@ public class FunctionImplemented extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return output == null ? new PrimitiveType(PrimitiveTypes.VOID,
+		return output == null ? new PrimitiveType(PrimitiveTypeWithoutContext.VOID,
 				Context.synthetic()) : output.resolveType();
 	}
 	@Override

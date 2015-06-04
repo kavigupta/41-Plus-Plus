@@ -28,71 +28,71 @@ public class StructTest {
 	}
 	@Test
 	public void singletonTest() {
-		assertPrint("{singleton}\r\n",
+		assertPrint("{singleton}\n",
 				"Define a singleton called _x. Tell me what _x is.");
 		assertPrint(
-				"true\r\n",
+				"true\n",
 				"Define a singleton called _x. Define a singleton called _y. Tell me what (_x is equal to _y) is.");
 	}
 	@Test
 	public void concreteStructTest() {
 		assertPrint(
-				"{record: _name <= '41++', _dateOfBirth <= 2015}\r\n",
+				"{record: _name <= '41++', _dateOfBirth <= 2015}\n",
 				"Define a record called _lang with a _name of '41++' and a _dateOfBirth of 2015. Tell me what _lang is.");
 		assertPrint(
-				"false\r\n",
+				"false\n",
 				"Define a record called _lang with a _name of '41++' and a _dateOfBirth of 2015."
 						+ "Define a record called _lang_date_wrong with a _name of '41++' and a _dateOfBirth of 2014."
 						+ "Tell me what (_lang is equal to _lang_date_wrong) is.");
 		assertPrint(
-				"true\r\n",
+				"true\n",
 				"Define a record called _lang with a _name of '41++' and a _dateOfBirth of 2015."
 						+ "Define a record called _langcopy with a _name of '41++' and a _dateOfBirth of 2015."
 						+ "Tell me what (_lang is equal to _langcopy) is.");
 		assertPrint(
-				"{record: _name <= '41++', _dateOfBirth <= 2015}\r\n",
+				"{record: _name <= '41++', _dateOfBirth <= 2015}\n",
 				"Define a record called _lang with a _name of '41++' and a _dateOfBirth of 2015."
 						+ "Define a record called _langcopy with a value of _lang."
 						+ "Tell me what _langcopy is.");
 		assertPrint(
-				"{record: _name <= 'te+-s()t[]', _dateOfBirth <= 2015}\r\n",
+				"{record: _name <= 'te+-s()t[]', _dateOfBirth <= 2015}\n",
 				"Define a record called _lang with a _name of '41++' and a _dateOfBirth of 2015."
 						+ "Set the _name of _lang to 'te+-s()t[]'."
 						+ "Tell me what _lang is.");
 		assertPrint(
-				"'41++'\r\n",
+				"'41++'\n",
 				"Define a record called _lang with a _name of '41++' and a _dateOfBirth of 2015."
 						+ "Tell me what (the _name of _lang) is.");
 		assertPrint(
-				"2015\r\n",
+				"2015\n",
 				"Define a record called _lang with a _name of '41++' and a _dateOfBirth of 2015."
 						+ "Tell me what (the _dateOfBirth of _lang) is.");
 	}
 	@Test
 	public void genericStructureTest() {
 		assertPrint(
-				"{(triple of number, string, and bool): _x <= 2, _y <= 'abc', _z <= true}\r\n",
+				"{(triple of number, string, and bool): _x <= 2, _y <= 'abc', _z <= true}\n",
 				"Define a (triple of number, string, and bool) called _st with a _x of 2, a _y of 'abc', and a _z of true. Tell me what _st is.");
 		assertPrint(
-				"true\r\n",
+				"true\n",
 				""
 						+ "Define a (triple of number, string, and bool) called _st with a _x of 2, a _y of 'abc', and a _z of true."
 						+ "Define a (triple of number, string, and bool) called _st2 with a _x of 2, a _y of 'abc', and a _z of true."
 						+ "Tell me what (_st is equal to _st2) is.");
 		assertPrint(
-				"false\r\n",
+				"false\n",
 				""
 						+ "Define a (triple of number, string, and bool) called _st with a _x of 2, a _y of 'abc', and a _z of true."
 						+ "Define a (triple of number, string, and bool) called _st2 with a _x of 12345, a _y of 'abc', and a _z of true."
 						+ "Tell me what (_st is equal to _st2) is.");
 		assertPrint(
-				"false\r\n",
+				"false\n",
 				""
 						+ "Define a (triple of string, string, and bool) called _st with a _x of '2', a _y of 'abc', and a _z of true."
 						+ "Define a (triple of number, string, and bool) called _st2 with a _x of 12345, a _y of 'abc', and a _z of true."
 						+ "Tell me what (_st is equal to _st2) is.");
 		assertPrint(
-				"true\r\n",
+				"true\n",
 				""
 						+ "Define a (triple of number, string, and bool) called _st with a _x of 2, a _y of 'abc', and a _z of true."
 						+ "Define a (triple of number, string, and bool) called _st2 with a _x of 12345, a _y of 'def', and a _z of false."

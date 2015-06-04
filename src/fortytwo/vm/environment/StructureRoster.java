@@ -27,7 +27,7 @@ public class StructureRoster {
 		for (GenericStructure struct : structs) {
 			if (struct.type.equals(type)) return struct;
 		}
-		DNEErrors.structureDNE(type, this);
+		DNEErrors.typeDNE(type);
 		// should not be reachable.
 		return null;
 	}
@@ -73,14 +73,14 @@ public class StructureRoster {
 			GenericStructureType genericType) {
 		for (GenericStructure gs : structs)
 			if (gs.type.equals(genericType)) return gs;
-		DNEErrors.structureDNE(genericType, this);
+		DNEErrors.typeDNE(genericType);
 		// should never get here
 		return null;
 	}
 	private GenericStructureType genericVersionOf(StructureType type) {
 		for (GenericStructure gs : structs)
 			if (gs.type.name.equals(type.name)) return gs.type;
-		DNEErrors.structureDNE(type, this);
+		DNEErrors.typeDNE(type);
 		// should never happen
 		return null;
 	}
@@ -95,7 +95,7 @@ public class StructureRoster {
 			if (fields.size() == 1
 					&& length != null
 					&& length.resolveType().equals(
-							new PrimitiveType(PrimitiveTypes.NUMBER,
+							new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
 									Context.synthetic())))
 				return true;
 			if (fields.size() == 0)

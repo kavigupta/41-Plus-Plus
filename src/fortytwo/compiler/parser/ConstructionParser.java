@@ -102,7 +102,7 @@ public class ConstructionParser {
 						// LOWPRI allow generic typing in functions...
 						// later
 						if (!(type instanceof ConcreteType))
-							ParserErrors.genericTypeInFunctionDecl(type,
+							ParserErrors.expectedCTInFunctionDecl(type,
 									line, vars.size());
 						vars.put(VariableIdentifier.getInstance(line
 								.get(i + 1)), type);
@@ -121,7 +121,7 @@ public class ConstructionParser {
 				.stream()
 				.map(x -> {
 					if (!(x instanceof VariableIdentifier))
-						ParserErrors.nonVariableInDecl(true, x.toToken(),
+						ParserErrors.expectedVariableInDecl(true, x.toToken(),
 								line);
 					return (VariableIdentifier) x;
 				}).collect(Collectors.toList());
@@ -133,7 +133,7 @@ public class ConstructionParser {
 		}
 		if (outputloc < 0)
 			return new FunctionDefinition(sig.key, variables, types,
-					new PrimitiveType(PrimitiveTypes.VOID, line.get(line
+					new PrimitiveType(PrimitiveTypeWithoutContext.VOID, line.get(line
 							.size() - 1).context),
 					Context.tokenSum(line));
 		if (Language.isArticle(line.get(outputloc + 1).token)) outputloc++;
@@ -141,7 +141,7 @@ public class ConstructionParser {
 		GenericType outputType = ExpressionParser.parseType(Language
 				.parenthesize(line));
 		if (!(outputType instanceof ConcreteType))
-			ParserErrors.genericTypeInFunctionDecl(outputType, line, -1);
+			ParserErrors.expectedCTInFunctionDecl(outputType, line, -1);
 		return new FunctionDefinition(sig.key, variables, types,
 				(ConcreteType) outputType, Context.tokenSum(line));
 	}

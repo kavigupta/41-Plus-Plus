@@ -8,7 +8,7 @@ import fortytwo.language.Operation;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypes;
+import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.errors.RuntimeErrors;
 import fortytwo.vm.errors.TypingErrors;
@@ -70,11 +70,11 @@ public class BinaryOperation implements Expression {
 	@Override
 	public boolean typeCheck() {
 		if (!first.resolveType().equals(
-				new PrimitiveType(PrimitiveTypes.NUMBER, Context
+				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
 						.synthetic())))
 			TypingErrors.expectedNumberInArithmeticOperator(this, true);
 		if (!second.resolveType().equals(
-				new PrimitiveType(PrimitiveTypes.NUMBER, Context
+				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
 						.synthetic())))
 			TypingErrors.expectedNumberInArithmeticOperator(this, false);
 		return true;
@@ -82,7 +82,7 @@ public class BinaryOperation implements Expression {
 	@Override
 	public ConcreteType resolveType() {
 		typeCheck();
-		return new PrimitiveType(PrimitiveTypes.NUMBER, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context.synthetic());
 	}
 	@Override
 	public Context context() {

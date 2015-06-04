@@ -32,7 +32,7 @@ public class TypeVariable implements GenericType {
 	@Override
 	public ConcreteType resolve(TypeVariableRoster roster) {
 		ConcreteType type = roster.referenceTo(this);
-		if (type == null) DNEErrors.variableDNE(this);
+		if (type == null) DNEErrors.typeDNE(this);
 		return type;
 	}
 	@Override

@@ -3,7 +3,7 @@ package fortytwo.vm.expressions;
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypes;
+import fortytwo.language.type.PrimitiveTypeWithoutContext;
 
 public class LiteralBool extends LiteralExpression {
 	public final boolean contents;
@@ -16,7 +16,7 @@ public class LiteralBool extends LiteralExpression {
 	}
 	@Override
 	public PrimitiveType resolveType() {
-		return new PrimitiveType(PrimitiveTypes.BOOL, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context.synthetic());
 	}
 	@Override
 	public String toSourceCode() {

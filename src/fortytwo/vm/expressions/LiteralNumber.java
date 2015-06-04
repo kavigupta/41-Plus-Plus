@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypes;
+import fortytwo.language.type.PrimitiveTypeWithoutContext;
 
 public class LiteralNumber extends LiteralExpression {
 	public final BigDecimal contents;
@@ -19,7 +19,7 @@ public class LiteralNumber extends LiteralExpression {
 	}
 	@Override
 	public PrimitiveType resolveType() {
-		return new PrimitiveType(PrimitiveTypes.NUMBER, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context.synthetic());
 	}
 	@Override
 	public String toSourceCode() {

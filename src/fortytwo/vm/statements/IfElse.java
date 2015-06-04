@@ -3,7 +3,7 @@ package fortytwo.vm.statements;
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypes;
+import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.Expression;
@@ -41,7 +41,7 @@ public class IfElse implements Statement {
 	@Override
 	public boolean typeCheck() {
 		if (condition.resolveType()
-				.equals(new PrimitiveType(PrimitiveTypes.BOOL, Context
+				.equals(new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context
 						.synthetic()))) return true;
 		TypingErrors.expectedBoolInCondition(true, condition);
 		// unreachable

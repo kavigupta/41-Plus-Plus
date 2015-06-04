@@ -90,7 +90,7 @@ public class StdLib42 {
 		if (FunctionName.getInstance(name).equals(
 				StdLib42.FUNC_FIELD_ACCESS_NAME_APPARENT)) {
 			if (!(arguments.get(0) instanceof VariableIdentifier))
-				ParserErrors.nonVariableInFieldAccess(arguments.get(0));
+				ParserErrors.expectedVariableInFieldAccess(arguments.get(0));
 			return Pair
 					.getInstance(
 							getFieldAccess(((VariableIdentifier) arguments
@@ -120,13 +120,13 @@ public class StdLib42 {
 			if (field.equals(TypeVariable.LENGTH.name))
 				return Pair.getInstance(
 						FunctionArrayLength.INSTANCE,
-						new PrimitiveType(PrimitiveTypes.NUMBER, Context
+						new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
 								.synthetic()));
-		} else if (type.equals(new PrimitiveType(PrimitiveTypes.STRING,
+		} else if (type.equals(new PrimitiveType(PrimitiveTypeWithoutContext.STRING,
 				Context.synthetic())))
 			return Pair.getInstance(
 					FunctionStrlen.INSTANCE,
-					new PrimitiveType(PrimitiveTypes.NUMBER, Context
+					new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
 							.synthetic()));
 		if (!(type instanceof StructureType)) return null;
 		FunctionFieldAccess f = new FunctionFieldAccess(field,
@@ -155,13 +155,13 @@ public class StdLib42 {
 			if (field.equals(TypeVariable.LENGTH.name))
 				return Pair.getInstance(
 						FunctionArrayLength.INSTANCE,
-						new PrimitiveType(PrimitiveTypes.NUMBER, Context
+						new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
 								.synthetic()));
-		} else if (type.equals(new PrimitiveType(PrimitiveTypes.NUMBER,
+		} else if (type.equals(new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
 				Context.synthetic())))
 			return Pair.getInstance(
 					FunctionStrlen.INSTANCE,
-					new PrimitiveType(PrimitiveTypes.NUMBER, Context
+					new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
 							.synthetic()));
 		if (!(type instanceof StructureType)) return null;
 		FunctionFieldAccess f = new FunctionFieldAccess(field,

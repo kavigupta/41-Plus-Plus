@@ -4,9 +4,9 @@ import fortytwo.compiler.Context;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class PrimitiveType implements ConcreteType {
-	public final PrimitiveTypes types;
+	public final PrimitiveTypeWithoutContext types;
 	private final Context context;
-	public PrimitiveType(PrimitiveTypes types, Context context) {
+	public PrimitiveType(PrimitiveTypeWithoutContext types, Context context) {
 		this.types = types;
 		this.context = context;
 	}

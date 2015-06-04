@@ -31,11 +31,11 @@ public class TypeVariableRoster {
 	}
 	public ConcreteType referenceTo(TypeVariable id) {
 		ConcreteType le = pairs.get(id);
-		if (le == null) DNEErrors.variableDNE(id);
+		if (le == null) DNEErrors.typeDNE(id);
 		return le;
 	}
 	public void redefine(TypeVariable name, ConcreteType express) {
-		if (!pairs.containsKey(name)) DNEErrors.variableDNE(name);
+		if (!pairs.containsKey(name)) DNEErrors.typeDNE(name);
 		pairs.put(name, express);
 	}
 }

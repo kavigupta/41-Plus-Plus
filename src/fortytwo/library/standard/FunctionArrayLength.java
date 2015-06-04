@@ -26,7 +26,7 @@ public class FunctionArrayLength extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return new PrimitiveType(PrimitiveTypes.NUMBER, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {

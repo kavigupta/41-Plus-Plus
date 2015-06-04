@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypes;
+import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.Expression;
@@ -32,7 +32,7 @@ public class WhileLoop implements Statement {
 	public boolean typeCheck() {
 		condition.typeCheck();
 		if (!condition.resolveType()
-				.equals(new PrimitiveType(PrimitiveTypes.BOOL, Context
+				.equals(new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context
 						.synthetic())))
 			TypingErrors.expectedBoolInCondition(false, condition);
 		statement.typeCheck();

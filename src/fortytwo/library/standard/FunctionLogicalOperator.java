@@ -11,7 +11,7 @@ import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypes;
+import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -43,17 +43,17 @@ public class FunctionLogicalOperator extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return new PrimitiveType(PrimitiveTypes.BOOL, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {
 		ArrayList<GenericType> args = new ArrayList<>();
 		for (FunctionComponent fc : name.function) {
 			if (fc instanceof FunctionArgument)
-				args.add(new PrimitiveType(PrimitiveTypes.BOOL, Context
+				args.add(new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context
 						.synthetic()));
 		}
 		return FunctionSignature.getInstance(name, args, new PrimitiveType(
-				PrimitiveTypes.BOOL, Context.synthetic()));
+				PrimitiveTypeWithoutContext.BOOL, Context.synthetic()));
 	}
 }

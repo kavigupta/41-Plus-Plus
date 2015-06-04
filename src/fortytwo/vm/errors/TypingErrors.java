@@ -1,12 +1,15 @@
 package fortytwo.vm.errors;
 
+import java.util.List;
+
 import fortytwo.compiler.Context;
+import fortytwo.compiler.Token;
 import fortytwo.language.Language;
 import fortytwo.language.field.Field;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypes;
+import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.environment.VariableRoster;
 import fortytwo.vm.expressions.BinaryOperation;
@@ -31,7 +34,7 @@ public class TypingErrors {
 			BinaryOperation operation, boolean firstArgument) {
 		typeError("The " + (firstArgument ? "first" : "second")
 				+ " argument in " + operation.operation.noun.toLowerCase(),
-				new PrimitiveType(PrimitiveTypes.NUMBER, Context
+				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
 						.synthetic()), firstArgument ? operation.first
 						: operation.second);
 	}
@@ -39,7 +42,7 @@ public class TypingErrors {
 			Expression condition) {
 		typeError("The condition of " + (ifIf ? "an if" : "a while")
 				+ " loop",
-				new PrimitiveType(PrimitiveTypes.BOOL, Context.synthetic()),
+				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context.synthetic()),
 				condition);
 	}
 	public static void redefinitionTypeMismatch(Field name, Expression value) {
@@ -59,6 +62,10 @@ public class TypingErrors {
 		// TODO Auto-generated method stub
 	}
 	public static void inresolubleType(GenericType gt) {
+		// TODO Auto-generated method stub
+	}
+	public static void invalidArrayType(List<Token> tokens,
+			List<GenericType> typeVariables) {
 		// TODO Auto-generated method stub
 	}
 }

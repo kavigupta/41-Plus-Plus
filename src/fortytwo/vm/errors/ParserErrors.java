@@ -10,19 +10,24 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
 
 public class ParserErrors {
-	public static void nonVariableInDecl(boolean functionDecl, Token x,
-			List<Token> line) {
-		// TODO Auto-generated method stub
+	public static void expectedVariableInDecl(boolean functionDecl,
+			Token problem, List<Token> line) {
+		Errors.error(
+				ErrorType.PARSING,
+				String.format(
+						"A %s definition must contain only name tokens and variables, but ~%s~ is neither.",
+						functionDecl ? "function" : "type", problem.token),
+				problem.context);
 	}
 	/**
 	 * Use -1 for {@code argument} to signify output type. The rest signify
 	 * input type.
 	 */
-	public static void genericTypeInFunctionDecl(GenericType type,
+	public static void expectedCTInFunctionDecl(GenericType type,
 			List<Token> line, int argument) {
 		// TODO Auto-generated method stub
 	}
-	public static void genericTypeInDefinition(Token type) {
+	public static void expectedCTInDefinition(GenericType type) {
 		// TODO Auto-generated method stub
 	}
 	public static void incompleteFields(VariableIdentifier vid,
@@ -47,7 +52,7 @@ public class ParserErrors {
 	public static void expectedImpureExpression(List<Token> line) {
 		// TODO Auto-generated method stub
 	}
-	public static void nonVariableInFieldAccess(
+	public static void expectedVariableInFieldAccess(
 			ParsedExpression parsedExpression) {
 		// TODO Auto-generated method stub
 	}

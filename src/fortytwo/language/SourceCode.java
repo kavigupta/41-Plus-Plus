@@ -198,7 +198,7 @@ public class SourceCode {
 	private static String displayOutputType(ConcreteType outputType,
 			boolean hasFields) {
 		if (outputType instanceof PrimitiveType
-				&& ((PrimitiveType) outputType).types == PrimitiveTypes.VOID)
+				&& ((PrimitiveType) outputType).types == PrimitiveTypeWithoutContext.VOID)
 			return "";
 		return " " + (hasFields ? "and" : "that") + " outputs "
 				+ Language.articleized(outputType.toSourceCode());

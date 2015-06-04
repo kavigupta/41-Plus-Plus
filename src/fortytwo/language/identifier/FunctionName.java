@@ -9,6 +9,7 @@ import fortytwo.compiler.Token;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
+import fortytwo.language.type.ConcreteType;
 
 public class FunctionName {
 	public final List<FunctionComponent> function;
@@ -61,5 +62,18 @@ public class FunctionName {
 	public Context context() {
 		return Context.sum(function.stream().map(FunctionComponent::context)
 				.collect(Collectors.toList()));
+	}
+	public String display(List<ConcreteType> types) {
+		int count = 0;
+		StringBuffer sbuff = new StringBuffer();
+		for (FunctionComponent comp : function) {
+			if (comp instanceof FunctionToken)
+				sbuff.append(((FunctionToken) comp).token.token);
+			else {
+				sbuff.append(types.get(count).toSourceCode());
+				count++;
+			}
+		}
+		return sbuff.toString();
 	}
 }

@@ -69,8 +69,7 @@ public class StaticEnvironment {
 		if (func != null) return func.key.signature();
 		FunctionSignature sig = funcs.referenceTo(name, types);
 		if (sig != null) return sig;
-		if (container == null)
-			DNEErrors.functionSignatureDNE(name, types, funcs);
+		if (container == null) DNEErrors.functionSignatureDNE(name, types);
 		return container.referenceTo(name, types);
 	}
 	public void putReference(FunctionDefinition f) {

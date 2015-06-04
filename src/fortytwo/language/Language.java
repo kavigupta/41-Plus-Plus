@@ -45,7 +45,8 @@ public class Language {
 	public static Token deparenthesize(Token token) {
 		if (token.token.startsWith(OPEN_PAREN)) {
 			if (!token.token.endsWith(CLOSE_PAREN))
-				SyntaxErrors.closingMarkDNE(token.context, token.token, 0);
+				SyntaxErrors.matchingSymbolDNE(token.context, token.token,
+						0);
 			return token.subToken(1, token.token.length() - 1);
 		}
 		return token;
@@ -85,5 +86,20 @@ public class Language {
 	}
 	public static boolean isClosingBrace(List<String> list) {
 		return list.get(0).equals(THATS) && list.get(1).equals(ALL);
+	}
+	public static char matchingSymbol(char start) {
+		switch (start) {
+			case '[':
+				return ']';
+			case ']':
+				return '[';
+			case '(':
+				return ')';
+			case ')':
+				return '(';
+			case '\'':
+				return '\'';
+		}
+		return 0;
 	}
 }

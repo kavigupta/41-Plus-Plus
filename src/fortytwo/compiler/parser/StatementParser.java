@@ -120,7 +120,7 @@ public class StatementParser {
 		}
 		GenericType genericType = ExpressionParser.parseType(type);
 		if (!(genericType instanceof ConcreteType))
-			ParserErrors.genericTypeInDefinition(type);
+			ParserErrors.expectedCTInDefinition(genericType);
 		return new ParsedDefinition(new Field(
 				VariableIdentifier.getInstance(name),
 				(ConcreteType) genericType), fields, fullContext);
