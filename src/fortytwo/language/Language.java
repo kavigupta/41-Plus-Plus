@@ -102,4 +102,26 @@ public class Language {
 		}
 		return 0;
 	}
+	public static String ordinal(int argument) {
+		switch (argument % 10) {
+			case 1:
+				return argument + "st";
+			case 2:
+				return argument + "nd";
+			case 3:
+				return argument + "rd";
+		}
+		return argument + "th";
+	}
+	public static String uppercase(String sent) {
+		if (sent.length() == 0) return "";
+		return Character.toUpperCase(sent.charAt(0)) + sent.substring(1);
+	}
+	public static boolean isTerminator(char c) {
+		return Character.isWhitespace(c) || isPunctuation(c) || c == ']'
+				|| c == ')';
+	}
+	private static boolean isPunctuation(char c) {
+		return c == ',' || c == '.';
+	}
 }

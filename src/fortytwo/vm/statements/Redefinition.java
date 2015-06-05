@@ -1,6 +1,7 @@
 package fortytwo.vm.statements;
 
 import fortytwo.compiler.Context;
+import fortytwo.language.SourceCode;
 import fortytwo.language.field.Field;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.errors.TypingErrors;
@@ -32,8 +33,7 @@ public class Redefinition implements Statement {
 	}
 	@Override
 	public String toSourceCode() {
-		// TODO Auto-generated method stub
-		return null;
+		return SourceCode.displayRedefinition(name, value);
 	}
 	@Override
 	public boolean isSimple() {

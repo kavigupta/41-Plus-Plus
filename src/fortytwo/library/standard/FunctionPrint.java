@@ -10,6 +10,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.language.type.TypeVariable;
+import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -24,12 +25,13 @@ public class FunctionPrint extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		env.machine.displayLine(arguments.get(0).toSourceCode());
+		VirtualMachine.displayLine(arguments.get(0).toSourceCode());
 		return null;
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.VOID, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.VOID,
+				Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {

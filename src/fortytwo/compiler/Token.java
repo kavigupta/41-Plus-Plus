@@ -5,6 +5,9 @@ import java.util.List;
 public class Token {
 	public final String token;
 	public final Context context;
+	public static Token minimal(String line) {
+		return new Token(line, Context.minimal(line));
+	}
 	public Token(String line, Context context) {
 		this.token = line;
 		this.context = context;
@@ -33,7 +36,8 @@ public class Token {
 		return token;
 	}
 	public Token subToken(int i, int j) {
-		return new Token(token.substring(i, j), context.subContext(i, j));
+		return new Token(token.substring(i, j), Context.construct(context, i,
+				j));
 	}
 	public static int indexOf(List<Token> tokens, String s) {
 		for (int i = 0; i < tokens.size(); i++) {

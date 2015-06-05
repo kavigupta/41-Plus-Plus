@@ -20,7 +20,7 @@ import fortytwo.vm.errors.ParserErrors;
 public class Parser {
 	private Parser() {}
 	public static List<Sentence> parse(String text) {
-		List<Token> tokens = Tokenizer.tokenize(Context.minimal(), text);
+		List<Token> tokens = Tokenizer.tokenize(Context.minimal(text), text);
 		List<List<Token>> phrases = new ArrayList<>();
 		List<Token> current = new ArrayList<>();
 		for (int i = 0; i < tokens.size(); i++) {

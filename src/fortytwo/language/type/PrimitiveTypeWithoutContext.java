@@ -11,7 +11,7 @@ import fortytwo.vm.expressions.LiteralString;
 
 public enum PrimitiveTypeWithoutContext {
 	NUMBER(LiteralNumber.getInstance(BigDecimal.ZERO, Context.synthetic())),
-	STRING(new LiteralString(new Token("", Context.minimal()))), BOOL(
+	STRING(new LiteralString(new Token("", Context.minimal("")))), BOOL(
 			LiteralBool.getInstance(false, Context.synthetic())),
 	TYPE(null), VOID(null);
 	public final LiteralExpression def;

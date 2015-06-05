@@ -16,7 +16,6 @@ import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.FunctionImplemented;
 import fortytwo.vm.errors.ParserErrors;
@@ -26,24 +25,20 @@ import fortytwo.vm.statements.Statement;
 
 public class GlobalEnvironment {
 	public final StaticEnvironment staticEnv;
-	public final VirtualMachine machine;
 	public final FunctionRoster funcs;
-	public GlobalEnvironment(StaticEnvironment staticEnv,
-			VirtualMachine machine, FunctionRoster funcs) {
+	public GlobalEnvironment(StaticEnvironment staticEnv, FunctionRoster funcs) {
 		this.staticEnv = staticEnv;
-		this.machine = machine;
 		this.funcs = funcs;
 	}
 	public static GlobalEnvironment getDefaultEnvironment(
-			StaticEnvironment staticEnv, VirtualMachine vm) {
-		return new GlobalEnvironment(staticEnv, vm,
+			StaticEnvironment staticEnv) {
+		return new GlobalEnvironment(staticEnv,
 				FunctionRoster.getDefault(staticEnv));
 	}
-	public static GlobalEnvironment interpret(List<Sentence> sentences,
-			VirtualMachine vm) {
+	public static GlobalEnvironment interpret(List<Sentence> sentences) {
 		StaticEnvironment environment = StaticEnvironment.getDefault();
-		GlobalEnvironment global = GlobalEnvironment.getDefaultEnvironment(
-				environment, vm);
+		GlobalEnvironment global = GlobalEnvironment
+				.getDefaultEnvironment(environment);
 		LocalEnvironment local = global.minimalLocalEnvironment();
 		ArrayList<ParsedFunction> functions = new ArrayList<>();
 		for (int i = 0; i < sentences.size(); i++) {
@@ -113,8 +108,6 @@ public class GlobalEnvironment {
 		int result = 1;
 		result = prime * result + ((funcs == null) ? 0 : funcs.hashCode());
 		result = prime * result
-				+ ((machine == null) ? 0 : machine.hashCode());
-		result = prime * result
 				+ ((staticEnv == null) ? 0 : staticEnv.hashCode());
 		return result;
 	}
@@ -127,9 +120,6 @@ public class GlobalEnvironment {
 		if (funcs == null) {
 			if (other.funcs != null) return false;
 		} else if (!funcs.equals(other.funcs)) return false;
-		if (machine == null) {
-			if (other.machine != null) return false;
-		} else if (!machine.equals(other.machine)) return false;
 		if (staticEnv == null) {
 			if (other.staticEnv != null) return false;
 		} else if (!staticEnv.equals(other.staticEnv)) return false;

@@ -8,13 +8,14 @@ import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
+import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Structure;
 
 public class DNEErrors {
 	public static void dneError(String description, String name,
 			String suffix, Context context) {
 		// The <description> ~<name>~ does not exist here
-		Errors.error(ErrorType.DNE, String.format(
+		VirtualMachine.error(ErrorType.DNE, String.format(
 				"The %s ~%s~ does not exist%s", description, name, suffix),
 				context);
 	}

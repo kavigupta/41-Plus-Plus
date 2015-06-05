@@ -27,6 +27,7 @@ import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.constructions.GenericStructure;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.SyntaxErrors;
+import fortytwo.vm.errors.TypingErrors;
 
 public class ConstructionParser {
 	public static ParsedFunctionCall composeFunction(List<Token> list) {
@@ -128,7 +129,7 @@ public class ConstructionParser {
 		List<GenericType> types = new ArrayList<>();
 		for (VariableIdentifier vid : variables) {
 			GenericType gt = vars.get(vid);
-			if (gt == null) ParserErrors.incompleteFields(vid, line);
+			if (gt == null) TypingErrors.incompleteFieldTypingInFunctionDecl(vid, line);
 			types.add(gt);
 		}
 		if (outputloc < 0)

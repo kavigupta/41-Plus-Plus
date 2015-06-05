@@ -11,6 +11,7 @@ import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.Tokenizer;
+import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.LocalEnvironment;
 
@@ -19,12 +20,9 @@ public class StructTest {
 			+ "Define a type called record that contains a string called _name and a number called _dateOfBirth."
 			+ "Define a type called triple of _Tx, _Ty, and _Tz that contains a _Tx called _x, a _Ty called _y, and a _Tz called _z.";
 	GlobalEnvironment env;
-	String buffer = "";
 	@Before
 	public void init() {
-		env = Compiler42.compile(TEST_STRUCTS, x -> {
-			buffer += x + System.lineSeparator();
-		});
+		env = Compiler42.compile(TEST_STRUCTS);
 	}
 	@Test
 	public void singletonTest() {
@@ -106,8 +104,7 @@ public class StructTest {
 				.map(x -> ((ParsedStatement) x)
 						.contextualize(env.staticEnv))
 				.forEach(x -> x.execute(loc));
-		assertEquals(result, buffer);
-		buffer = "";
+		assertEquals(result, VirtualMachine.popMessage());
 	}
 	public void assertEquivalence(String result, String toEvaluate) {
 		LocalEnvironment loc = env.minimalLocalEnvironment();

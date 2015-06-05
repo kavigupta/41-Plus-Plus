@@ -6,17 +6,40 @@ import java.util.stream.Collectors;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 
 public class Context {
-	public static Context construct(Context parent, int start, int end) {
-		// TODO 0 implement this
-		return new Context();
+	public static final Context SYNTHETIC = new Context(null, -1, -1);
+	public final String in;
+	public final int start, end;
+	private Context(String in, int start, int end) {
+		this.in = in;
+		this.start = start;
+		this.end = end;
 	}
-	public static Context minimal() {
-		// TODO 0 implement this
-		return new Context();
+	private boolean isSynthetic() {
+		return this == SYNTHETIC;
+	}
+	public Context inParen() {
+		if (isSynthetic()) return SYNTHETIC;
+		assert start - 1 >= 0;
+		return new Context(in, start - 1, end + 1);
+	}
+	public Context withUnaryApplied() {
+		if (isSynthetic()) return SYNTHETIC;
+		assert start - 1 >= 0;
+		return new Context(in, start - 1, end);
+	}
+	public static Context construct(Context parent, int start, int end) {
+		if (parent.isSynthetic()) return SYNTHETIC;
+		assert start >= 0;
+		assert end >= 0;
+		assert parent.start + end < parent.end;
+		return new Context(parent.in, parent.start + start, parent.start
+				+ end);
+	}
+	public static Context minimal(String text) {
+		return new Context(text, 0, text.length());
 	}
 	public static Context synthetic() {
-		// TODO 0 implement this
-		return new Context();
+		return SYNTHETIC;
 	}
 	public static Context tokenSum(List<Token> tokens) {
 		return sum(tokens.stream().map(t -> t.context)
@@ -27,19 +50,13 @@ public class Context {
 				.collect(Collectors.toList()));
 	}
 	public static Context sum(List<Context> asList) {
-		// TODO 0 implement this
-		return new Context();
+		if (asList.size() == 0) return SYNTHETIC;
+		return asList.stream().reduce(Context::sum).get();
 	}
-	public Context inParen() {
-		// TODO 0 implement this
-		return new Context();
-	}
-	public Context subContext(int i, int j) {
-		// TODO 0 implement this
-		return new Context();
-	}
-	public Context unary() {
-		// TODO 0 implement this
-		return null;
+	public static Context sum(Context a, Context b) {
+		if (a.isSynthetic() || b.isSynthetic()) return SYNTHETIC;
+		assert a.in.equals(b.in);
+		return new Context(a.in, Math.min(a.start, b.start), Math.max(a.end,
+				b.end));
 	}
 }

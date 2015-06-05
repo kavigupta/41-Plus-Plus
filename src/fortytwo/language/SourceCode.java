@@ -13,7 +13,10 @@ import fortytwo.compiler.parsed.declaration.FunctionReturn;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
-import fortytwo.compiler.parsed.statements.*;
+import fortytwo.compiler.parsed.statements.ParsedDefinition;
+import fortytwo.compiler.parsed.statements.ParsedIfElse;
+import fortytwo.compiler.parsed.statements.ParsedStatementSeries;
+import fortytwo.compiler.parsed.statements.ParsedWhileLoop;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -23,6 +26,7 @@ import fortytwo.language.type.*;
 import fortytwo.vm.expressions.*;
 import fortytwo.vm.statements.IfElse;
 import fortytwo.vm.statements.StatementSeries;
+import fortytwo.vm.statements.WhileLoop;
 
 public class SourceCode {
 	public static String display(FunctionDefinition def) {
@@ -87,22 +91,32 @@ public class SourceCode {
 						: (". Otherwise: " + parsedIfElse.ifelse
 								.toSourceCode()));
 	}
-	public static String display(ParsedRedefinition parsedRedefinition) {
-		return "Set the value of " + parsedRedefinition.name.toSourceCode()
-				+ " to " + parsedRedefinition.expr.toSourceCode();
+	public static String displayRedefinition(ParsedConstruct name,
+			ParsedConstruct expr) {
+		return "Set the value of " + name.toSourceCode() + " to "
+				+ expr.toSourceCode();
+	}
+	public static String display(StatementSeries statementSeries) {
+		return displaySeries(statementSeries.statements);
 	}
 	public static String display(ParsedStatementSeries parsedStatementSeries) {
-		if (parsedStatementSeries.statements.size() == 0) return "";
-		if (parsedStatementSeries.statements.size() == 1)
-			return parsedStatementSeries.statements.get(0).toSourceCode();
-		String total = parsedStatementSeries.statements.stream()
-				.map(x -> x.toSourceCode())
+		return displaySeries(parsedStatementSeries.statements);
+	}
+	public static String displaySeries(
+			List<? extends ParsedConstruct> statements) {
+		if (statements.size() == 0) return "";
+		if (statements.size() == 1) return statements.get(0).toSourceCode();
+		String total = statements.stream().map(x -> x.toSourceCode())
 				.reduce("", (a, b) -> a + ". " + b);
 		return total.substring(2);
 	}
 	public static String display(ParsedWhileLoop parsedWhileLoop) {
 		return "While " + parsedWhileLoop.condition.toSourceCode() + ": "
 				+ wrapInBraces(parsedWhileLoop.statement);
+	}
+	public static String display(WhileLoop whileLoop) {
+		return "While " + whileLoop.condition.toSourceCode() + ": "
+				+ wrapInBraces(whileLoop.statement);
 	}
 	public static String display(ParsedConstruct first, Operation operation,
 			ParsedConstruct second) {
@@ -220,7 +234,7 @@ public class SourceCode {
 	private static String displayField(GenericField field) {
 		return displayField(field.type, field.name);
 	}
-	private static String displayList(List<String> items) {
+	public static String displayList(List<String> items) {
 		switch (items.size()) {
 			case 0:
 				return "";

@@ -1,15 +1,18 @@
 package fortytwo.vm.errors;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.Language;
+import fortytwo.language.ParsedConstruct;
+import fortytwo.language.SourceCode;
 import fortytwo.language.field.Field;
-import fortytwo.language.type.ConcreteType;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
-import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.environment.VariableRoster;
 import fortytwo.vm.expressions.BinaryOperation;
@@ -17,15 +20,14 @@ import fortytwo.vm.expressions.Expression;
 
 public class TypingErrors {
 	public static void typeError(String expressionDescription,
-			ConcreteType expected, Expression actual) {
+			String expectedType, Expression actual) {
 		/*
 		 * <Expression description> must be <expected type>, but is actually
 		 * ~<expression>~, which is <actual type>.
 		 */
-		Errors.error(ErrorType.TYPING, String.format(
+		VirtualMachine.error(ErrorType.TYPING, String.format(
 				"%s must be %s, but is actually ~%s~, which is %s",
-				expressionDescription,
-				Language.articleized(expected.toSourceCode()),
+				expressionDescription, Language.articleized(expectedType),
 				actual.toSourceCode(),
 				Language.articleized(actual.resolveType().toSourceCode())),
 				actual.context());
@@ -34,38 +36,89 @@ public class TypingErrors {
 			BinaryOperation operation, boolean firstArgument) {
 		typeError("The " + (firstArgument ? "first" : "second")
 				+ " argument in " + operation.operation.noun.toLowerCase(),
-				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
-						.synthetic()), firstArgument ? operation.first
-						: operation.second);
+				PrimitiveTypeWithoutContext.NUMBER.toSourceCode(),
+				firstArgument ? operation.first : operation.second);
 	}
 	public static void expectedBoolInCondition(boolean ifIf,
 			Expression condition) {
 		typeError("The condition of " + (ifIf ? "an if" : "a while")
-				+ " loop",
-				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context.synthetic()),
+				+ " loop", PrimitiveTypeWithoutContext.BOOL.toSourceCode(),
 				condition);
 	}
 	public static void redefinitionTypeMismatch(Field name, Expression value) {
-		typeError("The value of " + name.name.toSourceCode(), name.type,
-				value);
+		typeError("The value of " + name.name.toSourceCode(),
+				name.type.toSourceCode(), value);
 	}
 	public static void fieldAssignmentTypeMismatch(Structure struct,
 			Field field, Expression value) {
 		typeError("The " + field.name.toSourceCode() + " of "
-				+ struct.type.toSourceCode(), field.type, value);
+				+ struct.type.toSourceCode(), field.type.toSourceCode(),
+				value);
 	}
 	public static void incompleteConstructor(Structure struct,
 			VariableRoster<?> fields) {
-		// TODO 0 implement
+		String actual = "no fields";
+		if (fields.size() != 0) {
+			String displayedFields = SourceCode.displayList(struct.fields
+					.stream().map(ParsedConstruct::toSourceCode)
+					.collect(Collectors.toList()));
+			actual = "only " + displayedFields;
+		}
+		actual += (fields.size() == 1 ? "was" : "were");
+		String msg = String
+				.format("The structure %s must contain the field%s %s, but %s defined here.",
+						struct.type.toSourceCode(),
+						struct.fields.size() == 1 ? "" : "s",
+						SourceCode.displayList(struct.fields.stream()
+								.map(ParsedConstruct::toSourceCode)
+								.collect(Collectors.toList())), actual);
+		VirtualMachine.error(
+				ErrorType.PARSING,
+				msg,
+				Context.sum(struct.fields.stream().map(x -> x.context())
+						.collect(Collectors.toList())));
 	}
 	public static void incompleteArrayConstructor(Context context) {
-		// TODO Auto-generated method stub
+		VirtualMachine
+				.error(ErrorType.PARSING,
+						"Arrays must be defined with the field _length, but it was not defined here",
+						context);
 	}
 	public static void inresolubleType(GenericType gt) {
-		// TODO Auto-generated method stub
+		VirtualMachine
+				.error(ErrorType.PARSING,
+						String.format(
+								"The type ~%s~ could not be understood given the type variables known here",
+								gt.toSourceCode()), gt.context());
 	}
 	public static void invalidArrayType(List<Token> tokens,
 			List<GenericType> typeVariables) {
-		// TODO Auto-generated method stub
+		String contentType;
+		if (typeVariables.size() == 0)
+			contentType = "no content type";
+		else {
+			contentType = "the content types "
+					+ SourceCode.displayList(typeVariables.stream()
+							.map(ParsedConstruct::toSourceCode)
+							.collect(Collectors.toList()));
+		}
+		VirtualMachine
+				.error(ErrorType.PARSING,
+						String.format(
+								"Arrays must be defined in terms of "
+										+ "exactly one type of content, but ~%s~ is defined with %s",
+								tokens.stream()
+										.map(x -> x.token)
+										.reduce((a, b) -> a + " " + b)
+										.get(), contentType), Context
+								.tokenSum(tokens));
+	}
+	public static void incompleteFieldTypingInFunctionDecl(
+			VariableIdentifier vid, List<Token> line) {
+		VirtualMachine
+				.error(ErrorType.PARSING,
+						String.format(
+								"The type of the variable ~%s~ is not specified in this function declaration",
+								vid.toSourceCode()), vid.context());
 	}
 }

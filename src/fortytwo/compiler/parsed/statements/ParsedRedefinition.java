@@ -25,7 +25,7 @@ public class ParsedRedefinition extends ParsedAssignment {
 	}
 	@Override
 	public String toSourceCode() {
-		return SourceCode.display(this);
+		return SourceCode.displayRedefinition(name, expr);
 	}
 	@Override
 	public boolean isSimple() {

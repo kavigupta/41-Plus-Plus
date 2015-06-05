@@ -19,7 +19,7 @@ public class FunctionName {
 				.stream()
 				.map(x -> x.length() == 0 ? FunctionArgument.INSTANCE
 						: new FunctionToken(new Token(x, Context
-								.minimal())))
+								.minimal(x))))
 				.collect(Collectors.toList()));
 	}
 	public static FunctionName getInstance(Token... name) {

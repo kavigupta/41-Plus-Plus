@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
+import fortytwo.language.SourceCode;
 import fortytwo.vm.environment.LocalEnvironment;
 
 public class StatementSeries implements Statement {
@@ -26,8 +27,7 @@ public class StatementSeries implements Statement {
 	}
 	@Override
 	public String toSourceCode() {
-		// TODO Auto-generated method stub
-		return null;
+		return SourceCode.display(this);
 	}
 	@Override
 	public boolean isSimple() {

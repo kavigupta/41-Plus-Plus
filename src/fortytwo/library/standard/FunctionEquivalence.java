@@ -26,7 +26,8 @@ import fortytwo.vm.expressions.LiteralExpression;
 public class FunctionEquivalence extends Function42 {
 	public static final TypeVariable TO_BE_COMPARED = new TypeVariable(
 			VariableIdentifier.getInstance(new Token(
-					"_FunctionEquivalence_compare", Context.minimal())));
+					"_FunctionEquivalence_compare", Context
+							.minimal("_FunctionEquivalence_compare"))));
 	public static enum Comparator {
 		EQUALS(true, "is", "equal", "to"), NOT_EQUALS(false, "is", "not",
 				"equal", "to"), SAME_AS(true, "is", "the", "same", "as"),
@@ -42,10 +43,12 @@ public class FunctionEquivalence extends Function42 {
 					.map(x -> new FunctionToken(new Token(x, Context
 							.synthetic()))).collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
-			this.sig = FunctionSignature.getInstance(FunctionName
-					.getInstance(s), Arrays.asList(TO_BE_COMPARED,
-					TO_BE_COMPARED), new PrimitiveType(
-					PrimitiveTypeWithoutContext.BOOL, Context.synthetic()));
+			this.sig = FunctionSignature
+					.getInstance(FunctionName.getInstance(s), Arrays
+							.asList(TO_BE_COMPARED, TO_BE_COMPARED),
+							new PrimitiveType(
+									PrimitiveTypeWithoutContext.BOOL,
+									Context.synthetic()));
 			this.eq = eq;
 		}
 	}
@@ -70,7 +73,8 @@ public class FunctionEquivalence extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
+				Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {

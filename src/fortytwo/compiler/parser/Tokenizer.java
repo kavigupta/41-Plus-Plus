@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
+import fortytwo.language.Language;
 import fortytwo.vm.errors.SyntaxErrors;
 
 public class Tokenizer {
@@ -73,8 +74,8 @@ public class Tokenizer {
 					continue loop;
 				case '\'':
 					if (i - 1 < 0
-							|| Character.isWhitespace(input
-									.charAt(i - 1))) {
+							|| Language
+									.isTerminator(input.charAt(i - 1))) {
 						add(parent, i, token, tokens);
 						int closequote = findCloseQuote(input, i);
 						if (closequote < 0)

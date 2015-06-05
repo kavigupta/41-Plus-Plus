@@ -46,20 +46,17 @@ public class UI {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(path
 					+ "-output.txt"));
-			Compiler42.execute(text.toString(), new VirtualMachine() {
-				@Override
-				public void displayLine(String s) {
-					try {
-						System.out.println("Writing " + s);
-						bw.write(s);
-						bw.write(System.lineSeparator());
-					} catch (IOException e) {
-						errorInWritingTo(parent, path + "-output.txt");
-						e.printStackTrace();
-						return;
-					}
+			VirtualMachine.displayln = s -> {
+				try {
+					System.out.println("Writing " + s);
+					bw.write(s);
+					bw.write(System.lineSeparator());
+				} catch (IOException e) {
+					errorInWritingTo(parent, path + "-output.txt");
+					e.printStackTrace();
 				}
-			});
+			};
+			Compiler42.execute(text.toString());
 			bw.close();
 			bw.close();
 		} catch (IOException e) {

@@ -1,15 +1,38 @@
 package fortytwo.vm;
 
-public interface VirtualMachine {
-	static final VirtualMachine DEBUGGER = new VirtualMachine() {
-		@Override
-		public void displayLine(String s) {
-			System.out.print(s);
-			System.out.print(System.lineSeparator());
-			// I'm writing it like this so that it doesn't show up in my log
-			// search/deletes
-		}
+import java.util.function.Consumer;
+
+import fortytwo.compiler.Context;
+import fortytwo.vm.errors.Error42;
+import fortytwo.vm.errors.ErrorType;
+
+public final class VirtualMachine {
+	public static Consumer<String> displayln = System.out::println;
+	public static Consumer<Error42> displayerr = x -> {
+		throw new RuntimeException(x.type + ":\t" + x.msg + ":" + x.context);
 	};
-	public static final VirtualMachine defaultVM = DEBUGGER;
-	public void displayLine(String s);
+	private static Error42 err = null;
+	private static String msg = "";
+	private VirtualMachine() {}
+	public static void displayLine(String s) {
+		msg += s + System.lineSeparator();
+		displayln.accept(s);
+	}
+	public static void error(ErrorType type, String msg, Context context) {
+		err = new Error42(type, msg, context);
+		displayerr.accept(err);
+	}
+	public static boolean errorState() {
+		return err != null;
+	}
+	public static String popMessage() {
+		String temp = msg;
+		msg = "";
+		return temp;
+	}
+	public static Error42 popError() {
+		Error42 temp = err;
+		err = null;
+		return temp;
+	}
 }

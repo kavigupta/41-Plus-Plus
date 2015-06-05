@@ -30,7 +30,7 @@ public class StatementParser {
 				line.remove(0);
 				ParsedExpression e = ExpressionParser.parseExpression(line);
 				if (e.type() == SentenceType.PURE_EXPRESSION)
-					ParserErrors.expectedImpureExpression(line);
+					ParserErrors.expectedFunctionCall(e);
 				return e;
 			case Resources.DEFINE:
 				return parseDefinition(line);

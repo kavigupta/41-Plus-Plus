@@ -3,6 +3,7 @@ package fortytwo.vm.statements;
 import java.util.Arrays;
 
 import fortytwo.compiler.Context;
+import fortytwo.language.SourceCode;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.environment.LocalEnvironment;
@@ -31,8 +32,8 @@ public class WhileLoop implements Statement {
 	@Override
 	public boolean typeCheck() {
 		condition.typeCheck();
-		if (!condition.resolveType()
-				.equals(new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context
+		if (!condition.resolveType().equals(
+				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context
 						.synthetic())))
 			TypingErrors.expectedBoolInCondition(false, condition);
 		statement.typeCheck();
@@ -40,8 +41,7 @@ public class WhileLoop implements Statement {
 	}
 	@Override
 	public String toSourceCode() {
-		// TODO Auto-generated method stub
-		return null;
+		return SourceCode.display(this);
 	}
 	@Override
 	public boolean isSimple() {

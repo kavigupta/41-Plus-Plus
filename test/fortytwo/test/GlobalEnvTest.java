@@ -11,13 +11,12 @@ import org.junit.Test;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
-import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parser.ExpressionParser;
-import fortytwo.compiler.parser.StatementParser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.LiteralArray;
@@ -25,32 +24,22 @@ import fortytwo.vm.expressions.LiteralString;
 
 public class GlobalEnvTest {
 	GlobalEnvironment env;
-	String buffer;
 	@Before
 	public void init() {
-		env = GlobalEnvironment.getDefaultEnvironment(
-				StaticEnvironment.getDefault(), x -> {
-					buffer = x;
-				});
+		env = GlobalEnvironment.getDefaultEnvironment(StaticEnvironment
+				.getDefault());
 	}
 	@Test
 	public void printTest() {
-		((ParsedStatement) StatementParser.parseStatement(Tokenizer.tokenize(
-				Context.minimal(), "Tell me what 'Hello, World' is.")))
-				.contextualize(env.staticEnv).execute(
-						env.minimalLocalEnvironment());
-		assertEquals("'Hello, World'", buffer);
-		((ParsedStatement) StatementParser.parseStatement(Tokenizer.tokenize(
-				Context.minimal(), "Tell me what 'Hello. World' is.")))
-				.contextualize(env.staticEnv).execute(
-						env.minimalLocalEnvironment());
-		assertEquals("'Hello. World'", buffer);
-		((ParsedStatement) StatementParser
-				.parseStatement(Tokenizer.tokenize(Context.minimal(),
-						"Tell me what 'a + b = c + d-e+f=g,dsad. asde.3452,2' is.")))
-				.contextualize(env.staticEnv).execute(
-						env.minimalLocalEnvironment());
-		assertEquals("'a + b = c + d-e+f=g,dsad. asde.3452,2'", buffer);
+		Utilities.execute("Tell me what 'Hello, World' is.", env);
+		assertEquals("'Hello, World'\n", VirtualMachine.popMessage());
+		Utilities.execute("Tell me what 'Hello. World' is.", env);
+		assertEquals("'Hello. World'\n", VirtualMachine.popMessage());
+		Utilities.execute(
+				"Tell me what 'a + b = c + d-e+f=g,dsad. asde.3452,2' is.",
+				env);
+		assertEquals("'a + b = c + d-e+f=g,dsad. asde.3452,2'\n",
+				VirtualMachine.popMessage());
 	}
 	@Test
 	public void compareTest() {
@@ -97,7 +86,7 @@ public class GlobalEnvTest {
 																		Context.synthetic())))
 														.collect(Collectors
 																.toList()),
-												Context.minimal())))
+												Context.SYNTHETIC)))
 						.contextualize(env.staticEnv)
 						.literalValue(env.minimalLocalEnvironment())
 						.toSourceCode());
