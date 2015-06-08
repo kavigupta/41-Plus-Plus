@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.expressions.ParsedBinaryOperation;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.UntypedExpression;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
 import fortytwo.language.Language;
 import fortytwo.language.Operation;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.ExpressionType;
 import fortytwo.language.classification.SentenceType;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.*;
 import fortytwo.library.standard.StdLib42;
@@ -31,7 +31,7 @@ import fortytwo.vm.expressions.LiteralNumber;
 import fortytwo.vm.expressions.LiteralString;
 
 public class ExpressionParser {
-	public static ParsedExpression parseExpression(List<Token> list) {
+	public static UntypedExpression parseExpression(List<Token> list) {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() == 1
@@ -39,10 +39,10 @@ public class ExpressionParser {
 			return function.arguments.get(0);
 		return function;
 	}
-	public static ParsedExpression parsePureExpression(
+	public static UntypedExpression parsePureExpression(
 			List<Token> currentExpression) {
-		ArrayList<ParsedExpression> originalExpressions = tokenize(currentExpression);
-		ArrayList<ParsedExpression> expressions = removeUnary(originalExpressions);
+		ArrayList<UntypedExpression> originalExpressions = tokenize(currentExpression);
+		ArrayList<UntypedExpression> expressions = removeUnary(originalExpressions);
 		for (int precendence = 0; precendence <= Operation.MAX_PRECDENCE; precendence++) {
 			expressions = removeBinary(expressions, precendence);
 		}
@@ -51,22 +51,22 @@ public class ExpressionParser {
 					currentExpression);
 		return expressions.get(0);
 	}
-	private static ArrayList<ParsedExpression> removeBinary(
-			ArrayList<ParsedExpression> expressions, int precendence) {
-		Stack<ParsedExpression> exp = new Stack<>();
+	private static ArrayList<UntypedExpression> removeBinary(
+			ArrayList<UntypedExpression> expressions, int precendence) {
+		Stack<UntypedExpression> exp = new Stack<>();
 		for (int i = 0; i < expressions.size(); i++) {
-			ParsedExpression token = expressions.get(i);
+			UntypedExpression token = expressions.get(i);
 			if (token instanceof UnevaluatedOperator
 					&& ((UnevaluatedOperator) token).operator.precendence <= precendence) {
 				if (exp.size() == 0)
 					SyntaxErrors.invalidExpression(
 							ExpressionType.ARITHMETIC,
 							expressions.stream()
-									.map(ParsedExpression::toToken)
+									.map(UntypedExpression::toToken)
 									.collect(Collectors.toList()));
-				ParsedExpression first = exp.pop();
+				UntypedExpression first = exp.pop();
 				i++;
-				ParsedExpression second = expressions.get(i);
+				UntypedExpression second = expressions.get(i);
 				UnevaluatedOperator op = (UnevaluatedOperator) token;
 				exp.push(new ParsedBinaryOperation(first, second,
 						op.operator, Context.sum(Arrays.asList(
@@ -78,9 +78,9 @@ public class ExpressionParser {
 		}
 		return new ArrayList<>(exp);
 	}
-	private static ArrayList<ParsedExpression> removeUnary(
-			ArrayList<ParsedExpression> expressions) {
-		ArrayList<ParsedExpression> expressionsWoUO = new ArrayList<>();
+	private static ArrayList<UntypedExpression> removeUnary(
+			ArrayList<UntypedExpression> expressions) {
+		ArrayList<UntypedExpression> expressionsWoUO = new ArrayList<>();
 		for (int i = 0; i < expressions.size(); i++) {
 			if (expressions.get(i) instanceof UnevaluatedOperator) {
 				UnevaluatedOperator uneop = (UnevaluatedOperator) expressions
@@ -91,7 +91,7 @@ public class ExpressionParser {
 						continue;
 					} else if (uneop.operator.equals(Operation.SUBTRACT)) {
 						i++;
-						ParsedExpression next = expressions.get(i);
+						UntypedExpression next = expressions.get(i);
 						expressionsWoUO.add(ParsedBinaryOperation
 								.getNegation(next));
 					}
@@ -104,8 +104,8 @@ public class ExpressionParser {
 		}
 		return expressionsWoUO;
 	}
-	private static ArrayList<ParsedExpression> tokenize(List<Token> exp) {
-		ArrayList<ParsedExpression> expressions = new ArrayList<>();
+	private static ArrayList<UntypedExpression> tokenize(List<Token> exp) {
+		ArrayList<UntypedExpression> expressions = new ArrayList<>();
 		for (Token token : exp) {
 			switch (token.token.charAt(0)) {
 				case '0':
@@ -166,7 +166,7 @@ public class ExpressionParser {
 					// should not happen.
 					break;
 				case '_':
-					expressions.add(VariableIdentifier.getInstance(token));
+					expressions.add(VariableID.getInstance(token));
 					break;
 				case '(':
 					Token depar = Language.deparenthesize(token);
@@ -181,7 +181,7 @@ public class ExpressionParser {
 	}
 	public static GenericType parseType(Token token) {
 		if (token.token.startsWith(Resources.VARIABLE_START))
-			return new TypeVariable(VariableIdentifier.getInstance(token));
+			return new TypeVariable(VariableID.getInstance(token));
 		while (token.token.startsWith(Resources.OPEN_PAREN))
 			token = Language.deparenthesize(token);
 		for (PrimitiveTypeWithoutContext type : PrimitiveTypeWithoutContext.values()) {
@@ -237,7 +237,7 @@ public class ExpressionParser {
 					.collect(Collectors.toList()), context);
 		return new GenericStructureType(struct, typeVariables, context);
 	}
-	private static class UnevaluatedOperator implements ParsedExpression {
+	private static class UnevaluatedOperator implements UntypedExpression {
 		public Operation operator;
 		public Context context;
 		public UnevaluatedOperator(Operation operator, Context context) {

@@ -1,19 +1,19 @@
 package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.UntypedExpression;
 import fortytwo.language.SourceCode;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.FieldAssignment;
 import fortytwo.vm.statements.Statement;
 
 public class ParsedFieldAssignment extends ParsedAssignment {
-	public final VariableIdentifier name, field;
-	public final ParsedExpression value;
+	public final VariableID name, field;
+	public final UntypedExpression value;
 	private final Context context;
-	public ParsedFieldAssignment(VariableIdentifier name,
-			VariableIdentifier field, ParsedExpression parseExpression,
+	public ParsedFieldAssignment(VariableID name,
+			VariableID field, UntypedExpression parseExpression,
 			Context context) {
 		this.name = name;
 		this.field = field;

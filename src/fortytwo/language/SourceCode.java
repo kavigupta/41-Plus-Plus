@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
-import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
+import fortytwo.compiler.parsed.constructions.UntypedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
-import fortytwo.compiler.parsed.declaration.FunctionReturn;
+import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.UntypedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.compiler.parsed.statements.ParsedDefinition;
 import fortytwo.compiler.parsed.statements.ParsedIfElse;
@@ -19,7 +19,7 @@ import fortytwo.compiler.parsed.statements.ParsedStatementSeries;
 import fortytwo.compiler.parsed.statements.ParsedWhileLoop;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.*;
@@ -38,7 +38,7 @@ public class SourceCode {
 						: (" that takes " + fieldList))
 				+ displayOutputType(def.outputType, fieldList.length() != 0);
 	}
-	public static String display(FunctionReturn functionReturn) {
+	public static String display(FunctionOutput functionReturn) {
 		return "Exit the function" + displayReturn(functionReturn.output);
 	}
 	public static String display(StructureDeclaration structureDeclaration) {
@@ -60,7 +60,7 @@ public class SourceCode {
 						: (" with " + displayFieldList(parsedDefinition.fields)));
 	}
 	public static String display(ParsedConstruct obj,
-			VariableIdentifier field, ParsedConstruct value) {
+			VariableID field, ParsedConstruct value) {
 		return "Set the " + field.name + " of " + obj.toSourceCode() + " to "
 				+ value.toSourceCode();
 	}
@@ -196,16 +196,16 @@ public class SourceCode {
 		return new Token(buff.substring(0, buff.length() - 1) + ")", Context
 				.tokenSum(name).inParen());
 	}
-	private static String displayFieldList(ParsedVariableRoster fields) {
+	private static String displayFieldList(UntypedVariableRoster fields) {
 		List<String> items = new ArrayList<>();
-		for (Entry<VariableIdentifier, ParsedExpression> e : fields
+		for (Entry<VariableID, UntypedExpression> e : fields
 				.entryIterator()) {
 			items.add(Language.articleized(e.getKey().toSourceCode()
 					+ " of " + e.getValue().toSourceCode()));
 		}
 		return displayList(items);
 	}
-	private static String displayReturn(ParsedExpression output) {
+	private static String displayReturn(UntypedExpression output) {
 		if (output == null) return "";
 		return " and output " + output.toSourceCode();
 	}
@@ -218,7 +218,7 @@ public class SourceCode {
 				+ Language.articleized(outputType.toSourceCode());
 	}
 	private static String displayFieldList(List<GenericType> parameterTypes,
-			List<VariableIdentifier> parameterVariables) {
+			List<VariableID> parameterVariables) {
 		List<String> items = new ArrayList<>();
 		for (int i = 0; i < parameterTypes.size(); i++) {
 			items.add(displayField(parameterTypes.get(i),
@@ -227,7 +227,7 @@ public class SourceCode {
 		return displayList(items);
 	}
 	private static String displayField(GenericType genericType,
-			VariableIdentifier variableIdentifier) {
+			VariableID variableIdentifier) {
 		return Language.articleized(genericType.toSourceCode() + " called "
 				+ variableIdentifier.toSourceCode());
 	}

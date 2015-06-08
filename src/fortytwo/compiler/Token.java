@@ -12,6 +12,9 @@ public class Token {
 		this.token = line;
 		this.context = context;
 	}
+	public Token subToken(int i, int j) {
+		return new Token(token.substring(i, j), context.subContext(i, j));
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -34,9 +37,6 @@ public class Token {
 	@Override
 	public String toString() {
 		return token;
-	}
-	public Token subToken(int i, int j) {
-		return new Token(token.substring(i, j), context.subContext(i, j));
 	}
 	public static int indexOf(List<Token> tokens, String s) {
 		for (int i = 0; i < tokens.size(); i++) {

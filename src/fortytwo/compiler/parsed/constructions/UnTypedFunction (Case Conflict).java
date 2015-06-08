@@ -4,25 +4,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
-import fortytwo.compiler.parsed.declaration.FunctionReturn;
+import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.vm.constructions.FunctionImplemented;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.Statement;
 
-public class ParsedFunction {
+public class UntypedFunction {
 	private final FunctionDefinition f;
 	private final List<ParsedStatement> body;
-	private final FunctionReturn r;
-	public ParsedFunction(FunctionDefinition f, List<ParsedStatement> body,
-			FunctionReturn r) {
+	private final FunctionOutput r;
+	public UntypedFunction(FunctionDefinition f, List<ParsedStatement> body,
+			FunctionOutput r) {
 		this.f = f;
 		this.body = body;
 		this.r = r;
 	}
 	public FunctionImplemented contextualize(StaticEnvironment environment) {
 		StaticEnvironment local = StaticEnvironment.getChild(environment);
-		f.registerParameters(local);
+		f.registerInputs(local);
 		List<Statement> bodyS = body.stream().map(x -> {
 			return x.contextualize(local);
 		}).collect(Collectors.toList());
@@ -46,7 +46,7 @@ public class ParsedFunction {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		ParsedFunction other = (ParsedFunction) obj;
+		UntypedFunction other = (UntypedFunction) obj;
 		if (body == null) {
 			if (other.body != null) return false;
 		} else if (!body.equals(other.body)) return false;

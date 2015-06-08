@@ -3,22 +3,22 @@ package fortytwo.vm.environment;
 import java.util.HashMap;
 
 import fortytwo.language.field.Field;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.type.ConcreteType;
 
 public class VariableTypeRoster {
-	public final HashMap<VariableIdentifier, ConcreteType> pairs = new HashMap<>();
-	public void add(VariableIdentifier variableIdentifier,
+	public final HashMap<VariableID, ConcreteType> pairs = new HashMap<>();
+	public void add(VariableID variableIdentifier,
 			ConcreteType expression) {
 		pairs.put(variableIdentifier, expression);
 	}
-	public void remove(VariableIdentifier name, ConcreteType type) {
+	public void remove(VariableID name, ConcreteType type) {
 		pairs.remove(name, type);
 	}
 	public void add(Field field) {
 		add(field.name, field.type);
 	}
-	public ConcreteType typeOf(VariableIdentifier name) {
+	public ConcreteType typeOf(VariableID name) {
 		ConcreteType type = pairs.get(name);
 		if (type == null) return null;
 		return type;

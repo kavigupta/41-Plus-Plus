@@ -3,7 +3,7 @@ package fortytwo.compiler.parsed.statements;
 import java.util.Arrays;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.UntypedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.vm.environment.StaticEnvironment;
@@ -12,13 +12,13 @@ import fortytwo.vm.statements.IfElse;
 import fortytwo.vm.statements.Statement;
 
 public class ParsedIfElse implements ParsedStatement {
-	public final ParsedExpression condition;
+	public final UntypedExpression condition;
 	public final ParsedStatementSeries ifso, ifelse;
-	public static ParsedIfElse getInstance(ParsedExpression condition,
+	public static ParsedIfElse getInstance(UntypedExpression condition,
 			ParsedStatementSeries ifso, ParsedStatementSeries ifelse) {
 		return new ParsedIfElse(condition, ifso, ifelse);
 	}
-	private ParsedIfElse(ParsedExpression condition,
+	private ParsedIfElse(UntypedExpression condition,
 			ParsedStatementSeries ifso, ParsedStatementSeries ifelse) {
 		this.condition = condition;
 		this.ifso = ifso;

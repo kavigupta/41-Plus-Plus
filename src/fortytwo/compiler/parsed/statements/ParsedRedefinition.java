@@ -1,18 +1,18 @@
 package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.UntypedExpression;
 import fortytwo.language.SourceCode;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.statements.Redefinition;
 import fortytwo.vm.statements.Statement;
 
 public class ParsedRedefinition extends ParsedAssignment {
-	public final VariableIdentifier name;
-	public final ParsedExpression expr;
+	public final VariableID name;
+	public final UntypedExpression expr;
 	private final Context context;
-	public ParsedRedefinition(VariableIdentifier name, ParsedExpression expr,
+	public ParsedRedefinition(VariableID name, UntypedExpression expr,
 			Context context) {
 		this.name = name;
 		this.expr = expr;

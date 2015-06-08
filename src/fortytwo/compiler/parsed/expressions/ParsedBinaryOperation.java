@@ -11,18 +11,18 @@ import fortytwo.vm.expressions.BinaryOperation;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralNumber;
 
-public class ParsedBinaryOperation implements ParsedExpression {
-	public final ParsedExpression first, second;
+public class ParsedBinaryOperation implements UntypedExpression {
+	public final UntypedExpression first, second;
 	public final Operation operation;
 	private final Context context;
-	public ParsedBinaryOperation(ParsedExpression first,
-			ParsedExpression second, Operation operation, Context context) {
+	public ParsedBinaryOperation(UntypedExpression first,
+			UntypedExpression second, Operation operation, Context context) {
 		this.first = first;
 		this.second = second;
 		this.operation = operation;
 		this.context = context;
 	}
-	public static ParsedBinaryOperation getNegation(ParsedExpression contents) {
+	public static ParsedBinaryOperation getNegation(UntypedExpression contents) {
 		return new ParsedBinaryOperation(LiteralNumber.getInstance(
 				BigDecimal.ZERO, Context.synthetic()), contents,
 				Operation.SUBTRACT, contents.context().withUnaryApplied());

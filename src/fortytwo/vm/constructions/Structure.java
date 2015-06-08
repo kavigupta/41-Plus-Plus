@@ -3,7 +3,7 @@ package fortytwo.vm.constructions;
 import java.util.List;
 
 import fortytwo.language.field.Field;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.type.StructureType;
 
 public class Structure {
@@ -35,7 +35,7 @@ public class Structure {
 		} else if (!type.equals(other.type)) return false;
 		return true;
 	}
-	public boolean containsField(VariableIdentifier k) {
+	public boolean containsField(VariableID k) {
 		return fields.stream().map(x -> x.name.equals(k))
 				.reduce(false, (a, b) -> a || b);
 	}

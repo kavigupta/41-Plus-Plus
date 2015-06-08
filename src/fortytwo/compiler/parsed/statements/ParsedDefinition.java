@@ -1,7 +1,7 @@
 package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
+import fortytwo.compiler.parsed.constructions.UntypedVariableRoster;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.Field;
@@ -11,9 +11,9 @@ import fortytwo.vm.statements.Statement;
 
 public class ParsedDefinition implements ParsedStatement {
 	public final Field name;
-	public final ParsedVariableRoster fields;
+	public final UntypedVariableRoster fields;
 	private final Context context;
-	public ParsedDefinition(Field name, ParsedVariableRoster fields,
+	public ParsedDefinition(Field name, UntypedVariableRoster fields,
 			Context context) {
 		this.name = name;
 		this.fields = fields;

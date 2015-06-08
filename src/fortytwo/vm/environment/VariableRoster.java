@@ -6,25 +6,25 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class VariableRoster<T extends Expression> {
-	private final ArrayList<Pair<VariableIdentifier, Expression>> pairs = new ArrayList<>();
-	public void assign(VariableIdentifier name, T express) {
+	private final ArrayList<Pair<VariableID, Expression>> pairs = new ArrayList<>();
+	public void assign(VariableID name, T express) {
 		// a variable being assigned twice should never happen if typechecking
 		// did its job
 		pairs.add(Pair.getInstance(name, express));
 	}
-	public boolean assigned(VariableIdentifier name) {
-		for (Pair<VariableIdentifier, Expression> entry : pairs) {
+	public boolean assigned(VariableID name) {
+		for (Pair<VariableID, Expression> entry : pairs) {
 			if (entry.key.equals(name)) return true;
 		}
 		return false;
 	}
-	public void deregister(VariableIdentifier name) {
+	public void deregister(VariableID name) {
 		for (int i = 0; i < pairs.size(); i++) {
 			if (!pairs.get(i).key.equals(name)) continue;
 			pairs.remove(i);
@@ -32,8 +32,8 @@ public class VariableRoster<T extends Expression> {
 		}
 		// this should never happen if typechecking did its job.
 	}
-	public T referenceTo(VariableIdentifier id) {
-		for (Pair<VariableIdentifier, Expression> entry : pairs) {
+	public T referenceTo(VariableID id) {
+		for (Pair<VariableID, Expression> entry : pairs) {
 			@SuppressWarnings("unchecked")
 			T val = (T) entry.value;
 			if (entry.key.equals(id)) return val;
@@ -41,7 +41,7 @@ public class VariableRoster<T extends Expression> {
 		// this should never happen if typechecking did its job.
 		return null;
 	}
-	public void redefine(VariableIdentifier name, T express) {
+	public void redefine(VariableID name, T express) {
 		for (int i = 0; i < pairs.size(); i++) {
 			if (!pairs.get(i).key.equals(name)) continue;
 			pairs.set(i, Pair.getInstance(name, express));
@@ -51,12 +51,12 @@ public class VariableRoster<T extends Expression> {
 	}
 	public T value() {
 		try {
-			return referenceTo(VariableIdentifier.VALUE);
+			return referenceTo(VariableID.VALUE);
 		} catch (Throwable t) {
 			return null;
 		}
 	}
-	public ConcreteType typeOf(VariableIdentifier name) {
+	public ConcreteType typeOf(VariableID name) {
 		try {
 			return referenceTo(name).resolveType();
 		} catch (Throwable t) {
@@ -72,11 +72,11 @@ public class VariableRoster<T extends Expression> {
 		return roster;
 	}
 	@SuppressWarnings("unchecked")
-	public void forEach(Consumer<Pair<VariableIdentifier, T>> consumer) {
+	public void forEach(Consumer<Pair<VariableID, T>> consumer) {
 		pairs.forEach(x -> consumer.accept(Pair.getInstance(x.key,
 				(T) x.value)));
 	}
-	public List<VariableIdentifier> variables() {
+	public List<VariableID> variables() {
 		return pairs.stream().map(Pair::getKey).collect(Collectors.toList());
 	}
 	public int size() {

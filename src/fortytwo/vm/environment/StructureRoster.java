@@ -7,7 +7,7 @@ import java.util.List;
 import fortytwo.compiler.Context;
 import fortytwo.language.field.Field;
 import fortytwo.language.field.GenericField;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.type.*;
 import fortytwo.vm.constructions.GenericStructure;
 import fortytwo.vm.constructions.Structure;
@@ -31,7 +31,7 @@ public class StructureRoster {
 		// should not be reachable.
 		return null;
 	}
-	public Field typeOf(ConcreteType type, VariableIdentifier field) {
+	public Field typeOf(ConcreteType type, VariableID field) {
 		if (!(type instanceof StructureType))
 			DNEErrors.fieldAccessOnPrimitive(type, Arrays.asList(field));
 		Structure struct = getStructure((StructureType) type);

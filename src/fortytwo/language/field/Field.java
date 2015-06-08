@@ -1,16 +1,16 @@
 package fortytwo.language.field;
 
 import fortytwo.compiler.Context;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class Field implements Expression {
-	public final VariableIdentifier name;
+	public final VariableID name;
 	public final ConcreteType type;
-	public Field(VariableIdentifier name, ConcreteType type) {
+	public Field(VariableID name, ConcreteType type) {
 		this.name = name;
 		this.type = type;
 	}

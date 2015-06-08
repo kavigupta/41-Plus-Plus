@@ -6,19 +6,19 @@ import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionName;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.StaticEnvironment;
 
 public class FunctionDefinition implements Declaration {
 	public final FunctionName name;
-	public final List<VariableIdentifier> parameterVariables;
+	public final List<VariableID> parameterVariables;
 	public final List<GenericType> parameterTypes;
 	public final ConcreteType outputType;
 	private final Context context;
 	public FunctionDefinition(FunctionName signature,
-			List<VariableIdentifier> parameterVariables,
+			List<VariableID> parameterVariables,
 			List<GenericType> parameterTypes, ConcreteType output,
 			Context context) {
 		this.name = signature;
@@ -35,7 +35,7 @@ public class FunctionDefinition implements Declaration {
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}
-	public void registerParameters(StaticEnvironment environment) {
+	public void registerInputs(StaticEnvironment environment) {
 		for (int i = 0; i < parameterTypes.size(); i++) {
 			// LOWPRI allow generic typing in functions...
 			environment.addType(parameterVariables.get(i), (ConcreteType)

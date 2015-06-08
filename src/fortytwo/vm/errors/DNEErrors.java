@@ -5,7 +5,7 @@ import java.util.List;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.identifier.FunctionName;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.VirtualMachine;
@@ -22,7 +22,7 @@ public class DNEErrors {
 	public static void typeDNE(GenericType id) {
 		dneError("type", id.toSourceCode(), " here", id.context());
 	}
-	public static void variableDNE(VariableIdentifier name) {
+	public static void variableDNE(VariableID name) {
 		dneError("variable", name.toSourceCode(), " here", name.context());
 	}
 	public static void functionSignatureDNE(FunctionName name,
@@ -33,16 +33,16 @@ public class DNEErrors {
 		dneError("function", name.display(types), " here",
 				Context.sum(context));
 	}
-	public static void fieldDNE(Structure struct, VariableIdentifier field) {
+	public static void fieldDNE(Structure struct, VariableID field) {
 		dneError("field", "the " + field.toSourceCode() + " of "
 				+ struct.type.toSourceCode(), " here", field.context());
 	}
-	public static void fieldDNEInArray(VariableIdentifier field) {
+	public static void fieldDNEInArray(VariableID field) {
 		dneError("field", "the " + field.toSourceCode() + " of an array",
 				"; only _length exists", field.context());
 	}
 	public static void fieldAccessOnPrimitive(ConcreteType type,
-			List<VariableIdentifier> field) {
+			List<VariableID> field) {
 		dneError("field", "the " + field.get(0).toSourceCode() + " of "
 				+ type.toSourceCode(), "; no fields exist on primitives",
 				field.get(0).context());

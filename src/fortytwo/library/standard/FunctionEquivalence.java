@@ -9,7 +9,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
@@ -25,7 +25,7 @@ import fortytwo.vm.expressions.LiteralExpression;
 
 public class FunctionEquivalence extends Function42 {
 	public static final TypeVariable TO_BE_COMPARED = new TypeVariable(
-			VariableIdentifier.getInstance(new Token(
+			VariableID.getInstance(new Token(
 					"_FunctionEquivalence_compare", Context
 							.minimal("_FunctionEquivalence_compare"))));
 	public static enum Comparator {

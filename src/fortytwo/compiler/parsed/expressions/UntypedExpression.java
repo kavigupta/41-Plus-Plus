@@ -6,7 +6,7 @@ import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.Expression;
 
-public interface ParsedExpression extends ParsedStatement {
+public interface UntypedExpression extends ParsedStatement {
 	@Override
 	public Expression contextualize(StaticEnvironment env);
 	public Context context();

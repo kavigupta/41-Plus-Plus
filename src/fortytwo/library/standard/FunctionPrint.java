@@ -6,7 +6,7 @@ import java.util.List;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.language.type.TypeVariable;
@@ -19,7 +19,7 @@ import fortytwo.vm.expressions.LiteralExpression;
 public class FunctionPrint extends Function42 {
 	public static final FunctionPrint INSTANCE = new FunctionPrint();
 	public static final TypeVariable TO_PRINT = new TypeVariable(
-			VariableIdentifier.getInstance(new Token("_toPrint", Context
+			VariableID.getInstance(new Token("_toPrint", Context
 					.synthetic())));
 	private FunctionPrint() {}
 	@Override

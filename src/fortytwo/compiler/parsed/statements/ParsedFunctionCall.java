@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.UntypedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionName;
@@ -15,15 +15,15 @@ import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.statements.FunctionCall;
 
-public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
+public class ParsedFunctionCall implements UntypedExpression, ParsedStatement {
 	public final FunctionName name;
-	public final List<ParsedExpression> arguments;
+	public final List<UntypedExpression> arguments;
 	public static ParsedFunctionCall getInstance(FunctionName signature,
-			List<ParsedExpression> value) {
+			List<UntypedExpression> value) {
 		return new ParsedFunctionCall(signature, value);
 	}
 	private ParsedFunctionCall(FunctionName signature,
-			List<ParsedExpression> arguments) {
+			List<UntypedExpression> arguments) {
 		this.name = signature;
 		this.arguments = arguments;
 	}

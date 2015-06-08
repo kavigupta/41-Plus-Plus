@@ -9,7 +9,7 @@ import fortytwo.language.Language;
 import fortytwo.language.ParsedConstruct;
 import fortytwo.language.SourceCode;
 import fortytwo.language.field.Field;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.VirtualMachine;
@@ -114,7 +114,7 @@ public class TypingErrors {
 								.tokenSum(tokens));
 	}
 	public static void incompleteFieldTypingInFunctionDecl(
-			VariableIdentifier vid, List<Token> line) {
+			VariableID vid, List<Token> line) {
 		VirtualMachine
 				.error(ErrorType.PARSING,
 						String.format(

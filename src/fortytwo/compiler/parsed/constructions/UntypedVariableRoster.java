@@ -3,18 +3,18 @@ package fortytwo.compiler.parsed.constructions;
 import java.util.ArrayList;
 
 import lib.standard.collections.Pair;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
-import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.compiler.parsed.expressions.UntypedExpression;
+import fortytwo.language.identifier.VariableID;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.VariableRoster;
 import fortytwo.vm.expressions.Expression;
 
-public class ParsedVariableRoster {
-	private final ArrayList<Pair<VariableIdentifier, ParsedExpression>> pairs = new ArrayList<>();
-	public void add(VariableIdentifier id, ParsedExpression expr) {
+public class UntypedVariableRoster {
+	private final ArrayList<Pair<VariableID, UntypedExpression>> pairs = new ArrayList<>();
+	public void add(VariableID id, UntypedExpression expr) {
 		pairs.add(Pair.getInstance(id, expr));
 	}
-	public Iterable<Pair<VariableIdentifier, ParsedExpression>> entryIterator() {
+	public Iterable<Pair<VariableID, UntypedExpression>> entryIterator() {
 		return pairs;
 	}
 	public VariableRoster<Expression> contextualize(StaticEnvironment env) {
@@ -39,7 +39,7 @@ public class ParsedVariableRoster {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		ParsedVariableRoster other = (ParsedVariableRoster) obj;
+		UntypedVariableRoster other = (UntypedVariableRoster) obj;
 		if (pairs == null) {
 			if (other.pairs != null) return false;
 		} else if (!pairs.equals(other.pairs)) return false;
