@@ -36,8 +36,7 @@ public class Token {
 		return token;
 	}
 	public Token subToken(int i, int j) {
-		return new Token(token.substring(i, j), Context.construct(context, i,
-				j));
+		return new Token(token.substring(i, j), context.subContext(i, j));
 	}
 	public static int indexOf(List<Token> tokens, String s) {
 		for (int i = 0; i < tokens.size(); i++) {

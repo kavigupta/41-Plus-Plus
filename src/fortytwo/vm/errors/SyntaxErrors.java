@@ -16,7 +16,7 @@ public class SyntaxErrors {
 				String.format("This ~%s~ has no corresponding ~%s~",
 						input.charAt(i),
 						Language.matchingSymbol(input.charAt(i))),
-				Context.construct(parent, i, i + 1));
+				parent.subContext(i, i + 1));
 	}
 	public static void invalidExpression(ExpressionType type,
 			List<Token> currentExpression) {

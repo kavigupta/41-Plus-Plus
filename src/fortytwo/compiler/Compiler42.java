@@ -6,6 +6,7 @@ import fortytwo.compiler.parser.StatementParser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.environment.GlobalEnvironment;
+import fortytwo.vm.errors.ErrorType;
 
 public class Compiler42 {
 	public static GlobalEnvironment compile(String text) {
@@ -21,7 +22,8 @@ public class Compiler42 {
 			ps.contextualize(env.staticEnv).execute(
 					env.minimalLocalEnvironment());
 		} catch (Throwable t) {
-			VirtualMachine.displayLine("Error in processing input");
+			VirtualMachine.error(ErrorType.PARSING,
+					"Main method not found.", Context.minimal(text));
 		}
 	}
 }

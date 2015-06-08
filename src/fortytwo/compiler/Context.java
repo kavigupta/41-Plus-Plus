@@ -9,11 +9,6 @@ public class Context {
 	public static final Context SYNTHETIC = new Context(null, -1, -1);
 	public final String in;
 	public final int start, end;
-	private Context(String in, int start, int end) {
-		this.in = in;
-		this.start = start;
-		this.end = end;
-	}
 	private boolean isSynthetic() {
 		return this == SYNTHETIC;
 	}
@@ -27,13 +22,12 @@ public class Context {
 		assert start - 1 >= 0;
 		return new Context(in, start - 1, end);
 	}
-	public static Context construct(Context parent, int start, int end) {
-		if (parent.isSynthetic()) return SYNTHETIC;
+	public Context subContext(int start, int end) {
+		if (this.isSynthetic()) return SYNTHETIC;
 		assert start >= 0;
 		assert end >= 0;
-		assert parent.start + end < parent.end;
-		return new Context(parent.in, parent.start + start, parent.start
-				+ end);
+		assert this.start + end < this.end;
+		return new Context(this.in, this.start + start, this.start + end);
 	}
 	public static Context minimal(String text) {
 		return new Context(text, 0, text.length());
@@ -58,6 +52,11 @@ public class Context {
 		assert a.in.equals(b.in);
 		return new Context(a.in, Math.min(a.start, b.start), Math.max(a.end,
 				b.end));
+	}
+	private Context(String in, int start, int end) {
+		this.in = in;
+		this.start = start;
+		this.end = end;
 	}
 	@Override
 	public int hashCode() {

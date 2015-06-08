@@ -66,9 +66,7 @@ public class Utilities {
 		if (!VirtualMachine.errorState())
 			throw new AssertionError(
 					"An error was expected, but none was found.");
-		assertEquals(
-				new Error42(type, msg,
-						Context.construct(parent, start, end)),
+		assertEquals(new Error42(type, msg, parent.subContext(start, end)),
 				VirtualMachine.popError());
 		VirtualMachine.displayerr = old;
 	}

@@ -34,8 +34,8 @@ public class Tokenizer {
 					// dump anything between parenthesis into an single
 					// token
 					tokens.add(new Token(input
-							.substring(i, closeparen + 1), Context
-							.construct(parent, i, closeparen + 1)));
+							.substring(i, closeparen + 1), parent
+							.subContext(i, closeparen + 1)));
 					i = closeparen;
 					continue loop;
 				case ')':
@@ -49,16 +49,15 @@ public class Tokenizer {
 				case ',':
 					add(parent, i, token, tokens);
 					tokens.add(new Token(Character.toString(input
-							.charAt(i)), Context.construct(parent, i,
-							i + 1)));
+							.charAt(i)), parent.subContext(i, i + 1)));
 					continue loop;
 				case '.':
 					if (i + 1 < input.length()
 							&& !Character.isDigit(input.charAt(i + 1))) {
 						add(parent, i, token, tokens);
 						tokens.add(new Token(Character.toString(input
-								.charAt(i)), Context.construct(parent,
-								i, i + 1)));
+								.charAt(i)), parent
+								.subContext(i, i + 1)));
 						continue loop;
 					}
 					break;
@@ -69,8 +68,8 @@ public class Tokenizer {
 							&& input.charAt(i + 1) == '/')
 						divOrFloorDiv = "//";
 					else divOrFloorDiv = "/";
-					tokens.add(new Token(divOrFloorDiv, Context.construct(
-							parent, i, i + 1)));
+					tokens.add(new Token(divOrFloorDiv, parent.subContext(
+							i, i + 1)));
 					continue loop;
 				case '\'':
 					if (i - 1 < 0
@@ -84,8 +83,7 @@ public class Tokenizer {
 						tokens.add(new Token("'"
 								+ unescape(input.substring(i + 1,
 										closequote)) + "'" + "",
-								Context.construct(parent, i,
-										closequote + 1)));
+								parent.subContext(i, closequote + 1)));
 						i = closequote;
 						continue loop;
 					}
@@ -134,8 +132,8 @@ public class Tokenizer {
 	}
 	private static void add(Context parent, int i, StringBuffer token,
 			List<Token> tokens) {
-		tokens.add(new Token(token.toString(), Context.construct(parent, i, i
-				+ token.length())));
+		tokens.add(new Token(token.toString(), parent.subContext(i,
+				i + token.length())));
 		token.setLength(0);
 	}
 	private static int findCloseBracket(String input, int i) {
