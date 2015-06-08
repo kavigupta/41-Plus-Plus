@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 
 import fortytwo.compiler.parsed.constructions.ParsedFunction;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
-import fortytwo.compiler.parsed.declaration.FunctionReturn;
+import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
@@ -47,12 +47,12 @@ public class GlobalEnvironment {
 				case DECLARATION_FUNCT:
 					FunctionDefinition f = (FunctionDefinition) s;
 					environment.putReference(f);
-					FunctionReturn r = null;
+					FunctionOutput r = null;
 					i++;
 					ArrayList<ParsedStatement> body = new ArrayList<>();
 					for (; i < sentences.size(); i++) {
-						if (sentences.get(i).type() == SentenceType.FUNCTION_RETURN) {
-							r = (FunctionReturn) sentences.get(i);
+						if (sentences.get(i).type() == SentenceType.FUNCTION_OUTPUT) {
+							r = (FunctionOutput) sentences.get(i);
 							break;
 						}
 						Sentence sC = sentences.get(i);

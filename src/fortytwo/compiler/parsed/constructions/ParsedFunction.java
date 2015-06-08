@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
-import fortytwo.compiler.parsed.declaration.FunctionReturn;
+import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.vm.constructions.FunctionImplemented;
 import fortytwo.vm.environment.StaticEnvironment;
@@ -13,9 +13,9 @@ import fortytwo.vm.statements.Statement;
 public class ParsedFunction {
 	private final FunctionDefinition f;
 	private final List<ParsedStatement> body;
-	private final FunctionReturn r;
+	private final FunctionOutput r;
 	public ParsedFunction(FunctionDefinition f, List<ParsedStatement> body,
-			FunctionReturn r) {
+			FunctionOutput r) {
 		this.f = f;
 		this.body = body;
 		this.r = r;
@@ -23,9 +23,9 @@ public class ParsedFunction {
 	public FunctionImplemented contextualize(StaticEnvironment environment) {
 		StaticEnvironment local = StaticEnvironment.getChild(environment);
 		f.registerParameters(local);
-		List<Statement> bodyS = body.stream().map(x -> {
-			return x.contextualize(local);
-		}).collect(Collectors.toList());
+		List<Statement> bodyS = body.stream()
+				.map(x -> x.contextualize(local))
+				.collect(Collectors.toList());
 		return new FunctionImplemented(f, bodyS, r.output == null ? null
 				: r.output.contextualize(local));
 	}

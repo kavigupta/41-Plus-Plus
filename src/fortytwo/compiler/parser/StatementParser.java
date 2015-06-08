@@ -6,7 +6,7 @@ import java.util.List;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
-import fortytwo.compiler.parsed.declaration.FunctionReturn;
+import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.compiler.parsed.statements.*;
@@ -45,19 +45,19 @@ public class StatementParser {
 		}
 		return parseVoidFunctionCall(line);
 	}
-	private static FunctionReturn parseReturn(List<Token> line) {
+	private static FunctionOutput parseReturn(List<Token> line) {
 		Context fullContext = Context.tokenSum(line);
 		/* Exit the function( and output <output>)?. */
 		if (!line.get(1).token.equals(Resources.THE)
 				|| !line.get(2).token.equals(Resources.DECL_FUNCTION))
-			SyntaxErrors.invalidSentence(SentenceType.FUNCTION_RETURN, line);
+			SyntaxErrors.invalidSentence(SentenceType.FUNCTION_OUTPUT, line);
 		if (line.size() == 3)
-			return new FunctionReturn(null, Context.tokenSum(line));
+			return new FunctionOutput(null, Context.tokenSum(line));
 		if (!line.get(3).token.equals(Resources.AND)
 				|| !line.get(4).token.equals(Resources.OUTPUT))
-			SyntaxErrors.invalidSentence(SentenceType.FUNCTION_RETURN, line);
+			SyntaxErrors.invalidSentence(SentenceType.FUNCTION_OUTPUT, line);
 		line.subList(0, 5).clear();
-		return new FunctionReturn(ExpressionParser.parseExpression(line),
+		return new FunctionOutput(ExpressionParser.parseExpression(line),
 				fullContext);
 	}
 	private static ParsedStatement parseVoidFunctionCall(List<Token> list) {

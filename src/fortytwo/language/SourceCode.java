@@ -9,7 +9,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
-import fortytwo.compiler.parsed.declaration.FunctionReturn;
+import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
@@ -38,7 +38,7 @@ public class SourceCode {
 						: (" that takes " + fieldList))
 				+ displayOutputType(def.outputType, fieldList.length() != 0);
 	}
-	public static String display(FunctionReturn functionReturn) {
+	public static String display(FunctionOutput functionReturn) {
 		return "Exit the function" + displayReturn(functionReturn.output);
 	}
 	public static String display(StructureDeclaration structureDeclaration) {
