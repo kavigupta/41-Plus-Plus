@@ -5,7 +5,7 @@ import java.util.List;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
-import fortytwo.compiler.parsed.expressions.UntypedExpression;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.language.Language;
 import fortytwo.language.type.GenericType;
@@ -55,7 +55,7 @@ public class ParserErrors {
 				"The %s for this %s was not found.", endType, startType),
 				context);
 	}
-	public static void expectedFunctionCall(UntypedExpression exp) {
+	public static void expectedFunctionCall(ParsedExpression exp) {
 		expected("function call", exp);
 	}
 	public static void expectedStatement(Sentence x) {
@@ -65,7 +65,7 @@ public class ParserErrors {
 		expected("declaration or definition", s);
 	}
 	public static void expectedVariableInFieldAccess(
-			UntypedExpression parsedExpression) {
+			ParsedExpression parsedExpression) {
 		expected("variable", parsedExpression);
 	}
 	public static void expected(String expectedClass, Sentence actually) {

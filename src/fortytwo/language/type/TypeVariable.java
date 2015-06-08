@@ -2,16 +2,16 @@ package fortytwo.language.type;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
-import fortytwo.language.identifier.VariableID;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.errors.DNEErrors;
 
 public class TypeVariable implements GenericType {
 	public static final TypeVariable LENGTH = new TypeVariable(
-			VariableID.getInstance(new Token("_length", Context
+			VariableIdentifier.getInstance(new Token("_length", Context
 					.synthetic())));
-	public final VariableID name;
-	public TypeVariable(VariableID name) {
+	public final VariableIdentifier name;
+	public TypeVariable(VariableIdentifier name) {
 		this.name = name;
 	}
 	@Override

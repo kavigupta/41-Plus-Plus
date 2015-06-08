@@ -6,7 +6,7 @@ import java.util.List;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.language.identifier.FunctionSignature;
-import fortytwo.language.identifier.VariableID;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.*;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
@@ -17,7 +17,7 @@ import fortytwo.vm.expressions.LiteralNumber;
 
 public class FunctionArrayAccess extends Function42 {
 	private static final TypeVariable CONTENTS = new TypeVariable(
-			VariableID.getInstance(new Token("_contents", Context
+			VariableIdentifier.getInstance(new Token("_contents", Context
 					.synthetic())));
 	public static final FunctionArrayAccess ST = new FunctionArrayAccess("st");
 	public static final FunctionArrayAccess ND = new FunctionArrayAccess("nd");

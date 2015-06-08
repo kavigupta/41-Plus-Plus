@@ -7,11 +7,11 @@ import java.util.List;
 import lib.standard.collections.Pair;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
-import fortytwo.compiler.parsed.expressions.UntypedExpression;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.Resources;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
-import fortytwo.language.identifier.VariableID;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
@@ -69,30 +69,30 @@ public class StdLib42 {
 	}
 	private static void addPair() {
 		TypeVariable _k = new TypeVariable(
-				VariableID.getInstance(Token.minimal("_k")));
+				VariableIdentifier.getInstance(Token.minimal("_k")));
 		TypeVariable _v = new TypeVariable(
-				VariableID.getInstance(Token.minimal("_v")));
+				VariableIdentifier.getInstance(Token.minimal("_v")));
 		DEF_STRUCT.addStructure(new GenericStructure(
 				new GenericStructureType(Arrays.asList(Token
 						.minimal("pair")), Arrays.asList(_k, _v), Context
 						.synthetic()),
 				Arrays.asList(
-						new GenericField(VariableID
+						new GenericField(VariableIdentifier
 								.getInstance(Token.minimal("_key")), _k),
-						new GenericField(VariableID
+						new GenericField(VariableIdentifier
 								.getInstance(Token.minimal("_value")),
 								_v))));
 	}
-	public static Pair<FunctionName, List<UntypedExpression>> parseFunction(
-			List<FunctionComponent> name, List<UntypedExpression> arguments) {
+	public static Pair<FunctionName, List<ParsedExpression>> parseFunction(
+			List<FunctionComponent> name, List<ParsedExpression> arguments) {
 		if (FunctionName.getInstance(name).equals(
 				StdLib42.FUNC_FIELD_ACCESS_NAME_APPARENT)) {
-			if (!(arguments.get(0) instanceof VariableID))
+			if (!(arguments.get(0) instanceof VariableIdentifier))
 				ParserErrors
 						.expectedVariableInFieldAccess(arguments.get(0));
 			return Pair
 					.getInstance(
-							getFieldAccess(((VariableID) arguments
+							getFieldAccess(((VariableIdentifier) arguments
 									.get(0)).name.token), Arrays
 									.asList(arguments.get(1)));
 		}
@@ -112,8 +112,8 @@ public class StdLib42 {
 				new FunctionToken(new Token("of", Context.synthetic()))))
 			return null;
 		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
-		if (!(inputs.get(0) instanceof VariableID)) return null;
-		VariableID field = (VariableID) inputs.get(0);
+		if (!(inputs.get(0) instanceof VariableIdentifier)) return null;
+		VariableIdentifier field = (VariableIdentifier) inputs.get(0);
 		ConcreteType type = inputs.get(1).resolveType();
 		if (type instanceof ArrayType) {
 			if (field.equals(TypeVariable.LENGTH.name))
@@ -146,7 +146,7 @@ public class StdLib42 {
 				new FunctionToken(new Token("of", Context.synthetic()))))
 			return null;
 		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
-		VariableID field = VariableID
+		VariableIdentifier field = VariableIdentifier
 				.getInstance(((FunctionToken) name.function.get(1)).token);
 		ConcreteType type = inputs.get(0);
 		if (type instanceof ArrayType) {

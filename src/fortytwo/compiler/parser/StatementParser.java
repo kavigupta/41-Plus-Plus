@@ -5,16 +5,16 @@ import java.util.List;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
-import fortytwo.compiler.parsed.constructions.UntypedVariableRoster;
-import fortytwo.compiler.parsed.declaration.FunctionOutput;
-import fortytwo.compiler.parsed.expressions.UntypedExpression;
+import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
+import fortytwo.compiler.parsed.declaration.FunctionReturn;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.compiler.parsed.statements.*;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.Field;
-import fortytwo.language.identifier.VariableID;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
@@ -28,7 +28,7 @@ public class StatementParser {
 		switch (line.get(0).token) {
 			case Resources.RUN:
 				line.remove(0);
-				UntypedExpression e = ExpressionParser.parseExpression(line);
+				ParsedExpression e = ExpressionParser.parseExpression(line);
 				if (e.type() == SentenceType.PURE_EXPRESSION)
 					ParserErrors.expectedFunctionCall(e);
 				return e;
@@ -45,19 +45,19 @@ public class StatementParser {
 		}
 		return parseVoidFunctionCall(line);
 	}
-	private static FunctionOutput parseReturn(List<Token> line) {
+	private static FunctionReturn parseReturn(List<Token> line) {
 		Context fullContext = Context.tokenSum(line);
 		/* Exit the function( and output <output>)?. */
 		if (!line.get(1).token.equals(Resources.THE)
 				|| !line.get(2).token.equals(Resources.DECL_FUNCTION))
 			SyntaxErrors.invalidSentence(SentenceType.FUNCTION_RETURN, line);
 		if (line.size() == 3)
-			return new FunctionOutput(null, Context.tokenSum(line));
+			return new FunctionReturn(null, Context.tokenSum(line));
 		if (!line.get(3).token.equals(Resources.AND)
 				|| !line.get(4).token.equals(Resources.OUTPUT))
 			SyntaxErrors.invalidSentence(SentenceType.FUNCTION_RETURN, line);
 		line.subList(0, 5).clear();
-		return new FunctionOutput(ExpressionParser.parseExpression(line),
+		return new FunctionReturn(ExpressionParser.parseExpression(line),
 				fullContext);
 	}
 	private static ParsedStatement parseVoidFunctionCall(List<Token> list) {
@@ -66,7 +66,7 @@ public class StatementParser {
 		if (function.name.function.size() != 1
 				|| !(function.name.function.get(0) instanceof FunctionArgument))
 			return function;
-		UntypedExpression exp = function.arguments.get(0);
+		ParsedExpression exp = function.arguments.get(0);
 		if (exp instanceof ParsedFunctionCall) return exp;
 		ParserErrors.expectedFunctionCall(exp);
 		// should never get here
@@ -82,12 +82,12 @@ public class StatementParser {
 				|| !line.get(5).token.equals(Resources.TO))
 			SyntaxErrors.invalidSentence(SentenceType.ASSIGNMENT, line);
 		Token fieldT = line.get(2);
-		VariableID name = VariableID.getInstance(line.get(4));
+		VariableIdentifier name = VariableIdentifier.getInstance(line.get(4));
 		line.subList(0, 6).clear();
-		UntypedExpression expr = ExpressionParser.parseExpression(line);
+		ParsedExpression expr = ExpressionParser.parseExpression(line);
 		return fieldT.token.equals(Resources.VALUE) ? new ParsedRedefinition(
 				name, expr, fullContext) : new ParsedFieldAssignment(name,
-				VariableID.getInstance(fieldT), expr, fullContext);
+				VariableIdentifier.getInstance(fieldT), expr, fullContext);
 	}
 	private static Sentence parseDefinition(List<Token> line) {
 		Context fullContext = Context.tokenSum(line);
@@ -104,7 +104,7 @@ public class StatementParser {
 		if (type.token.equals(Resources.TYPE))
 			return ConstructionParser.parseStructDefinition(line);
 		Token name = line.get(4);
-		UntypedVariableRoster fields = new UntypedVariableRoster();
+		ParsedVariableRoster fields = new ParsedVariableRoster();
 		for (int i = 5; i < line.size(); i++) {
 			if (!line.get(i).token.equals(Resources.OF)) continue;
 			Token fieldT = line.get(i - 1);
@@ -115,14 +115,14 @@ public class StatementParser {
 				tokens2.add(line.get(i));
 				i++;
 			}
-			fields.add(VariableID.getInstance(fieldT),
+			fields.add(VariableIdentifier.getInstance(fieldT),
 					ExpressionParser.parseExpression(tokens2));
 		}
 		GenericType genericType = ExpressionParser.parseType(type);
 		if (!(genericType instanceof ConcreteType))
 			ParserErrors.expectedCTInDefinition(genericType);
 		return new ParsedDefinition(new Field(
-				VariableID.getInstance(name),
+				VariableIdentifier.getInstance(name),
 				(ConcreteType) genericType), fields, fullContext);
 	}
 }

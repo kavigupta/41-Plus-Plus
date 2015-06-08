@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import lib.standard.collections.Pair;
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
-import fortytwo.language.identifier.VariableID;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.environment.VariableRoster;
@@ -19,17 +19,17 @@ public class LiteralObject extends LiteralExpression {
 		this.struct = struct;
 		this.fields = fields;
 	}
-	public void redefine(VariableID name, LiteralExpression express) {
+	public void redefine(VariableIdentifier name, LiteralExpression express) {
 		fields.redefine(name, express);
 	}
 	public int nFields() {
 		return fields.size();
 	}
 	public void forEachField(
-			Consumer<Pair<VariableID, LiteralExpression>> le) {
+			Consumer<Pair<VariableIdentifier, LiteralExpression>> le) {
 		fields.forEach(le);
 	}
-	public LiteralExpression valueOf(VariableID field) {
+	public LiteralExpression valueOf(VariableIdentifier field) {
 		return fields.referenceTo(field);
 	}
 	@Override

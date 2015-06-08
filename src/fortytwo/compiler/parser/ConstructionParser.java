@@ -11,14 +11,14 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
-import fortytwo.compiler.parsed.expressions.UntypedExpression;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
-import fortytwo.language.identifier.VariableID;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
@@ -31,7 +31,7 @@ import fortytwo.vm.errors.TypingErrors;
 
 public class ConstructionParser {
 	public static ParsedFunctionCall composeFunction(List<Token> list) {
-		Pair<FunctionName, List<UntypedExpression>> fsig = parseFunctionSignature(list);
+		Pair<FunctionName, List<ParsedExpression>> fsig = parseFunctionSignature(list);
 		return ParsedFunctionCall.getInstance(fsig.key, fsig.value);
 	}
 	public static StructureDeclaration parseStructDefinition(List<Token> line) {
@@ -58,7 +58,7 @@ public class ConstructionParser {
 			for (; i < line.size()
 					&& !line.get(i).token.equals(Resources.THAT); i++) {
 				if (Language.isValidVariableIdentifier(line.get(i).token)) {
-					typeVariables.add(new TypeVariable(VariableID
+					typeVariables.add(new TypeVariable(VariableIdentifier
 							.getInstance(line.get(i))));
 				}
 			}
@@ -66,7 +66,7 @@ public class ConstructionParser {
 		ArrayList<GenericField> fields = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).token.equals(Resources.CALLED)) continue;
-			fields.add(new GenericField(VariableID.getInstance(line
+			fields.add(new GenericField(VariableIdentifier.getInstance(line
 					.get(i + 1)), ExpressionParser.parseType(line
 					.get(i - 1))));
 		}
@@ -91,7 +91,7 @@ public class ConstructionParser {
 			funcExpress.add(line.get(i));
 		}
 		i++;
-		Map<VariableID, GenericType> vars = new HashMap<>();
+		Map<VariableIdentifier, GenericType> vars = new HashMap<>();
 		if (i < line.size()) {
 			switch (line.get(i).token) {
 				case Resources.TAKES:
@@ -105,7 +105,7 @@ public class ConstructionParser {
 						if (!(type instanceof ConcreteType))
 							ParserErrors.expectedCTInFunctionDecl(type,
 									line, vars.size());
-						vars.put(VariableID.getInstance(line
+						vars.put(VariableIdentifier.getInstance(line
 								.get(i + 1)), type);
 					}
 					break;
@@ -117,17 +117,17 @@ public class ConstructionParser {
 			}
 		}
 		int outputloc = Token.indexOf(line, Resources.OUTPUTS);
-		Pair<FunctionName, List<UntypedExpression>> sig = parseFunctionSignature(funcExpress);
-		List<VariableID> variables = sig.value
+		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(funcExpress);
+		List<VariableIdentifier> variables = sig.value
 				.stream()
 				.map(x -> {
-					if (!(x instanceof VariableID))
+					if (!(x instanceof VariableIdentifier))
 						ParserErrors.expectedVariableInDecl(true, x.toToken(),
 								line);
-					return (VariableID) x;
+					return (VariableIdentifier) x;
 				}).collect(Collectors.toList());
 		List<GenericType> types = new ArrayList<>();
-		for (VariableID vid : variables) {
+		for (VariableIdentifier vid : variables) {
 			GenericType gt = vars.get(vid);
 			if (gt == null) TypingErrors.incompleteFieldTypingInFunctionDecl(vid, line);
 			types.add(gt);
@@ -146,17 +146,17 @@ public class ConstructionParser {
 		return new FunctionDefinition(sig.key, variables, types,
 				(ConcreteType) outputType, Context.tokenSum(line));
 	}
-	private static Pair<FunctionName, List<UntypedExpression>> parseFunctionSignature(
+	private static Pair<FunctionName, List<ParsedExpression>> parseFunctionSignature(
 			List<Token> list) {
 		List<FunctionComponent> function = new ArrayList<>();
 		List<Token> currentExpression = new ArrayList<>();
-		List<UntypedExpression> arguments = new ArrayList<>();
+		List<ParsedExpression> arguments = new ArrayList<>();
 		for (Token tok : list) {
 			if (Language.isExpression(tok.token)) {
 				currentExpression.add(tok);
 			} else if (Language.isFunctionToken(tok.token)) {
 				if (currentExpression.size() != 0) {
-					UntypedExpression argument = ExpressionParser
+					ParsedExpression argument = ExpressionParser
 							.parsePureExpression(currentExpression);
 					arguments.add(argument);
 					function.add(FunctionArgument.INSTANCE);
@@ -166,7 +166,7 @@ public class ConstructionParser {
 			} else break;
 		}
 		if (currentExpression.size() != 0) {
-			UntypedExpression argument = ExpressionParser
+			ParsedExpression argument = ExpressionParser
 					.parsePureExpression(currentExpression);
 			arguments.add(argument);
 			function.add(FunctionArgument.INSTANCE);

@@ -6,7 +6,7 @@ import lib.standard.collections.Pair;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
-import fortytwo.language.identifier.VariableID;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.constructions.Function42;
@@ -47,16 +47,16 @@ public class StaticEnvironment {
 		this.types = types;
 		this.container = null;
 	}
-	public void addGlobalVariable(VariableID name,
+	public void addGlobalVariable(VariableIdentifier name,
 			LiteralExpression express) {
 		this.globalVariables.assign(name, express);
 		this.addType(name, express.resolveType());
 	}
-	public void addType(VariableID variableIdentifier,
+	public void addType(VariableIdentifier variableIdentifier,
 			ConcreteType concreteType) {
 		types.add(variableIdentifier, concreteType);
 	}
-	public ConcreteType typeOf(VariableID name) {
+	public ConcreteType typeOf(VariableIdentifier name) {
 		ConcreteType type = types.typeOf(name);
 		if (type != null) return type;
 		if (container == null) DNEErrors.variableDNE(name);
@@ -75,7 +75,7 @@ public class StaticEnvironment {
 	public void putReference(FunctionDefinition f) {
 		funcs.putReference(f);
 	}
-	public LiteralExpression referenceTo(VariableID name) {
+	public LiteralExpression referenceTo(VariableIdentifier name) {
 		LiteralExpression expr = globalVariables.referenceTo(name);
 		if (expr != null) return expr;
 		if (container == null) DNEErrors.variableDNE(name);

@@ -1,6 +1,6 @@
 package fortytwo.vm.environment;
 
-import fortytwo.language.identifier.VariableID;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -11,13 +11,13 @@ public class LocalEnvironment {
 		this.global = global;
 		vars = new VariableRoster<>();
 	}
-	public LiteralExpression referenceTo(VariableID id) {
+	public LiteralExpression referenceTo(VariableIdentifier id) {
 		LiteralExpression localE = vars.referenceTo(id);
 		if (localE != null) return localE;
 		LiteralExpression globalE = global.staticEnv.referenceTo(id);
 		return globalE;
 	}
-	public ConcreteType typeOf(VariableID name) {
+	public ConcreteType typeOf(VariableIdentifier name) {
 		ConcreteType type = vars.typeOf(name);
 		if (type != null) return type;
 		return global.staticEnv.typeOf(name);

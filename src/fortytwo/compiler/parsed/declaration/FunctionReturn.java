@@ -1,14 +1,14 @@
 package fortytwo.compiler.parsed.declaration;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.expressions.UntypedExpression;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 
-public class FunctionOutput implements Declaration {
-	public final UntypedExpression output;
+public class FunctionReturn implements Declaration {
+	public final ParsedExpression output;
 	private final Context context;
-	public FunctionOutput(UntypedExpression output, Context context) {
+	public FunctionReturn(ParsedExpression output, Context context) {
 		this.output = output;
 		this.context = context;
 	}
@@ -40,7 +40,7 @@ public class FunctionOutput implements Declaration {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		FunctionOutput other = (FunctionOutput) obj;
+		FunctionReturn other = (FunctionReturn) obj;
 		if (output == null) {
 			if (other.output != null) return false;
 		} else if (!output.equals(other.output)) return false;

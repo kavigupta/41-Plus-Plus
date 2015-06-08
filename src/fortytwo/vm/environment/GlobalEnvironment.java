@@ -5,17 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import fortytwo.compiler.parsed.constructions.UntypedFunction;
+import fortytwo.compiler.parsed.constructions.ParsedFunction;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
-import fortytwo.compiler.parsed.declaration.FunctionOutput;
+import fortytwo.compiler.parsed.declaration.FunctionReturn;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
-import fortytwo.compiler.parsed.expressions.UntypedExpression;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.compiler.parsed.statements.ParsedDefinition;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionSignature;
-import fortytwo.language.identifier.VariableID;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.FunctionImplemented;
 import fortytwo.vm.errors.ParserErrors;
@@ -40,19 +40,19 @@ public class GlobalEnvironment {
 		GlobalEnvironment global = GlobalEnvironment
 				.getDefaultEnvironment(environment);
 		LocalEnvironment local = global.minimalLocalEnvironment();
-		ArrayList<UntypedFunction> functions = new ArrayList<>();
+		ArrayList<ParsedFunction> functions = new ArrayList<>();
 		for (int i = 0; i < sentences.size(); i++) {
 			Sentence s = sentences.get(i);
 			switch (s.type()) {
 				case DECLARATION_FUNCT:
 					FunctionDefinition f = (FunctionDefinition) s;
 					environment.putReference(f);
-					FunctionOutput r = null;
+					FunctionReturn r = null;
 					i++;
 					ArrayList<ParsedStatement> body = new ArrayList<>();
 					for (; i < sentences.size(); i++) {
 						if (sentences.get(i).type() == SentenceType.FUNCTION_RETURN) {
-							r = (FunctionOutput) sentences.get(i);
+							r = (FunctionReturn) sentences.get(i);
 							break;
 						}
 						Sentence sC = sentences.get(i);
@@ -61,7 +61,7 @@ public class GlobalEnvironment {
 						body.add((ParsedStatement) sC);
 					}
 					if (r == null) ParserErrors.noExit(f);
-					functions.add(new UntypedFunction(f, body, r));
+					functions.add(new ParsedFunction(f, body, r));
 					break;
 				case DECLARATION_STRUCT:
 					environment.structs
@@ -70,7 +70,7 @@ public class GlobalEnvironment {
 				case DEFINITION:
 					ParsedDefinition def = (ParsedDefinition) s;
 					VariableRoster<Expression> fieldValues = new VariableRoster<Expression>();
-					for (Entry<VariableID, UntypedExpression> pair : def.fields
+					for (Entry<VariableIdentifier, ParsedExpression> pair : def.fields
 							.entryIterator()) {
 						LiteralExpression applied = pair
 								.getValue()
@@ -89,7 +89,7 @@ public class GlobalEnvironment {
 			}
 		}
 		HashMap<FunctionSignature, Function42> implFunctions = new HashMap<>();
-		for (UntypedFunction func : functions) {
+		for (ParsedFunction func : functions) {
 			FunctionImplemented impl = func.contextualize(environment);
 			impl.body.forEach(Statement::typeCheck);
 			FunctionDefinition f = func.definition();

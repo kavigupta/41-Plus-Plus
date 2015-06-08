@@ -1,13 +1,13 @@
 package fortytwo.vm.expressions;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.expressions.UntypedExpression;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 
-public abstract class LiteralExpression implements UntypedExpression, Expression {
+public abstract class LiteralExpression implements ParsedExpression, Expression {
 	protected Context context;
 	public LiteralExpression(Context context) {
 		this.context = context;

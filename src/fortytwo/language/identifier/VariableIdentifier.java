@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token;
-import fortytwo.compiler.parsed.expressions.UntypedExpression;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.ExpressionType;
@@ -13,18 +13,18 @@ import fortytwo.language.field.Field;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.SyntaxErrors;
 
-public class VariableID implements UntypedExpression {
-	public static final VariableID VALUE = new VariableID(
+public class VariableIdentifier implements ParsedExpression {
+	public static final VariableIdentifier VALUE = new VariableIdentifier(
 			new Token(Resources.VALUE, Context.synthetic()));
 	public final Token name;
-	public static VariableID getInstance(Token token) {
+	public static VariableIdentifier getInstance(Token token) {
 		if (token.token.equals(Resources.VALUE)) return VALUE;
 		if (!Language.isValidVariableIdentifier(token.token))
 			SyntaxErrors.invalidExpression(ExpressionType.VARIABLE,
 					Arrays.asList(token));
-		return new VariableID(token);
+		return new VariableIdentifier(token);
 	}
-	private VariableID(Token name) {
+	private VariableIdentifier(Token name) {
 		this.name = name;
 	}
 	@Override
@@ -44,7 +44,7 @@ public class VariableID implements UntypedExpression {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		VariableID other = (VariableID) obj;
+		VariableIdentifier other = (VariableIdentifier) obj;
 		return this.name.token.equals(other.name.token);
 	}
 	@Override
