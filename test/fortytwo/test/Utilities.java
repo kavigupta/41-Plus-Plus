@@ -3,6 +3,7 @@ package fortytwo.test;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
@@ -10,7 +11,10 @@ import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.StatementParser;
 import fortytwo.compiler.parser.Tokenizer;
+import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.environment.GlobalEnvironment;
+import fortytwo.vm.errors.Error42;
+import fortytwo.vm.errors.ErrorType;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
 
@@ -29,6 +33,12 @@ public class Utilities {
 				.contextualize(env.staticEnv)
 				.literalValue(env.minimalLocalEnvironment());
 	}
+	public static void assertErrorInTokenization(ErrorType type, String msg,
+			int start, int end, String toTokenize) {
+		Context parent = Context.minimal(toTokenize);
+		assertError(type, msg, start, end,
+				() -> Tokenizer.tokenize(parent, toTokenize), parent);
+	}
 	public static void assertCorrectTokenization(String toTokenize,
 			String... tokens) {
 		assertEquals(
@@ -41,5 +51,25 @@ public class Utilities {
 			GlobalEnvironment env) {
 		assertEquals(result, ((LiteralNumber) Utilities.evaluate(toEvaluate,
 				env)).contents.doubleValue(), Math.ulp(result));
+	}
+	public static void assertError(ErrorType type, String msg, int start,
+			int end, Runnable run, Context parent) {
+		Consumer<Error42> old = VirtualMachine.displayerr;
+		VirtualMachine.displayerr = x -> {
+			throw new RuntimeException("~Temporary.");
+		};
+		try {
+			run.run();
+		} catch (RuntimeException re) {
+			if (!re.getMessage().equals("~Temporary.")) throw re;
+		}
+		if (!VirtualMachine.errorState())
+			throw new AssertionError(
+					"An error was expected, but none was found.");
+		assertEquals(
+				new Error42(type, msg,
+						Context.construct(parent, start, end)),
+				VirtualMachine.popError());
+		VirtualMachine.displayerr = old;
 	}
 }

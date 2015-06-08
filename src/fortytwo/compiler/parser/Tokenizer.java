@@ -102,9 +102,15 @@ public class Tokenizer {
 				.collect(Collectors.toList());
 	}
 	private static int findCloseQuote(String input, int i) {
+		int backslashstate = 0;
 		for (int j = i + 1; j < input.length(); j++) {
-			if (input.charAt(j) != '\'') continue;
-			if (input.charAt(j - 1) != '\\') return j;
+			System.out.println(input + "\t" + input.charAt(j) + "\t"
+					+ backslashstate);
+			if (input.charAt(j) == '\'' && backslashstate % 2 == 0)
+				return j;
+			if (input.charAt(j) == '\\')
+				backslashstate++;
+			else backslashstate = 0;
 		}
 		return -1;
 	}

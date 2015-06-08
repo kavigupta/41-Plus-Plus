@@ -11,10 +11,12 @@ import fortytwo.vm.VirtualMachine;
 
 public class SyntaxErrors {
 	public static void matchingSymbolDNE(Context parent, String input, int i) {
-		VirtualMachine.error(ErrorType.SYNTAX, String.format(
-				"The closing %s to this %s was not found", input.charAt(i),
-				Language.matchingSymbol(input.charAt(i))), Context
-				.construct(parent, i, i + 1));
+		VirtualMachine.error(
+				ErrorType.SYNTAX,
+				String.format("This ~%s~ has no corresponding ~%s~",
+						input.charAt(i),
+						Language.matchingSymbol(input.charAt(i))),
+				Context.construct(parent, i, i + 1));
 	}
 	public static void invalidExpression(ExpressionType type,
 			List<Token> currentExpression) {

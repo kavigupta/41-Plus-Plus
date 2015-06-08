@@ -59,4 +59,35 @@ public class Context {
 		return new Context(a.in, Math.min(a.start, b.start), Math.max(a.end,
 				b.end));
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + end;
+		result = prime * result + ((in == null) ? 0 : in.hashCode());
+		result = prime * result + start;
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Context other = (Context) obj;
+		if (end != other.end) return false;
+		if (in == null) {
+			if (other.in != null) return false;
+		} else if (!in.equals(other.in)) return false;
+		if (start != other.start) return false;
+		return true;
+	}
+	@Override
+	public String toString() {
+		return isSynthetic() ? "Synthetic" : in.substring(
+				Math.max(start - 10, 0), start)
+				+ "~"
+				+ in.substring(start, end)
+				+ "~"
+				+ in.substring(end, Math.min(end + 10, in.length()));
+	}
 }

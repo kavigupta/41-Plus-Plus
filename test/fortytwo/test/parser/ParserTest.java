@@ -1,4 +1,4 @@
-package fortytwo.test;
+package fortytwo.test.parser;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,6 +10,10 @@ import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.language.Resources;
 
+/*
+ * TODO fix this nonsense. This really needs to be split into more classes and
+ * test cases.
+ */
 public class ParserTest {
 	@Test
 	public void padderTest() {
