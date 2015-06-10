@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
@@ -18,11 +18,11 @@ public class FunctionName {
 				.asList(name)
 				.stream()
 				.map(x -> x.length() == 0 ? FunctionArgument.INSTANCE
-						: new FunctionToken(new Token(x, Context
+						: new FunctionToken(new Token42(x, Context
 								.minimal(x))))
 				.collect(Collectors.toList()));
 	}
-	public static FunctionName getInstance(Token... name) {
+	public static FunctionName getInstance(Token42... name) {
 		return getInstance(Arrays
 				.asList(name)
 				.stream()

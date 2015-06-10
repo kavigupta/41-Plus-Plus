@@ -3,7 +3,7 @@ package fortytwo.vm.errors;
 import java.util.List;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.Language;
 import fortytwo.language.classification.ExpressionType;
 import fortytwo.language.classification.SentenceType;
@@ -19,7 +19,7 @@ public class SyntaxErrors {
 				parent.subContext(i, i + 1));
 	}
 	public static void invalidExpression(ExpressionType type,
-			List<Token> currentExpression) {
+			List<Token42> currentExpression) {
 		VirtualMachine.error(
 				ErrorType.SYNTAX,
 				String.format("%s is not a valid %s",
@@ -28,7 +28,7 @@ public class SyntaxErrors {
 						type.description()),
 				Context.tokenSum(currentExpression));
 	}
-	public static void invalidSentence(SentenceType type, List<Token> line) {
+	public static void invalidSentence(SentenceType type, List<Token42> line) {
 		VirtualMachine.error(
 				ErrorType.SYNTAX,
 				String.format(

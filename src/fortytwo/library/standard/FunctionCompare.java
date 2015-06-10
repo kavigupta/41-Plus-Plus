@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
@@ -40,7 +40,7 @@ public class FunctionCompare extends Function42 {
 			s.addAll(Arrays
 					.asList(name)
 					.stream()
-					.map(x -> new FunctionToken(new Token(x, Context
+					.map(x -> new FunctionToken(new Token42(x, Context
 							.synthetic()))).collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
 			this.sig = FunctionSignature.getInstance(FunctionName

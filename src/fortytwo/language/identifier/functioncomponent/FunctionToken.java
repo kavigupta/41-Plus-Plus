@@ -1,11 +1,11 @@
 package fortytwo.language.identifier.functioncomponent;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 
 public class FunctionToken implements FunctionComponent {
-	public final Token token;
-	public FunctionToken(Token token) {
+	public final Token42 token;
+	public FunctionToken(Token42 token) {
 		this.token = token;
 	}
 	@Override

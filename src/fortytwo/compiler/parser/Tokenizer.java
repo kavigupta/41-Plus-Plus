@@ -7,40 +7,61 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.Language;
 import fortytwo.vm.errors.SyntaxErrors;
 
 public class Tokenizer {
-	public static List<Token> tokenize(Context parent, String input) {
+	public static List<Token42> tokenize(Context parent, String input) {
+		return tokenizeFully(parent, input).stream()
+				.filter(Token42::isMeaningful).collect(Collectors.toList());
+	}
+	public static List<Token42> tokenizeFully(Context parent, String input) {
+		if (input.length() == 0) return new ArrayList<>();
+		// This function, unlike others, contains return statements after
+		// error throw statements. This is because for syntax highlighting
+		// purposes, it will be called in an error-tolerant environment.
 		input += " ";
-		List<Token> tokens = new ArrayList<>();
+		List<Token42> tokens = new ArrayList<>();
 		StringBuffer token = new StringBuffer();
 		loop: for (int i = 0; i < input.length(); i++) {
 			switch (input.charAt(i)) {
 				case '[':
 					add(parent, i, token, tokens);
 					int closebracket = findCloseBracket(input, i);
-					if (closebracket < 0)
+					if (closebracket < 0) {
 						SyntaxErrors.matchingSymbolDNE(parent, input, i);
-					// ignore everything between brackets.
+						tokens.add(new Token42(input.substring(i), null));
+						return tokens;
+					}
+					// don't just ignore everything between brackets, add
+					// it! (It'll be filtered out for everything but syntax
+					// highlighting purposes anyway)
+					tokens.add(new Token42(input.substring(i,
+							closebracket + 1), parent.subContext(i,
+							closebracket + 1)));
 					i = closebracket;
 					continue loop;
 				case '(':
 					add(parent, i, token, tokens);
 					int closeparen = findCloseParen(input, i);
-					if (closeparen < 0)
+					if (closeparen < 0) {
 						SyntaxErrors.matchingSymbolDNE(parent, input, i);
+						tokens.add(new Token42(input.substring(i), null));
+						return tokens;
+					}
 					// dump anything between parenthesis into an single
 					// token
-					tokens.add(new Token(input
-							.substring(i, closeparen + 1), parent
-							.subContext(i, closeparen + 1)));
+					tokens.add(new Token42(input.substring(i,
+							closeparen + 1), parent.subContext(i,
+							closeparen + 1)));
 					i = closeparen;
 					continue loop;
 				case ')':
 				case ']':
+					tokens.add(new Token42(input.substring(i), null));
 					SyntaxErrors.matchingSymbolDNE(parent, input, i);
+					return tokens;
 				case '+':
 				case '-':
 				case '*':
@@ -48,14 +69,14 @@ public class Tokenizer {
 				case ':':
 				case ',':
 					add(parent, i, token, tokens);
-					tokens.add(new Token(Character.toString(input
+					tokens.add(new Token42(Character.toString(input
 							.charAt(i)), parent.subContext(i, i + 1)));
 					continue loop;
 				case '.':
 					if (i + 1 < input.length()
 							&& !Character.isDigit(input.charAt(i + 1))) {
 						add(parent, i, token, tokens);
-						tokens.add(new Token(Character.toString(input
+						tokens.add(new Token42(Character.toString(input
 								.charAt(i)), parent
 								.subContext(i, i + 1)));
 						continue loop;
@@ -68,8 +89,8 @@ public class Tokenizer {
 							&& input.charAt(i + 1) == '/')
 						divOrFloorDiv = "//";
 					else divOrFloorDiv = "/";
-					tokens.add(new Token(divOrFloorDiv, parent.subContext(
-							i, i + 1)));
+					tokens.add(new Token42(divOrFloorDiv, parent
+							.subContext(i, i + 1)));
 					continue loop;
 				case '\'':
 					if (i - 1 < 0
@@ -77,10 +98,14 @@ public class Tokenizer {
 									.isTerminator(input.charAt(i - 1))) {
 						add(parent, i, token, tokens);
 						int closequote = findCloseQuote(input, i);
-						if (closequote < 0)
+						if (closequote < 0) {
 							SyntaxErrors.matchingSymbolDNE(parent,
 									input, i);
-						tokens.add(new Token("'"
+							tokens.add(new Token42(input.substring(i),
+									null));
+							return tokens;
+						}
+						tokens.add(new Token42("'"
 								+ unescape(input.substring(i + 1,
 										closequote)) + "'" + "",
 								parent.subContext(i, closequote + 1)));
@@ -91,19 +116,21 @@ public class Tokenizer {
 			}
 			if (Character.isWhitespace(input.charAt(i))) {
 				add(parent, i, token, tokens);
+				tokens.add(new Token42(input.substring(i, i + 1), parent
+						.subContext(i, i + 1)));
 				continue loop;
 			}
 			token.append(input.charAt(i));
 			continue loop;
 		}
-		return tokens.stream().filter(t -> t.token.trim().length() != 0)
-				.collect(Collectors.toList());
+		if (tokens.size() == 0) return tokens;
+		if (tokens.get(tokens.size() - 1).token.equals(" "))
+			tokens.remove(tokens.size() - 1);
+		return tokens;
 	}
 	private static int findCloseQuote(String input, int i) {
 		int backslashstate = 0;
 		for (int j = i + 1; j < input.length(); j++) {
-			System.out.println(input + "\t" + input.charAt(j) + "\t"
-					+ backslashstate);
 			if (input.charAt(j) == '\'' && backslashstate % 2 == 0)
 				return j;
 			if (input.charAt(j) == '\\')
@@ -117,23 +144,26 @@ public class Tokenizer {
 			if (input.charAt(j) == ')') return j;
 			if (input.charAt(j) == '\'' && input.charAt(j - 1) != '\\') {
 				j = findCloseQuote(input, j);
+				if (j == -1) return -1;
 				continue;
 			}
 			if (input.charAt(j) == '(') {
 				j = findCloseParen(input, j);
+				if (j == -1) return -1;
 				continue;
 			}
 			if (input.charAt(j) == '[') {
 				j = findCloseBracket(input, j);
+				if (j == -1) return -1;
 				continue;
 			}
 		}
 		return -1;
 	}
 	private static void add(Context parent, int i, StringBuffer token,
-			List<Token> tokens) {
-		tokens.add(new Token(token.toString(), parent.subContext(i,
-				i + token.length())));
+			List<Token42> tokens) {
+		tokens.add(new Token42(token.toString(), parent.subContext(
+				i - token.length(), i)));
 		token.setLength(0);
 	}
 	private static int findCloseBracket(String input, int i) {

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="syntax_highlighting/src/test/java"/>
-	<classpathentry kind="src" path="syntax_highlighting/src/main/java"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="res"/>
+	<classpathentry kind="src" path="ide"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="src" path="/Standard Library"/>
+	<classpathentry kind="lib" path="syntax_highlighting/build/libs/rsyntaxtextarea-2.5.6.jar" sourcepath="syntax_highlighting/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

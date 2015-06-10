@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Tokenizer;
@@ -81,7 +81,7 @@ public class GlobalEnvTest {
 														Context.synthetic()),
 												"world".chars()
 														.mapToObj(x -> new LiteralString(
-																new Token(
+																new Token42(
 																		Character.toString((char) x),
 																		Context.synthetic())))
 														.collect(Collectors

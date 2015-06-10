@@ -6,7 +6,7 @@ import java.util.List;
 
 import lib.standard.collections.Pair;
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.Resources;
 import fortytwo.language.field.GenericField;
@@ -69,18 +69,18 @@ public class StdLib42 {
 	}
 	private static void addPair() {
 		TypeVariable _k = new TypeVariable(
-				VariableIdentifier.getInstance(Token.minimal("_k")));
+				VariableIdentifier.getInstance(Token42.minimal("_k")));
 		TypeVariable _v = new TypeVariable(
-				VariableIdentifier.getInstance(Token.minimal("_v")));
+				VariableIdentifier.getInstance(Token42.minimal("_v")));
 		DEF_STRUCT.addStructure(new GenericStructure(
-				new GenericStructureType(Arrays.asList(Token
+				new GenericStructureType(Arrays.asList(Token42
 						.minimal("pair")), Arrays.asList(_k, _v), Context
 						.synthetic()),
 				Arrays.asList(
 						new GenericField(VariableIdentifier
-								.getInstance(Token.minimal("_key")), _k),
+								.getInstance(Token42.minimal("_key")), _k),
 						new GenericField(VariableIdentifier
-								.getInstance(Token.minimal("_value")),
+								.getInstance(Token42.minimal("_value")),
 								_v))));
 	}
 	public static Pair<FunctionName, List<ParsedExpression>> parseFunction(
@@ -105,11 +105,11 @@ public class StdLib42 {
 			StaticEnvironment se, FunctionName name, List<Expression> inputs) {
 		if (name.function.size() != 4) return null;
 		if (!name.function.get(0).equals(
-				new FunctionToken(new Token("the", Context.synthetic()))))
+				new FunctionToken(new Token42("the", Context.synthetic()))))
 			return null;
 		if (!(name.function.get(1) instanceof FunctionArgument)) return null;
 		if (!name.function.get(2).equals(
-				new FunctionToken(new Token("of", Context.synthetic()))))
+				new FunctionToken(new Token42("of", Context.synthetic()))))
 			return null;
 		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
 		if (!(inputs.get(0) instanceof VariableIdentifier)) return null;
@@ -136,14 +136,14 @@ public class StdLib42 {
 			List<ConcreteType> inputs) {
 		if (name.function.size() != 4) return null;
 		if (!name.function.get(0).equals(
-				new FunctionToken(new Token("the", Context.synthetic()))))
+				new FunctionToken(new Token42("the", Context.synthetic()))))
 			return null;
 		if (!(name.function.get(1) instanceof FunctionToken)
 				|| !((FunctionToken) name.function.get(1)).token.token
 						.startsWith(Resources.VARIABLE_START))
 			return null;
 		if (!name.function.get(2).equals(
-				new FunctionToken(new Token("of", Context.synthetic()))))
+				new FunctionToken(new Token42("of", Context.synthetic()))))
 			return null;
 		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
 		VariableIdentifier field = VariableIdentifier

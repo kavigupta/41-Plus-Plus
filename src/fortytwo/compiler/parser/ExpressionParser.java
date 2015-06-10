@@ -8,7 +8,7 @@ import java.util.Stack;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.compiler.parsed.expressions.ParsedBinaryOperation;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
@@ -31,7 +31,7 @@ import fortytwo.vm.expressions.LiteralNumber;
 import fortytwo.vm.expressions.LiteralString;
 
 public class ExpressionParser {
-	public static ParsedExpression parseExpression(List<Token> list) {
+	public static ParsedExpression parseExpression(List<Token42> list) {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() == 1
@@ -40,7 +40,7 @@ public class ExpressionParser {
 		return function;
 	}
 	public static ParsedExpression parsePureExpression(
-			List<Token> currentExpression) {
+			List<Token42> currentExpression) {
 		ArrayList<ParsedExpression> originalExpressions = tokenize(currentExpression);
 		ArrayList<ParsedExpression> expressions = removeUnary(originalExpressions);
 		for (int precendence = 0; precendence <= Operation.MAX_PRECDENCE; precendence++) {
@@ -104,9 +104,9 @@ public class ExpressionParser {
 		}
 		return expressionsWoUO;
 	}
-	private static ArrayList<ParsedExpression> tokenize(List<Token> exp) {
+	private static ArrayList<ParsedExpression> tokenize(List<Token42> exp) {
 		ArrayList<ParsedExpression> expressions = new ArrayList<>();
-		for (Token token : exp) {
+		for (Token42 token : exp) {
 			switch (token.token.charAt(0)) {
 				case '0':
 				case '1':
@@ -169,7 +169,7 @@ public class ExpressionParser {
 					expressions.add(VariableIdentifier.getInstance(token));
 					break;
 				case '(':
-					Token depar = Language.deparenthesize(token);
+					Token42 depar = Language.deparenthesize(token);
 					expressions.add(parseExpression(Tokenizer.tokenize(
 							depar.context, depar.token)));
 					break;
@@ -179,7 +179,7 @@ public class ExpressionParser {
 		}
 		return expressions;
 	}
-	public static GenericType parseType(Token token) {
+	public static GenericType parseType(Token42 token) {
 		if (token.token.startsWith(Resources.VARIABLE_START))
 			return new TypeVariable(VariableIdentifier.getInstance(token));
 		while (token.token.startsWith(Resources.OPEN_PAREN))
@@ -190,9 +190,9 @@ public class ExpressionParser {
 		}
 		return parseStructType(Tokenizer.tokenize(token.context, token.token));
 	}
-	private static GenericType parseStructType(List<Token> tokens) {
+	private static GenericType parseStructType(List<Token42> tokens) {
 		Context context = Context.tokenSum(tokens);
-		ArrayList<Token> struct = new ArrayList<>();
+		ArrayList<Token42> struct = new ArrayList<>();
 		int i = 0;
 		for (; i < tokens.size() && !tokens.get(i).token.equals(Resources.OF); i++) {
 			struct.add(tokens.get(i));

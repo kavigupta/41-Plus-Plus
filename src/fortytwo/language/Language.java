@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.vm.errors.SyntaxErrors;
 
 public class Language {
@@ -42,11 +42,13 @@ public class Language {
 	public static boolean isArticle(String word) {
 		return word.equals(A) || word.equals(AN);
 	}
-	public static Token deparenthesize(Token token) {
+	public static Token42 deparenthesize(Token42 token) {
 		if (token.token.startsWith(OPEN_PAREN)) {
-			if (!token.token.endsWith(CLOSE_PAREN))
+			if (!token.token.endsWith(CLOSE_PAREN)) {
 				SyntaxErrors.matchingSymbolDNE(token.context, token.token,
 						0);
+				return token.subToken(1, token.token.length());
+			}
 			return token.subToken(1, token.token.length() - 1);
 		}
 		return token;
@@ -59,7 +61,9 @@ public class Language {
 				|| start == '\'' || start == '_';
 	}
 	public static boolean isValidVariableIdentifier(String name) {
+		if (name == null) return false;
 		if (name.contains(SPACE)) return false;
+		if (name.equals(VALUE)) return true;
 		return name.startsWith(VARIABLE_START);
 	}
 	public static boolean isFunctionToken(String token) {
@@ -67,15 +71,15 @@ public class Language {
 		// LOWPRI rest of this: it should be fine for now
 		return true;
 	}
-	public static Token parenthesize(List<Token> line) {
-		if (line.size() == 0) return new Token("", Context.synthetic());
+	public static Token42 parenthesize(List<Token42> line) {
+		if (line.size() == 0) return new Token42("", Context.synthetic());
 		if (line.size() == 1) return line.get(0);
 		StringBuilder s = new StringBuilder(OPEN_PAREN);
-		for (Token l : line) {
+		for (Token42 l : line) {
 			s.append(l.token).append(SPACE);
 		}
-		return new Token(s.append(CLOSE_PAREN).toString(), Context.tokenSum(
-				line).inParen());
+		return new Token42(s.append(CLOSE_PAREN).toString(), Context
+				.tokenSum(line).inParen());
 	}
 	public static boolean isListElement(String token) {
 		return token.equals(COMMA) || token.equals(AND);

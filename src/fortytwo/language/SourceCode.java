@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
@@ -159,7 +159,7 @@ public class SourceCode {
 	public static String display(StructureType st) {
 		if (st.types.size() == 0) return parenthesizedName(st.name).token;
 		StringBuffer buff = new StringBuffer("(");
-		for (Token s : st.name) {
+		for (Token42 s : st.name) {
 			buff.append(s).append(" ");
 		}
 		List<String> types = st.types.stream().map(x -> x.toSourceCode())
@@ -169,7 +169,7 @@ public class SourceCode {
 	}
 	public static String display(GenericStructureType type) {
 		StringBuffer name = new StringBuffer();
-		for (Token s : type.name)
+		for (Token42 s : type.name)
 			name.append(s).append(' ');
 		String list = displayList(type.inputs.stream()
 				.map(x -> x.toSourceCode()).collect(Collectors.toList()));
@@ -186,14 +186,14 @@ public class SourceCode {
 		if (statement.isSimple()) return s;
 		return "Do the following: " + s + "." + " That's all";
 	}
-	private static Token parenthesizedName(List<Token> name) {
-		if (name.size() == 0) return new Token("()", Context.synthetic());
+	private static Token42 parenthesizedName(List<Token42> name) {
+		if (name.size() == 0) return new Token42("()", Context.synthetic());
 		if (name.size() == 1) return name.get(0);
 		StringBuffer buff = new StringBuffer("(");
-		for (Token s : name) {
+		for (Token42 s : name) {
 			buff.append(s.token).append(" ");
 		}
-		return new Token(buff.substring(0, buff.length() - 1) + ")", Context
+		return new Token42(buff.substring(0, buff.length() - 1) + ")", Context
 				.tokenSum(name).inParen());
 	}
 	private static String displayFieldList(ParsedVariableRoster fields) {

@@ -3,7 +3,7 @@ package fortytwo.vm.errors;
 import java.util.List;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.sentences.Sentence;
@@ -13,7 +13,7 @@ import fortytwo.vm.VirtualMachine;
 
 public class ParserErrors {
 	public static void expectedVariableInDecl(boolean functionDecl,
-			Token problem, List<Token> line) {
+			Token42 problem, List<Token42> line) {
 		VirtualMachine.error(ErrorType.PARSING, String.format(
 				"A %s definition must contain only name tokens and variables,"
 						+ " but ~%s~ is neither.",
@@ -25,7 +25,7 @@ public class ParserErrors {
 	 * input type.
 	 */
 	public static void expectedCTInFunctionDecl(GenericType type,
-			List<Token> line, int argument) {
+			List<Token42> line, int argument) {
 		String location = argument < 0 ? "output" : (Language
 				.ordinal(argument) + " input");
 		VirtualMachine.error(
@@ -45,7 +45,7 @@ public class ParserErrors {
 		unresolvedTermination("function definition", "function output",
 				f.context());
 	}
-	public static void noCloseVB(List<Token> openingBrace) {
+	public static void noCloseVB(List<Token42> openingBrace) {
 		unresolvedTermination("Open block", "Close Block",
 				Context.tokenSum(openingBrace));
 	}

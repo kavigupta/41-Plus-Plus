@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -25,7 +25,7 @@ import fortytwo.vm.expressions.LiteralExpression;
 
 public class FunctionEquivalence extends Function42 {
 	public static final TypeVariable TO_BE_COMPARED = new TypeVariable(
-			VariableIdentifier.getInstance(new Token(
+			VariableIdentifier.getInstance(new Token42(
 					"_FunctionEquivalence_compare", Context
 							.minimal("_FunctionEquivalence_compare"))));
 	public static enum Comparator {
@@ -40,7 +40,7 @@ public class FunctionEquivalence extends Function42 {
 			s.addAll(Arrays
 					.asList(name)
 					.stream()
-					.map(x -> new FunctionToken(new Token(x, Context
+					.map(x -> new FunctionToken(new Token42(x, Context
 							.synthetic()))).collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
 			this.sig = FunctionSignature

@@ -1,17 +1,17 @@
 package fortytwo.vm.expressions;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
 
 public class LiteralString extends LiteralExpression {
-	public final Token contents;
-	public static LiteralString getInstance(Token contents) {
+	public final Token42 contents;
+	public static LiteralString getInstance(Token42 contents) {
 		return new LiteralString(contents);
 	}
-	public LiteralString(Token contents) {
+	public LiteralString(Token42 contents) {
 		super(contents.context);
 		this.contents = contents;
 	}

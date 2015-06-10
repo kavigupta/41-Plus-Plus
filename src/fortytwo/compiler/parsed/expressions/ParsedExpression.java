@@ -1,7 +1,7 @@
 package fortytwo.compiler.parsed.expressions;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.Expression;
@@ -14,7 +14,7 @@ public interface ParsedExpression extends ParsedStatement {
 	public default boolean isSimple() {
 		return true;
 	}
-	public default Token toToken() {
-		return new Token(toSourceCode(), context());
+	public default Token42 toToken() {
+		return new Token42(toSourceCode(), context());
 	}
 }

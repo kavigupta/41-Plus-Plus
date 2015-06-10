@@ -8,6 +8,7 @@
 \newcommand{\codeblock}[1]{\begin{quote}\code{#1}\end{quote}}
 
 \newcommand{\name}{\code{41++}}
+\newcommand{\idename}{\code{\name{} Editor}}
 
 \begin{document}
 \title{Manual for the \name Language}
@@ -19,6 +20,6 @@
 
 \section{Console Manipulation}
 
-The console is the little box at the bottom of your screen.
+The console is the little box at the bottom of the \idename{}. The id
 
 \end{document}

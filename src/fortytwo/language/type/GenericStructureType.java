@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.SourceCode;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.errors.TypingErrors;
 
 public class GenericStructureType implements GenericType {
-	public final List<Token> name;
+	public final List<Token42> name;
 	public final List<GenericType> inputs;
 	private final Context context;
-	public GenericStructureType(List<Token> structName,
+	public GenericStructureType(List<Token42> structName,
 			List<GenericType> inputs, Context context) {
 		this.name = structName;
 		this.inputs = inputs;

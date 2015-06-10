@@ -3,7 +3,7 @@ package fortytwo.language.type;
 import java.math.BigDecimal;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
@@ -11,7 +11,7 @@ import fortytwo.vm.expressions.LiteralString;
 
 public enum PrimitiveTypeWithoutContext {
 	NUMBER(LiteralNumber.getInstance(BigDecimal.ZERO, Context.synthetic())),
-	STRING(new LiteralString(new Token("", Context.minimal("")))), BOOL(
+	STRING(new LiteralString(new Token42("", Context.minimal("")))), BOOL(
 			LiteralBool.getInstance(false, Context.synthetic())),
 	TYPE(null), VOID(null);
 	public final LiteralExpression def;

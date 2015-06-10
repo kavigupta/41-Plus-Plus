@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
@@ -22,7 +22,7 @@ import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.SyntaxErrors;
 
 public class StatementParser {
-	public static Sentence parseStatement(List<Token> line) {
+	public static Sentence parseStatement(List<Token42> line) {
 		line = new ArrayList<>(line);
 		line.remove(line.size() - 1);
 		switch (line.get(0).token) {
@@ -45,7 +45,7 @@ public class StatementParser {
 		}
 		return parseVoidFunctionCall(line);
 	}
-	private static FunctionOutput parseReturn(List<Token> line) {
+	private static FunctionOutput parseReturn(List<Token42> line) {
 		Context fullContext = Context.tokenSum(line);
 		/* Exit the function( and output <output>)?. */
 		if (!line.get(1).token.equals(Resources.THE)
@@ -60,7 +60,7 @@ public class StatementParser {
 		return new FunctionOutput(ExpressionParser.parseExpression(line),
 				fullContext);
 	}
-	private static ParsedStatement parseVoidFunctionCall(List<Token> list) {
+	private static ParsedStatement parseVoidFunctionCall(List<Token42> list) {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() != 1
@@ -72,7 +72,7 @@ public class StatementParser {
 		// should never get here
 		return null;
 	}
-	private static ParsedAssignment parseAssignment(List<Token> line) {
+	private static ParsedAssignment parseAssignment(List<Token42> line) {
 		Context fullContext = Context.tokenSum(line);
 		/*
 		 * Set the <field> of <name> to <value>.
@@ -81,7 +81,7 @@ public class StatementParser {
 				|| !line.get(3).token.equals(Resources.OF)
 				|| !line.get(5).token.equals(Resources.TO))
 			SyntaxErrors.invalidSentence(SentenceType.ASSIGNMENT, line);
-		Token fieldT = line.get(2);
+		Token42 fieldT = line.get(2);
 		VariableIdentifier name = VariableIdentifier.getInstance(line.get(4));
 		line.subList(0, 6).clear();
 		ParsedExpression expr = ExpressionParser.parseExpression(line);
@@ -89,7 +89,7 @@ public class StatementParser {
 				name, expr, fullContext) : new ParsedFieldAssignment(name,
 				VariableIdentifier.getInstance(fieldT), expr, fullContext);
 	}
-	private static Sentence parseDefinition(List<Token> line) {
+	private static Sentence parseDefinition(List<Token42> line) {
 		Context fullContext = Context.tokenSum(line);
 		/*
 		 * Define a[n] <type> called <name>( with a <field1> of <value1>, a
@@ -98,17 +98,17 @@ public class StatementParser {
 		if (!Language.isArticle(line.get(1).token)
 				|| !line.get(3).token.equals(Resources.CALLED))
 			SyntaxErrors.invalidSentence(SentenceType.DEFINITION, line);
-		Token type = Language.deparenthesize(line.get(2));
+		Token42 type = Language.deparenthesize(line.get(2));
 		if (type.token.equals(Resources.DECL_FUNCTION))
 			return ConstructionParser.parseFunctionDefinition(line);
 		if (type.token.equals(Resources.TYPE))
 			return ConstructionParser.parseStructDefinition(line);
-		Token name = line.get(4);
+		Token42 name = line.get(4);
 		ParsedVariableRoster fields = new ParsedVariableRoster();
 		for (int i = 5; i < line.size(); i++) {
 			if (!line.get(i).token.equals(Resources.OF)) continue;
-			Token fieldT = line.get(i - 1);
-			ArrayList<Token> tokens2 = new ArrayList<>();
+			Token42 fieldT = line.get(i - 1);
+			ArrayList<Token42> tokens2 = new ArrayList<>();
 			i++;
 			while (i < line.size()
 					&& !Language.isListElement(line.get(i).token)) {

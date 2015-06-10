@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.StructureDeclaration;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
@@ -30,11 +30,11 @@ import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.errors.TypingErrors;
 
 public class ConstructionParser {
-	public static ParsedFunctionCall composeFunction(List<Token> list) {
+	public static ParsedFunctionCall composeFunction(List<Token42> list) {
 		Pair<FunctionName, List<ParsedExpression>> fsig = parseFunctionSignature(list);
 		return ParsedFunctionCall.getInstance(fsig.key, fsig.value);
 	}
-	public static StructureDeclaration parseStructDefinition(List<Token> line) {
+	public static StructureDeclaration parseStructDefinition(List<Token42> line) {
 		Context context = Context.tokenSum(line);
 		/*
 		 * Define a type called <structure> of <typevar1>, <typevar2>,
@@ -46,7 +46,7 @@ public class ConstructionParser {
 			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_STRUCT,
 					line);
 		line.subList(0, 4).clear();
-		ArrayList<Token> structExpression = new ArrayList<>();
+		ArrayList<Token42> structExpression = new ArrayList<>();
 		int i = 0;
 		for (; i < line.size() && !line.get(i).token.equals(Resources.THAT)
 				&& !line.get(i).token.equals(Resources.OF); i++) {
@@ -74,7 +74,7 @@ public class ConstructionParser {
 				new GenericStructureType(structExpression, typeVariables,
 						context), fields), Context.tokenSum(line));
 	}
-	public static FunctionDefinition parseFunctionDefinition(List<Token> line) {
+	public static FunctionDefinition parseFunctionDefinition(List<Token42> line) {
 		/*
 		 * Define a function called <function expression> that takes a[n]
 		 * <type1> called <field1>, a[n] <type2> called <field2>, and a[n]
@@ -86,7 +86,7 @@ public class ConstructionParser {
 			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_FUNCT,
 					line);
 		int i = 4;
-		ArrayList<Token> funcExpress = new ArrayList<>();
+		ArrayList<Token42> funcExpress = new ArrayList<>();
 		for (; i < line.size() && !line.get(i).token.equals(Resources.THAT); i++) {
 			funcExpress.add(line.get(i));
 		}
@@ -116,7 +116,7 @@ public class ConstructionParser {
 							SentenceType.DECLARATION_FUNCT, line);
 			}
 		}
-		int outputloc = Token.indexOf(line, Resources.OUTPUTS);
+		int outputloc = Token42.indexOf(line, Resources.OUTPUTS);
 		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(funcExpress);
 		List<VariableIdentifier> variables = sig.value
 				.stream()
@@ -147,11 +147,11 @@ public class ConstructionParser {
 				(ConcreteType) outputType, Context.tokenSum(line));
 	}
 	private static Pair<FunctionName, List<ParsedExpression>> parseFunctionSignature(
-			List<Token> list) {
+			List<Token42> list) {
 		List<FunctionComponent> function = new ArrayList<>();
-		List<Token> currentExpression = new ArrayList<>();
+		List<Token42> currentExpression = new ArrayList<>();
 		List<ParsedExpression> arguments = new ArrayList<>();
-		for (Token tok : list) {
+		for (Token42 tok : list) {
 			if (Language.isExpression(tok.token)) {
 				currentExpression.add(tok);
 			} else if (Language.isFunctionToken(tok.token)) {

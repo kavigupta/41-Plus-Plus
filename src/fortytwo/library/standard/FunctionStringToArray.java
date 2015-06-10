@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
@@ -21,7 +21,7 @@ public class FunctionStringToArray extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		Token tokenVal = ((LiteralString) arguments.get(0)).contents;
+		Token42 tokenVal = ((LiteralString) arguments.get(0)).contents;
 		LiteralArray larray = new LiteralArray(new PrimitiveType(
 				PrimitiveTypeWithoutContext.STRING, Context.synthetic()),
 				tokenVal.token.length(), Context.synthetic());

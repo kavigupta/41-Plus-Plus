@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
@@ -20,9 +20,9 @@ public class FunctionStringAppend extends Function42 {
 	@Override
 	protected LiteralString apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		Token a = ((LiteralString) arguments.get(0)).contents;
-		Token b = ((LiteralString) arguments.get(1)).contents;
-		return new LiteralString(new Token(a.token + b.token,
+		Token42 a = ((LiteralString) arguments.get(0)).contents;
+		Token42 b = ((LiteralString) arguments.get(1)).contents;
+		return new LiteralString(new Token42(a.token + b.token,
 				Context.sum(Arrays.asList(a.context, b.context))));
 	}
 	@Override

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ArrayType;
 import fortytwo.language.type.PrimitiveType;
@@ -22,7 +22,7 @@ public class FunctionStringSplit extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		Token token = ((LiteralString) arguments.get(0)).contents;
+		Token42 token = ((LiteralString) arguments.get(0)).contents;
 		LiteralArray array = new LiteralArray(new PrimitiveType(
 				PrimitiveTypeWithoutContext.STRING, Context.synthetic()),
 				token.token.length(), Context.synthetic());

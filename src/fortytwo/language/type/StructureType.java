@@ -3,15 +3,15 @@ package fortytwo.language.type;
 import java.util.List;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.SourceCode;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class StructureType implements ConcreteType {
-	public final List<Token> name;
+	public final List<Token42> name;
 	public final List<ConcreteType> types;
 	private final Context context;
-	public StructureType(List<Token> name, List<ConcreteType> types,
+	public StructureType(List<Token42> name, List<ConcreteType> types,
 			Context context) {
 		this.name = name;
 		this.types = types;

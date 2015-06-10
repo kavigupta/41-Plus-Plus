@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ArrayType;
 import fortytwo.language.type.PrimitiveType;
@@ -31,7 +31,7 @@ public class FunctionLetterCombine extends Function42 {
 					.charAt(0);
 		}
 		return new LiteralString(
-				new Token(new String(c), Context.synthetic()));
+				new Token42(new String(c), Context.synthetic()));
 	}
 	@Override
 	public PrimitiveType outputType() {

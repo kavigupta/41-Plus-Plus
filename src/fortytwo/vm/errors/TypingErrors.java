@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.Token;
+import fortytwo.compiler.Token42;
 import fortytwo.language.Language;
 import fortytwo.language.ParsedConstruct;
 import fortytwo.language.SourceCode;
@@ -91,7 +91,7 @@ public class TypingErrors {
 								"The type ~%s~ could not be understood given the type variables known here",
 								gt.toSourceCode()), gt.context());
 	}
-	public static void invalidArrayType(List<Token> tokens,
+	public static void invalidArrayType(List<Token42> tokens,
 			List<GenericType> typeVariables) {
 		String contentType;
 		if (typeVariables.size() == 0)
@@ -114,7 +114,7 @@ public class TypingErrors {
 								.tokenSum(tokens));
 	}
 	public static void incompleteFieldTypingInFunctionDecl(
-			VariableIdentifier vid, List<Token> line) {
+			VariableIdentifier vid, List<Token42> line) {
 		VirtualMachine
 				.error(ErrorType.PARSING,
 						String.format(

@@ -35,7 +35,7 @@ public class Context {
 	public static Context synthetic() {
 		return SYNTHETIC;
 	}
-	public static Context tokenSum(List<Token> tokens) {
+	public static Context tokenSum(List<Token42> tokens) {
 		return sum(tokens.stream().map(t -> t.context)
 				.collect(Collectors.toList()));
 	}
