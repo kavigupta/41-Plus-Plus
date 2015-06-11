@@ -1,4 +1,0 @@
-			case Token.COMMENT_MULTILINE:
-				state = MLC;
-				start = text.offset;
-				break;

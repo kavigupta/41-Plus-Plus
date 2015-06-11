@@ -1,4 +1,0 @@
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
-				state = STRING;
-				start = text.offset;
-				break;
