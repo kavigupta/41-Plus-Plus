@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,6 +16,7 @@ import fortytwo.vm.expressions.LiteralExpression;
 public class LineHistory extends JScrollPane {
 	private JPanel entry;
 	private int index = 0;
+	private ArrayList<String> history = new ArrayList<String>();
 	public LineHistory() {
 		super();
 		entry = new JPanel();
@@ -46,6 +48,7 @@ public class LineHistory extends JScrollPane {
 		entry.add(comp, gbc);
 	}
 	public void displayCommand(String cmd) {
+		history.add(cmd);
 		cmd = cmd.replaceAll("[\\r\\n]", "");
 		System.out.println("Command " + cmd);
 		JTextPane command = new JTextPane();
@@ -53,9 +56,12 @@ public class LineHistory extends JScrollPane {
 		put(command, true);
 	}
 	public void displayOutput(LiteralExpression literalValue) {
+		String output = literalValue.toSourceCode();
+		history.add(output);
 		JTextPane result = new JTextPane();
 		result.setText("&nbsp;= " + literalValue.toSourceCode());
-		put(result, true);
+		result.setForeground(Color.YELLOW);
+		put(result, false);
 	}
 	public void displayln(String line) {
 		JTextPane result = new JTextPane();
@@ -84,5 +90,14 @@ public class LineHistory extends JScrollPane {
 		JTextPane pane = new JTextPane();
 		pane.setText(error.toString());
 		put(pane, false);
+	}
+	public int nCommands() {
+		return history.size();
+	}
+	public void set(int pointer, String text) {
+		history.set(pointer, text);
+	}
+	public String get(int pointer) {
+		return history.get(pointer);
 	}
 }

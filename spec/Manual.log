@@ -1,10 +1,9 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=latex 2015.6.3)  8 JUN 2015 15:37
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.6.3)  11 JUN 2015 16:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**\nonstopmode\input _TZ_12721-KG-HP-2014-Ubuntu.tex
-(./_TZ_12721-KG-HP-2014-Ubuntu.tex
-(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+**\nonstopmode\input Manual.tex
+(./Manual.tex (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
 File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
@@ -61,8 +60,8 @@ Package: footnote 1997/01/28 1.13 Save footnotes around boxes
 \fn@notes=\box28
 \fn@width=\dimen107
 )
-(./_TZ_12721-KG-HP-2014-Ubuntu.aux)
-\openout1 = `_TZ_12721-KG-HP-2014-Ubuntu.aux'.
+No file Manual.aux.
+\openout1 = `Manual.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
 LaTeX Font Info:    ... okay on input line 12.
@@ -89,16 +88,32 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 18.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 18.
- [1
+[1
 
-] (./_TZ_12721-KG-HP-2014-Ubuntu.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./Manual.aux) ) 
 Here is how much of TeX's memory you used:
- 1525 strings out of 495029
- 21830 string characters out of 6181524
- 70676 words of memory out of 5000000
+ 1524 strings out of 495028
+ 21629 string characters out of 6181498
+ 70679 words of memory out of 5000000
  4786 multiletter control sequences out of 15000+600000
  8132 words of font info for 30 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 26i,8n,32p,871b,219s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 26i,8n,32p,850b,219s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt1
+0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
 
-Output written on _TZ_12721-KG-HP-2014-Ubuntu.dvi (1 page, 1856 bytes).
+Output written on Manual.pdf (1 page, 91111 bytes).
+PDF statistics:
+ 48 PDF objects out of 1000 (max. 8388607)
+ 34 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

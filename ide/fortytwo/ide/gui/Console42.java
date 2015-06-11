@@ -1,8 +1,10 @@
 package fortytwo.ide.gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -18,6 +20,7 @@ public class Console42 extends JDialog {
 	private RSyntaxTextArea line;
 	private LineHistory history;
 	private GUILinkedEnvironment environ;
+	private int pointer = 0;
 	public Console42(JFrame owner, GUILinkedEnvironment environ) {
 		super(owner, "41++ Console");
 		this.environ = environ;
@@ -27,28 +30,48 @@ public class Console42 extends JDialog {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		line = ComponentFactory.getLine42(true, this::exec);
+		line.addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {}
+			@Override
+			public void keyPressed(KeyEvent e) {}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_UP
+						|| e.getKeyCode() == KeyEvent.VK_KP_UP)
+					movePointer(+1);
+				else if (e.getKeyCode() == KeyEvent.VK_DOWN)
+					movePointer(-1);
+			}
+		});
 		contentPane.add(line, BorderLayout.SOUTH);
 		contentPane.add(history, BorderLayout.CENTER);
 		setContentPane(contentPane);
-		addWindowListener(new WindowListener() {
-			@Override
-			public void windowOpened(WindowEvent e) {}
-			@Override
-			public void windowIconified(WindowEvent e) {}
-			@Override
-			public void windowDeiconified(WindowEvent e) {}
-			@Override
-			public void windowDeactivated(WindowEvent e) {}
+		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				owner.dispatchEvent(new WindowEvent(owner,
 						WindowEvent.WINDOW_CLOSING));
 			}
-			@Override
-			public void windowClosed(WindowEvent e) {}
-			@Override
-			public void windowActivated(WindowEvent e) {}
 		});
+	}
+	public void movePointer(int direction) {
+		System.out.println("Travelling in the direction " + direction);
+		int size = history.nCommands();
+		if (size == 0) return;
+		if (pointer != history.nCommands())
+			history.set(pointer, line.getText());
+		System.out.printf("Cached %s at location %s.", line.getText(),
+				pointer);
+		pointer += -direction;
+		if (pointer == size || pointer == -1) {
+			pointer = size;
+			line.setText("");
+			return;
+		}
+		if (pointer < 0) pointer += size - 1;
+		if (pointer > size) pointer -= size + 1;
+		line.setText(history.get(pointer).replaceAll("[\r\n]", ""));
 	}
 	public void exec() {
 		String cmd = line.getText();
@@ -60,5 +83,6 @@ public class Console42 extends JDialog {
 		} catch (Exception e) {
 			if (!e.getMessage().startsWith("~")) e.printStackTrace();
 		}
+		pointer = history.nCommands();
 	}
 }
