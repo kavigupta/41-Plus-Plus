@@ -11,6 +11,11 @@ public class LocalEnvironment {
 		this.global = global;
 		vars = new VariableRoster<>();
 	}
+	public LocalEnvironment reinitialize(GlobalEnvironment newEnvironment) {
+		LocalEnvironment newlocal = new LocalEnvironment(newEnvironment);
+		vars.forEach(x -> newlocal.vars.assign(x.key, x.value));
+		return newlocal;
+	}
 	public LiteralExpression referenceTo(VariableIdentifier id) {
 		LiteralExpression localE = vars.referenceTo(id);
 		if (localE != null) return localE;

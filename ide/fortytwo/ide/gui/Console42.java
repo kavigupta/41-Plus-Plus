@@ -26,14 +26,7 @@ public class Console42 extends JDialog {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		line = ComponentFactory.getLine42(true, () -> {
-			String cmd = line.getText();
-			history.displayCommand(cmd);
-			line.setText("");
-			try {
-				environ.execute(cmd);
-			} catch (Exception e) {}
-		});
+		line = ComponentFactory.getLine42(true, this::exec);
 		contentPane.add(line, BorderLayout.SOUTH);
 		contentPane.add(history, BorderLayout.CENTER);
 		setContentPane(contentPane);
@@ -56,5 +49,16 @@ public class Console42 extends JDialog {
 			@Override
 			public void windowActivated(WindowEvent e) {}
 		});
+	}
+	public void exec() {
+		String cmd = line.getText();
+		history.displayCommand(cmd);
+		line.setText("");
+		try {
+			environ.refresh();
+			environ.execute(cmd);
+		} catch (Exception e) {
+			if (!e.getMessage().startsWith("~")) e.printStackTrace();
+		}
 	}
 }

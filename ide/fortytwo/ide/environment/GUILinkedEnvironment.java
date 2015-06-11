@@ -1,6 +1,10 @@
 package fortytwo.ide.environment;
 
+import java.util.function.Supplier;
+
+import fortytwo.compiler.Compiler42;
 import fortytwo.compiler.Context;
+import fortytwo.compiler.parsed.sentences.Sentence;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
@@ -14,37 +18,45 @@ import fortytwo.vm.errors.ParserErrors;
 
 public class GUILinkedEnvironment {
 	public LineHistory history;
-	private LocalEnvironment env;
-	public GUILinkedEnvironment(LineHistory history) {
+	private LocalEnvironment console;
+	private String last = "";
+	private Supplier<String> editor;
+	public GUILinkedEnvironment(LineHistory history, Supplier<String> editor) {
 		super();
 		this.history = history;
-		this.env = new LocalEnvironment(
+		this.console = new LocalEnvironment(
 				GlobalEnvironment.getDefaultEnvironment(StaticEnvironment
 						.getDefault()));
 		VirtualMachine.displayln = history::displayln;
-		VirtualMachine.displayerr = err -> {
-			history.displayerr(err);
-			throw new RuntimeException();
+		VirtualMachine.displayerr = error -> {
+			history.displayerr(error);
+			throw new RuntimeException("~~~has been logged");
 		};
+		this.editor = editor;
 	}
 	public void execute(String cmd) {
-		if (cmd.endsWith(".")) {
-			Parser.parse(cmd).forEach(
-					x -> {
-						if (x instanceof ParsedStatement) {
-							((ParsedStatement) x).contextualize(
-									env.staticEnvironment()).execute(
-									env);
-						} else {
-							ParserErrors.expectedStatement(x);
-						}
-					});
+		if (cmd.trim().endsWith(".")) {
+			for (Sentence x : Parser.parse(cmd)) {
+				if (x instanceof ParsedStatement) {
+					((ParsedStatement) x).contextualize(
+							console.staticEnvironment())
+							.execute(console);
+				} else {
+					ParserErrors.expectedStatement(x);
+				}
+			}
 		} else {
 			history.displayOutput(ExpressionParser
 					.parseExpression(
 							Tokenizer.tokenize(Context.minimal(cmd), cmd))
-					.contextualize(env.staticEnvironment())
-					.literalValue(env));
+					.contextualize(console.staticEnvironment())
+					.literalValue(console));
 		}
+	}
+	public void refresh() {
+		String newSource = editor.get();
+		if (newSource.equals(last)) return;
+		GlobalEnvironment newEnvironment = Compiler42.compile(newSource);
+		console = console.reinitialize(newEnvironment);
 	}
 }

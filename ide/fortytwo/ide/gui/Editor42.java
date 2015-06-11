@@ -25,7 +25,7 @@ public class Editor42 extends TextEditor {
 		setTitle("41++ Editor");
 		textArea = ComponentFactory.getEditorBox42();
 		setTextArea(textArea);
-		environ = new GUILinkedEnvironment(new LineHistory());
+		environ = new GUILinkedEnvironment(new LineHistory(), this::getText);
 		JMenu help = new JMenu("Help");
 		help.add(getMenuItem("Manual", -1, false, e -> this.cmdHelpManual()));
 		help.add(getMenuItem("About", -1, false, e -> this.cmdAbout()));

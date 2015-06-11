@@ -68,12 +68,15 @@ public class FunctionName {
 		StringBuffer sbuff = new StringBuffer();
 		for (FunctionComponent comp : function) {
 			if (comp instanceof FunctionToken)
-				sbuff.append(((FunctionToken) comp).token.token);
+				sbuff.append(((FunctionToken) comp).token.token)
+						.append(" ");
 			else {
-				sbuff.append(types.get(count).toSourceCode());
+				sbuff.append("{").append(types.get(count).toSourceCode())
+						.append("} ");
 				count++;
 			}
 		}
-		return sbuff.toString();
+		if (sbuff.length() == 0) return "";
+		return sbuff.substring(0, sbuff.length() - 1);
 	}
 }

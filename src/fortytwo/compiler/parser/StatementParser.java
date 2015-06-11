@@ -95,7 +95,7 @@ public class StatementParser {
 		 * Define a[n] <type> called <name>( with a <field1> of <value1>, a
 		 * <field2> of <value2>, ...)?.
 		 */
-		if (!Language.isArticle(line.get(1).token)
+		if (line.size() < 5 || !Language.isArticle(line.get(1).token)
 				|| !line.get(3).token.equals(Resources.CALLED))
 			SyntaxErrors.invalidSentence(SentenceType.DEFINITION, line);
 		Token42 type = Language.deparenthesize(line.get(2));

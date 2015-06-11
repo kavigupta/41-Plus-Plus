@@ -22,19 +22,16 @@ public class SyntaxErrors {
 			List<Token42> currentExpression) {
 		VirtualMachine.error(
 				ErrorType.SYNTAX,
-				String.format("%s is not a valid %s",
+				String.format("~%s~ is not a valid %s",
 						currentExpression.stream().map(x -> x.token)
 								.reduce((x, y) -> x + " " + y),
 						type.description()),
 				Context.tokenSum(currentExpression));
 	}
 	public static void invalidSentence(SentenceType type, List<Token42> line) {
-		VirtualMachine.error(
-				ErrorType.SYNTAX,
-				String.format(
-						"%s is not a valid %s",
-						line.stream().map(x -> x.token)
-								.reduce((x, y) -> x + " " + y),
-						type.description()), Context.tokenSum(line));
+		VirtualMachine.error(ErrorType.SYNTAX, String.format(
+				"~%s~ is not a valid %s", line.stream().map(x -> x.token)
+						.reduce((x, y) -> x + " " + y).get(),
+				type.description()), Context.tokenSum(line));
 	}
 }

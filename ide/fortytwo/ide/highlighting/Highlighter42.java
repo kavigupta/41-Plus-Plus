@@ -51,7 +51,6 @@ public class Highlighter42 extends AbstractTokenMaker {
 	}
 	private void addAllTokens(List<Token42> tokens, Segment text,
 			int startOffset) {
-		System.out.println("Tokens: " + tokens);
 		if (tokens.size() == 0) return;
 		Token42 error = null;
 		int errorStart = 0;
@@ -94,10 +93,6 @@ public class Highlighter42 extends AbstractTokenMaker {
 			int tokenStart) {
 		int currentTokenStart = tokenStart + text.offset;
 		int currentTokenEnd = currentTokenStart + error.token.length();
-		System.out.println("Add token: "
-				+ text.toString().substring(
-						currentTokenStart - text.offset,
-						currentTokenEnd - text.offset - 1));
 		addToken(text.array, currentTokenStart, currentTokenEnd - 2,
 				Token.ERROR_IDENTIFIER, startOffset
 						+ (currentTokenStart - text.offset));

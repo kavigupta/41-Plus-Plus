@@ -121,4 +121,13 @@ public class TypingErrors {
 								"The type of the variable ~%s~ is not specified in this function declaration",
 								vid.toSourceCode()), vid.context());
 	}
+	public static void noValue(Field name) {
+		VirtualMachine
+				.error(ErrorType.PARSING,
+						String.format(
+								"The primitive variable ~%s~, of type ~%s~, cannot be defined without a value",
+								name.name.toSourceCode(),
+								name.type.toSourceCode()), name
+								.context());
+	}
 }

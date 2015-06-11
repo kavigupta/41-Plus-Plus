@@ -94,8 +94,9 @@ public class StructureRoster {
 			Expression length = fields.referenceTo(TypeVariable.LENGTH.name);
 			if (fields.size() == 1
 					&& length != null
-					&& length.resolveType().equals(
-							new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+					&& length.resolveType()
+							.equals(new PrimitiveType(
+									PrimitiveTypeWithoutContext.NUMBER,
 									Context.synthetic())))
 				return true;
 			if (fields.size() == 0)
@@ -103,6 +104,7 @@ public class StructureRoster {
 			else DNEErrors.fieldDNEInArray(fields.variables().get(0));
 		}
 		if (!(name.type instanceof StructureType)) {
+			if (fields.size() == 0) TypingErrors.noValue(name);
 			// nothing but a structure or array has anything but a value
 			DNEErrors.fieldAccessOnPrimitive(name.type, fields.variables());
 		}
