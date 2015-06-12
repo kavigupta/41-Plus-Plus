@@ -26,8 +26,8 @@ import fortytwo.vm.expressions.LiteralExpression;
 public class FunctionEquivalence extends Function42 {
 	public static final TypeVariable TO_BE_COMPARED = new TypeVariable(
 			VariableIdentifier.getInstance(new Token42(
-					"_FunctionEquivalence_compare", Context
-							.minimal("_FunctionEquivalence_compare"))));
+					"\"FunctionEquivalence_compare\"", Context
+							.minimal("\"FunctionEquivalence_compare\""))));
 	public static enum Comparator {
 		EQUALS(true, "is", "equal", "to"), NOT_EQUALS(false, "is", "not",
 				"equal", "to"), SAME_AS(true, "is", "the", "same", "as"),

@@ -38,7 +38,8 @@ public final class Resources {
 	public static final String MODULUS = "Remainderation";
 	public static final String DIV = "Division";
 	/* Naming Conventions */
-	public static final String VARIABLE_START = "_";
+	public static final String VARIABLE_BEGIN = "\"";
+	public static final String VARIABLE_END = "\"";
 	public static final String OPEN_PAREN = "(";
 	public static final String CLOSE_PAREN = ")";
 	/* Statements */

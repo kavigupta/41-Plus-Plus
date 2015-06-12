@@ -17,8 +17,8 @@ import fortytwo.vm.expressions.LiteralNumber;
 
 public class FunctionArrayAccess extends Function42 {
 	private static final TypeVariable CONTENTS = new TypeVariable(
-			VariableIdentifier.getInstance(new Token42("_contents", Context
-					.synthetic())));
+			VariableIdentifier.getInstance(new Token42("\"contents\"",
+					Context.synthetic())));
 	public static final FunctionArrayAccess ST = new FunctionArrayAccess("st");
 	public static final FunctionArrayAccess ND = new FunctionArrayAccess("nd");
 	public static final FunctionArrayAccess RD = new FunctionArrayAccess("rd");

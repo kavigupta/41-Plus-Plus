@@ -123,7 +123,7 @@ public class Highlighter42 extends AbstractTokenMaker {
 				return Token.LITERAL_NUMBER_DECIMAL_INT;
 			case '[':
 				return Token.COMMENT_MARKUP;
-			case '_':
+			case '"':
 				return Token.VARIABLE;
 			case '.':
 			case ':':

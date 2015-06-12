@@ -165,7 +165,7 @@ public class ExpressionParser {
 								Operation.DIVIDE, token.context));
 					// should not happen.
 					break;
-				case '_':
+				case '\"':
 					expressions.add(VariableIdentifier.getInstance(token));
 					break;
 				case '(':
@@ -180,11 +180,12 @@ public class ExpressionParser {
 		return expressions;
 	}
 	public static GenericType parseType(Token42 token) {
-		if (token.token.startsWith(Resources.VARIABLE_START))
+		if (token.token.startsWith(Resources.VARIABLE_BEGIN))
 			return new TypeVariable(VariableIdentifier.getInstance(token));
 		while (token.token.startsWith(Resources.OPEN_PAREN))
 			token = Language.deparenthesize(token);
-		for (PrimitiveTypeWithoutContext type : PrimitiveTypeWithoutContext.values()) {
+		for (PrimitiveTypeWithoutContext type : PrimitiveTypeWithoutContext
+				.values()) {
 			if (type.typeID().equals(token.token))
 				return new PrimitiveType(type, token.context);
 		}

@@ -26,12 +26,14 @@ public class FunctionArrayLength extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+				Context.synthetic());
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(FunctionName.getInstance("the",
-				"_length", "of", ""), Arrays.asList(new GenericArrayType(
-				TypeVariable.LENGTH, Context.synthetic())), outputType());
+				TypeVariable.LENGTH.name.name.token, "of", ""), Arrays
+				.asList(new GenericArrayType(TypeVariable.LENGTH, Context
+						.synthetic())), outputType());
 	}
 }

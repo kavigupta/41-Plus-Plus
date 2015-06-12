@@ -39,7 +39,7 @@ public class DNEErrors {
 	}
 	public static void fieldDNEInArray(VariableIdentifier field) {
 		dneError("field", "the " + field.toSourceCode() + " of an array",
-				"; only _length exists", field.context());
+				"; only \"length\" exists", field.context());
 	}
 	public static void fieldAccessOnPrimitive(ConcreteType type,
 			List<VariableIdentifier> field) {

@@ -23,6 +23,10 @@
 \section{The Console}
 This section will make a lot more sense if you have \ide{} open, so I suggest you open it now.
 
-The console is the little box at the bottom, marked, as you might suspect, ``\con{}.'' You can write stuff into it and press \enter{}. here
+The console is the little box at the bottom, marked, as you might suspect, ``\con{}.'' You can write stuff into it and press \enter{}. Here are a few things to try.
+
+\subsection{Literals}
+
+Try typing ``2'' into your console.
 
 \end{document}

@@ -19,8 +19,8 @@ import fortytwo.vm.expressions.LiteralExpression;
 public class FunctionPrint extends Function42 {
 	public static final FunctionPrint INSTANCE = new FunctionPrint();
 	public static final TypeVariable TO_PRINT = new TypeVariable(
-			VariableIdentifier.getInstance(new Token42("_toPrint", Context
-					.synthetic())));
+			VariableIdentifier.getInstance(new Token42("\"toPrint\"",
+					Context.synthetic())));
 	private FunctionPrint() {}
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,

@@ -8,7 +8,7 @@ import lib.standard.collections.Pair;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.Token42;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
-import fortytwo.language.Resources;
+import fortytwo.language.Language;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -69,19 +69,19 @@ public class StdLib42 {
 	}
 	private static void addPair() {
 		TypeVariable _k = new TypeVariable(
-				VariableIdentifier.getInstance(Token42.minimal("_k")));
+				VariableIdentifier.getInstance(Token42.minimal("\"k\"")));
 		TypeVariable _v = new TypeVariable(
-				VariableIdentifier.getInstance(Token42.minimal("_v")));
+				VariableIdentifier.getInstance(Token42.minimal("\"v\"")));
 		DEF_STRUCT.addStructure(new GenericStructure(
 				new GenericStructureType(Arrays.asList(Token42
 						.minimal("pair")), Arrays.asList(_k, _v), Context
-						.synthetic()),
-				Arrays.asList(
+						.synthetic()), Arrays.asList(
+						new GenericField(
+								VariableIdentifier.getInstance(Token42
+										.minimal("\"key\"")), _k),
 						new GenericField(VariableIdentifier
-								.getInstance(Token42.minimal("_key")), _k),
-						new GenericField(VariableIdentifier
-								.getInstance(Token42.minimal("_value")),
-								_v))));
+								.getInstance(Token42
+										.minimal("\"value\"")), _v))));
 	}
 	public static Pair<FunctionName, List<ParsedExpression>> parseFunction(
 			List<FunctionComponent> name, List<ParsedExpression> arguments) {
@@ -139,9 +139,9 @@ public class StdLib42 {
 				new FunctionToken(new Token42("the", Context.synthetic()))))
 			return null;
 		if (!(name.function.get(1) instanceof FunctionToken)
-				|| !((FunctionToken) name.function.get(1)).token.token
-						.startsWith(Resources.VARIABLE_START))
-			return null;
+				|| !(Language
+						.isValidVariableIdentifier(((FunctionToken) name.function
+								.get(1)).token.token))) return null;
 		if (!name.function.get(2).equals(
 				new FunctionToken(new Token42("of", Context.synthetic()))))
 			return null;

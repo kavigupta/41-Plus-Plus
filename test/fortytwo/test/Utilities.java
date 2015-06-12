@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.StatementParser;
@@ -69,5 +70,11 @@ public class Utilities {
 		assertEquals(new Error42(type, msg, parent.subContext(start, end)),
 				VirtualMachine.popError());
 		VirtualMachine.displayerr = old;
+	}
+	public static void assertParse(ParsedExpression value, String toParse) {
+		assertEquals(
+				value,
+				ExpressionParser.parseExpression(Tokenizer.tokenize(
+						Context.minimal(toParse), toParse)));
 	}
 }

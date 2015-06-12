@@ -81,7 +81,7 @@ public class TypingErrors {
 	public static void incompleteArrayConstructor(Context context) {
 		VirtualMachine
 				.error(ErrorType.PARSING,
-						"Arrays must be defined with the field _length, but it was not defined here",
+						"Arrays must be defined with the field \"length\", but it was not defined here",
 						context);
 	}
 	public static void inresolubleType(GenericType gt) {

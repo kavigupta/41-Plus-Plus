@@ -58,13 +58,13 @@ public class Language {
 		char start = token.charAt(0);
 		return start == '(' || start == '+' || start == '-' || start == '*'
 				|| start == '/' || start == '%' || Character.isDigit(start)
-				|| start == '\'' || start == '_';
+				|| start == '\'' || start == '\"';
 	}
 	public static boolean isValidVariableIdentifier(String name) {
 		if (name == null) return false;
 		if (name.contains(SPACE)) return false;
 		if (name.equals(VALUE)) return true;
-		return name.startsWith(VARIABLE_START);
+		return name.startsWith(VARIABLE_BEGIN) && name.endsWith(VARIABLE_END);
 	}
 	public static boolean isFunctionToken(String token) {
 		if (!Character.isAlphabetic(token.charAt(0))) return false;
