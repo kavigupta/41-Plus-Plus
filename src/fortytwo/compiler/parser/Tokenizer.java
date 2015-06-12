@@ -93,6 +93,7 @@ public class Tokenizer {
 							.subContext(i, i + 1)));
 					continue loop;
 				case '\'':
+				case '\"':
 					if (i - 1 < 0
 							|| Language
 									.isTerminator(input.charAt(i - 1))) {
@@ -105,10 +106,11 @@ public class Tokenizer {
 									null));
 							return tokens;
 						}
-						tokens.add(new Token42("'"
+						tokens.add(new Token42(input.charAt(i)
 								+ unescape(input.substring(i + 1,
-										closequote)) + "'" + "",
-								parent.subContext(i, closequote + 1)));
+										closequote))
+								+ input.charAt(i), parent.subContext(i,
+								closequote + 1)));
 						i = closequote;
 						continue loop;
 					}
@@ -129,9 +131,10 @@ public class Tokenizer {
 		return tokens;
 	}
 	private static int findCloseQuote(String input, int i) {
+		char open = input.charAt(i);
 		int backslashstate = 0;
 		for (int j = i + 1; j < input.length(); j++) {
-			if (input.charAt(j) == '\'' && backslashstate % 2 == 0)
+			if (input.charAt(j) == open && backslashstate % 2 == 0)
 				return j;
 			if (input.charAt(j) == '\\')
 				backslashstate++;

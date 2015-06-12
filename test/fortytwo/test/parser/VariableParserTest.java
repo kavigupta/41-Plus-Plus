@@ -10,14 +10,15 @@ import fortytwo.test.Utilities;
 public class VariableParserTest {
 	@Test
 	public void simpleTest() {
-		Utilities.assertParse(VariableIdentifier.getInstance(new Token42(
-				"\"abc\"", Context.SYNTHETIC)), "\"abc\"");
-		Utilities.assertParse(VariableIdentifier.getInstance(new Token42(
-				"\"abc123\"", Context.SYNTHETIC)), "\"abc123\"");
-		Utilities.assertParse(VariableIdentifier.getInstance(new Token42(
-				"\"`\"", Context.SYNTHETIC)), "\"`\"");
+		assertVariableParse("abc");
+		assertVariableParse("abc123");
+		assertVariableParse("123");
+		assertVariableParse("``");
+		assertVariableParse("_-2=");
+		assertVariableParse("(");
+		assertVariableParse(" ");
 	}
-	public static void assertVariableParse() {
+	public static void assertVariableParse(String name) {
 		Utilities.assertParse(
 				VariableIdentifier.getInstance(new Token42("\"" + name
 						+ "\"", Context.SYNTHETIC)), "\"" + name + "\"");

@@ -62,7 +62,6 @@ public class Language {
 	}
 	public static boolean isValidVariableIdentifier(String name) {
 		if (name == null) return false;
-		if (name.contains(SPACE)) return false;
 		if (name.equals(VALUE)) return true;
 		return name.startsWith(VARIABLE_BEGIN) && name.endsWith(VARIABLE_END);
 	}
