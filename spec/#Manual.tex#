@@ -2,15 +2,37 @@
 \usepackage{verbatim}
 \usepackage{listings}
 \usepackage{footnote}
+\usepackage[margin=1in]{geometry}
 \makesavenoteenv{tabular}
+\usepackage{color}
+\usepackage{soul}
+\usepackage{calc}
+\usepackage[framemethod=default]{mdframed}
 
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\codeblock}[1]{\begin{quote}\code{#1}\end{quote}}
 
+\newmdenv[linecolor=white,backgroundcolor=black]{blackbox}
+\newenvironment{console}{\begin{blackbox}\code\bgroup\color{white}}{\egroup\end{blackbox}}
+
+\newcommand{
+
 \newcommand{\name}{\code{41++}}
 \newcommand{\ide}{\name{} Editor}
 \newcommand{\con}{\name{} Console}
+
 \newcommand{\enter}{``ENTER''}
+
+\newcommand{\consExpression}[2]{
+\begin{console}
+\begin{tabular}{ll}
+>> &#1\\
+\textcolor{yellow}{\hspace*{1ex}=} &\textcolor{yellow}{#2}
+\end{tabular}
+\end{console}}
+
+\newcommand{\consInput}[1]{\textcolor{white}{\colorbox{black}{\code{#1}}}}
+\newcommand{\consExpr}[1]{\textcolor{yellow}{\colorbox{black}{\code{#1}}}}
 
 \begin{document}
 \title{Manual for the \name Language}
@@ -23,10 +45,20 @@
 \section{The Console}
 This section will make a lot more sense if you have \ide{} open, so I suggest you open it now.
 
-The console is the little box at the bottom, marked, as you might suspect, ``\con{}.'' You can write stuff into it and press \enter{}. Here are a few things to try.
+The console is the little box at the bottom, marked, as you might suspect, ``\con{}.'' You can write stuff into it and press \enter{}. The usefullness of the console will be discussed later in this section.
 
-\subsection{Literals}
+\section{Literals}
 
-Try typing ``2'' into your console.
+Try typing \consInput{2} into your console. You should get something that looks like this:
+
+\consExpression{2}{2}
+
+Notice how the second line is in yellow; this, along with the equals sign before it, signifies that it is an output.
+
+Now, you may be thinking ``OK, that's great, it's a duplication program. Very very useful. [end sarcasm]'', but in fact explaining this simple characteristic will give you some insight into how to use \name{}. When you enter \consInput{2} into the document, then the \name{} interpreter calculates the literal value of the input, which in this case is helpfully \consExpr{2}.
+
+Anything that when typed into the console outputs itself is known as a ``literal''. Numbers are an example of such a literal. Valid numbers consist of a sequence of digits \code{0-9}, with an optional period that must be followed by more digits\footnote{Some languages allow for numbers like \code{4.}, but periods have a special meaning in \name{} so you must write \code{4.0} or just \code{4}.}
+
+The second type of literals are strings. Strings are slightl
 
 \end{document}

@@ -122,6 +122,11 @@ public class Tokenizer {
 						.subContext(i, i + 1)));
 				continue loop;
 			}
+			if (i - 1 >= 0 && Character.isDigit(input.charAt(i - 1))
+					&& (!Character.isDigit(input.charAt(i)))
+					&& input.charAt(i) != '.') {
+				add(parent, i, token, tokens);
+			}
 			token.append(input.charAt(i));
 			continue loop;
 		}

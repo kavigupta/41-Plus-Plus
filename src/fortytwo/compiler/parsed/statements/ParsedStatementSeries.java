@@ -16,7 +16,7 @@ public class ParsedStatementSeries implements ParsedStatement {
 	private final Context context;
 	public static ParsedStatementSeries getInstance(ParsedStatement s,
 			Context context) {
-		if (s instanceof ParsedStatementSeries)
+		if (s.type() == SentenceType.COMPOUND)
 			return (ParsedStatementSeries) s;
 		return new ParsedStatementSeries(Arrays.asList(s), context);
 	}

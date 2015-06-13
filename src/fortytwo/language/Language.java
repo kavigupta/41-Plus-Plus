@@ -120,9 +120,12 @@ public class Language {
 		if (sent.length() == 0) return "";
 		return Character.toUpperCase(sent.charAt(0)) + sent.substring(1);
 	}
+	public static boolean isOperator(char c) {
+		return c == '+' || c == '-' || c == '*' || c == '/' || c == '%';
+	}
 	public static boolean isTerminator(char c) {
-		return Character.isWhitespace(c) || isPunctuation(c) || c == ']'
-				|| c == ')';
+		return isOperator(c) || Character.isWhitespace(c) || isPunctuation(c)
+				|| c == ']' || c == ')';
 	}
 	private static boolean isPunctuation(char c) {
 		return c == ',' || c == '.';

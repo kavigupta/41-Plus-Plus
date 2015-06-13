@@ -10,6 +10,7 @@ import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.ide.gui.LineHistory;
+import fortytwo.language.classification.SentenceKind;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.LocalEnvironment;
@@ -37,7 +38,7 @@ public class GUILinkedEnvironment {
 	public void execute(String cmd) {
 		if (cmd.trim().endsWith(".")) {
 			for (Sentence x : Parser.parse(cmd)) {
-				if (x instanceof ParsedStatement) {
+				if (x.type().kind == SentenceKind.STATEMENT) {
 					((ParsedStatement) x).contextualize(
 							console.staticEnvironment())
 							.execute(console);

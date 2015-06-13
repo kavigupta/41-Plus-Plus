@@ -13,6 +13,7 @@ import lib.standard.gui.TextEditor;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextArea;
 
+import fortytwo.icon.IconManager;
 import fortytwo.ide.environment.GUILinkedEnvironment;
 
 public class Editor42 extends TextEditor {
@@ -23,6 +24,7 @@ public class Editor42 extends TextEditor {
 	public Editor42() {
 		super();
 		setTitle("41++ Editor");
+		IconManager.setIcon(this);
 		textArea = ComponentFactory.getEditorBox42();
 		setTextArea(textArea);
 		environ = new GUILinkedEnvironment(new LineHistory(), this::getText);

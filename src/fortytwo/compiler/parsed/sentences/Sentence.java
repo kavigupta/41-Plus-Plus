@@ -7,5 +7,6 @@ public interface Sentence extends ParsedConstruct {
 	public SentenceType type();
 	@Override
 	public String toSourceCode();
+	@Override
 	public boolean isSimple();
 }
