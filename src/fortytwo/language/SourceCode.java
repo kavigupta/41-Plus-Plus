@@ -193,8 +193,8 @@ public class SourceCode {
 		for (Token42 s : name) {
 			buff.append(s.token).append(" ");
 		}
-		return new Token42(buff.substring(0, buff.length() - 1) + ")", Context
-				.tokenSum(name).inParen());
+		return new Token42(buff.substring(0, buff.length() - 1) + ")",
+				Context.tokenSum(name).inParen());
 	}
 	private static String displayFieldList(ParsedVariableRoster fields) {
 		List<String> items = new ArrayList<>();
