@@ -7,7 +7,7 @@ public class FunctionArgument implements FunctionComponent {
 	private FunctionArgument() {}
 	@Override
 	public Context context() {
-		return Context.synthetic();
+		return Context.SYNTHETIC;
 	}
 	@Override
 	public String toString() {

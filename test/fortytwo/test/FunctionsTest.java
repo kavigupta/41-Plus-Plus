@@ -65,7 +65,7 @@ public class FunctionsTest {
 				ExpressionParser
 						.parseExpression(
 								Tokenizer.tokenize(
-										Context.minimal(toEvaluate),
+										Context.entire(toEvaluate),
 										toEvaluate))
 						.contextualize(env.staticEnv)
 						.literalValue(env.minimalLocalEnvironment())

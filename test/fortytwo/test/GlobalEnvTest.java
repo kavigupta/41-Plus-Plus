@@ -78,12 +78,12 @@ public class GlobalEnvTest {
 										.getInstance(
 												new PrimitiveType(
 														PrimitiveTypeWithoutContext.STRING,
-														Context.synthetic()),
+														Context.SYNTHETIC),
 												"world".chars()
 														.mapToObj(x -> new LiteralString(
 																new Token42(
 																		Character.toString((char) x),
-																		Context.synthetic())))
+																		Context.SYNTHETIC)))
 														.collect(Collectors
 																.toList()),
 												Context.SYNTHETIC)))
@@ -96,7 +96,7 @@ public class GlobalEnvTest {
 				result,
 				ExpressionParser
 						.parseExpression(
-								Tokenizer.tokenize(Context.synthetic(),
+								Tokenizer.tokenize(Context.SYNTHETIC,
 										toEvaluate))
 						.contextualize(env.staticEnv)
 						.literalValue(env.minimalLocalEnvironment())

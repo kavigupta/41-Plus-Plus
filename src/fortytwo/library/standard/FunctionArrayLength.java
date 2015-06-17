@@ -22,18 +22,18 @@ public class FunctionArrayLength extends Function42 {
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		return new LiteralNumber(BigDecimal.valueOf(((LiteralArray) arguments
-				.get(0)).length()), Context.synthetic());
+				.get(0)).length()), Context.SYNTHETIC);
 	}
 	@Override
 	public GenericType outputType() {
 		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-				Context.synthetic());
+				Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(FunctionName.getInstance("the",
 				TypeVariable.LENGTH.name.name.token, "of", ""), Arrays
-				.asList(new GenericArrayType(TypeVariable.LENGTH, Context
-						.synthetic())), outputType());
+				.asList(new GenericArrayType(TypeVariable.LENGTH,
+						Context.SYNTHETIC)), outputType());
 	}
 }

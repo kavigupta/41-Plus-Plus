@@ -112,7 +112,7 @@ public class StructTest {
 				result,
 				ExpressionParser
 						.parseExpression(
-								Tokenizer.tokenize(Context.synthetic(),
+								Tokenizer.tokenize(Context.SYNTHETIC,
 										toEvaluate))
 						.contextualize(env.staticEnv).literalValue(loc)
 						.toSourceCode());

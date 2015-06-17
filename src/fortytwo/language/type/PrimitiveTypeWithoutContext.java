@@ -10,10 +10,10 @@ import fortytwo.vm.expressions.LiteralNumber;
 import fortytwo.vm.expressions.LiteralString;
 
 public enum PrimitiveTypeWithoutContext {
-	NUMBER(LiteralNumber.getInstance(BigDecimal.ZERO, Context.synthetic())),
-	STRING(new LiteralString(new Token42("", Context.minimal("")))), BOOL(
-			LiteralBool.getInstance(false, Context.synthetic())),
-	TYPE(null), VOID(null);
+	NUMBER(LiteralNumber.getInstance(BigDecimal.ZERO, Context.SYNTHETIC)),
+	STRING(new LiteralString(new Token42("", Context.entire("")))), BOOL(
+			LiteralBool.getInstance(false, Context.SYNTHETIC)), TYPE(null),
+	VOID(null);
 	public final LiteralExpression def;
 	private PrimitiveTypeWithoutContext(LiteralExpression def) {
 		this.def = def;

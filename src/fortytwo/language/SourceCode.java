@@ -131,7 +131,7 @@ public class SourceCode {
 		for (int i = 0; i < literalArray.length(); i++) {
 			// no issue here.
 			sbuff.append(
-					literalArray.get(i + 1, Context.synthetic())
+					literalArray.get(i + 1, Context.SYNTHETIC)
 							.toSourceCode()).append(", ");
 		}
 		return sbuff.delete(sbuff.length() - 2, sbuff.length()).append("]")
@@ -187,14 +187,14 @@ public class SourceCode {
 		return "Do the following: " + s + "." + " That's all";
 	}
 	private static Token42 parenthesizedName(List<Token42> name) {
-		if (name.size() == 0) return new Token42("()", Context.synthetic());
+		if (name.size() == 0) return new Token42("()", Context.SYNTHETIC);
 		if (name.size() == 1) return name.get(0);
 		StringBuffer buff = new StringBuffer("(");
 		for (Token42 s : name) {
 			buff.append(s.token).append(" ");
 		}
-		return new Token42(buff.substring(0, buff.length() - 1) + ")", Context
-				.tokenSum(name).inParen());
+		return new Token42(buff.substring(0, buff.length() - 1) + ")",
+				Context.tokenSum(name).inParen());
 	}
 	private static String displayFieldList(ParsedVariableRoster fields) {
 		List<String> items = new ArrayList<>();

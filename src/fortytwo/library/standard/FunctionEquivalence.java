@@ -27,7 +27,7 @@ public class FunctionEquivalence extends Function42 {
 	public static final TypeVariable TO_BE_COMPARED = new TypeVariable(
 			VariableIdentifier.getInstance(new Token42(
 					"\"FunctionEquivalence_compare\"", Context
-							.minimal("\"FunctionEquivalence_compare\""))));
+							.entire("\"FunctionEquivalence_compare\""))));
 	public static enum Comparator {
 		EQUALS(true, "is", "equal", "to"), NOT_EQUALS(false, "is", "not",
 				"equal", "to"), SAME_AS(true, "is", "the", "same", "as"),
@@ -40,15 +40,14 @@ public class FunctionEquivalence extends Function42 {
 			s.addAll(Arrays
 					.asList(name)
 					.stream()
-					.map(x -> new FunctionToken(new Token42(x, Context
-							.synthetic()))).collect(Collectors.toList()));
+					.map(x -> new FunctionToken(new Token42(x,
+							Context.SYNTHETIC)))
+					.collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
-			this.sig = FunctionSignature
-					.getInstance(FunctionName.getInstance(s), Arrays
-							.asList(TO_BE_COMPARED, TO_BE_COMPARED),
-							new PrimitiveType(
-									PrimitiveTypeWithoutContext.BOOL,
-									Context.synthetic()));
+			this.sig = FunctionSignature.getInstance(FunctionName
+					.getInstance(s), Arrays.asList(TO_BE_COMPARED,
+					TO_BE_COMPARED), new PrimitiveType(
+					PrimitiveTypeWithoutContext.BOOL, Context.SYNTHETIC));
 			this.eq = eq;
 		}
 	}
@@ -69,12 +68,12 @@ public class FunctionEquivalence extends Function42 {
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		return LiteralBool.getInstance(
 				arguments.get(0).equals(arguments.get(1)) == compare.eq,
-				Context.synthetic());
+				Context.SYNTHETIC);
 	}
 	@Override
 	public GenericType outputType() {
 		return new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
-				Context.synthetic());
+				Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {

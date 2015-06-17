@@ -33,8 +33,8 @@ public class WhileLoop implements Statement {
 	public boolean typeCheck() {
 		condition.typeCheck();
 		if (!condition.resolveType().equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context
-						.synthetic())))
+				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
+						Context.SYNTHETIC)))
 			TypingErrors.expectedBoolInCondition(false, condition);
 		statement.typeCheck();
 		return false;

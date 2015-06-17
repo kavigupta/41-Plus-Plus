@@ -42,15 +42,17 @@ public class FunctionArrayModification extends Function42 {
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.VOID, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.VOID,
+				Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(FunctionName.getInstance("Set",
 				"the", "", suffix, "element", "of", "", "to", ""), Arrays
-				.asList(new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
-						.synthetic()), new GenericArrayType(
-						TypeVariable.LENGTH, Context.synthetic()),
+				.asList(new PrimitiveType(
+						PrimitiveTypeWithoutContext.NUMBER,
+						Context.SYNTHETIC), new GenericArrayType(
+						TypeVariable.LENGTH, Context.SYNTHETIC),
 						TypeVariable.LENGTH), outputType());
 	}
 }

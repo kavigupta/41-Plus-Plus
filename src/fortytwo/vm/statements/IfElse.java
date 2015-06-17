@@ -40,9 +40,9 @@ public class IfElse implements Statement {
 	}
 	@Override
 	public boolean typeCheck() {
-		if (condition.resolveType()
-				.equals(new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context
-						.synthetic()))) return true;
+		if (condition.resolveType().equals(
+				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
+						Context.SYNTHETIC))) return true;
 		TypingErrors.expectedBoolInCondition(true, condition);
 		// unreachable
 		return false;

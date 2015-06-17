@@ -31,13 +31,13 @@ public class Compiler42 {
 				.parse(text));
 		try {
 			ParsedStatement ps = ((ParsedStatement) StatementParser
-					.parseStatement(Tokenizer.tokenize(
-							Context.synthetic(), "This first.")));
+					.parseStatement(Tokenizer.tokenize(Context.SYNTHETIC,
+							"This first.")));
 			ps.contextualize(env.staticEnv).execute(
 					env.minimalLocalEnvironment());
 		} catch (Throwable t) {
 			VirtualMachine.error(ErrorType.PARSING,
-					"Main method not found.", Context.minimal(text));
+					"Main method not found.", Context.entire(text));
 		}
 	}
 }

@@ -19,7 +19,8 @@ public class LiteralNumber extends LiteralExpression {
 	}
 	@Override
 	public PrimitiveType resolveType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+				Context.SYNTHETIC);
 	}
 	@Override
 	public String toSourceCode() {

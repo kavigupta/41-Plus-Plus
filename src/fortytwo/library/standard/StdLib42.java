@@ -74,8 +74,8 @@ public class StdLib42 {
 				VariableIdentifier.getInstance(Token42.minimal("\"v\"")));
 		DEF_STRUCT.addStructure(new GenericStructure(
 				new GenericStructureType(Arrays.asList(Token42
-						.minimal("pair")), Arrays.asList(_k, _v), Context
-						.synthetic()), Arrays.asList(
+						.minimal("pair")), Arrays.asList(_k, _v),
+						Context.SYNTHETIC), Arrays.asList(
 						new GenericField(
 								VariableIdentifier.getInstance(Token42
 										.minimal("\"key\"")), _k),
@@ -105,11 +105,11 @@ public class StdLib42 {
 			StaticEnvironment se, FunctionName name, List<Expression> inputs) {
 		if (name.function.size() != 4) return null;
 		if (!name.function.get(0).equals(
-				new FunctionToken(new Token42("the", Context.synthetic()))))
+				new FunctionToken(new Token42("the", Context.SYNTHETIC))))
 			return null;
 		if (!(name.function.get(1) instanceof FunctionArgument)) return null;
 		if (!name.function.get(2).equals(
-				new FunctionToken(new Token42("of", Context.synthetic()))))
+				new FunctionToken(new Token42("of", Context.SYNTHETIC))))
 			return null;
 		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
 		if (!(inputs.get(0) instanceof VariableIdentifier)) return null;
@@ -120,12 +120,12 @@ public class StdLib42 {
 				return Pair.getInstance(FunctionArrayLength.INSTANCE,
 						new PrimitiveType(
 								PrimitiveTypeWithoutContext.NUMBER,
-								Context.synthetic()));
+								Context.SYNTHETIC));
 		} else if (type.equals(new PrimitiveType(
-				PrimitiveTypeWithoutContext.STRING, Context.synthetic())))
+				PrimitiveTypeWithoutContext.STRING, Context.SYNTHETIC)))
 			return Pair.getInstance(FunctionStrlen.INSTANCE,
 					new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-							Context.synthetic()));
+							Context.SYNTHETIC));
 		if (!(type instanceof StructureType)) return null;
 		FunctionFieldAccess f = new FunctionFieldAccess(field,
 				se.structs.getStructure((StructureType) type));
@@ -136,14 +136,14 @@ public class StdLib42 {
 			List<ConcreteType> inputs) {
 		if (name.function.size() != 4) return null;
 		if (!name.function.get(0).equals(
-				new FunctionToken(new Token42("the", Context.synthetic()))))
+				new FunctionToken(new Token42("the", Context.SYNTHETIC))))
 			return null;
 		if (!(name.function.get(1) instanceof FunctionToken)
 				|| !(Language
 						.isValidVariableIdentifier(((FunctionToken) name.function
 								.get(1)).token.token))) return null;
 		if (!name.function.get(2).equals(
-				new FunctionToken(new Token42("of", Context.synthetic()))))
+				new FunctionToken(new Token42("of", Context.SYNTHETIC))))
 			return null;
 		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
 		VariableIdentifier field = VariableIdentifier
@@ -154,12 +154,12 @@ public class StdLib42 {
 				return Pair.getInstance(FunctionArrayLength.INSTANCE,
 						new PrimitiveType(
 								PrimitiveTypeWithoutContext.NUMBER,
-								Context.synthetic()));
+								Context.SYNTHETIC));
 		} else if (type.equals(new PrimitiveType(
-				PrimitiveTypeWithoutContext.NUMBER, Context.synthetic())))
+				PrimitiveTypeWithoutContext.NUMBER, Context.SYNTHETIC)))
 			return Pair.getInstance(FunctionStrlen.INSTANCE,
 					new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-							Context.synthetic()));
+							Context.SYNTHETIC));
 		if (!(type instanceof StructureType)) return null;
 		FunctionFieldAccess f = new FunctionFieldAccess(field,
 				se.structs.getStructure((StructureType) type));

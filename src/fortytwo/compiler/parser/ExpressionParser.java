@@ -134,11 +134,11 @@ public class ExpressionParser {
 					break;
 				case 't':
 					expressions.add(LiteralBool.getInstance(true,
-							Context.synthetic()));
+							Context.SYNTHETIC));
 					break;
 				case 'f':
 					expressions.add(LiteralBool.getInstance(false,
-							Context.synthetic()));
+							Context.SYNTHETIC));
 					break;
 				case '+':
 					expressions.add(new UnevaluatedOperator(Operation.ADD,

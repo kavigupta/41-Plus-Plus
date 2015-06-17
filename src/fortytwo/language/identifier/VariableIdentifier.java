@@ -15,7 +15,7 @@ import fortytwo.vm.errors.SyntaxErrors;
 
 public class VariableIdentifier implements ParsedExpression {
 	public static final VariableIdentifier VALUE = new VariableIdentifier(
-			new Token42(Resources.VALUE, Context.synthetic()));
+			new Token42(Resources.VALUE, Context.SYNTHETIC));
 	public final Token42 name;
 	public static VariableIdentifier getInstance(Token42 token) {
 		if (token.token.equals(Resources.VALUE)) return VALUE;

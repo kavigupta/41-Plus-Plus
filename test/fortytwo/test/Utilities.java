@@ -22,21 +22,20 @@ import fortytwo.vm.expressions.LiteralNumber;
 public class Utilities {
 	public static void execute(String statement, GlobalEnvironment env) {
 		((ParsedStatement) StatementParser.parseStatement(Tokenizer.tokenize(
-				Context.minimal(statement), statement))).contextualize(
+				Context.entire(statement), statement))).contextualize(
 				env.staticEnv).execute(env.minimalLocalEnvironment());
 	}
 	public static LiteralExpression evaluate(String toEvaluate,
 			GlobalEnvironment env) {
 		return ExpressionParser
 				.parseExpression(
-						Tokenizer.tokenize(Context.synthetic(),
-								toEvaluate))
+						Tokenizer.tokenize(Context.SYNTHETIC, toEvaluate))
 				.contextualize(env.staticEnv)
 				.literalValue(env.minimalLocalEnvironment());
 	}
 	public static void assertErrorInTokenization(ErrorType type, String msg,
 			int start, int end, String toTokenize) {
-		Context parent = Context.minimal(toTokenize);
+		Context parent = Context.entire(toTokenize);
 		assertError(type, msg, start, end,
 				() -> Tokenizer.tokenize(parent, toTokenize), parent);
 	}
@@ -44,7 +43,7 @@ public class Utilities {
 			String... tokens) {
 		assertEquals(
 				Arrays.asList(tokens),
-				Tokenizer.tokenize(Context.minimal(toTokenize), toTokenize)
+				Tokenizer.tokenize(Context.entire(toTokenize), toTokenize)
 						.stream().map(x -> x.token)
 						.collect(Collectors.toList()));
 	}
@@ -75,6 +74,6 @@ public class Utilities {
 		assertEquals(
 				value,
 				ExpressionParser.parseExpression(Tokenizer.tokenize(
-						Context.minimal(toParse), toParse)));
+						Context.entire(toParse), toParse)));
 	}
 }

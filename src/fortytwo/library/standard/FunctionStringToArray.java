@@ -23,8 +23,8 @@ public class FunctionStringToArray extends Function42 {
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		Token42 tokenVal = ((LiteralString) arguments.get(0)).contents;
 		LiteralArray larray = new LiteralArray(new PrimitiveType(
-				PrimitiveTypeWithoutContext.STRING, Context.synthetic()),
-				tokenVal.token.length(), Context.synthetic());
+				PrimitiveTypeWithoutContext.STRING, Context.SYNTHETIC),
+				tokenVal.token.length(), Context.SYNTHETIC);
 		for (int i = 0; i < tokenVal.token.length(); i++) {
 			larray.set(i + 1,
 					new LiteralString(tokenVal.subToken(i, i + 1)),
@@ -34,12 +34,14 @@ public class FunctionStringToArray extends Function42 {
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.VOID, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.VOID,
+				Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(StdLib42.FUNC_PRINT, Arrays
-				.asList(new PrimitiveType(PrimitiveTypeWithoutContext.STRING, Context
-						.synthetic())), outputType());
+				.asList(new PrimitiveType(
+						PrimitiveTypeWithoutContext.STRING,
+						Context.SYNTHETIC)), outputType());
 	}
 }

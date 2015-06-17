@@ -24,8 +24,8 @@ public class FunctionStringSplit extends Function42 {
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		Token42 token = ((LiteralString) arguments.get(0)).contents;
 		LiteralArray array = new LiteralArray(new PrimitiveType(
-				PrimitiveTypeWithoutContext.STRING, Context.synthetic()),
-				token.token.length(), Context.synthetic());
+				PrimitiveTypeWithoutContext.STRING, Context.SYNTHETIC),
+				token.token.length(), Context.SYNTHETIC);
 		for (int i = 0; i < token.token.length(); i++) {
 			array.set(i + 1, new LiteralString(token.subToken(i, i + 1)),
 					Context.exprSum(arguments));
@@ -34,13 +34,15 @@ public class FunctionStringSplit extends Function42 {
 	}
 	@Override
 	public ArrayType outputType() {
-		return new ArrayType(new PrimitiveType(PrimitiveTypeWithoutContext.STRING,
-				Context.synthetic()), Context.synthetic());
+		return new ArrayType(new PrimitiveType(
+				PrimitiveTypeWithoutContext.STRING, Context.SYNTHETIC),
+				Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(StdLib42.FUNC_STRING_SPLIT,
-				Arrays.asList(new PrimitiveType(PrimitiveTypeWithoutContext.STRING,
-						Context.synthetic())), outputType());
+				Arrays.asList(new PrimitiveType(
+						PrimitiveTypeWithoutContext.STRING,
+						Context.SYNTHETIC)), outputType());
 	}
 }

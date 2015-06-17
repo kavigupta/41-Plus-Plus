@@ -40,16 +40,17 @@ public class FunctionCompare extends Function42 {
 			s.addAll(Arrays
 					.asList(name)
 					.stream()
-					.map(x -> new FunctionToken(new Token42(x, Context
-							.synthetic()))).collect(Collectors.toList()));
+					.map(x -> new FunctionToken(new Token42(x,
+							Context.SYNTHETIC)))
+					.collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
 			this.sig = FunctionSignature.getInstance(FunctionName
 					.getInstance(s), Arrays.asList(
-					new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
-							.synthetic()),
-					new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
-							.synthetic())), new PrimitiveType(
-					PrimitiveTypeWithoutContext.BOOL, Context.synthetic()));
+					new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+							Context.SYNTHETIC), new PrimitiveType(
+							PrimitiveTypeWithoutContext.NUMBER,
+							Context.SYNTHETIC)), new PrimitiveType(
+					PrimitiveTypeWithoutContext.BOOL, Context.SYNTHETIC));
 			this.lt = lt;
 			this.eq = eq;
 			this.gt = gt;
@@ -66,14 +67,15 @@ public class FunctionCompare extends Function42 {
 		BigDecimal b = ((LiteralNumber) arguments.get(1)).contents;
 		int comp = a.compareTo(b);
 		if (comp == 0)
-			return LiteralBool.getInstance(compare.eq, Context.synthetic());
+			return LiteralBool.getInstance(compare.eq, Context.SYNTHETIC);
 		if (comp > 0)
-			return LiteralBool.getInstance(compare.gt, Context.synthetic());
-		return LiteralBool.getInstance(compare.lt, Context.synthetic());
+			return LiteralBool.getInstance(compare.gt, Context.SYNTHETIC);
+		return LiteralBool.getInstance(compare.lt, Context.SYNTHETIC);
 	}
 	@Override
 	public GenericType outputType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
+				Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {

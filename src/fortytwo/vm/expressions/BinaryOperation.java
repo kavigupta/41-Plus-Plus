@@ -70,19 +70,20 @@ public class BinaryOperation implements Expression {
 	@Override
 	public boolean typeCheck() {
 		if (!first.resolveType().equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
-						.synthetic())))
+				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+						Context.SYNTHETIC)))
 			TypingErrors.expectedNumberInArithmeticOperator(this, true);
 		if (!second.resolveType().equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context
-						.synthetic())))
+				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+						Context.SYNTHETIC)))
 			TypingErrors.expectedNumberInArithmeticOperator(this, false);
 		return true;
 	}
 	@Override
 	public ConcreteType resolveType() {
 		typeCheck();
-		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+				Context.SYNTHETIC);
 	}
 	@Override
 	public Context context() {

@@ -6,7 +6,7 @@ public class Token42 {
 	public final String token;
 	public final Context context;
 	public static Token42 minimal(String line) {
-		return new Token42(line, Context.minimal(line));
+		return new Token42(line, Context.entire(line));
 	}
 	public Token42(String line, Context context) {
 		this.token = line;

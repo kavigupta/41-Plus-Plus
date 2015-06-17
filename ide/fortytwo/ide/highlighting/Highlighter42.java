@@ -40,7 +40,7 @@ public class Highlighter42 extends AbstractTokenMaker {
 		VirtualMachine.displayerr = x -> System.err.println(x);
 		String code = new String(text.array, text.offset, text.count);
 		addAllTokens(
-				Tokenizer.tokenizeFully(Context.minimal(code), code)
+				Tokenizer.tokenizeFully(Context.entire(code), code)
 						.stream().filter(x -> x.token.length() != 0)
 						.collect(Collectors.toList()), text, startOffset);
 		addNullToken();

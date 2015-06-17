@@ -20,8 +20,7 @@ import fortytwo.vm.errors.ParserErrors;
 public class Parser {
 	private Parser() {}
 	public static List<Sentence> parse(String text) {
-		List<Token42> tokens = Tokenizer
-				.tokenize(Context.minimal(text), text);
+		List<Token42> tokens = Tokenizer.tokenize(Context.entire(text), text);
 		List<List<Token42>> phrases = new ArrayList<>();
 		List<Token42> current = new ArrayList<>();
 		for (int i = 0; i < tokens.size(); i++) {
@@ -45,7 +44,7 @@ public class Parser {
 	public static Sentence pop(List<List<Token42>> phrases) {
 		if (phrases.size() == 0)
 			return new ParsedStatementSeries(Arrays.asList(),
-					Context.synthetic());
+					Context.SYNTHETIC);
 		switch (phrases.get(0).get(0).token) {
 			case Resources.IF:
 				return popIf(phrases);
@@ -66,7 +65,7 @@ public class Parser {
 		ParsedExpression condition = ExpressionParser.parseExpression(IF);
 		ParsedStatementSeries ifso = popSeries(phrases);
 		ParsedStatementSeries ifelse = new ParsedStatementSeries(
-				Arrays.asList(), Context.synthetic());
+				Arrays.asList(), Context.SYNTHETIC);
 		if (phrases.size() > 0
 				&& phrases.get(0).get(0).token.equals(Resources.OTHERWISE)) {
 			phrases.remove(0); // This should just be "Otherwise:"
@@ -85,7 +84,7 @@ public class Parser {
 	private static ParsedStatementSeries popSeries(List<List<Token42>> phrases) {
 		if (phrases.size() == 0)
 			return new ParsedStatementSeries(Arrays.asList(),
-					Context.synthetic());
+					Context.SYNTHETIC);
 		if (!Language.isOpeningBrace(phrases.get(0).stream()
 				.map(x -> x.token).collect(Collectors.toList()))) {
 			Sentence sent = pop(phrases);

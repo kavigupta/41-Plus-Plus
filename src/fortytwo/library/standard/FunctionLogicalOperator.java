@@ -26,7 +26,7 @@ public class FunctionLogicalOperator extends Function42 {
 		for (int k = 0; k < arguments.size(); k++) {
 			array[k] = ((LiteralBool) arguments.get(k)).contents;
 		}
-		return LiteralBool.getInstance(op.apply(array), Context.synthetic());
+		return LiteralBool.getInstance(op.apply(array), Context.SYNTHETIC);
 	}
 	public static final FunctionLogicalOperator AND = new FunctionLogicalOperator(
 			x -> x[0] && x[1], "", "and", "");
@@ -43,17 +43,19 @@ public class FunctionLogicalOperator extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
+				Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {
 		ArrayList<GenericType> args = new ArrayList<>();
 		for (FunctionComponent fc : name.function) {
 			if (fc instanceof FunctionArgument)
-				args.add(new PrimitiveType(PrimitiveTypeWithoutContext.BOOL, Context
-						.synthetic()));
+				args.add(new PrimitiveType(
+						PrimitiveTypeWithoutContext.BOOL,
+						Context.SYNTHETIC));
 		}
 		return FunctionSignature.getInstance(name, args, new PrimitiveType(
-				PrimitiveTypeWithoutContext.BOOL, Context.synthetic()));
+				PrimitiveTypeWithoutContext.BOOL, Context.SYNTHETIC));
 	}
 }

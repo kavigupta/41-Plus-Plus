@@ -72,7 +72,7 @@ public class Language {
 		return true;
 	}
 	public static Token42 parenthesize(List<Token42> line) {
-		if (line.size() == 0) return new Token42("", Context.synthetic());
+		if (line.size() == 0) return new Token42("", Context.SYNTHETIC);
 		if (line.size() == 1) return line.get(0);
 		StringBuilder s = new StringBuilder(OPEN_PAREN);
 		for (Token42 l : line) {

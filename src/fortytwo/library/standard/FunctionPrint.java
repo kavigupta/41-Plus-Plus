@@ -20,7 +20,7 @@ public class FunctionPrint extends Function42 {
 	public static final FunctionPrint INSTANCE = new FunctionPrint();
 	public static final TypeVariable TO_PRINT = new TypeVariable(
 			VariableIdentifier.getInstance(new Token42("\"toPrint\"",
-					Context.synthetic())));
+					Context.SYNTHETIC)));
 	private FunctionPrint() {}
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
@@ -31,7 +31,7 @@ public class FunctionPrint extends Function42 {
 	@Override
 	public PrimitiveType outputType() {
 		return new PrimitiveType(PrimitiveTypeWithoutContext.VOID,
-				Context.synthetic());
+				Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {

@@ -25,19 +25,19 @@ public class FunctionStrlen extends Function42 {
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		return new LiteralNumber(
 				BigDecimal.valueOf(((LiteralString) arguments.get(0)).contents.token
-						.length()), Context.synthetic());
+						.length()), Context.SYNTHETIC);
 	}
 	@Override
 	public PrimitiveType outputType() {
 		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-				Context.synthetic());
+				Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(FunctionName.getInstance("the",
 				TypeVariable.LENGTH.name.name.token, "of", ""), Arrays
 				.asList(new PrimitiveType(
-						PrimitiveTypeWithoutContext.STRING, Context
-								.synthetic())), outputType());
+						PrimitiveTypeWithoutContext.STRING,
+						Context.SYNTHETIC)), outputType());
 	}
 }

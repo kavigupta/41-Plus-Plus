@@ -27,21 +27,23 @@ public class FunctionLetterCombine extends Function42 {
 		for (int i = 0; i < array.length(); i++) {
 			// pass a synthetic context because we know there will be no
 			// error.
-			c[i] = ((LiteralString) array.get(i + 1, Context.synthetic())).contents.token
+			c[i] = ((LiteralString) array.get(i + 1, Context.SYNTHETIC)).contents.token
 					.charAt(0);
 		}
 		return new LiteralString(
-				new Token42(new String(c), Context.synthetic()));
+				new Token42(new String(c), Context.SYNTHETIC));
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.STRING, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.STRING,
+				Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(StdLib42.FUNC_LETTER_COMBINE,
 				Arrays.asList(new ArrayType(new PrimitiveType(
-						PrimitiveTypeWithoutContext.STRING, Context.synthetic()),
-						Context.synthetic())), outputType());
+						PrimitiveTypeWithoutContext.STRING,
+						Context.SYNTHETIC), Context.SYNTHETIC)),
+				outputType());
 	}
 }

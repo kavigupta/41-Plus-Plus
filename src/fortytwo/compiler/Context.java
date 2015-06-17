@@ -5,23 +5,51 @@ import java.util.stream.Collectors;
 
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 
+/**
+ * An object representing the position in a string of a token.
+ */
 public class Context {
+	/**
+	 * A context representing a "synthetic" context, such as a value created by
+	 * a natively implemented function.
+	 */
 	public static final Context SYNTHETIC = new Context(null, -1, -1);
-	public final String in;
-	public final int start, end;
+	private final String in;
+	/**
+	 * The starting position within the string.
+	 */
+	public final int start;
+	/**
+	 * The ending position within the string
+	 */
+	public final int end;
 	private boolean isSynthetic() {
 		return this == SYNTHETIC;
 	}
+	/**
+	 * @return a context representing this token in parentheses.
+	 */
 	public Context inParen() {
 		if (isSynthetic()) return SYNTHETIC;
 		assert start - 1 >= 0;
 		return new Context(in, start - 1, end + 1);
 	}
+	/**
+	 * @return a context representing this context with a unary + or - in
+	 *         front.
+	 */
 	public Context withUnaryApplied() {
 		if (isSynthetic()) return SYNTHETIC;
 		assert start - 1 >= 0;
 		return new Context(in, start - 1, end);
 	}
+	/**
+	 * @param start the beginning of the subContext with respect to this
+	 *        context's start.
+	 * @param end the end of the subContext with respect to this context's
+	 *        start.
+	 * @return a context that spans [start, end) of this context's span.
+	 */
 	public Context subContext(int start, int end) {
 		if (this.isSynthetic()) return SYNTHETIC;
 		assert start >= 0;
@@ -29,11 +57,12 @@ public class Context {
 		assert this.start + end < this.end;
 		return new Context(this.in, this.start + start, this.start + end);
 	}
-	public static Context minimal(String text) {
+	/**
+	 * @param text the text to be turned into a token
+	 * @return the Context of the entire text, treated as a single token.
+	 */
+	public static Context entire(String text) {
 		return new Context(text, 0, text.length());
-	}
-	public static Context synthetic() {
-		return SYNTHETIC;
 	}
 	public static Context tokenSum(List<Token42> tokens) {
 		return sum(tokens.stream().map(t -> t.context)

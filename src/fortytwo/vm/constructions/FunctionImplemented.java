@@ -43,8 +43,9 @@ public class FunctionImplemented extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return output == null ? new PrimitiveType(PrimitiveTypeWithoutContext.VOID,
-				Context.synthetic()) : output.resolveType();
+		return output == null ? new PrimitiveType(
+				PrimitiveTypeWithoutContext.VOID, Context.SYNTHETIC)
+				: output.resolveType();
 	}
 	@Override
 	public FunctionSignature signature() {

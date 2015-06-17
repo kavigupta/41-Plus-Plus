@@ -50,11 +50,11 @@ public class StructureRoster {
 		if (name.type instanceof StructureType)
 			return new LiteralObject(
 					getStructure((StructureType) name.type), fieldValues,
-					Context.synthetic());
+					Context.SYNTHETIC);
 		return new LiteralArray(((ArrayType) name.type).contentType,
 				((LiteralNumber) fieldValues
 						.referenceTo(TypeVariable.LENGTH.name)).contents
-						.intValue(), Context.synthetic());
+						.intValue(), Context.SYNTHETIC);
 	}
 	public Structure getStructure(StructureType struct) {
 		GenericStructureType genericType = genericVersionOf(struct);
@@ -97,8 +97,7 @@ public class StructureRoster {
 					&& length.resolveType()
 							.equals(new PrimitiveType(
 									PrimitiveTypeWithoutContext.NUMBER,
-									Context.synthetic())))
-				return true;
+									Context.SYNTHETIC))) return true;
 			if (fields.size() == 0)
 				TypingErrors.incompleteArrayConstructor(context);
 			else DNEErrors.fieldDNEInArray(fields.variables().get(0));

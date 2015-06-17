@@ -18,7 +18,7 @@ import fortytwo.vm.expressions.LiteralNumber;
 public class FunctionArrayAccess extends Function42 {
 	private static final TypeVariable CONTENTS = new TypeVariable(
 			VariableIdentifier.getInstance(new Token42("\"contents\"",
-					Context.synthetic())));
+					Context.SYNTHETIC)));
 	public static final FunctionArrayAccess ST = new FunctionArrayAccess("st");
 	public static final FunctionArrayAccess ND = new FunctionArrayAccess("nd");
 	public static final FunctionArrayAccess RD = new FunctionArrayAccess("rd");
@@ -43,8 +43,8 @@ public class FunctionArrayAccess extends Function42 {
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(StdLib42
 				.functArrayAccess(suffix), Arrays.asList(new PrimitiveType(
-				PrimitiveTypeWithoutContext.NUMBER, Context.synthetic()),
-				new GenericArrayType(CONTENTS, Context.synthetic())),
+				PrimitiveTypeWithoutContext.NUMBER, Context.SYNTHETIC),
+				new GenericArrayType(CONTENTS, Context.SYNTHETIC)),
 				CONTENTS);
 	}
 }

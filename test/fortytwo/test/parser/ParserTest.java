@@ -121,7 +121,6 @@ public class ParserTest {
 	}
 	private static String cdLoopExpr(String line) {
 		return ExpressionParser.parseExpression(
-				Tokenizer.tokenize(Context.synthetic(), line))
-				.toSourceCode();
+				Tokenizer.tokenize(Context.SYNTHETIC, line)).toSourceCode();
 	}
 }

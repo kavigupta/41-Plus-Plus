@@ -17,7 +17,8 @@ public class LiteralString extends LiteralExpression {
 	}
 	@Override
 	public PrimitiveType resolveType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.STRING, Context.synthetic());
+		return new PrimitiveType(PrimitiveTypeWithoutContext.STRING,
+				Context.SYNTHETIC);
 	}
 	@Override
 	public String toSourceCode() {

@@ -49,7 +49,7 @@ public class GUILinkedEnvironment {
 		} else {
 			history.displayOutput(ExpressionParser
 					.parseExpression(
-							Tokenizer.tokenize(Context.minimal(cmd), cmd))
+							Tokenizer.tokenize(Context.entire(cmd), cmd))
 					.contextualize(console.staticEnvironment())
 					.literalValue(console));
 		}

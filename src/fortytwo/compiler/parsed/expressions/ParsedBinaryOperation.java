@@ -24,7 +24,7 @@ public class ParsedBinaryOperation implements ParsedExpression {
 	}
 	public static ParsedBinaryOperation getNegation(ParsedExpression contents) {
 		return new ParsedBinaryOperation(LiteralNumber.getInstance(
-				BigDecimal.ZERO, Context.synthetic()), contents,
+				BigDecimal.ZERO, Context.SYNTHETIC), contents,
 				Operation.SUBTRACT, contents.context().withUnaryApplied());
 	}
 	@Override
