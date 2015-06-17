@@ -59,6 +59,15 @@ public class Context {
 		this.end = end;
 	}
 	@Override
+	public String toString() {
+		return isSynthetic() ? "Synthetic" : in.substring(
+				Math.max(start - 10, 0), start)
+				+ "~"
+				+ in.substring(start, end)
+				+ "~"
+				+ in.substring(end, Math.min(end + 10, in.length()));
+	}
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -79,14 +88,5 @@ public class Context {
 		} else if (!in.equals(other.in)) return false;
 		if (start != other.start) return false;
 		return true;
-	}
-	@Override
-	public String toString() {
-		return isSynthetic() ? "Synthetic" : in.substring(
-				Math.max(start - 10, 0), start)
-				+ "~"
-				+ in.substring(start, end)
-				+ "~"
-				+ in.substring(end, Math.min(end + 10, in.length()));
 	}
 }

@@ -4,7 +4,7 @@ import static fortytwo.test.Utilities.assertCorrectTokenization;
 
 import org.junit.Test;
 
-/* TODO fix this class */
+/* TODO complete all test cases properly */
 public class TokenizerTest {
 	@Test
 	public void statementTests() {
@@ -15,9 +15,9 @@ public class TokenizerTest {
 				"4.0", "+", "4.0", "=", "2", ":", "Dothis", ".",
 				"Otherwise", ":", "Dothat", ".");
 		assertCorrectTokenization(
-				"Define a string called _x with a value of '()[]\\'\\r\\n'.",
+				"Define a string called _x with a value of '()[]\\'\\n'.",
 				"Define", "a", "string", "called", "_x", "with", "a",
-				"value", "of", "'()[]'\r\n'", ".");
+				"value", "of", "'()[]'\n'", ".");
 		assertCorrectTokenization(
 				"Define a [COMPILER ERROR HERE ''''''''''''] number called _x.",
 				"Define", "a", "number", "called", "_x", ".");

@@ -8,6 +8,8 @@ import fortytwo.ide.gui.Editor42;
 
 public class IconManager {
 	private static final BufferedImage ICON_PROGRAM;
+	public static final String ICON_URL = IconManager.class.getResource(
+			"icon.png").toString();
 	static {
 		BufferedImage iconProgram;
 		try {

@@ -57,8 +57,25 @@ Notice how the second line is in yellow; this, along with the equals sign before
 
 Now, you may be thinking ``OK, that's great, it's a duplication program. Very very useful. [end sarcasm]'', but in fact explaining this simple characteristic will give you some insight into how to use \name{}. When you enter \consInput{2} into the document, then the \name{} interpreter calculates the literal value of the input, which in this case is helpfully \consExpr{2}.
 
-Anything that when typed into the console outputs itself is known as a ``literal''. Numbers are an example of such a literal. Valid numbers consist of a sequence of digits \code{0-9}, with an optional period that must be followed by more digits\footnote{Some languages allow for numbers like \code{4.}, but periods have a special meaning in \name{} so you must write \code{4.0} or just \code{4}.}
+Anything that when typed into the console outputs itself is known as a ``literal''. Numbers are an example of such a literal. Valid numbers consist of a sequence of digits \code{0-9}, with an optional period that must be followed by more digits\footnote{Some languages allow for numbers like \code{4.}, but periods have a special meaning in \name{} so you must write \code{4.0} or just \code{4} (no period at the end).}
 
-The second type of literals are strings. Strings are slightl
+The second type of literals are strings. Strings are slightly more complicated than numbers, but the simple rule is that they must start and end with a single quote (\code{'}). Here are a few examples:
+
+\consExpression{'abc'}{'abc'}
+\consExpression{'1 2 3'}{'1 2 3'}
+\consExpression{'In \textbackslash{}'quotes\textbackslash{}''}{'In 'quotes''}
+
+As you can see, the text isn't exactly repeated. For example, \code{\textbackslash{}'} becomes a quote. This is the only way of inserting a quote into a literal string, known as an ``escape''. Other valid escapes are as follows:
+
+\begin{tabular}{|l|l|
+\hline
+Sequence & Value\\
+\code{\backslash{}n} & A new line, the equivalent of the \enter{} key\\
+\code{\backslash{}t} & A tab\\
+\code{\backslash{}b} & A button\\
+\code{\backslash{}n} & A new line, the equivalent of the \enter{} key\\
+\code{\backslash{}n} & A new line, the equivalent of the \enter{} key\\
+
+\end{tabular}
 
 \end{document}

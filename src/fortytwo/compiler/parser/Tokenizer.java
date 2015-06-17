@@ -2,8 +2,6 @@ package fortytwo.compiler.parser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
@@ -178,27 +176,58 @@ public class Tokenizer {
 		return input.indexOf(']', i);
 	}
 	public static String unescape(String str) {
-		str = str.replace("\\b", "\b");
-		str = str.replace("\\t", "\t");
-		str = str.replace("\\n", "\n");
-		str = str.replace("\\r", "\r");
-		str = str.replace("\\f", "\f");
-		str = str.replace("\\'", "\'");
-		str = str.replace("\\\\", "\\");
-		Matcher mat = Pattern
-				.compile("\\\\u(?<hexcode>[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])")
-				.matcher(str);
-		int i = 0;
-		StringBuffer sbuff = new StringBuffer();
-		while (mat.find()) {
-			int start = mat.start();
-			int end = mat.end();
-			int c = Integer.parseInt(mat.group("hexcode").toUpperCase(), 16);
-			sbuff.append(str.substring(i, start)).append(
-					Character.toString((char) c));
-			i = end;
+		StringBuffer buff = new StringBuffer();
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == '\\') {
+				if (i + 1 >= str.length()) {
+					buff.append('\\');
+					continue;
+				}
+				i++;
+				switch (str.charAt(i)) {
+					case '\\':
+						buff.append('\\');
+						continue;
+					case '\'':
+						buff.append('\'');
+						continue;
+					case 'n':
+						buff.append('\n');
+						continue;
+					case 't':
+						buff.append('\t');
+						continue;
+					case 'u':
+						if (i + 5 >= str.length()) {
+							buff.append("\\u");
+							continue;
+						}
+						String sub = str.substring(i + 1, i + 5);
+						if (sub.matches("[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]")) {
+							buff.append((char) Integer.parseInt(
+									sub.toUpperCase(), 16));
+							i += 4;
+						} else i--;
+						break;
+					default:
+						buff.append('\\');
+						i--;
+						break;
+				}
+			} else {
+				buff.append(str.charAt(i));
+			}
 		}
-		sbuff.append(str.substring(i));
-		return sbuff.toString();
+		return buff.toString();
+	}
+	public static String escape(String str) {
+		str = str.replace("\\", "\\\\");
+		str = str.replace("\b", "\\b");
+		str = str.replace("\t", "\\t");
+		str = str.replace("\n", "\\n");
+		str = str.replace("\r", "\\r");
+		str = str.replace("\f", "\\f");
+		str = str.replace("\'", "\\'");
+		return str;
 	}
 }

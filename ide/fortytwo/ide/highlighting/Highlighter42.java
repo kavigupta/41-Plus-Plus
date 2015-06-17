@@ -202,13 +202,9 @@ public class Highlighter42 extends AbstractTokenMaker {
 		}
 		return "";
 	}
-	// LOWPRI fix this highlighter, which is basically a rudimentary
-	// find-replace system as of now (probably just configure the tokenizer
-	// right then pipe in here).
 	@Override
 	public TokenMap getWordsToHighlight() {
-		TokenMap tokenMap = new TokenMap();
-		return tokenMap;
+		return new TokenMap();
 	}
 	@Override
 	public void addToken(char[] segment, int start, int end, int tokenType,

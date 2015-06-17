@@ -12,14 +12,14 @@ import fortytwo.compiler.parser.Tokenizer;
 public class UnescapeTest {
 	@Test
 	public void standard() {
-		assertUE("\r\n\b\t\f", "\\r\\n\\b\\t\\f");
-		assertUE("a\rb\nc\bd\te\ff", "a\\rb\\nc\\bd\\te\\ff");
+		assertUE("\n\t", "\\n\\t");
+		assertUE("ab\ncd\tef", "ab\\ncd\\tef");
 	}
 	@Test
 	public void standardInvalid() {
-		assertUE("\r\n\f\t\\", "\\r\\n\\f\\t\\");
-		assertUE("\r\n\f\t\\ f", "\\r\\n\\f\\t\\ f");
-		assertUE("\\ r\n\b\t\f", "\\ r\\n\\b\\t\\f");
+		assertUE("\n\t\\", "\\n\\t\\");
+		assertUE("\\n\t\\ f", "\\\\n\\t\\ f");
+		assertUE("\\ r\n\t", "\\ r\\n\\t");
 	}
 	@Test
 	public void multiple() {

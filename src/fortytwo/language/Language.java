@@ -66,8 +66,9 @@ public class Language {
 		return name.startsWith(VARIABLE_BEGIN) && name.endsWith(VARIABLE_END);
 	}
 	public static boolean isFunctionToken(String token) {
-		if (!Character.isAlphabetic(token.charAt(0))) return false;
-		// LOWPRI rest of this: it should be fine for now
+		if (isExpression(token)) return false;
+		// just assume anything that isn't an expression is a function
+		// LOWPRI fix this function
 		return true;
 	}
 	public static Token42 parenthesize(List<Token42> line) {

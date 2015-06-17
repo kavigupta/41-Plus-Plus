@@ -1,20 +1,25 @@
 package fortytwo.ide.gui;
 
+import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
-import javax.swing.Action;
-import javax.swing.JMenu;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import lib.standard.gui.TextEditor;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextArea;
 
+import fortytwo.docs.Documents;
 import fortytwo.icon.IconManager;
 import fortytwo.ide.environment.GUILinkedEnvironment;
+import fortytwo.metadata.Metadata;
 
 public class Editor42 extends TextEditor {
 	public static final double CONSOLE_START = .7, CONSOLE_END = .97;
@@ -40,10 +45,40 @@ public class Editor42 extends TextEditor {
 		getJMenuBar().add(help);
 	}
 	public void cmdHelpManual() {
-		// TODO Auto-generated method stub.
+		// TODO Finish manual of help
 	}
 	public void cmdAbout() {
-		// TODO Auto-generated method stub.
+		JDialog about = new JDialog(this);
+		JEditorPane jtp = new JEditorPane();
+		jtp.setEditable(false);
+		jtp.setContentType("text/html");
+		jtp.addHyperlinkListener(new HyperlinkListener() {
+			@Override
+			public void hyperlinkUpdate(HyperlinkEvent e) {
+				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+					if (Desktop.isDesktopSupported()) {
+						try {
+							Desktop.getDesktop().browse(
+									e.getURL().toURI());
+							return;
+						} catch (IOException | URISyntaxException e1) {}
+					}
+					JOptionPane.showMessageDialog(
+							Editor42.this,
+							String.format(
+									"Hyperlinks do not appear to be supported by your platform, you will have to manually navigate to \"%s\"",
+									e.getURL()),
+							"Manual Hyperlink Required",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		jtp.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+		jtp.setText(Metadata.applyMacroes(Documents.ABOUT_HTML));
+		about.setContentPane(jtp);
+		about.setTitle("About 41++ Editor");
+		about.setBounds(100, 100, 400, 400);
+		about.setVisible(true);
 	}
 	@Override
 	protected Action getCutAction() {

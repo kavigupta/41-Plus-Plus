@@ -20,12 +20,13 @@ import fortytwo.vm.errors.ParserErrors;
 public class Parser {
 	private Parser() {}
 	public static List<Sentence> parse(String text) {
-		List<Token42> tokens = Tokenizer.tokenize(Context.minimal(text), text);
+		List<Token42> tokens = Tokenizer
+				.tokenize(Context.minimal(text), text);
 		List<List<Token42>> phrases = new ArrayList<>();
 		List<Token42> current = new ArrayList<>();
 		for (int i = 0; i < tokens.size(); i++) {
 			Token42 token = tokens.get(i);
-			current.add(token);
+			if (!token.token.equals(Resources.COLON)) current.add(token);
 			if (token.token.equals(Resources.PERIOD)
 					|| token.token.equals(Resources.COLON)) {
 				phrases.add(current);

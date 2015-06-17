@@ -8,5 +8,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="src" path="/Standard Library"/>
 	<classpathentry kind="lib" path="syntax_highlighting/build/libs/rsyntaxtextarea-2.5.6.jar" sourcepath="syntax_highlighting/src"/>
+	<classpathentry kind="lib" path="commons-lang3-3.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -5,14 +5,12 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import fortytwo.compiler.Context;
+import fortytwo.compiler.parsed.sentences.Sentence;
+import fortytwo.compiler.parsed.statements.ParsedWhileLoop;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.Tokenizer;
 
-/*
- * TODO fix this nonsense. This really needs to be split into more classes and
- * test cases.
- */
 public class ParserTest {
 	@Test
 	public void expressionParserTest() {
@@ -115,7 +113,11 @@ public class ParserTest {
 		assertEquals(expr, cdLoopExpr(expr));
 	}
 	private static String cdLoopLine(String line) {
-		return Parser.parse(line).get(0).toSourceCode() + ".";
+		Sentence s = Parser.parse(line).get(0);
+		if (s instanceof ParsedWhileLoop)
+			System.out.println(((ParsedWhileLoop) s).condition
+					.toSourceCode());
+		return s.toSourceCode() + ".";
 	}
 	private static String cdLoopExpr(String line) {
 		return ExpressionParser.parseExpression(

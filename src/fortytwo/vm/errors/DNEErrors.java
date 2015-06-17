@@ -27,6 +27,8 @@ public class DNEErrors {
 	}
 	public static void functionSignatureDNE(FunctionName name,
 			List<ConcreteType> types) {
+		if (name.function.size() == 0)
+			throw new RuntimeException("Zero length function??????");
 		ArrayList<Context> context = new ArrayList<>();
 		context.add(name.context());
 		types.forEach(x -> context.add(x.context()));

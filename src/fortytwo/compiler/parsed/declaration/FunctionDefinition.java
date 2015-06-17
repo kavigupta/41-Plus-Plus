@@ -37,9 +37,8 @@ public class FunctionDefinition implements Declaration {
 	}
 	public void registerParameters(StaticEnvironment environment) {
 		for (int i = 0; i < parameterTypes.size(); i++) {
-			// LOWPRI allow generic typing in functions...
 			environment.addType(parameterVariables.get(i), (ConcreteType)
-			// LOWPRI remove cast
+			// LOWPRI remove cast once generic typing is allowed
 					parameterTypes.get(i));
 		}
 	}
