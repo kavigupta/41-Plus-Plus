@@ -11,10 +11,26 @@ import fortytwo.vm.expressions.BinaryOperation;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralNumber;
 
+/**
+ * A structure representing an operation between two parsed expressions.
+ */
 public class ParsedBinaryOperation implements ParsedExpression {
-	public final ParsedExpression first, second;
+	/**
+	 * The first element in the operation
+	 */
+	public final ParsedExpression first;
+	/**
+	 * The second element in the operation
+	 */
+	public final ParsedExpression second;
+	/**
+	 * The operation to be used
+	 */
 	public final Operation operation;
 	private final Context context;
+	/**
+	 * Struct constructor.
+	 */
 	public ParsedBinaryOperation(ParsedExpression first,
 			ParsedExpression second, Operation operation, Context context) {
 		this.first = first;
@@ -22,10 +38,13 @@ public class ParsedBinaryOperation implements ParsedExpression {
 		this.operation = operation;
 		this.context = context;
 	}
-	public static ParsedBinaryOperation getNegation(ParsedExpression contents) {
+	/**
+	 * @return {@code -x}
+	 */
+	public static ParsedBinaryOperation getNegation(ParsedExpression x) {
 		return new ParsedBinaryOperation(LiteralNumber.getInstance(
-				BigDecimal.ZERO, Context.SYNTHETIC), contents,
-				Operation.SUBTRACT, contents.context().withUnaryApplied());
+				BigDecimal.ZERO, Context.SYNTHETIC), x, Operation.SUBTRACT,
+				x.context().withUnaryApplied());
 	}
 	@Override
 	public Expression contextualize(StaticEnvironment env) {
