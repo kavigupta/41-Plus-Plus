@@ -23,10 +23,11 @@ public class ParsedDefinition implements ParsedStatement {
 	public Statement contextualize(StaticEnvironment environment) {
 		environment.addType(name.name, name.type);
 		return new Definition(name, fields.contextualize(environment),
-				environment.structs, context());
+				context());
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment environment) {
+		environment.addType(name.name, name.type);
 		return environment.structs.typeCheckConstructor(name,
 				fields.contextualize(environment), context);
 	}

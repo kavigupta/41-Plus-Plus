@@ -33,11 +33,6 @@ public class FunctionCall implements Expression, Statement {
 		literalValue(environment);
 	}
 	@Override
-	public boolean typeCheck() {
-		// this has already been checked.
-		return true;
-	}
-	@Override
 	public LiteralExpression literalValue(LocalEnvironment environment) {
 		Function42 f = environment.global.funcs.get(function, arguments);
 		if (f == null) throw new RuntimeException(function.name.toString());

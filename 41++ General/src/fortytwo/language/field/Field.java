@@ -23,11 +23,6 @@ public class Field implements Expression {
 		environment.vars.deregister(name);
 	}
 	@Override
-	public boolean typeCheck() {
-		// has been typechecked on creation
-		return true;
-	}
-	@Override
 	public LiteralExpression literalValue(LocalEnvironment env) {
 		return env.referenceTo(this.name);
 	}

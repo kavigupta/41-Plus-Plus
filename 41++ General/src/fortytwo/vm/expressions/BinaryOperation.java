@@ -11,7 +11,6 @@ import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.errors.RuntimeErrors;
-import fortytwo.vm.errors.TypingErrors;
 
 public class BinaryOperation implements Expression {
 	public static final BigDecimal PRECISION = BigDecimal.TEN.pow(100);
@@ -68,20 +67,7 @@ public class BinaryOperation implements Expression {
 		return null;
 	}
 	@Override
-	public boolean typeCheck() {
-		if (!first.resolveType().equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-						Context.SYNTHETIC)))
-			TypingErrors.expectedNumberInArithmeticOperator(this, true);
-		if (!second.resolveType().equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-						Context.SYNTHETIC)))
-			TypingErrors.expectedNumberInArithmeticOperator(this, false);
-		return true;
-	}
-	@Override
 	public ConcreteType resolveType() {
-		typeCheck();
 		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
 				Context.SYNTHETIC);
 	}

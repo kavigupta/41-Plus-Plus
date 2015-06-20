@@ -53,6 +53,12 @@ public class ParsedFunction {
 		return new FunctionImplemented(f, bodyS, r.output == null ? null
 				: r.output.contextualize(local));
 	}
+	public boolean typeCheck(StaticEnvironment env) {
+		StaticEnvironment local = StaticEnvironment.getChild(env);
+		f.registerParameters(local);
+		body.forEach(x -> x.typeCheck(local));
+		return true;
+	}
 	/**
 	 * @return the definition of this function
 	 */

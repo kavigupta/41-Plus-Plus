@@ -21,11 +21,6 @@ public class StatementSeries implements Statement {
 		statements.forEach(s -> s.clean(environment));
 	}
 	@Override
-	public boolean typeCheck() {
-		statements.forEach(s -> s.typeCheck());
-		return true;
-	}
-	@Override
 	public String toSourceCode() {
 		return SourceCode.display(this);
 	}

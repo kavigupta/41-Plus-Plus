@@ -4,10 +4,7 @@ import java.util.Arrays;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
-import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
 
@@ -28,16 +25,6 @@ public class WhileLoop implements Statement {
 	@Override
 	public void clean(LocalEnvironment environment) {
 		// forms a closure, no need to clean
-	}
-	@Override
-	public boolean typeCheck() {
-		condition.typeCheck();
-		if (!condition.resolveType().equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
-						Context.SYNTHETIC)))
-			TypingErrors.expectedBoolInCondition(false, condition);
-		statement.typeCheck();
-		return false;
 	}
 	@Override
 	public String toSourceCode() {

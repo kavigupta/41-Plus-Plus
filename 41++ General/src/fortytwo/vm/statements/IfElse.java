@@ -2,10 +2,7 @@ package fortytwo.vm.statements;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
-import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
 
@@ -37,15 +34,6 @@ public class IfElse implements Statement {
 	@Override
 	public void clean(LocalEnvironment environment) {
 		// Forms a closure, no need to clean once done
-	}
-	@Override
-	public boolean typeCheck() {
-		if (condition.resolveType().equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
-						Context.SYNTHETIC))) return true;
-		TypingErrors.expectedBoolInCondition(true, condition);
-		// unreachable
-		return false;
 	}
 	@Override
 	public String toSourceCode() {

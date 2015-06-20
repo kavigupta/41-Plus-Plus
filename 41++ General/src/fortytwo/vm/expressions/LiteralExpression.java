@@ -22,7 +22,7 @@ public abstract class LiteralExpression implements ParsedExpression, Expression 
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment environment) {
-		return typeCheck();
+		return true;
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
@@ -35,10 +35,6 @@ public abstract class LiteralExpression implements ParsedExpression, Expression 
 	@Override
 	public SentenceType type() {
 		return SentenceType.PURE_EXPRESSION;
-	}
-	@Override
-	public final boolean typeCheck() {
-		return true;
 	}
 	@Override
 	public final Context context() {

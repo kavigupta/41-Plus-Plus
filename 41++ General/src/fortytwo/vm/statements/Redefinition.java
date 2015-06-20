@@ -4,7 +4,6 @@ import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.field.Field;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.Expression;
 
 public class Redefinition implements Statement {
@@ -23,13 +22,6 @@ public class Redefinition implements Statement {
 	@Override
 	public void clean(LocalEnvironment environment) {
 		// no variables created
-	}
-	@Override
-	public boolean typeCheck() {
-		if (name.type.equals(value.resolveType())) return true;
-		TypingErrors.redefinitionTypeMismatch(name, value);
-		// should never get here
-		return false;
 	}
 	@Override
 	public String toSourceCode() {

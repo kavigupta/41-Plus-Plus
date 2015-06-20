@@ -21,7 +21,6 @@ import fortytwo.vm.constructions.FunctionImplemented;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
-import fortytwo.vm.statements.Statement;
 
 public class GlobalEnvironment {
 	public final StaticEnvironment staticEnv;
@@ -90,8 +89,8 @@ public class GlobalEnvironment {
 		}
 		HashMap<FunctionSignature, Function42> implFunctions = new HashMap<>();
 		for (ParsedFunction func : functions) {
+			func.typeCheck(environment);
 			FunctionImplemented impl = func.contextualize(environment);
-			impl.body.forEach(Statement::typeCheck);
 			FunctionDefinition f = func.definition();
 			implFunctions.put(f.sig, impl);
 		}

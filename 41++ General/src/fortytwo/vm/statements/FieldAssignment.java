@@ -5,7 +5,6 @@ import fortytwo.language.SourceCode;
 import fortytwo.language.field.Field;
 import fortytwo.language.type.StructureType;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralObject;
 
@@ -33,13 +32,6 @@ public class FieldAssignment implements Statement {
 	@Override
 	public void clean(LocalEnvironment environment) {
 		// nothing to clean.
-	}
-	@Override
-	public boolean typeCheck() {
-		if (!field.type.equals(value.resolveType()))
-		// TODO I'd fix this glaring error if it mattered in the slightest
-			TypingErrors.fieldAssignmentTypeMismatch(null, field, value);
-		return true;
 	}
 	@Override
 	public boolean isSimple() {
