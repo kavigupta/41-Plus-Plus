@@ -251,6 +251,21 @@ public class ExpressionParser {
 			// Should never be called
 		}
 		@Override
+		public boolean typeCheck(StaticEnvironment environment) {
+			// should never be called
+			return false;
+		}
+		@Override
+		public boolean isSimple() {
+			// should never be called
+			return false;
+		}
+		@Override
+		public ConcreteType resolveType(StaticEnvironment env) {
+			// should never be called
+			return null;
+		}
+		@Override
 		public SentenceType type() {
 			// should never be called
 			return null;

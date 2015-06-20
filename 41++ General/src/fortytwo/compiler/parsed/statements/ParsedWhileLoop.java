@@ -4,7 +4,10 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
+import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.statements.Statement;
 import fortytwo.vm.statements.WhileLoop;
 
@@ -23,6 +26,16 @@ public class ParsedWhileLoop implements ParsedStatement {
 		Statement statementS = statement.contextualize(environment);
 		return new WhileLoop(condition.contextualize(StaticEnvironment
 				.getChild(environment)), statementS);
+	}
+	@Override
+	public boolean typeCheck(StaticEnvironment env) {
+		condition.typeCheck(env);
+		if (!condition.resolveType(env).equals(
+				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
+						Context.SYNTHETIC)))
+			TypingErrors.expectedBoolInCondition(false,
+					condition.contextualize(env));
+		return statement.typeCheck(env);
 	}
 	@Override
 	public SentenceType type() {

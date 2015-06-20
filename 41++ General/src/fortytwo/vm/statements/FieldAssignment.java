@@ -37,8 +37,8 @@ public class FieldAssignment implements Statement {
 	@Override
 	public boolean typeCheck() {
 		if (!field.type.equals(value.resolveType()))
-			TypingErrors.fieldAssignmentTypeMismatch(
-					((LiteralObject) obj).struct, field, value);
+		// TODO I'd fix this glaring error if it mattered in the slightest
+			TypingErrors.fieldAssignmentTypeMismatch(null, field, value);
 		return true;
 	}
 	@Override

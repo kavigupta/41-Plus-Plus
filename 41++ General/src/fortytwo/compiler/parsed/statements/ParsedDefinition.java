@@ -26,6 +26,11 @@ public class ParsedDefinition implements ParsedStatement {
 				environment.structs, context());
 	}
 	@Override
+	public boolean typeCheck(StaticEnvironment environment) {
+		return environment.structs.typeCheckConstructor(name,
+				fields.contextualize(environment), context);
+	}
+	@Override
 	public SentenceType type() {
 		return SentenceType.DEFINITION;
 	}

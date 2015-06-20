@@ -6,7 +6,11 @@ import fortytwo.compiler.Context;
 import fortytwo.language.Operation;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
+import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.PrimitiveType;
+import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.BinaryOperation;
 import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralNumber;
@@ -47,10 +51,30 @@ public class ParsedBinaryOperation implements ParsedExpression {
 				x.context().withUnaryApplied());
 	}
 	@Override
-	public Expression contextualize(StaticEnvironment env) {
+	public BinaryOperation contextualize(StaticEnvironment env) {
 		Expression firstE = first.contextualize(env), secondE = second
 				.contextualize(env);
 		return new BinaryOperation(firstE, secondE, operation, context);
+	}
+	@Override
+	public boolean typeCheck(StaticEnvironment env) {
+		if (!first.resolveType(env).equals(
+				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+						Context.SYNTHETIC)))
+			TypingErrors.expectedNumberInArithmeticOperator(
+					this.contextualize(env), true);
+		if (!second.resolveType(env).equals(
+				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+						Context.SYNTHETIC)))
+			TypingErrors.expectedNumberInArithmeticOperator(
+					this.contextualize(env), false);
+		return true;
+	}
+	@Override
+	public ConcreteType resolveType(StaticEnvironment env) {
+		typeCheck(env);
+		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+				Context.SYNTHETIC);
 	}
 	@Override
 	public SentenceType type() {

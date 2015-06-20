@@ -4,7 +4,9 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.StructureType;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.statements.FieldAssignment;
 import fortytwo.vm.statements.Statement;
 
@@ -26,6 +28,15 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 				name.contextualize(environment),
 				environment.structs.typeOf(environment.typeOf(name), field),
 				value.contextualize(environment), context());
+	}
+	@Override
+	public boolean typeCheck(StaticEnvironment env) {
+		// TODO handle when not fed a structure...
+		if (!env.typeOf(field).equals(value.resolveType(env)))
+			TypingErrors.fieldAssignmentTypeMismatch(env.structs
+					.getStructure((StructureType) name.resolveType(env)),
+					field.contextualize(env), value.contextualize(env));
+		return true;
 	}
 	@Override
 	public String toSourceCode() {

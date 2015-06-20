@@ -32,6 +32,11 @@ public class ParsedStatementSeries implements ParsedStatement {
 				.collect(Collectors.toList()));
 	}
 	@Override
+	public boolean typeCheck(StaticEnvironment env) {
+		statements.forEach(s -> s.typeCheck(env));
+		return true;
+	}
+	@Override
 	public SentenceType type() {
 		return SentenceType.COMPOUND;
 	}

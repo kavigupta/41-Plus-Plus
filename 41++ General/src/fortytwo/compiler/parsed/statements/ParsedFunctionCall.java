@@ -40,6 +40,21 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 				context());
 	}
 	@Override
+	public boolean typeCheck(StaticEnvironment env) {
+		// this has already been checked.
+		return true;
+	}
+	@Override
+	public ConcreteType resolveType(StaticEnvironment env) {
+		List<Expression> args = this.arguments.stream()
+				.map(x -> x.contextualize(env))
+				.collect(Collectors.toList());
+		List<ConcreteType> types = args.stream().map(Expression::resolveType)
+				.collect(Collectors.toList());
+		FunctionSignature sig = env.referenceTo(name, types);
+		return sig.outputType.resolve(sig.typeVariables(args));
+	}
+	@Override
 	public SentenceType type() {
 		return SentenceType.FUNCTION_CALL;
 	}

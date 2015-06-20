@@ -5,6 +5,7 @@ import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.statements.Redefinition;
 import fortytwo.vm.statements.Statement;
 
@@ -22,6 +23,14 @@ public class ParsedRedefinition extends ParsedAssignment {
 	public Statement contextualize(StaticEnvironment environment) {
 		return new Redefinition(name.contextualize(environment),
 				expr.contextualize(environment), context());
+	}
+	@Override
+	public boolean typeCheck(StaticEnvironment env) {
+		if (name.resolveType(env).equals(expr.resolveType(env))) return true;
+		TypingErrors.redefinitionTypeMismatch(name.contextualize(env),
+				expr.contextualize(env));
+		// should never get here
+		return false;
 	}
 	@Override
 	public String toSourceCode() {

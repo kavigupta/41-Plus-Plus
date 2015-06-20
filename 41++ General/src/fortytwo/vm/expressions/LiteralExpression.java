@@ -17,6 +17,14 @@ public abstract class LiteralExpression implements ParsedExpression, Expression 
 		return this;
 	}
 	@Override
+	public ConcreteType resolveType(StaticEnvironment env) {
+		return resolveType();
+	}
+	@Override
+	public boolean typeCheck(StaticEnvironment environment) {
+		return typeCheck();
+	}
+	@Override
 	public void execute(LocalEnvironment environment) {
 		// No - op by default
 	}
