@@ -39,18 +39,14 @@ public class GUILinkedEnvironment {
 		if (cmd.trim().endsWith(".")) {
 			for (Sentence x : Parser.parse(cmd)) {
 				if (x.type().kind == SentenceKind.STATEMENT) {
-					((ParsedStatement) x).contextualize(
-							console.staticEnvironment())
-							.execute(console);
+					((ParsedStatement) x).execute(console);
 				} else {
 					ParserErrors.expectedStatement(x);
 				}
 			}
 		} else {
-			history.displayOutput(ExpressionParser
-					.parseExpression(
-							Tokenizer.tokenize(LiteralToken.entire(cmd)))
-					.contextualize(console.staticEnvironment())
+			history.displayOutput(ExpressionParser.parseExpression(
+					Tokenizer.tokenize(LiteralToken.entire(cmd)))
 					.literalValue(console));
 		}
 	}

@@ -1,13 +1,15 @@
 package fortytwo.language.field;
 
 import fortytwo.compiler.Context;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.expressions.Expression;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class Field implements Expression {
+public class Field implements ParsedExpression {
 	public final VariableIdentifier name;
 	public final ConcreteType type;
 	public Field(VariableIdentifier name, ConcreteType type) {
@@ -15,20 +17,28 @@ public class Field implements Expression {
 		this.type = type;
 	}
 	@Override
+	public LiteralExpression literalValue(LocalEnvironment env) {
+		return env.referenceTo(this.name);
+	}
+	@Override
+	public ConcreteType resolveType(StaticEnvironment env) {
+		return type;
+	}
+	@Override
+	public boolean typeCheck(StaticEnvironment environment) {
+		return true;
+	}
+	@Override
 	public void execute(LocalEnvironment environment) {
 		// no-op
 	}
 	@Override
 	public void clean(LocalEnvironment environment) {
-		environment.vars.deregister(name);
+		// no-op
 	}
 	@Override
-	public LiteralExpression literalValue(LocalEnvironment env) {
-		return env.referenceTo(this.name);
-	}
-	@Override
-	public ConcreteType resolveType() {
-		return type;
+	public SentenceType type() {
+		return SentenceType.PURE_EXPRESSION;
 	}
 	@Override
 	public Context context() {

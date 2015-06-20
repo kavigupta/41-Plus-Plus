@@ -99,11 +99,8 @@ public class StructTest {
 	}
 	public void assertPrint(String result, String statement) {
 		LocalEnvironment loc = env.minimalLocalEnvironment();
-		Parser.parse(statement)
-				.stream()
-				.map(x -> ((ParsedStatement) x)
-						.contextualize(env.staticEnv))
-				.forEach(x -> x.execute(loc));
+		Parser.parse(statement).stream()
+				.forEach(x -> ((ParsedStatement) x).execute(loc));
 		assertEquals(result, VirtualMachine.popMessage());
 	}
 	public void assertEquivalence(String result, String toEvaluate) {
@@ -114,7 +111,6 @@ public class StructTest {
 						.parseExpression(
 								Tokenizer.tokenize(LiteralToken
 										.entire(toEvaluate)))
-						.contextualize(env.staticEnv).literalValue(loc)
-						.toSourceCode());
+						.literalValue(loc).toSourceCode());
 	}
 }

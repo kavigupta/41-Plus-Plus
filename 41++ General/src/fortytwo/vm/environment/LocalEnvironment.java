@@ -1,19 +1,20 @@
 package fortytwo.vm.environment;
 
+import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class LocalEnvironment {
 	public final GlobalEnvironment global;
-	public final VariableRoster<LiteralExpression> vars;
+	public final ParsedVariableRoster<LiteralExpression> vars;
 	public LocalEnvironment(GlobalEnvironment global) {
 		this.global = global;
-		vars = new VariableRoster<>();
+		vars = new ParsedVariableRoster<>();
 	}
 	public LocalEnvironment reinitialize(GlobalEnvironment newEnvironment) {
 		LocalEnvironment newlocal = new LocalEnvironment(newEnvironment);
-		vars.forEach(x -> newlocal.vars.assign(x.key, x.value));
+		vars.pairs.forEach(x -> newlocal.vars.assign(x.key, x.value));
 		return newlocal;
 	}
 	public LiteralExpression referenceTo(VariableIdentifier id) {
@@ -23,14 +24,14 @@ public class LocalEnvironment {
 		return globalE;
 	}
 	public ConcreteType typeOf(VariableIdentifier name) {
-		ConcreteType type = vars.typeOf(name);
+		ConcreteType type = vars.referenceTo(name).resolveType();
 		if (type != null) return type;
 		return global.staticEnv.typeOf(name);
 	}
 	public StaticEnvironment staticEnvironment() {
 		StaticEnvironment env = StaticEnvironment.getChild(global.staticEnv);
-		vars.forEach(variable -> env.addType(variable.getKey(), variable
-				.getValue().resolveType()));
+		vars.pairs.forEach(variable -> env.addType(variable.getKey(),
+				variable.getValue().resolveType()));
 		return env;
 	}
 	@Override

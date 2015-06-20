@@ -11,7 +11,8 @@ import fortytwo.vm.expressions.LiteralExpression;
 public abstract class Function42 {
 	public final LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments) {
-		return apply(env, arguments, signature().typeVariables(arguments));
+		return apply(env, arguments,
+				signature().typeVariables(arguments, env.staticEnv));
 	}
 	protected abstract LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster);

@@ -3,8 +3,11 @@ package fortytwo.vm.environment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
+import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.field.Field;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -13,7 +16,10 @@ import fortytwo.vm.constructions.GenericStructureSignature;
 import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.TypingErrors;
-import fortytwo.vm.expressions.*;
+import fortytwo.vm.expressions.LiteralArray;
+import fortytwo.vm.expressions.LiteralExpression;
+import fortytwo.vm.expressions.LiteralNumber;
+import fortytwo.vm.expressions.LiteralObject;
 
 public class StructureRoster {
 	public List<GenericStructureSignature> structs;
@@ -43,10 +49,11 @@ public class StructureRoster {
 		return null;
 	}
 	public LiteralExpression instance(Field name,
-			VariableRoster<LiteralExpression> fieldValues, Context context) {
+			ParsedVariableRoster<LiteralExpression> fieldValues,
+			Context context) {
 		LiteralExpression value = fieldValues.value();
 		if (value != null) return value;
-		typeCheckConstructor(name, fieldValues, context);
+		typeCheckConstructor(null, name, fieldValues, context);
 		if (name.type instanceof StructureType)
 			return new LiteralObject(
 					getStructure((StructureType) name.type), fieldValues,
@@ -84,43 +91,51 @@ public class StructureRoster {
 		// should never happen
 		return null;
 	}
-	public boolean typeCheckConstructor(Field name, VariableRoster<?> fields,
+	public boolean typeCheckConstructor(StaticEnvironment env, Field name,
+			ParsedVariableRoster<? extends ParsedExpression> fieldValues,
 			Context context) {
-		if (fields.value() != null) {
-			if (fields.value().resolveType().equals(name.type)) return true;
-			TypingErrors.redefinitionTypeMismatch(name, fields.value());
+		if (fieldValues.value() != null) {
+			if (fieldValues.value().resolveType(env).equals(name.type))
+				return true;
+			TypingErrors.redefinitionTypeMismatch(name, fieldValues.value(),
+					env);
 		}
 		if (name.type instanceof ArrayType) {
-			Expression length = fields.referenceTo(TypeVariable.LENGTH.name);
-			if (fields.size() == 1
+			ParsedExpression length = fieldValues
+					.referenceTo(TypeVariable.LENGTH.name);
+			if (fieldValues.numberOfVariables() == 1
 					&& length != null
-					&& length.resolveType()
+					&& length.resolveType(env)
 							.equals(new PrimitiveType(
 									PrimitiveTypeWithoutContext.NUMBER,
 									Context.SYNTHETIC))) return true;
-			if (fields.size() == 0)
+			if (fieldValues.numberOfVariables() == 0)
 				TypingErrors.incompleteArrayConstructor(context);
-			else DNEErrors.fieldDNEInArray(fields.variables().get(0));
+			else DNEErrors.fieldDNEInArray(fieldValues.pairs.get(0).key);
 		}
 		if (!(name.type instanceof StructureType)) {
-			if (fields.size() == 0) TypingErrors.noValue(name);
+			if (fieldValues.numberOfVariables() == 0)
+				TypingErrors.noValue(name);
 			// nothing but a structure or array has anything but a value
-			DNEErrors.fieldAccessOnPrimitive(name.type, fields.variables());
+			DNEErrors.fieldAccessOnPrimitive(name.type, fieldValues.pairs
+					.stream().map(x -> x.key).collect(Collectors.toList()));
 		}
 		Structure struct = getStructure((StructureType) name.type);
 		for (Field f : struct.fields) {
-			if (!fields.referenceTo(f.name).resolveType().equals(f.type))
-				TypingErrors.fieldAssignmentTypeMismatch(struct, f, f);
+			if (!fieldValues.referenceTo(f.name).resolveType(env)
+					.equals(f.type))
+				TypingErrors.fieldAssignmentTypeMismatch(struct, f,
+						fieldValues.referenceTo(f.name), env);
 		}
-		fields.forEach(x -> {
+		fieldValues.pairs.forEach(x -> {
 			if (!struct.containsField(x.key))
 				DNEErrors.fieldDNE(struct, x.key);
 		});
 		struct.fields
 				.stream()
-				.filter(f -> !fields.assigned(f.name))
+				.filter(f -> !fieldValues.assigned(f.name))
 				.forEach(f -> TypingErrors.incompleteConstructor(struct,
-						fields));
+						fieldValues));
 		return true;
 	}
 	@Override

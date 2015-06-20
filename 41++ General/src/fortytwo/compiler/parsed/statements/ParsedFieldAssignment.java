@@ -3,12 +3,13 @@ package fortytwo.compiler.parsed.statements;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.SourceCode;
+import fortytwo.language.field.Field;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.StructureType;
+import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
-import fortytwo.vm.statements.FieldAssignment;
-import fortytwo.vm.statements.Statement;
+import fortytwo.vm.expressions.LiteralObject;
 
 public class ParsedFieldAssignment extends ParsedAssignment {
 	public final VariableIdentifier name, field;
@@ -23,20 +24,27 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		this.context = context;
 	}
 	@Override
-	public Statement contextualize(StaticEnvironment environment) {
-		return new FieldAssignment(
-				name.contextualize(environment),
-				environment.structs.typeOf(environment.typeOf(name), field),
-				value.contextualize(environment), context());
-	}
-	@Override
 	public boolean typeCheck(StaticEnvironment env) {
 		// TODO handle when not fed a structure...
 		if (!env.typeOf(field).equals(value.resolveType(env)))
 			TypingErrors.fieldAssignmentTypeMismatch(env.structs
 					.getStructure((StructureType) name.resolveType(env)),
-					field.contextualize(env), value.contextualize(env));
+					new Field(name, env.typeOf(name)), value, env);
 		return true;
+	}
+	@Override
+	public void execute(LocalEnvironment environment) {
+		StaticEnvironment se = environment.staticEnvironment();
+		if (!(name.resolveType(se) instanceof StructureType)) {
+			// should never happen.
+			return;
+		}
+		((LiteralObject) name.literalValue(environment)).redefine(field,
+				value.literalValue(environment));
+	}
+	@Override
+	public void clean(LocalEnvironment environment) {
+		// nothing to clean.
 	}
 	@Override
 	public String toSourceCode() {

@@ -9,10 +9,11 @@ import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.ExpressionType;
 import fortytwo.language.classification.SentenceType;
-import fortytwo.language.field.Field;
 import fortytwo.language.type.ConcreteType;
+import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.SyntaxErrors;
+import fortytwo.vm.expressions.LiteralExpression;
 
 public class VariableIdentifier implements ParsedExpression {
 	public static final VariableIdentifier VALUE = new VariableIdentifier(
@@ -29,10 +30,6 @@ public class VariableIdentifier implements ParsedExpression {
 		this.name = name;
 	}
 	@Override
-	public Field contextualize(StaticEnvironment env) {
-		return new Field(this, env.typeOf(this));
-	}
-	@Override
 	public ConcreteType resolveType(StaticEnvironment env) {
 		return env.typeOf(this);
 	}
@@ -40,6 +37,14 @@ public class VariableIdentifier implements ParsedExpression {
 	public boolean typeCheck(StaticEnvironment environment) {
 		// a variable's type is whatever it's set to
 		return true;
+	}
+	@Override
+	public void execute(LocalEnvironment environment) {
+		// no-op
+	}
+	@Override
+	public LiteralExpression literalValue(LocalEnvironment env) {
+		return env.referenceTo(this);
 	}
 	@Override
 	public SentenceType type() {

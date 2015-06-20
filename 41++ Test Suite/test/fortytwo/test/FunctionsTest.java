@@ -66,7 +66,6 @@ public class FunctionsTest {
 						.parseExpression(
 								Tokenizer.tokenize(LiteralToken
 										.entire(toEvaluate)))
-						.contextualize(env.staticEnv)
 						.literalValue(env.minimalLocalEnvironment())
 						.toSourceCode());
 	}

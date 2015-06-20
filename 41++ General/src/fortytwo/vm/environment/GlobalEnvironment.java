@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.constructions.ParsedFunction;
+import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
@@ -19,7 +19,6 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.FunctionImplemented;
 import fortytwo.vm.errors.ParserErrors;
-import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class GlobalEnvironment {
@@ -38,8 +37,7 @@ public class GlobalEnvironment {
 		StaticEnvironment environment = StaticEnvironment.getDefault();
 		GlobalEnvironment global = GlobalEnvironment
 				.getDefaultEnvironment(environment);
-		LocalEnvironment local = global.minimalLocalEnvironment();
-		ArrayList<ParsedFunction> functions = new ArrayList<>();
+		ArrayList<FunctionImplemented> functions = new ArrayList<>();
 		for (int i = 0; i < sentences.size(); i++) {
 			Sentence s = sentences.get(i);
 			switch (s.type()) {
@@ -60,7 +58,7 @@ public class GlobalEnvironment {
 						body.add((ParsedStatement) sC);
 					}
 					if (r == null) ParserErrors.noExit(f);
-					functions.add(new ParsedFunction(f, body, r));
+					functions.add(new FunctionImplemented(f, body, r));
 					break;
 				case DECLARATION_STRUCT:
 					environment.structs
@@ -68,27 +66,30 @@ public class GlobalEnvironment {
 					break;
 				case DEFINITION:
 					ParsedDefinition def = (ParsedDefinition) s;
-					VariableRoster<Expression> fieldValues = new VariableRoster<Expression>();
-					for (Entry<VariableIdentifier, ParsedExpression> pair : def.fields
-							.entryIterator()) {
-						LiteralExpression applied = pair
-								.getValue()
-								.contextualize(environment)
+					ParsedVariableRoster<? extends ParsedExpression> fieldValues = new ParsedVariableRoster<>();
+					for (Entry<VariableIdentifier, ? extends ParsedExpression> pair : def.fields.pairs) {
+						LiteralExpression applied = pair.getValue()
 								.literalValue(
 										new LocalEnvironment(global));
 						fieldValues.assign(pair.getKey(), applied);
 					}
-					environment.addGlobalVariable(def.name.name,
-							environment.structs.instance(def.name,
-									fieldValues.literalValue(local),
-									def.name.name.context()));
+					environment
+							.addGlobalVariable(
+									def.toCreate.name,
+									environment.structs
+											.instance(def.toCreate,
+													fieldValues
+															.literalValue(global
+																	.minimalLocalEnvironment()),
+													def.toCreate.name
+															.context()));
 					break;
 				default:
 					ParserErrors.expectedDeclarationOrDefinition(s);
 			}
 		}
 		HashMap<FunctionSignature, Function42> implFunctions = new HashMap<>();
-		for (ParsedFunction func : functions) {
+		for (FunctionImplemented func : functions) {
 			func.typeCheck(environment);
 			FunctionImplemented impl = func.contextualize(environment);
 			FunctionDefinition f = func.definition();

@@ -4,17 +4,17 @@ import java.util.function.Consumer;
 
 import lib.standard.collections.Pair;
 import fortytwo.compiler.Context;
+import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.environment.VariableRoster;
 
 public class LiteralObject extends LiteralExpression {
 	public final Structure struct;
-	private final VariableRoster<LiteralExpression> fields;
+	private final ParsedVariableRoster<LiteralExpression> fields;
 	public LiteralObject(Structure struct,
-			VariableRoster<LiteralExpression> fields, Context context) {
+			ParsedVariableRoster<LiteralExpression> fields, Context context) {
 		super(context);
 		this.struct = struct;
 		this.fields = fields;
@@ -23,11 +23,11 @@ public class LiteralObject extends LiteralExpression {
 		fields.redefine(name, express);
 	}
 	public int nFields() {
-		return fields.size();
+		return fields.numberOfVariables();
 	}
 	public void forEachField(
 			Consumer<Pair<VariableIdentifier, LiteralExpression>> le) {
-		fields.forEach(le);
+		fields.pairs.forEach(le);
 	}
 	public LiteralExpression valueOf(VariableIdentifier field) {
 		return fields.referenceTo(field);

@@ -2,14 +2,13 @@ package fortytwo.vm.environment;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lib.standard.collections.Pair;
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.constructions.Function42;
-import fortytwo.vm.expressions.Expression;
 
 public class FunctionRoster {
 	private final StaticEnvironment env;
@@ -17,11 +16,10 @@ public class FunctionRoster {
 	private FunctionRoster(StaticEnvironment env) {
 		this.env = env;
 	}
-	public Function42 get(FunctionSignature signature, List<Expression> inputs) {
+	public Function42 get(FunctionSignature signature,
+			List<ParsedExpression> arguments, List<ConcreteType> types) {
 		Pair<Function42, ConcreteType> func = StdLib42
-				.matchCompiledFieldAccess(env, signature.name,
-						inputs.stream().map(Expression::resolveType)
-								.collect(Collectors.toList()));
+				.matchCompiledFieldAccess(env, signature.name, types);
 		if (func != null) return func.getKey();
 		return functions.get(signature);
 	}

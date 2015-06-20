@@ -11,9 +11,10 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
+import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
-import fortytwo.vm.expressions.Expression;
-import fortytwo.vm.statements.FunctionCall;
+import fortytwo.vm.expressions.LiteralExpression;
 
 public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 	public final FunctionName name;
@@ -28,16 +29,22 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 		this.arguments = arguments;
 	}
 	@Override
-	public Expression contextualize(StaticEnvironment env) {
-		List<Expression> args = this.arguments.stream()
-				.map(x -> x.contextualize(env))
+	public void execute(LocalEnvironment environment) {
+		literalValue(environment);
+	}
+	@Override
+	public LiteralExpression literalValue(LocalEnvironment env) {
+		StaticEnvironment se = env.staticEnvironment();
+		List<ConcreteType> types = arguments.stream()
+				.map(x -> x.resolveType(env.staticEnvironment()))
 				.collect(Collectors.toList());
-		List<ConcreteType> types = args.stream().map(Expression::resolveType)
-				.collect(Collectors.toList());
-		FunctionSignature sig = env.referenceTo(name, types);
-		return FunctionCall.getInstance(sig,
-				sig.outputType.resolve(sig.typeVariables(args)), args,
-				context());
+		FunctionSignature sig = se.referenceTo(name, types);
+		Function42 f = env.global.funcs.get(sig, arguments, types);
+		if (f == null) throw new RuntimeException(sig.name.toString());
+		return f.apply(
+				env.global,
+				arguments.stream().map(x -> x.literalValue(env))
+						.collect(Collectors.toList()));
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment env) {
@@ -46,13 +53,10 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 	}
 	@Override
 	public ConcreteType resolveType(StaticEnvironment env) {
-		List<Expression> args = this.arguments.stream()
-				.map(x -> x.contextualize(env))
-				.collect(Collectors.toList());
-		List<ConcreteType> types = args.stream().map(Expression::resolveType)
-				.collect(Collectors.toList());
+		List<ConcreteType> types = arguments.stream()
+				.map(x -> x.resolveType(env)).collect(Collectors.toList());
 		FunctionSignature sig = env.referenceTo(name, types);
-		return sig.outputType.resolve(sig.typeVariables(args));
+		return sig.outputType.resolve(sig.typeVariables(arguments, env));
 	}
 	@Override
 	public SentenceType type() {

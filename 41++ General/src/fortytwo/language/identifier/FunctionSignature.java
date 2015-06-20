@@ -2,10 +2,11 @@ package fortytwo.language.identifier;
 
 import java.util.List;
 
+import fortytwo.compiler.parsed.expressions.ParsedExpression;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
+import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
-import fortytwo.vm.expressions.Expression;
 
 public class FunctionSignature {
 	public final FunctionName name;
@@ -55,10 +56,10 @@ public class FunctionSignature {
 				+ inputTypes + ", outputType=" + outputType + "]";
 	}
 	public final TypeVariableRoster typeVariables(
-			List<? extends Expression> arguments) {
+			List<? extends ParsedExpression> arguments, StaticEnvironment env) {
 		TypeVariableRoster roster = new TypeVariableRoster();
 		for (int i = 0; i < this.inputTypes.size(); i++) {
-			ConcreteType arg = arguments.get(i).resolveType();
+			ConcreteType arg = arguments.get(i).resolveType(env);
 			GenericType expected = this.inputTypes.get(i);
 			switch (expected.kind()) {
 				case CONCRETE:

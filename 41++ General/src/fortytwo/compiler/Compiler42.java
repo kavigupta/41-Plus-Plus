@@ -30,11 +30,10 @@ public class Compiler42 {
 		GlobalEnvironment env = GlobalEnvironment.interpret(Parser
 				.parse(text));
 		try {
-			ParsedFunctionCall
-					.getInstance(
-							FunctionName.getInstance("This", "first"),
-							Arrays.asList())
-					.contextualize(env.staticEnv)
+			// skipping typechecking...
+			ParsedFunctionCall.getInstance(
+					FunctionName.getInstance("This", "first"),
+					Arrays.asList())
 					.execute(env.minimalLocalEnvironment());
 		} catch (Throwable t) {
 			VirtualMachine.error(ErrorType.PARSING,

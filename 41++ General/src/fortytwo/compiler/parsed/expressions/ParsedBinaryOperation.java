@@ -1,6 +1,7 @@
 package fortytwo.compiler.parsed.expressions;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.Operation;
@@ -9,16 +10,18 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.errors.RuntimeErrors;
 import fortytwo.vm.errors.TypingErrors;
-import fortytwo.vm.expressions.BinaryOperation;
-import fortytwo.vm.expressions.Expression;
+import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
 
 /**
  * A structure representing an operation between two parsed expressions.
  */
 public class ParsedBinaryOperation implements ParsedExpression {
+	public static final BigDecimal PRECISION = BigDecimal.TEN.pow(100);
 	/**
 	 * The first element in the operation
 	 */
@@ -51,24 +54,57 @@ public class ParsedBinaryOperation implements ParsedExpression {
 				x.context().withUnaryApplied());
 	}
 	@Override
-	public BinaryOperation contextualize(StaticEnvironment env) {
-		Expression firstE = first.contextualize(env), secondE = second
-				.contextualize(env);
-		return new BinaryOperation(firstE, secondE, operation, context);
-	}
-	@Override
 	public boolean typeCheck(StaticEnvironment env) {
 		if (!first.resolveType(env).equals(
 				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
 						Context.SYNTHETIC)))
-			TypingErrors.expectedNumberInArithmeticOperator(
-					this.contextualize(env), true);
+			TypingErrors.expectedNumberInArithmeticOperator(this, true, env);
 		if (!second.resolveType(env).equals(
 				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
 						Context.SYNTHETIC)))
-			TypingErrors.expectedNumberInArithmeticOperator(
-					this.contextualize(env), false);
+			TypingErrors
+					.expectedNumberInArithmeticOperator(this, false, env);
 		return true;
+	}
+	@Override
+	public LiteralExpression literalValue(LocalEnvironment environment) {
+		LiteralExpression f = first.literalValue(environment);
+		LiteralExpression s = second.literalValue(environment);
+		// has already been typechecked.
+		BigDecimal bdfirst = ((LiteralNumber) f).contents;
+		BigDecimal bdsecond = ((LiteralNumber) s).contents;
+		if (operation.requiresSecondArgumentNotZero
+				&& bdsecond.compareTo(BigDecimal.ZERO) == 0)
+			RuntimeErrors.divideByZero(this, context);
+		switch (operation) {
+			case ADD:
+				return LiteralNumber.getInstance(bdfirst.add(bdsecond),
+						context);
+			case SUBTRACT:
+				return LiteralNumber.getInstance(
+						bdfirst.subtract(bdsecond), context);
+			case MULTIPLY:
+				return LiteralNumber.getInstance(
+						bdfirst.multiply(bdsecond), context);
+			case DIVIDE:
+				return LiteralNumber.getInstance(
+						bdfirst.multiply(PRECISION)
+								.divide(bdsecond,
+										RoundingMode.HALF_EVEN)
+								.divide(PRECISION), context);
+			case DIVIDE_FLOOR:
+				return LiteralNumber.getInstance(
+						bdfirst.divideToIntegralValue(bdsecond), context);
+			case MOD:
+				return LiteralNumber.getInstance(
+						bdfirst.remainder(bdsecond), context);
+		}
+		// This should never happen.
+		return null;
+	}
+	@Override
+	public void execute(LocalEnvironment environment) {
+		literalValue(environment);
 	}
 	@Override
 	public ConcreteType resolveType(StaticEnvironment env) {

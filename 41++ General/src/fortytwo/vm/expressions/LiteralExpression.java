@@ -7,14 +7,10 @@ import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 
-public abstract class LiteralExpression implements ParsedExpression, Expression {
+public abstract class LiteralExpression implements ParsedExpression {
 	protected Context context;
 	public LiteralExpression(Context context) {
 		this.context = context;
-	}
-	@Override
-	public final Expression contextualize(StaticEnvironment env) {
-		return this;
 	}
 	@Override
 	public ConcreteType resolveType(StaticEnvironment env) {
@@ -40,7 +36,6 @@ public abstract class LiteralExpression implements ParsedExpression, Expression 
 	public final Context context() {
 		return context;
 	}
-	@Override
 	public abstract ConcreteType resolveType();
 	@Override
 	public boolean equals(Object obj) {

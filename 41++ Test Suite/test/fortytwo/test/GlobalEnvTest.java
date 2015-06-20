@@ -87,7 +87,6 @@ public class GlobalEnvTest {
 														.collect(Collectors
 																.toList()),
 												Context.SYNTHETIC)))
-						.contextualize(env.staticEnv)
 						.literalValue(env.minimalLocalEnvironment())
 						.toSourceCode());
 	}
@@ -98,7 +97,6 @@ public class GlobalEnvTest {
 						.parseExpression(
 								Tokenizer.tokenize(LiteralToken
 										.entire(toEvaluate)))
-						.contextualize(env.staticEnv)
 						.literalValue(env.minimalLocalEnvironment())
 						.toSourceCode());
 	}

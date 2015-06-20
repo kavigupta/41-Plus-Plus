@@ -8,11 +8,10 @@ import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
-import fortytwo.vm.expressions.Expression;
-import fortytwo.vm.statements.IfElse;
-import fortytwo.vm.statements.Statement;
+import fortytwo.vm.expressions.LiteralBool;
 
 public class ParsedIfElse implements ParsedStatement {
 	public final ParsedExpression condition;
@@ -28,19 +27,25 @@ public class ParsedIfElse implements ParsedStatement {
 		this.ifelse = ifelse;
 	}
 	@Override
-	public Statement contextualize(StaticEnvironment env) {
-		Expression cond = condition.contextualize(env);
-		Statement ifsoS = ifso.contextualize(StaticEnvironment.getChild(env)), ifsoE = ifelse
-				.contextualize(StaticEnvironment.getChild(env));
-		return IfElse.getInstance(cond, ifsoS, ifsoE, context());
+	public void execute(LocalEnvironment environment) {
+		if (((LiteralBool) condition.literalValue(environment)).contents) {
+			ifso.execute(environment);
+			ifso.clean(environment);
+		} else {
+			ifelse.execute(environment);
+			ifelse.clean(environment);
+		}
+	}
+	@Override
+	public void clean(LocalEnvironment environment) {
+		// Forms a closure, no need to clean once done
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment env) {
 		if (condition.resolveType(env).equals(
 				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
 						Context.SYNTHETIC))) return true;
-		TypingErrors.expectedBoolInCondition(true,
-				condition.contextualize(env));
+		TypingErrors.expectedBoolInCondition(true, condition, env);
 		// unreachable
 		return false;
 	}

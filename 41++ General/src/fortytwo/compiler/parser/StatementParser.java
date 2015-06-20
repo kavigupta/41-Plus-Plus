@@ -60,7 +60,8 @@ public class StatementParser {
 		return new FunctionOutput(ExpressionParser.parseExpression(line),
 				fullContext);
 	}
-	private static ParsedStatement parseVoidFunctionCall(List<LiteralToken> list) {
+	private static ParsedStatement parseVoidFunctionCall(
+			List<LiteralToken> list) {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() != 1
@@ -104,7 +105,7 @@ public class StatementParser {
 		if (type.token.equals(Resources.TYPE))
 			return ConstructionParser.parseStructDefinition(line);
 		LiteralToken name = line.get(4);
-		ParsedVariableRoster fields = new ParsedVariableRoster();
+		ParsedVariableRoster<ParsedExpression> fields = new ParsedVariableRoster<>();
 		for (int i = 5; i < line.size(); i++) {
 			if (!line.get(i).token.equals(Resources.OF)) continue;
 			LiteralToken fieldT = line.get(i - 1);

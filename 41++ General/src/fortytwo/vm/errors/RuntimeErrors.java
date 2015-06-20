@@ -1,11 +1,11 @@
 package fortytwo.vm.errors;
 
 import fortytwo.compiler.Context;
-import fortytwo.vm.expressions.BinaryOperation;
+import fortytwo.compiler.parsed.expressions.ParsedBinaryOperation;
 import fortytwo.vm.expressions.LiteralArray;
 
 public class RuntimeErrors {
-	public static void divideByZero(BinaryOperation binaryOperation,
+	public static void divideByZero(ParsedBinaryOperation binaryOperation,
 			Context context) {
 		// LOWPRI implement later along with general errors
 	}

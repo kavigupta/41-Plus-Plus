@@ -23,7 +23,6 @@ import fortytwo.vm.environment.FunctionSignatureRoster;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.errors.ParserErrors;
-import fortytwo.vm.expressions.Expression;
 
 public class StdLib42 {
 	public static final StructureRoster DEF_STRUCT = new StructureRoster();
@@ -102,7 +101,8 @@ public class StdLib42 {
 		return FunctionName.getInstance("the", name, "of", "");
 	}
 	public static Pair<Function42, ConcreteType> matchFieldAccess(
-			StaticEnvironment se, FunctionName name, List<Expression> inputs) {
+			StaticEnvironment se, FunctionName name,
+			List<ParsedExpression> inputs) {
 		if (name.function.size() != 4) return null;
 		if (!name.function.get(0).equals(
 				new FunctionToken(LiteralToken.synthetic("the"))))
@@ -114,7 +114,7 @@ public class StdLib42 {
 		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
 		if (!(inputs.get(0) instanceof VariableIdentifier)) return null;
 		VariableIdentifier field = (VariableIdentifier) inputs.get(0);
-		ConcreteType type = inputs.get(1).resolveType();
+		ConcreteType type = inputs.get(1).resolveType(se);
 		if (type instanceof ArrayType) {
 			if (field.equals(TypeVariable.LENGTH.name))
 				return Pair.getInstance(FunctionArrayLength.INSTANCE,

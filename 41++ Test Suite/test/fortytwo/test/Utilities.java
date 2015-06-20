@@ -23,16 +23,13 @@ import fortytwo.vm.expressions.LiteralNumber;
 public class Utilities {
 	public static void execute(String statement, GlobalEnvironment env) {
 		((ParsedStatement) StatementParser.parseStatement(Tokenizer
-				.tokenize(LiteralToken.entire(statement)))).contextualize(
-				env.staticEnv).execute(env.minimalLocalEnvironment());
+				.tokenize(LiteralToken.entire(statement)))).execute(env
+				.minimalLocalEnvironment());
 	}
 	public static LiteralExpression evaluate(String toEvaluate,
 			GlobalEnvironment env) {
-		return ExpressionParser
-				.parseExpression(
-						Tokenizer.tokenize(LiteralToken
-								.entire(toEvaluate)))
-				.contextualize(env.staticEnv)
+		return ExpressionParser.parseExpression(
+				Tokenizer.tokenize(LiteralToken.entire(toEvaluate)))
 				.literalValue(env.minimalLocalEnvironment());
 	}
 	public static void assertErrorInTokenization(ErrorType type, String msg,

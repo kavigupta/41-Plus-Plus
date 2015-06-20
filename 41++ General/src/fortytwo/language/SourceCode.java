@@ -2,9 +2,9 @@ package fortytwo.language;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import lib.standard.collections.Pair;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.ParsedConstruct;
@@ -25,9 +25,6 @@ import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.*;
 import fortytwo.vm.expressions.*;
-import fortytwo.vm.statements.IfElse;
-import fortytwo.vm.statements.StatementSeries;
-import fortytwo.vm.statements.WhileLoop;
 
 public class SourceCode {
 	public static String displayFunctionDefinition(FunctionSignature sig,
@@ -53,10 +50,10 @@ public class SourceCode {
 	}
 	public static String display(ParsedDefinition parsedDefinition) {
 		return "Define "
-				+ Language.articleized(parsedDefinition.name.type
+				+ Language.articleized(parsedDefinition.toCreate.type
 						.toSourceCode())
 				+ " called "
-				+ parsedDefinition.name.name.name
+				+ parsedDefinition.toCreate.name.name
 				+ (parsedDefinition.fields.numberOfVariables() == 0 ? ""
 						: (" with " + displayFieldList(parsedDefinition.fields)));
 	}
@@ -82,23 +79,10 @@ public class SourceCode {
 						: (". Otherwise: " + parsedIfElse.ifelse
 								.toSourceCode()));
 	}
-	public static String display(IfElse parsedIfElse) {
-		return "If "
-				+ parsedIfElse.condition.toSourceCode()
-				+ ": "
-				+ wrapInBraces(parsedIfElse.ifso)
-				+ ((parsedIfElse.ifelse instanceof StatementSeries && ((StatementSeries) parsedIfElse.ifelse).statements
-						.size() == 0) ? ""
-						: (". Otherwise: " + parsedIfElse.ifelse
-								.toSourceCode()));
-	}
 	public static String displayRedefinition(ParsedConstruct name,
 			ParsedConstruct expr) {
 		return "Set the value of " + name.toSourceCode() + " to "
 				+ expr.toSourceCode();
-	}
-	public static String display(StatementSeries statementSeries) {
-		return displaySeries(statementSeries.statements);
 	}
 	public static String display(ParsedStatementSeries parsedStatementSeries) {
 		return displaySeries(parsedStatementSeries.statements);
@@ -114,10 +98,6 @@ public class SourceCode {
 	public static String display(ParsedWhileLoop parsedWhileLoop) {
 		return "While " + parsedWhileLoop.condition.toSourceCode() + ": "
 				+ wrapInBraces(parsedWhileLoop.statement);
-	}
-	public static String display(WhileLoop whileLoop) {
-		return "While " + whileLoop.condition.toSourceCode() + ": "
-				+ wrapInBraces(whileLoop.statement);
 	}
 	public static String display(ParsedConstruct first, Operation operation,
 			ParsedConstruct second) {
@@ -183,15 +163,9 @@ public class SourceCode {
 		if (statement.isSimple()) return s;
 		return "Do the following: " + s + "." + " That's all";
 	}
-	private static String wrapInBraces(ParsedConstruct statement) {
-		String s = statement.toSourceCode();
-		if (statement.isSimple()) return s;
-		return "Do the following: " + s + "." + " That's all";
-	}
-	private static String displayFieldList(ParsedVariableRoster fields) {
+	private static String displayFieldList(ParsedVariableRoster<?> fields) {
 		List<String> items = new ArrayList<>();
-		for (Entry<VariableIdentifier, ParsedExpression> e : fields
-				.entryIterator()) {
+		for (Pair<VariableIdentifier, ? extends ParsedExpression> e : fields.pairs) {
 			items.add(Language.articleized(e.getKey().toSourceCode()
 					+ " of " + e.getValue().toSourceCode()));
 		}

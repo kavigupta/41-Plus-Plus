@@ -21,12 +21,13 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.*;
 import fortytwo.library.standard.StdLib42;
+import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.errors.TypingErrors;
-import fortytwo.vm.expressions.Expression;
 import fortytwo.vm.expressions.LiteralBool;
+import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
 import fortytwo.vm.expressions.LiteralString;
 
@@ -246,11 +247,6 @@ public class ExpressionParser {
 			this.context = context;
 		}
 		@Override
-		public Expression contextualize(StaticEnvironment env) {
-			return null;
-			// Should never be called
-		}
-		@Override
 		public boolean typeCheck(StaticEnvironment environment) {
 			// should never be called
 			return false;
@@ -282,6 +278,15 @@ public class ExpressionParser {
 		@Override
 		public Context context() {
 			return context;
+		}
+		@Override
+		public void execute(LocalEnvironment environment) {
+			// should never be called
+		}
+		@Override
+		public LiteralExpression literalValue(LocalEnvironment environment) {
+			// should never be called
+			return null;
 		}
 	}
 }

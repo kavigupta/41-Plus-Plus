@@ -2,14 +2,12 @@ package fortytwo.compiler.parsed.statements;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
+import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
-import fortytwo.vm.statements.Statement;
-import fortytwo.vm.statements.StatementSeries;
 
 public class ParsedStatementSeries implements ParsedStatement {
 	public final List<ParsedStatement> statements;
@@ -26,15 +24,17 @@ public class ParsedStatementSeries implements ParsedStatement {
 		this.context = context;
 	}
 	@Override
-	public Statement contextualize(StaticEnvironment env) {
-		return new StatementSeries(statements.stream()
-				.map(s -> s.contextualize(env))
-				.collect(Collectors.toList()));
-	}
-	@Override
 	public boolean typeCheck(StaticEnvironment env) {
 		statements.forEach(s -> s.typeCheck(env));
 		return true;
+	}
+	@Override
+	public void execute(LocalEnvironment environment) {
+		statements.forEach(s -> s.execute(environment));
+	}
+	@Override
+	public void clean(LocalEnvironment environment) {
+		statements.forEach(s -> s.clean(environment));
 	}
 	@Override
 	public SentenceType type() {
