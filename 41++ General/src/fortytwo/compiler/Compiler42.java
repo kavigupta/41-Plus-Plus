@@ -11,8 +11,7 @@ import fortytwo.vm.errors.ErrorType;
 
 /**
  * A utility class for generating and executing environments (and potentially
- * jvm bytecode in
- * the future) from 41++ code.
+ * jvm bytecode in the future) from 41++ code.
  */
 public class Compiler42 {
 	/**
