@@ -1,7 +1,6 @@
 package fortytwo.compiler.parsed.expressions;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.Operation;
@@ -12,7 +11,6 @@ import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
-import fortytwo.vm.errors.RuntimeErrors;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
@@ -20,16 +18,16 @@ import fortytwo.vm.expressions.LiteralNumber;
 /**
  * A structure representing an operation between two parsed expressions.
  */
-public class ParsedBinaryOperation implements ParsedExpression {
+public class BinaryOperation extends Expression {
 	public static final BigDecimal PRECISION = BigDecimal.TEN.pow(100);
 	/**
 	 * The first element in the operation
 	 */
-	public final ParsedExpression first;
+	public final Expression first;
 	/**
 	 * The second element in the operation
 	 */
-	public final ParsedExpression second;
+	public final Expression second;
 	/**
 	 * The operation to be used
 	 */
@@ -38,8 +36,8 @@ public class ParsedBinaryOperation implements ParsedExpression {
 	/**
 	 * Struct constructor.
 	 */
-	public ParsedBinaryOperation(ParsedExpression first,
-			ParsedExpression second, Operation operation, Context context) {
+	public BinaryOperation(Expression first, Expression second,
+			Operation operation, Context context) {
 		this.first = first;
 		this.second = second;
 		this.operation = operation;
@@ -48,67 +46,32 @@ public class ParsedBinaryOperation implements ParsedExpression {
 	/**
 	 * @return {@code -x}
 	 */
-	public static ParsedBinaryOperation getNegation(ParsedExpression x) {
-		return new ParsedBinaryOperation(LiteralNumber.getInstance(
-				BigDecimal.ZERO, Context.SYNTHETIC), x, Operation.SUBTRACT,
-				x.context().withUnaryApplied());
-	}
-	@Override
-	public boolean typeCheck(StaticEnvironment env) {
-		if (!first.resolveType(env).equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-						Context.SYNTHETIC)))
-			TypingErrors.expectedNumberInArithmeticOperator(this, true, env);
-		if (!second.resolveType(env).equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-						Context.SYNTHETIC)))
-			TypingErrors
-					.expectedNumberInArithmeticOperator(this, false, env);
-		return true;
+	public static BinaryOperation getNegation(Expression x) {
+		return new BinaryOperation(LiteralNumber.getInstance(BigDecimal.ZERO,
+				Context.SYNTHETIC), x, Operation.SUBTRACT, x.context()
+				.withUnaryApplied());
 	}
 	@Override
 	public LiteralExpression literalValue(LocalEnvironment environment) {
-		LiteralExpression f = first.literalValue(environment);
-		LiteralExpression s = second.literalValue(environment);
-		// has already been typechecked.
-		BigDecimal bdfirst = ((LiteralNumber) f).contents;
-		BigDecimal bdsecond = ((LiteralNumber) s).contents;
-		if (operation.requiresSecondArgumentNotZero
-				&& bdsecond.compareTo(BigDecimal.ZERO) == 0)
-			RuntimeErrors.divideByZero(this, context);
-		switch (operation) {
-			case ADD:
-				return LiteralNumber.getInstance(bdfirst.add(bdsecond),
-						context);
-			case SUBTRACT:
-				return LiteralNumber.getInstance(
-						bdfirst.subtract(bdsecond), context);
-			case MULTIPLY:
-				return LiteralNumber.getInstance(
-						bdfirst.multiply(bdsecond), context);
-			case DIVIDE:
-				return LiteralNumber.getInstance(
-						bdfirst.multiply(PRECISION)
-								.divide(bdsecond,
-										RoundingMode.HALF_EVEN)
-								.divide(PRECISION), context);
-			case DIVIDE_FLOOR:
-				return LiteralNumber.getInstance(
-						bdfirst.divideToIntegralValue(bdsecond), context);
-			case MOD:
-				return LiteralNumber.getInstance(
-						bdfirst.remainder(bdsecond), context);
-		}
-		// This should never happen.
-		return null;
+		checkType(environment.staticEnvironment());
+		return operation.operate(first.literalValue(environment),
+				second.literalValue(environment));
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
 		literalValue(environment);
 	}
 	@Override
-	public ConcreteType resolveType(StaticEnvironment env) {
-		typeCheck(env);
+	public ConcreteType resolveType1(StaticEnvironment env) {
+		if (!first.type(env).equals(
+				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+						Context.SYNTHETIC)))
+			TypingErrors.expectedNumberInArithmeticOperator(this, true, env);
+		if (!second.type(env).equals(
+				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+						Context.SYNTHETIC)))
+			TypingErrors
+					.expectedNumberInArithmeticOperator(this, false, env);
 		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
 				Context.SYNTHETIC);
 	}
@@ -146,7 +109,7 @@ public class ParsedBinaryOperation implements ParsedExpression {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		ParsedBinaryOperation other = (ParsedBinaryOperation) obj;
+		BinaryOperation other = (BinaryOperation) obj;
 		if (first == null) {
 			if (other.first != null) return false;
 		} else if (!first.equals(other.first)) return false;

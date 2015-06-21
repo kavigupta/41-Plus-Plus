@@ -6,7 +6,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Language;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.VirtualMachine;
@@ -55,7 +55,7 @@ public class ParserErrors {
 				"The %s for this %s was not found.", endType, startType),
 				context);
 	}
-	public static void expectedFunctionCall(ParsedExpression exp) {
+	public static void expectedFunctionCall(Expression exp) {
 		expected("function call", exp);
 	}
 	public static void expectedStatement(Sentence x) {
@@ -65,7 +65,7 @@ public class ParserErrors {
 		expected("declaration or definition", s);
 	}
 	public static void expectedVariableInFieldAccess(
-			ParsedExpression parsedExpression) {
+			Expression parsedExpression) {
 		expected("variable", parsedExpression);
 	}
 	public static void expected(String expectedClass, Sentence actually) {

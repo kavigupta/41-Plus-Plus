@@ -1,26 +1,26 @@
 package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.Field;
+import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.StructureRoster;
 
-public class ParsedDefinition implements ParsedStatement {
+public class ParsedDefinition extends ParsedStatement {
 	public final Field toCreate;
-	public final ParsedVariableRoster<?> fields;
+	public final VariableRoster<?> fields;
 	private final Context context;
-	public ParsedDefinition(Field name, ParsedVariableRoster<?> fields,
+	public ParsedDefinition(Field name, VariableRoster<?> fields,
 			Context context) {
 		this.toCreate = name;
 		this.fields = fields;
 		this.context = context;
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment environment) {
+	public boolean typeCheck1(StaticEnvironment environment) {
 		environment.addType(toCreate.name, toCreate.type);
 		return environment.structs.typeCheckConstructor(environment,
 				toCreate, fields, context);

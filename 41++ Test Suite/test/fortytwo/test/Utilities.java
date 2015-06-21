@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.StatementParser;
@@ -69,7 +69,7 @@ public class Utilities {
 				VirtualMachine.popError());
 		VirtualMachine.displayerr = old;
 	}
-	public static void assertParse(ParsedExpression value, String toParse) {
+	public static void assertParse(Expression value, String toParse) {
 		assertEquals(value, ExpressionParser.parseExpression(Tokenizer
 				.tokenize(LiteralToken.entire(toParse))));
 	}

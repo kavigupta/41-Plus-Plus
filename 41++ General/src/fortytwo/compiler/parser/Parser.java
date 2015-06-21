@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedIfElse;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parsed.statements.ParsedStatementSeries;
@@ -63,7 +63,7 @@ public class Parser {
 	public static Sentence popIf(List<List<LiteralToken>> phrases) {
 		List<LiteralToken> IF = phrases.remove(0);
 		IF.remove(0);
-		ParsedExpression condition = ExpressionParser.parseExpression(IF);
+		Expression condition = ExpressionParser.parseExpression(IF);
 		ParsedStatementSeries ifso = popSeries(phrases);
 		ParsedStatementSeries ifelse = new ParsedStatementSeries(
 				Arrays.asList(), Context.SYNTHETIC);
@@ -77,7 +77,7 @@ public class Parser {
 	private static Sentence popWhile(List<List<LiteralToken>> phrases) {
 		List<LiteralToken> WHILE = phrases.remove(0);
 		WHILE.remove(0);
-		ParsedExpression condition = ExpressionParser.parseExpression(WHILE);
+		Expression condition = ExpressionParser.parseExpression(WHILE);
 		ParsedStatementSeries whileTrue = popSeries(phrases);
 		return new ParsedWhileLoop(condition, whileTrue, Context.sum(Arrays
 				.asList(condition.context(), whileTrue.context())));

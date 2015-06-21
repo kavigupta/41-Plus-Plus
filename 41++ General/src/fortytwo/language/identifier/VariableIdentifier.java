@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.ExpressionType;
@@ -15,7 +15,7 @@ import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class VariableIdentifier implements ParsedExpression {
+public class VariableIdentifier extends Expression {
 	public static final VariableIdentifier VALUE = new VariableIdentifier(
 			LiteralToken.synthetic(Resources.VALUE));
 	public final LiteralToken name;
@@ -30,13 +30,8 @@ public class VariableIdentifier implements ParsedExpression {
 		this.name = name;
 	}
 	@Override
-	public ConcreteType resolveType(StaticEnvironment env) {
+	public ConcreteType resolveType1(StaticEnvironment env) {
 		return env.typeOf(this);
-	}
-	@Override
-	public boolean typeCheck(StaticEnvironment environment) {
-		// a variable's type is whatever it's set to
-		return true;
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
@@ -73,9 +68,5 @@ public class VariableIdentifier implements ParsedExpression {
 	@Override
 	public String toSourceCode() {
 		return name.token;
-	}
-	@Override
-	public boolean isSimple() {
-		return true;
 	}
 }

@@ -1,7 +1,7 @@
 package fortytwo.language.field;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
@@ -9,7 +9,7 @@ import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class Field implements ParsedExpression {
+public class Field extends Expression {
 	public final VariableIdentifier name;
 	public final ConcreteType type;
 	public Field(VariableIdentifier name, ConcreteType type) {
@@ -21,19 +21,11 @@ public class Field implements ParsedExpression {
 		return env.referenceTo(this.name);
 	}
 	@Override
-	public ConcreteType resolveType(StaticEnvironment env) {
+	public ConcreteType resolveType1(StaticEnvironment env) {
 		return type;
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment environment) {
-		return true;
-	}
-	@Override
 	public void execute(LocalEnvironment environment) {
-		// no-op
-	}
-	@Override
-	public void clean(LocalEnvironment environment) {
 		// no-op
 	}
 	@Override
@@ -47,10 +39,6 @@ public class Field implements ParsedExpression {
 	@Override
 	public String toSourceCode() {
 		return name.toSourceCode();
-	}
-	@Override
-	public boolean isSimple() {
-		return true;
 	}
 	@Override
 	public int hashCode() {

@@ -56,7 +56,7 @@ public class FunctionImplemented extends Function42 {
 	public boolean typeCheck(StaticEnvironment env) {
 		StaticEnvironment local = StaticEnvironment.getChild(env);
 		f.registerParameters(local);
-		body.forEach(x -> x.typeCheck(local));
+		body.forEach(x -> x.checkType(local));
 		return true;
 	}
 	@Override
@@ -75,10 +75,10 @@ public class FunctionImplemented extends Function42 {
 	public GenericType outputType() {
 		StaticEnvironment local = StaticEnvironment.getDefault();
 		f.registerParameters(local);
-		body.forEach(x -> x.typeCheck(local));
+		body.forEach(x -> x.checkType(local));
 		return r.output == null ? new PrimitiveType(
 				PrimitiveTypeWithoutContext.VOID, Context.SYNTHETIC)
-				: r.output.resolveType(local);
+				: r.output.type(local);
 	}
 	@Override
 	public FunctionSignature signature() {

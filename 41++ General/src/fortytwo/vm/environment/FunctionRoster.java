@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import lib.standard.collections.Pair;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.library.standard.StdLib42;
@@ -17,7 +17,7 @@ public class FunctionRoster {
 		this.env = env;
 	}
 	public Function42 get(FunctionSignature signature,
-			List<ParsedExpression> arguments, List<ConcreteType> types) {
+			List<Expression> arguments, List<ConcreteType> types) {
 		Pair<Function42, ConcreteType> func = StdLib42
 				.matchCompiledFieldAccess(env, signature.name, types);
 		if (func != null) return func.getKey();

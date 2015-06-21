@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedDefinition;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.language.classification.SentenceType;
@@ -18,6 +17,7 @@ import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.FunctionImplemented;
+import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -66,8 +66,8 @@ public class GlobalEnvironment {
 					break;
 				case DEFINITION:
 					ParsedDefinition def = (ParsedDefinition) s;
-					ParsedVariableRoster<? extends ParsedExpression> fieldValues = new ParsedVariableRoster<>();
-					for (Entry<VariableIdentifier, ? extends ParsedExpression> pair : def.fields.pairs) {
+					VariableRoster<? extends Expression> fieldValues = new VariableRoster<>();
+					for (Entry<VariableIdentifier, ? extends Expression> pair : def.fields.pairs) {
 						LiteralExpression applied = pair.getValue()
 								.literalValue(
 										new LocalEnvironment(global));

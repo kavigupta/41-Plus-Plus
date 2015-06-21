@@ -9,10 +9,9 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.ParsedConstruct;
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedDefinition;
 import fortytwo.compiler.parsed.statements.ParsedIfElse;
 import fortytwo.compiler.parsed.statements.ParsedStatementSeries;
@@ -24,6 +23,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.*;
+import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.expressions.*;
 
 public class SourceCode {
@@ -163,15 +163,15 @@ public class SourceCode {
 		if (statement.isSimple()) return s;
 		return "Do the following: " + s + "." + " That's all";
 	}
-	private static String displayFieldList(ParsedVariableRoster<?> fields) {
+	private static String displayFieldList(VariableRoster<?> fields) {
 		List<String> items = new ArrayList<>();
-		for (Pair<VariableIdentifier, ? extends ParsedExpression> e : fields.pairs) {
+		for (Pair<VariableIdentifier, ? extends Expression> e : fields.pairs) {
 			items.add(Language.articleized(e.getKey().toSourceCode()
 					+ " of " + e.getValue().toSourceCode()));
 		}
 		return displayList(items);
 	}
-	private static String displayReturn(ParsedExpression output) {
+	private static String displayReturn(Expression output) {
 		if (output == null) return "";
 		return " and output " + output.toSourceCode();
 	}

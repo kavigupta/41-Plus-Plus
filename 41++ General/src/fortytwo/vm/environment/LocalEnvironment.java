@@ -1,16 +1,16 @@
 package fortytwo.vm.environment;
 
-import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
+import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class LocalEnvironment {
 	public final GlobalEnvironment global;
-	public final ParsedVariableRoster<LiteralExpression> vars;
+	public final VariableRoster<LiteralExpression> vars;
 	public LocalEnvironment(GlobalEnvironment global) {
 		this.global = global;
-		vars = new ParsedVariableRoster<>();
+		vars = new VariableRoster<>();
 	}
 	public LocalEnvironment reinitialize(GlobalEnvironment newEnvironment) {
 		LocalEnvironment newlocal = new LocalEnvironment(newEnvironment);

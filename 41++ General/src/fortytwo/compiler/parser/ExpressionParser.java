@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
-import fortytwo.compiler.parsed.expressions.ParsedBinaryOperation;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.BinaryOperation;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
 import fortytwo.language.Language;
 import fortytwo.language.Operation;
@@ -32,7 +32,7 @@ import fortytwo.vm.expressions.LiteralNumber;
 import fortytwo.vm.expressions.LiteralString;
 
 public class ExpressionParser {
-	public static ParsedExpression parseExpression(List<LiteralToken> list) {
+	public static Expression parseExpression(List<LiteralToken> list) {
 		ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() == 1
@@ -40,10 +40,10 @@ public class ExpressionParser {
 			return function.arguments.get(0);
 		return function;
 	}
-	public static ParsedExpression parsePureExpression(
+	public static Expression parsePureExpression(
 			List<LiteralToken> currentExpression) {
-		ArrayList<ParsedExpression> originalExpressions = tokenize(currentExpression);
-		ArrayList<ParsedExpression> expressions = removeUnary(originalExpressions);
+		ArrayList<Expression> originalExpressions = tokenize(currentExpression);
+		ArrayList<Expression> expressions = removeUnary(originalExpressions);
 		for (int precendence = 0; precendence <= Operation.MAX_PRECDENCE; precendence++) {
 			expressions = removeBinary(expressions, precendence);
 		}
@@ -52,36 +52,34 @@ public class ExpressionParser {
 					currentExpression);
 		return expressions.get(0);
 	}
-	private static ArrayList<ParsedExpression> removeBinary(
-			ArrayList<ParsedExpression> expressions, int precendence) {
-		Stack<ParsedExpression> exp = new Stack<>();
+	private static ArrayList<Expression> removeBinary(
+			ArrayList<Expression> expressions, int precendence) {
+		Stack<Expression> exp = new Stack<>();
 		for (int i = 0; i < expressions.size(); i++) {
-			ParsedExpression token = expressions.get(i);
+			Expression token = expressions.get(i);
 			if (token instanceof UnevaluatedOperator
 					&& ((UnevaluatedOperator) token).operator.precendence <= precendence) {
 				if (exp.size() == 0)
 					SyntaxErrors.invalidExpression(
-							ExpressionType.ARITHMETIC,
-							expressions.stream()
-									.map(ParsedExpression::toToken)
+							ExpressionType.ARITHMETIC, expressions
+									.stream().map(Expression::toToken)
 									.collect(Collectors.toList()));
-				ParsedExpression first = exp.pop();
+				Expression first = exp.pop();
 				i++;
-				ParsedExpression second = expressions.get(i);
+				Expression second = expressions.get(i);
 				UnevaluatedOperator op = (UnevaluatedOperator) token;
-				exp.push(new ParsedBinaryOperation(first, second,
-						op.operator, Context.sum(Arrays.asList(
-								first.context(), op.context(),
-								second.context()))));
+				exp.push(new BinaryOperation(first, second, op.operator,
+						Context.sum(Arrays.asList(first.context(),
+								op.context(), second.context()))));
 			} else {
 				exp.push(token);
 			}
 		}
 		return new ArrayList<>(exp);
 	}
-	private static ArrayList<ParsedExpression> removeUnary(
-			ArrayList<ParsedExpression> expressions) {
-		ArrayList<ParsedExpression> expressionsWoUO = new ArrayList<>();
+	private static ArrayList<Expression> removeUnary(
+			ArrayList<Expression> expressions) {
+		ArrayList<Expression> expressionsWoUO = new ArrayList<>();
 		for (int i = 0; i < expressions.size(); i++) {
 			if (expressions.get(i) instanceof UnevaluatedOperator) {
 				UnevaluatedOperator uneop = (UnevaluatedOperator) expressions
@@ -92,8 +90,8 @@ public class ExpressionParser {
 						continue;
 					} else if (uneop.operator.equals(Operation.SUBTRACT)) {
 						i++;
-						ParsedExpression next = expressions.get(i);
-						expressionsWoUO.add(ParsedBinaryOperation
+						Expression next = expressions.get(i);
+						expressionsWoUO.add(BinaryOperation
 								.getNegation(next));
 					}
 				} else {
@@ -105,8 +103,8 @@ public class ExpressionParser {
 		}
 		return expressionsWoUO;
 	}
-	private static ArrayList<ParsedExpression> tokenize(List<LiteralToken> exp) {
-		ArrayList<ParsedExpression> expressions = new ArrayList<>();
+	private static ArrayList<Expression> tokenize(List<LiteralToken> exp) {
+		ArrayList<Expression> expressions = new ArrayList<>();
 		for (LiteralToken token : exp) {
 			switch (token.token.charAt(0)) {
 				case '0':
@@ -239,7 +237,7 @@ public class ExpressionParser {
 					.collect(Collectors.toList()), context);
 		return new GenericStructureType(struct, typeVariables, context);
 	}
-	private static class UnevaluatedOperator implements ParsedExpression {
+	private static class UnevaluatedOperator extends Expression {
 		public Operation operator;
 		public Context context;
 		public UnevaluatedOperator(Operation operator, Context context) {
@@ -247,17 +245,7 @@ public class ExpressionParser {
 			this.context = context;
 		}
 		@Override
-		public boolean typeCheck(StaticEnvironment environment) {
-			// should never be called
-			return false;
-		}
-		@Override
-		public boolean isSimple() {
-			// should never be called
-			return false;
-		}
-		@Override
-		public ConcreteType resolveType(StaticEnvironment env) {
+		public ConcreteType resolveType1(StaticEnvironment env) {
 			// should never be called
 			return null;
 		}

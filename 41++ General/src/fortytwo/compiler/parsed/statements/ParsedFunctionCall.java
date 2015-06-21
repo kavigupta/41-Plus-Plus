@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionName;
@@ -16,15 +16,15 @@ import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
+public class ParsedFunctionCall extends Expression {
 	public final FunctionName name;
-	public final List<ParsedExpression> arguments;
+	public final List<Expression> arguments;
 	public static ParsedFunctionCall getInstance(FunctionName signature,
-			List<ParsedExpression> value) {
+			List<Expression> value) {
 		return new ParsedFunctionCall(signature, value);
 	}
 	private ParsedFunctionCall(FunctionName signature,
-			List<ParsedExpression> arguments) {
+			List<Expression> arguments) {
 		this.name = signature;
 		this.arguments = arguments;
 	}
@@ -36,7 +36,7 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 	public LiteralExpression literalValue(LocalEnvironment env) {
 		StaticEnvironment se = env.staticEnvironment();
 		List<ConcreteType> types = arguments.stream()
-				.map(x -> x.resolveType(env.staticEnvironment()))
+				.map(x -> x.type(env.staticEnvironment()))
 				.collect(Collectors.toList());
 		FunctionSignature sig = se.referenceTo(name, types);
 		Function42 f = env.global.funcs.get(sig, arguments, types);
@@ -47,14 +47,9 @@ public class ParsedFunctionCall implements ParsedExpression, ParsedStatement {
 						.collect(Collectors.toList()));
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment env) {
-		// this has already been checked.
-		return true;
-	}
-	@Override
-	public ConcreteType resolveType(StaticEnvironment env) {
-		List<ConcreteType> types = arguments.stream()
-				.map(x -> x.resolveType(env)).collect(Collectors.toList());
+	public ConcreteType resolveType1(StaticEnvironment env) {
+		List<ConcreteType> types = arguments.stream().map(x -> x.type(env))
+				.collect(Collectors.toList());
 		FunctionSignature sig = env.referenceTo(name, types);
 		return sig.outputType.resolve(sig.typeVariables(arguments, env));
 	}

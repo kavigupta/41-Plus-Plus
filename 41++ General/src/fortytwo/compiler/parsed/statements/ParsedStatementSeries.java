@@ -9,7 +9,7 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 
-public class ParsedStatementSeries implements ParsedStatement {
+public class ParsedStatementSeries extends ParsedStatement {
 	public final List<ParsedStatement> statements;
 	private final Context context;
 	public static ParsedStatementSeries getInstance(ParsedStatement s,
@@ -24,8 +24,8 @@ public class ParsedStatementSeries implements ParsedStatement {
 		this.context = context;
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment env) {
-		statements.forEach(s -> s.typeCheck(env));
+	public boolean typeCheck1(StaticEnvironment env) {
+		statements.forEach(s -> s.checkType(env));
 		return true;
 	}
 	@Override

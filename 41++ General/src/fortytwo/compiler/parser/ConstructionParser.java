@@ -11,7 +11,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
@@ -32,7 +32,7 @@ import fortytwo.vm.errors.TypingErrors;
 
 public class ConstructionParser {
 	public static ParsedFunctionCall composeFunction(List<LiteralToken> list) {
-		Pair<FunctionName, List<ParsedExpression>> fsig = parseFunctionSignature(list);
+		Pair<FunctionName, List<Expression>> fsig = parseFunctionSignature(list);
 		return ParsedFunctionCall.getInstance(fsig.key, fsig.value);
 	}
 	public static StructureDefinition parseStructDefinition(
@@ -113,7 +113,7 @@ public class ConstructionParser {
 					.invalidSentence(SentenceType.DECLARATION_FUNCT, line);
 		}
 		int outputloc = Language.indexOf(line, Resources.OUTPUTS);
-		Pair<FunctionName, List<ParsedExpression>> sig = parseFunctionSignature(funcExpress);
+		Pair<FunctionName, List<Expression>> sig = parseFunctionSignature(funcExpress);
 		List<VariableIdentifier> variables = sig.value
 				.stream()
 				.map(x -> {
@@ -145,17 +145,17 @@ public class ConstructionParser {
 		return new FunctionDefinition(FunctionSignature.getInstance(sig.key,
 				types, outputType), variables, Context.sum(line));
 	}
-	private static Pair<FunctionName, List<ParsedExpression>> parseFunctionSignature(
+	private static Pair<FunctionName, List<Expression>> parseFunctionSignature(
 			List<LiteralToken> list) {
 		List<FunctionComponent> function = new ArrayList<>();
 		List<LiteralToken> currentExpression = new ArrayList<>();
-		List<ParsedExpression> arguments = new ArrayList<>();
+		List<Expression> arguments = new ArrayList<>();
 		for (LiteralToken tok : list) {
 			if (Language.isExpression(tok.token)) {
 				currentExpression.add(tok);
 			} else if (Language.isFunctionToken(tok.token)) {
 				if (currentExpression.size() != 0) {
-					ParsedExpression argument = ExpressionParser
+					Expression argument = ExpressionParser
 							.parsePureExpression(currentExpression);
 					arguments.add(argument);
 					function.add(FunctionArgument.INSTANCE);
@@ -165,7 +165,7 @@ public class ConstructionParser {
 			} else break;
 		}
 		if (currentExpression.size() != 0) {
-			ParsedExpression argument = ExpressionParser
+			Expression argument = ExpressionParser
 					.parsePureExpression(currentExpression);
 			arguments.add(argument);
 			function.add(FunctionArgument.INSTANCE);

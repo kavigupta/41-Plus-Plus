@@ -7,7 +7,7 @@ import java.util.List;
 import lib.standard.collections.Pair;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Language;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
@@ -82,8 +82,8 @@ public class StdLib42 {
 								.getInstance(LiteralToken
 										.entire("\"value\"")), _v))));
 	}
-	public static Pair<FunctionName, List<ParsedExpression>> parseFunction(
-			List<FunctionComponent> name, List<ParsedExpression> arguments) {
+	public static Pair<FunctionName, List<Expression>> parseFunction(
+			List<FunctionComponent> name, List<Expression> arguments) {
 		if (FunctionName.getInstance(name).equals(
 				StdLib42.FUNC_FIELD_ACCESS_NAME_APPARENT)) {
 			if (!(arguments.get(0) instanceof VariableIdentifier))
@@ -101,8 +101,7 @@ public class StdLib42 {
 		return FunctionName.getInstance("the", name, "of", "");
 	}
 	public static Pair<Function42, ConcreteType> matchFieldAccess(
-			StaticEnvironment se, FunctionName name,
-			List<ParsedExpression> inputs) {
+			StaticEnvironment se, FunctionName name, List<Expression> inputs) {
 		if (name.function.size() != 4) return null;
 		if (!name.function.get(0).equals(
 				new FunctionToken(LiteralToken.synthetic("the"))))
@@ -114,7 +113,7 @@ public class StdLib42 {
 		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
 		if (!(inputs.get(0) instanceof VariableIdentifier)) return null;
 		VariableIdentifier field = (VariableIdentifier) inputs.get(0);
-		ConcreteType type = inputs.get(1).resolveType(se);
+		ConcreteType type = inputs.get(1).type(se);
 		if (type instanceof ArrayType) {
 			if (field.equals(TypeVariable.LENGTH.name))
 				return Pair.getInstance(FunctionArrayLength.INSTANCE,

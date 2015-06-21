@@ -1,9 +1,9 @@
-package fortytwo.compiler.parsed.constructions;
+package fortytwo.vm.constructions;
 
 import java.util.ArrayList;
 
 import lib.standard.collections.Pair;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.errors.DNEErrors;
@@ -12,15 +12,14 @@ import fortytwo.vm.expressions.LiteralExpression;
 /**
  * A class representing a roster of variables.
  */
-public class ParsedVariableRoster<T extends ParsedExpression> {
+public class VariableRoster<T extends Expression> {
 	public final ArrayList<Pair<VariableIdentifier, T>> pairs = new ArrayList<>();
 	/**
-	 * Registers the given Variable ID with the given parsed expression.
-	 */
-	public void add(VariableIdentifier id, T expr) {
-		pairs.add(Pair.getInstance(id, expr));
-	}
-	/**
+	 * ww public void add(VariableIdentifier id, T expr) {
+	 * pairs.add(Pair.getInstance(id, expr));
+	 * }
+	 * /**
+	 * 
 	 * @return an iterator over the variables
 	 */
 	public Iterable<Pair<VariableIdentifier, T>> entryIterator() {
@@ -81,7 +80,7 @@ public class ParsedVariableRoster<T extends ParsedExpression> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		@SuppressWarnings("unchecked")
-		ParsedVariableRoster<T> other = (ParsedVariableRoster<T>) obj;
+		VariableRoster<T> other = (VariableRoster<T>) obj;
 		if (pairs == null) {
 			if (other.pairs != null) return false;
 		} else if (!pairs.equals(other.pairs)) return false;
@@ -103,10 +102,10 @@ public class ParsedVariableRoster<T extends ParsedExpression> {
 		}
 		DNEErrors.variableDNE(name);
 	}
-	public ParsedVariableRoster<LiteralExpression> literalValue(
-			LocalEnvironment env) {
-		ParsedVariableRoster<LiteralExpression> roster = new ParsedVariableRoster<LiteralExpression>();
-		this.pairs.forEach(x -> roster.add(x.key, x.value.literalValue(env)));
+	public VariableRoster<LiteralExpression> literalValue(LocalEnvironment env) {
+		VariableRoster<LiteralExpression> roster = new VariableRoster<LiteralExpression>();
+		this.pairs.forEach(x -> roster.assign(x.key,
+				x.value.literalValue(env)));
 		return roster;
 	}
 }

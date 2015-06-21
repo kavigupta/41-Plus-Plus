@@ -6,9 +6,8 @@ import java.util.List;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.*;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
@@ -18,6 +17,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
+import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.SyntaxErrors;
 
@@ -28,7 +28,7 @@ public class StatementParser {
 		switch (line.get(0).token) {
 			case Resources.RUN:
 				line.remove(0);
-				ParsedExpression e = ExpressionParser.parseExpression(line);
+				Expression e = ExpressionParser.parseExpression(line);
 				if (e.type() == SentenceType.PURE_EXPRESSION)
 					ParserErrors.expectedFunctionCall(e);
 				return e;
@@ -67,7 +67,7 @@ public class StatementParser {
 		if (function.name.function.size() != 1
 				|| !(function.name.function.get(0) instanceof FunctionArgument))
 			return function;
-		ParsedExpression exp = function.arguments.get(0);
+		Expression exp = function.arguments.get(0);
 		if (exp instanceof ParsedFunctionCall) return exp;
 		ParserErrors.expectedFunctionCall(exp);
 		// should never get here
@@ -85,7 +85,7 @@ public class StatementParser {
 		LiteralToken fieldT = line.get(2);
 		VariableIdentifier name = VariableIdentifier.getInstance(line.get(4));
 		line.subList(0, 6).clear();
-		ParsedExpression expr = ExpressionParser.parseExpression(line);
+		Expression expr = ExpressionParser.parseExpression(line);
 		return fieldT.token.equals(Resources.VALUE) ? new ParsedRedefinition(
 				name, expr, fullContext) : new ParsedFieldAssignment(name,
 				VariableIdentifier.getInstance(fieldT), expr, fullContext);
@@ -105,7 +105,7 @@ public class StatementParser {
 		if (type.token.equals(Resources.TYPE))
 			return ConstructionParser.parseStructDefinition(line);
 		LiteralToken name = line.get(4);
-		ParsedVariableRoster<ParsedExpression> fields = new ParsedVariableRoster<>();
+		VariableRoster<Expression> fields = new VariableRoster<>();
 		for (int i = 5; i < line.size(); i++) {
 			if (!line.get(i).token.equals(Resources.OF)) continue;
 			LiteralToken fieldT = line.get(i - 1);
@@ -116,7 +116,7 @@ public class StatementParser {
 				tokens2.add(line.get(i));
 				i++;
 			}
-			fields.add(VariableIdentifier.getInstance(fieldT),
+			fields.assign(VariableIdentifier.getInstance(fieldT),
 					ExpressionParser.parseExpression(tokens2));
 		}
 		GenericType genericType = ExpressionParser.parseType(type);

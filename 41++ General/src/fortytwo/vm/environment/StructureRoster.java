@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.field.Field;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.*;
 import fortytwo.vm.constructions.GenericStructureSignature;
 import fortytwo.vm.constructions.Structure;
+import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralArray;
@@ -49,8 +49,7 @@ public class StructureRoster {
 		return null;
 	}
 	public LiteralExpression instance(Field name,
-			ParsedVariableRoster<LiteralExpression> fieldValues,
-			Context context) {
+			VariableRoster<LiteralExpression> fieldValues, Context context) {
 		LiteralExpression value = fieldValues.value();
 		if (value != null) return value;
 		typeCheckConstructor(null, name, fieldValues, context);
@@ -92,20 +91,19 @@ public class StructureRoster {
 		return null;
 	}
 	public boolean typeCheckConstructor(StaticEnvironment env, Field name,
-			ParsedVariableRoster<? extends ParsedExpression> fieldValues,
-			Context context) {
+			VariableRoster<? extends Expression> fieldValues, Context context) {
 		if (fieldValues.value() != null) {
-			if (fieldValues.value().resolveType(env).equals(name.type))
+			if (fieldValues.value().type(env).equals(name.type))
 				return true;
 			TypingErrors.redefinitionTypeMismatch(name, fieldValues.value(),
 					env);
 		}
 		if (name.type instanceof ArrayType) {
-			ParsedExpression length = fieldValues
+			Expression length = fieldValues
 					.referenceTo(TypeVariable.LENGTH.name);
 			if (fieldValues.numberOfVariables() == 1
 					&& length != null
-					&& length.resolveType(env)
+					&& length.type(env)
 							.equals(new PrimitiveType(
 									PrimitiveTypeWithoutContext.NUMBER,
 									Context.SYNTHETIC))) return true;
@@ -122,8 +120,7 @@ public class StructureRoster {
 		}
 		Structure struct = getStructure((StructureType) name.type);
 		for (Field f : struct.fields) {
-			if (!fieldValues.referenceTo(f.name).resolveType(env)
-					.equals(f.type))
+			if (!fieldValues.referenceTo(f.name).type(env).equals(f.type))
 				TypingErrors.fieldAssignmentTypeMismatch(struct, f,
 						fieldValues.referenceTo(f.name), env);
 		}

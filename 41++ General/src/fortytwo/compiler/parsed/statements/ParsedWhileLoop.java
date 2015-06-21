@@ -1,7 +1,7 @@
 package fortytwo.compiler.parsed.statements;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.PrimitiveType;
@@ -11,24 +11,23 @@ import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralBool;
 
-public class ParsedWhileLoop implements ParsedStatement {
-	public final ParsedExpression condition;
+public class ParsedWhileLoop extends ParsedStatement {
+	public final Expression condition;
 	public final ParsedStatement statement;
 	private final Context context;
-	public ParsedWhileLoop(ParsedExpression condition,
+	public ParsedWhileLoop(Expression condition,
 			ParsedStatement ParsedStatement, Context context) {
 		this.condition = condition;
 		this.statement = ParsedStatement;
 		this.context = context;
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment env) {
-		condition.typeCheck(env);
-		if (!condition.resolveType(env).equals(
+	public boolean typeCheck1(StaticEnvironment env) {
+		if (!condition.type(env).equals(
 				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
 						Context.SYNTHETIC)))
 			TypingErrors.expectedBoolInCondition(false, condition, env);
-		return statement.typeCheck(env);
+		return statement.checkType(env);
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {

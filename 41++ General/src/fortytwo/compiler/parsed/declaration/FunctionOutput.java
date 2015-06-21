@@ -2,7 +2,7 @@ package fortytwo.compiler.parsed.declaration;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 
@@ -12,14 +12,15 @@ import fortytwo.language.classification.SentenceType;
  */
 public class FunctionOutput implements Sentence {
 	/**
-	 * The output, in the form of a ParsedExpressionFS
+	 * The output, in the form of an Expression
 	 */
-	public final ParsedExpression output;
+	public final Expression output;
 	private final Context context;
 	/**
-	 * Struct constructor.
+	 * @param output the output of the function
+	 * @param context the context of the sentence
 	 */
-	public FunctionOutput(ParsedExpression output, Context context) {
+	public FunctionOutput(Expression output, Context context) {
 		this.output = output;
 		this.context = context;
 	}

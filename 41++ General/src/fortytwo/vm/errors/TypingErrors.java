@@ -6,9 +6,8 @@ import java.util.stream.Collectors;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.ParsedConstruct;
-import fortytwo.compiler.parsed.constructions.ParsedVariableRoster;
-import fortytwo.compiler.parsed.expressions.ParsedBinaryOperation;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.BinaryOperation;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Language;
 import fortytwo.language.SourceCode;
 import fortytwo.language.field.Field;
@@ -17,12 +16,12 @@ import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveTypeWithoutContext;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Structure;
+import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.environment.StaticEnvironment;
 
 public class TypingErrors {
 	public static void typeError(String expressionDescription,
-			String expectedType, ParsedExpression expression,
-			StaticEnvironment env) {
+			String expectedType, Expression expression, StaticEnvironment env) {
 		/*
 		 * <Expression description> must be <expected type>, but is actually
 		 * ~<expression>~, which is <actual type>.
@@ -30,12 +29,12 @@ public class TypingErrors {
 		VirtualMachine.error(ErrorType.TYPING, String.format(
 				"%s must be %s, but is actually ~%s~, which is %s",
 				expressionDescription, Language.articleized(expectedType),
-				expression.toSourceCode(), Language.articleized(expression
-						.resolveType(env).toSourceCode())), expression
-				.context());
+				expression.toSourceCode(),
+				Language.articleized(expression.type(env).toSourceCode())),
+				expression.context());
 	}
 	public static void expectedNumberInArithmeticOperator(
-			ParsedBinaryOperation operation, boolean firstArgument,
+			BinaryOperation operation, boolean firstArgument,
 			StaticEnvironment env) {
 		typeError("The " + (firstArgument ? "first" : "second")
 				+ " argument in " + operation.operation.noun.toLowerCase(),
@@ -43,24 +42,24 @@ public class TypingErrors {
 				firstArgument ? operation.first : operation.second, env);
 	}
 	public static void expectedBoolInCondition(boolean ifIf,
-			ParsedExpression condition, StaticEnvironment env) {
+			Expression condition, StaticEnvironment env) {
 		typeError("The condition of " + (ifIf ? "an if" : "a while")
 				+ " loop", PrimitiveTypeWithoutContext.BOOL.toSourceCode(),
 				condition, env);
 	}
 	public static void redefinitionTypeMismatch(Field name,
-			ParsedExpression parsedExpression, StaticEnvironment env) {
+			Expression parsedExpression, StaticEnvironment env) {
 		typeError("The value of " + name.name.toSourceCode(),
 				name.type.toSourceCode(), parsedExpression, env);
 	}
 	public static void fieldAssignmentTypeMismatch(Structure struct,
-			Field field, ParsedExpression value, StaticEnvironment env) {
+			Field field, Expression value, StaticEnvironment env) {
 		typeError("The " + field.name.toSourceCode() + " of "
 				+ struct.type.toSourceCode(), field.type.toSourceCode(),
 				value, env);
 	}
 	public static void incompleteConstructor(Structure struct,
-			ParsedVariableRoster<? extends ParsedExpression> fieldValues) {
+			VariableRoster<? extends Expression> fieldValues) {
 		String actual = "no fields";
 		if (fieldValues.numberOfVariables() != 0) {
 			String displayedFields = SourceCode.displayList(struct.fields

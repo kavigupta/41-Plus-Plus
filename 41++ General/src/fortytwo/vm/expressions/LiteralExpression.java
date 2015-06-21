@@ -1,24 +1,20 @@
 package fortytwo.vm.expressions;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 
-public abstract class LiteralExpression implements ParsedExpression {
+public abstract class LiteralExpression extends Expression {
 	protected Context context;
 	public LiteralExpression(Context context) {
 		this.context = context;
 	}
 	@Override
-	public ConcreteType resolveType(StaticEnvironment env) {
+	public ConcreteType resolveType1(StaticEnvironment env) {
 		return resolveType();
-	}
-	@Override
-	public boolean typeCheck(StaticEnvironment environment) {
-		return true;
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {

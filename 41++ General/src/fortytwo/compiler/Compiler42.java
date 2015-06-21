@@ -30,11 +30,11 @@ public class Compiler42 {
 		GlobalEnvironment env = GlobalEnvironment.interpret(Parser
 				.parse(text));
 		try {
-			// skipping typechecking...
-			ParsedFunctionCall.getInstance(
+			ParsedFunctionCall pfc = ParsedFunctionCall.getInstance(
 					FunctionName.getInstance("This", "first"),
-					Arrays.asList())
-					.execute(env.minimalLocalEnvironment());
+					Arrays.asList());
+			pfc.checkType(env.staticEnv);
+			pfc.execute(env.minimalLocalEnvironment());
 		} catch (Throwable t) {
 			VirtualMachine.error(ErrorType.PARSING,
 					"Main method not found.", Context.entire(text));

@@ -3,7 +3,7 @@ package fortytwo.compiler.parsed.statements;
 import java.util.Arrays;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.expressions.ParsedExpression;
+import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.PrimitiveType;
@@ -13,15 +13,15 @@ import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralBool;
 
-public class ParsedIfElse implements ParsedStatement {
-	public final ParsedExpression condition;
+public class ParsedIfElse extends ParsedStatement {
+	public final Expression condition;
 	public final ParsedStatementSeries ifso, ifelse;
-	public static ParsedIfElse getInstance(ParsedExpression condition,
+	public static ParsedIfElse getInstance(Expression condition,
 			ParsedStatementSeries ifso, ParsedStatementSeries ifelse) {
 		return new ParsedIfElse(condition, ifso, ifelse);
 	}
-	private ParsedIfElse(ParsedExpression condition,
-			ParsedStatementSeries ifso, ParsedStatementSeries ifelse) {
+	private ParsedIfElse(Expression condition, ParsedStatementSeries ifso,
+			ParsedStatementSeries ifelse) {
 		this.condition = condition;
 		this.ifso = ifso;
 		this.ifelse = ifelse;
@@ -41,8 +41,8 @@ public class ParsedIfElse implements ParsedStatement {
 		// Forms a closure, no need to clean once done
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment env) {
-		if (condition.resolveType(env).equals(
+	public boolean typeCheck1(StaticEnvironment env) {
+		if (condition.type(env).equals(
 				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
 						Context.SYNTHETIC))) return true;
 		TypingErrors.expectedBoolInCondition(true, condition, env);
