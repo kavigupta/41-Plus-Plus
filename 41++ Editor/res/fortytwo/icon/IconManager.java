@@ -19,6 +19,7 @@ public class IconManager {
 			iconProgram = null;
 		}
 		ICON_PROGRAM = iconProgram;
+		// TODO Fix why this isn't working in the jar
 	}
 	public static void setIcon(Editor42 ed) {
 		if (ICON_PROGRAM != null) ed.setIconImage(ICON_PROGRAM);
