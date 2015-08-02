@@ -14,7 +14,7 @@ public class IconManager {
 		BufferedImage iconProgram;
 		try {
 			iconProgram = ImageIO.read(IconManager.class
-					.getResource("icon.png"));
+					.getResourceAsStream("icon.png"));
 		} catch (Throwable t) {
 			iconProgram = null;
 		}
