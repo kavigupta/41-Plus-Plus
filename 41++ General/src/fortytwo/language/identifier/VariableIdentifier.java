@@ -30,19 +30,15 @@ public class VariableIdentifier extends Expression {
 		this.name = name;
 	}
 	@Override
-	public ConcreteType resolveType1(StaticEnvironment env) {
+	public ConcreteType findType(StaticEnvironment env) {
 		return env.typeOf(this);
-	}
-	@Override
-	public void execute(LocalEnvironment environment) {
-		// no-op
 	}
 	@Override
 	public LiteralExpression literalValue(LocalEnvironment env) {
 		return env.referenceTo(this);
 	}
 	@Override
-	public SentenceType type() {
+	public SentenceType kind() {
 		return SentenceType.PURE_EXPRESSION;
 	}
 	@Override

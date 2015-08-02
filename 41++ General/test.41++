@@ -1,7 +1,0 @@
-Define a function called This first. Define a number called _x with a value of 1. 
-While _x is less than 1000: Do the following: Set the value of _x to (_x+1). If _x is prime: Tell me what _x is. That's all. 
-Exit the function.
-
-Define a function called _x is prime that takes a number called _x and outputs a bool. Define a number called _i with a value of 1. Define a bool called _isPrimeForNow with a value of (_x is at least 2). 
-While ((_i+1) * (_i+1) is at most _x) and _isPrimeForNow: Do the following: Set the value of _i to _i+1. If (_x % _i) is equal to 0: Set the value of _isPrimeForNow to false. That's all.
-Exit the function and output _isPrimeForNow.

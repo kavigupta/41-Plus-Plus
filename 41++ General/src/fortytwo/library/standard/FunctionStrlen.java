@@ -8,7 +8,7 @@ import fortytwo.compiler.Context;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.language.type.TypeVariable;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
@@ -29,7 +29,7 @@ public class FunctionStrlen extends Function42 {
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+		return new PrimitiveType(PrimitiveTypeWOC.NUMBER,
 				Context.SYNTHETIC);
 	}
 	@Override
@@ -37,7 +37,7 @@ public class FunctionStrlen extends Function42 {
 		return FunctionSignature.getInstance(FunctionName.getInstance("the",
 				TypeVariable.LENGTH.name.name.token, "of", ""), Arrays
 				.asList(new PrimitiveType(
-						PrimitiveTypeWithoutContext.STRING,
+						PrimitiveTypeWOC.STRING,
 						Context.SYNTHETIC)), outputType());
 	}
 }

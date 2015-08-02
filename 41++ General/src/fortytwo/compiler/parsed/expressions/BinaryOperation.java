@@ -8,7 +8,7 @@ import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
@@ -16,7 +16,7 @@ import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
 
 /**
- * A structure representing an operation between two parsed expressions.
+ * A structure representing an operation between two expressions.
  */
 public class BinaryOperation extends Expression {
 	public static final BigDecimal PRECISION = BigDecimal.TEN.pow(100);
@@ -53,32 +53,25 @@ public class BinaryOperation extends Expression {
 	}
 	@Override
 	public LiteralExpression literalValue(LocalEnvironment environment) {
-		checkType(environment.staticEnvironment());
+		isTypeChecked(environment.staticEnvironment());
 		return operation.operate(first.literalValue(environment),
 				second.literalValue(environment));
 	}
 	@Override
-	public void execute(LocalEnvironment environment) {
-		literalValue(environment);
-	}
-	@Override
-	public ConcreteType resolveType1(StaticEnvironment env) {
-		if (!first.type(env).equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-						Context.SYNTHETIC)))
+	public ConcreteType findType(StaticEnvironment env) {
+		PrimitiveType number = PrimitiveType
+				.synthetic(PrimitiveTypeWOC.NUMBER);
+		if (!first.type(env).equals(number))
 			TypingErrors.expectedNumberInArithmeticOperator(this, true, env);
-		if (!second.type(env).equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-						Context.SYNTHETIC)))
+		if (!second.type(env).equals(number))
 			TypingErrors
 					.expectedNumberInArithmeticOperator(this, false, env);
-		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-				Context.SYNTHETIC);
+		return number;
 	}
 	@Override
-	public SentenceType type() {
-		if (first.type() == SentenceType.PURE_EXPRESSION
-				&& second.type() == SentenceType.PURE_EXPRESSION)
+	public SentenceType kind() {
+		if (first.kind() == SentenceType.PURE_EXPRESSION
+				&& second.kind() == SentenceType.PURE_EXPRESSION)
 			return SentenceType.PURE_EXPRESSION;
 		return SentenceType.IMPURE_EXPRESSION;
 	}

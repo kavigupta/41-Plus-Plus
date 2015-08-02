@@ -14,7 +14,7 @@ public class LocalEnvironment {
 	}
 	public LocalEnvironment reinitialize(GlobalEnvironment newEnvironment) {
 		LocalEnvironment newlocal = new LocalEnvironment(newEnvironment);
-		vars.pairs.forEach(x -> newlocal.vars.assign(x.key, x.value));
+		vars.pairs.forEach(x -> newlocal.vars.assign(x.getKey(), x.getValue()));
 		return newlocal;
 	}
 	public LiteralExpression referenceTo(VariableIdentifier id) {

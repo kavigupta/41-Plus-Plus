@@ -14,7 +14,7 @@ public class ParsedStatementSeries extends ParsedStatement {
 	private final Context context;
 	public static ParsedStatementSeries getInstance(ParsedStatement s,
 			Context context) {
-		if (s.type() == SentenceType.COMPOUND)
+		if (s.kind() == SentenceType.COMPOUND)
 			return (ParsedStatementSeries) s;
 		return new ParsedStatementSeries(Arrays.asList(s), context);
 	}
@@ -24,8 +24,8 @@ public class ParsedStatementSeries extends ParsedStatement {
 		this.context = context;
 	}
 	@Override
-	public boolean typeCheck1(StaticEnvironment env) {
-		statements.forEach(s -> s.checkType(env));
+	public boolean typeCheck(StaticEnvironment env) {
+		statements.forEach(s -> s.isTypeChecked(env));
 		return true;
 	}
 	@Override
@@ -37,7 +37,7 @@ public class ParsedStatementSeries extends ParsedStatement {
 		statements.forEach(s -> s.clean(environment));
 	}
 	@Override
-	public SentenceType type() {
+	public SentenceType kind() {
 		return SentenceType.COMPOUND;
 	}
 	@Override

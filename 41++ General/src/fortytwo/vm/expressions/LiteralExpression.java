@@ -13,19 +13,15 @@ public abstract class LiteralExpression extends Expression {
 		this.context = context;
 	}
 	@Override
-	public ConcreteType resolveType1(StaticEnvironment env) {
+	public ConcreteType findType(StaticEnvironment env) {
 		return resolveType();
-	}
-	@Override
-	public void execute(LocalEnvironment environment) {
-		// No - op by default
 	}
 	@Override
 	public final LiteralExpression literalValue(LocalEnvironment env) {
 		return this;
 	}
 	@Override
-	public SentenceType type() {
+	public SentenceType kind() {
 		return SentenceType.PURE_EXPRESSION;
 	}
 	@Override

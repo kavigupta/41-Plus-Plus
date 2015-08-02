@@ -3,7 +3,7 @@ package fortytwo.compiler.parsed.statements;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
-import fortytwo.language.field.Field;
+import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
@@ -20,10 +20,10 @@ public class ParsedRedefinition extends ParsedAssignment {
 		this.context = context;
 	}
 	@Override
-	public boolean typeCheck1(StaticEnvironment env) {
+	public boolean typeCheck(StaticEnvironment env) {
 		if (name.type(env).equals(value.type(env))) return true;
 		TypingErrors.redefinitionTypeMismatch(
-				new Field(name, name.type(env)), value, env);
+				new TypedVariable(name, name.type(env)), value, env);
 		// should never get here
 		return false;
 	}

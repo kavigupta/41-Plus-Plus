@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lib.standard.collections.Pair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.ParsedConstruct;
@@ -178,7 +179,7 @@ public class SourceCode {
 	private static String displayOutputType(GenericType outputType,
 			boolean hasFields) {
 		if (outputType instanceof PrimitiveType
-				&& ((PrimitiveType) outputType).types == PrimitiveTypeWithoutContext.VOID)
+				&& ((PrimitiveType) outputType).type == PrimitiveTypeWOC.VOID)
 			return "";
 		return " " + (hasFields ? "and" : "that") + " outputs "
 				+ Language.articleized(outputType.toSourceCode());

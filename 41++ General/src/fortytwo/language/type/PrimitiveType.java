@@ -4,11 +4,14 @@ import fortytwo.compiler.Context;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class PrimitiveType implements ConcreteType {
-	public final PrimitiveTypeWithoutContext types;
+	public final PrimitiveTypeWOC type;
 	private final Context context;
-	public PrimitiveType(PrimitiveTypeWithoutContext types, Context context) {
-		this.types = types;
+	public PrimitiveType(PrimitiveTypeWOC types, Context context) {
+		this.type = types;
 		this.context = context;
+	}
+	public static PrimitiveType synthetic(PrimitiveTypeWOC type) {
+		return new PrimitiveType(type, Context.SYNTHETIC);
 	}
 	@Override
 	public Kind kind() {
@@ -20,17 +23,17 @@ public class PrimitiveType implements ConcreteType {
 	}
 	@Override
 	public String toSourceCode() {
-		return types.toSourceCode();
+		return type.toSourceCode();
 	}
 	@Override
 	public LiteralExpression defaultValue() {
-		return types.def;
+		return type.def;
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((types == null) ? 0 : types.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 	@Override
@@ -39,7 +42,7 @@ public class PrimitiveType implements ConcreteType {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		PrimitiveType other = (PrimitiveType) obj;
-		if (types != other.types) return false;
+		if (type != other.type) return false;
 		return true;
 	}
 }

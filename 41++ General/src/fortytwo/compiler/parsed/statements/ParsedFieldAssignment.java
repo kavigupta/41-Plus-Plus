@@ -3,7 +3,7 @@ package fortytwo.compiler.parsed.statements;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
-import fortytwo.language.field.Field;
+import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.StructureType;
 import fortytwo.vm.environment.LocalEnvironment;
@@ -11,8 +11,22 @@ import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralObject;
 
+/**
+ * Represents a field assignment.
+ */
 public class ParsedFieldAssignment extends ParsedAssignment {
-	public final VariableIdentifier name, field;
+	/**
+	 * The name of the variable whose field is being modified.
+	 * TODO allow other things to be modified.
+	 */
+	public final VariableIdentifier name;
+	/**
+	 * The field to be set.
+	 */
+	public final VariableIdentifier field;
+	/**
+	 * The value to set the field to.
+	 */
 	public final Expression value;
 	private final Context context;
 	public ParsedFieldAssignment(VariableIdentifier name,
@@ -24,12 +38,12 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		this.context = context;
 	}
 	@Override
-	public boolean typeCheck1(StaticEnvironment env) {
+	public boolean typeCheck(StaticEnvironment env) {
 		// TODO handle when not fed a structure...
 		if (!env.typeOf(field).equals(value.type(env)))
 			TypingErrors.fieldAssignmentTypeMismatch(env.structs
 					.getStructure((StructureType) name.type(env)),
-					new Field(name, env.typeOf(name)), value, env);
+					new TypedVariable(name, env.typeOf(name)), value, env);
 		return true;
 	}
 	@Override

@@ -28,7 +28,7 @@ public class StructureDefinition implements Sentence {
 		this.context = context;
 	}
 	@Override
-	public SentenceType type() {
+	public SentenceType kind() {
 		return SentenceType.DECLARATION_STRUCT;
 	}
 	@Override

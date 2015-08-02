@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import lib.standard.collections.Pair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.expressions.Expression;
@@ -90,12 +91,11 @@ public class StdLib42 {
 				ParserErrors
 						.expectedVariableInFieldAccess(arguments.get(0));
 			return Pair
-					.getInstance(
-							getFieldAccess(((VariableIdentifier) arguments
-									.get(0)).name.token), Arrays
-									.asList(arguments.get(1)));
+					.of(getFieldAccess(((VariableIdentifier) arguments
+							.get(0)).name.token), Arrays
+							.asList(arguments.get(1)));
 		}
-		return Pair.getInstance(FunctionName.getInstance(name), arguments);
+		return Pair.of(FunctionName.getInstance(name), arguments);
 	}
 	public static FunctionName getFieldAccess(String name) {
 		return FunctionName.getInstance("the", name, "of", "");
@@ -116,19 +116,17 @@ public class StdLib42 {
 		ConcreteType type = inputs.get(1).type(se);
 		if (type instanceof ArrayType) {
 			if (field.equals(TypeVariable.LENGTH.name))
-				return Pair.getInstance(FunctionArrayLength.INSTANCE,
-						new PrimitiveType(
-								PrimitiveTypeWithoutContext.NUMBER,
+				return Pair.of(FunctionArrayLength.INSTANCE,
+						new PrimitiveType(PrimitiveTypeWOC.NUMBER,
 								Context.SYNTHETIC));
-		} else if (type.equals(new PrimitiveType(
-				PrimitiveTypeWithoutContext.STRING, Context.SYNTHETIC)))
-			return Pair.getInstance(FunctionStrlen.INSTANCE,
-					new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-							Context.SYNTHETIC));
+		} else if (type.equals(new PrimitiveType(PrimitiveTypeWOC.STRING,
+				Context.SYNTHETIC)))
+			return Pair.of(FunctionStrlen.INSTANCE, new PrimitiveType(
+					PrimitiveTypeWOC.NUMBER, Context.SYNTHETIC));
 		if (!(type instanceof StructureType)) return null;
 		FunctionFieldAccess f = new FunctionFieldAccess(field,
 				se.structs.getStructure((StructureType) type));
-		return Pair.getInstance(f, f.outputType());
+		return Pair.of(f, f.outputType());
 	}
 	public static Pair<Function42, ConcreteType> matchCompiledFieldAccess(
 			StaticEnvironment se, FunctionName name,
@@ -150,19 +148,17 @@ public class StdLib42 {
 		ConcreteType type = inputs.get(0);
 		if (type instanceof ArrayType) {
 			if (field.equals(TypeVariable.LENGTH.name))
-				return Pair.getInstance(FunctionArrayLength.INSTANCE,
-						new PrimitiveType(
-								PrimitiveTypeWithoutContext.NUMBER,
+				return Pair.of(FunctionArrayLength.INSTANCE,
+						new PrimitiveType(PrimitiveTypeWOC.NUMBER,
 								Context.SYNTHETIC));
-		} else if (type.equals(new PrimitiveType(
-				PrimitiveTypeWithoutContext.NUMBER, Context.SYNTHETIC)))
-			return Pair.getInstance(FunctionStrlen.INSTANCE,
-					new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
-							Context.SYNTHETIC));
+		} else if (type.equals(new PrimitiveType(PrimitiveTypeWOC.NUMBER,
+				Context.SYNTHETIC)))
+			return Pair.of(FunctionStrlen.INSTANCE, new PrimitiveType(
+					PrimitiveTypeWOC.NUMBER, Context.SYNTHETIC));
 		if (!(type instanceof StructureType)) return null;
 		FunctionFieldAccess f = new FunctionFieldAccess(field,
 				se.structs.getStructure((StructureType) type));
-		return Pair.getInstance(f, f.outputType());
+		return Pair.of(f, f.outputType());
 	}
 	public static void defaultFunctions(FunctionRoster funcs) {
 		for (Function42 f : DEFAULT_FUNCTIONS)

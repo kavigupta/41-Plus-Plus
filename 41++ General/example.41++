@@ -1,0 +1,14 @@
+Define a function called "x" is prime that takes a number called "x" and outputs a bool.
+	Define a bool called "x may be prime" with a value of ("x" is greater than or equal to 2). Define a number called "factor" with a value of 2.
+	While "x may be prime" and ("factor"*"factor" is at most "x"):
+		Do the following: If "x" % "factor" is equal to 0: Set the value of "x may be prime" to false. Set the value of "factor" to "factor"+1. That's all.
+Exit the function and output "x may be prime".
+
+Define a function called the "n" th prime that takes a number called "n" and outputs a number.
+	Define a number called "count" with a value of 0.
+	Define a number called "current" with a value of 1.
+	While "count" is less than "n": Do the following:
+		Set the value of "current" to "current"+1.
+		If "current" is prime: Set the value of "count" to "count"+1.
+		That's all.
+Exit the function and output "current".

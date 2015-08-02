@@ -7,7 +7,7 @@ import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
@@ -41,16 +41,16 @@ public class ParsedIfElse extends ParsedStatement {
 		// Forms a closure, no need to clean once done
 	}
 	@Override
-	public boolean typeCheck1(StaticEnvironment env) {
+	public boolean typeCheck(StaticEnvironment env) {
 		if (condition.type(env).equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
+				new PrimitiveType(PrimitiveTypeWOC.BOOL,
 						Context.SYNTHETIC))) return true;
 		TypingErrors.expectedBoolInCondition(true, condition, env);
 		// unreachable
 		return false;
 	}
 	@Override
-	public SentenceType type() {
+	public SentenceType kind() {
 		return SentenceType.CONTROL_FLOW;
 	}
 	@Override

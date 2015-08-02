@@ -7,7 +7,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -23,7 +23,7 @@ public class FunctionStringToArray extends Function42 {
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		LiteralToken tokenVal = ((LiteralString) arguments.get(0)).contents;
 		LiteralArray larray = new LiteralArray(new PrimitiveType(
-				PrimitiveTypeWithoutContext.STRING, Context.SYNTHETIC),
+				PrimitiveTypeWOC.STRING, Context.SYNTHETIC),
 				tokenVal.token.length(), Context.SYNTHETIC);
 		for (int i = 0; i < tokenVal.token.length(); i++) {
 			larray.set(i + 1,
@@ -34,14 +34,14 @@ public class FunctionStringToArray extends Function42 {
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.VOID,
+		return new PrimitiveType(PrimitiveTypeWOC.VOID,
 				Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(StdLib42.FUNC_PRINT, Arrays
 				.asList(new PrimitiveType(
-						PrimitiveTypeWithoutContext.STRING,
+						PrimitiveTypeWOC.STRING,
 						Context.SYNTHETIC)), outputType());
 	}
 }

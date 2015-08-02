@@ -40,7 +40,7 @@ public class GlobalEnvironment {
 		ArrayList<FunctionImplemented> functions = new ArrayList<>();
 		for (int i = 0; i < sentences.size(); i++) {
 			Sentence s = sentences.get(i);
-			switch (s.type()) {
+			switch (s.kind()) {
 				case DECLARATION_FUNCT:
 					FunctionDefinition f = (FunctionDefinition) s;
 					environment.putReference(f);
@@ -48,7 +48,7 @@ public class GlobalEnvironment {
 					i++;
 					ArrayList<ParsedStatement> body = new ArrayList<>();
 					for (; i < sentences.size(); i++) {
-						if (sentences.get(i).type() == SentenceType.FUNCTION_OUTPUT) {
+						if (sentences.get(i).kind() == SentenceType.FUNCTION_OUTPUT) {
 							r = (FunctionOutput) sentences.get(i);
 							break;
 						}

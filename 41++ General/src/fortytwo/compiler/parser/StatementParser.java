@@ -12,7 +12,7 @@ import fortytwo.compiler.parsed.statements.*;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.SentenceType;
-import fortytwo.language.field.Field;
+import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.ConcreteType;
@@ -29,7 +29,7 @@ public class StatementParser {
 			case Resources.RUN:
 				line.remove(0);
 				Expression e = ExpressionParser.parseExpression(line);
-				if (e.type() == SentenceType.PURE_EXPRESSION)
+				if (e.kind() == SentenceType.PURE_EXPRESSION)
 					ParserErrors.expectedFunctionCall(e);
 				return e;
 			case Resources.DEFINE:
@@ -122,7 +122,7 @@ public class StatementParser {
 		GenericType genericType = ExpressionParser.parseType(type);
 		if (!(genericType instanceof ConcreteType))
 			ParserErrors.expectedCTInDefinition(genericType);
-		return new ParsedDefinition(new Field(
+		return new ParsedDefinition(new TypedVariable(
 				VariableIdentifier.getInstance(name),
 				(ConcreteType) genericType), fields, fullContext);
 	}

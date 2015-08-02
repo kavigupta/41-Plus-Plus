@@ -29,10 +29,6 @@ public class ParsedFunctionCall extends Expression {
 		this.arguments = arguments;
 	}
 	@Override
-	public void execute(LocalEnvironment environment) {
-		literalValue(environment);
-	}
-	@Override
 	public LiteralExpression literalValue(LocalEnvironment env) {
 		StaticEnvironment se = env.staticEnvironment();
 		List<ConcreteType> types = arguments.stream()
@@ -47,14 +43,14 @@ public class ParsedFunctionCall extends Expression {
 						.collect(Collectors.toList()));
 	}
 	@Override
-	public ConcreteType resolveType1(StaticEnvironment env) {
+	public ConcreteType findType(StaticEnvironment env) {
 		List<ConcreteType> types = arguments.stream().map(x -> x.type(env))
 				.collect(Collectors.toList());
 		FunctionSignature sig = env.referenceTo(name, types);
 		return sig.outputType.resolve(sig.typeVariables(arguments, env));
 	}
 	@Override
-	public SentenceType type() {
+	public SentenceType kind() {
 		return SentenceType.FUNCTION_CALL;
 	}
 	@Override

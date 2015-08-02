@@ -4,7 +4,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.language.SourceCode;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.language.type.PrimitiveTypeWOC;
 
 public class LiteralString extends LiteralExpression {
 	public final LiteralToken contents;
@@ -17,7 +17,7 @@ public class LiteralString extends LiteralExpression {
 	}
 	@Override
 	public PrimitiveType resolveType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.STRING,
+		return new PrimitiveType(PrimitiveTypeWOC.STRING,
 				Context.SYNTHETIC);
 	}
 	@Override

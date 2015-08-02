@@ -33,7 +33,7 @@ public class Compiler42 {
 			ParsedFunctionCall pfc = ParsedFunctionCall.getInstance(
 					FunctionName.getInstance("This", "first"),
 					Arrays.asList());
-			pfc.checkType(env.staticEnv);
+			pfc.isTypeChecked(env.staticEnv);
 			pfc.execute(env.minimalLocalEnvironment());
 		} catch (Throwable t) {
 			VirtualMachine.error(ErrorType.PARSING,

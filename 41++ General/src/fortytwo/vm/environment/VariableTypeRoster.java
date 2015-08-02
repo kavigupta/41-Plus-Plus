@@ -2,7 +2,7 @@ package fortytwo.vm.environment;
 
 import java.util.HashMap;
 
-import fortytwo.language.field.Field;
+import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 
@@ -15,7 +15,7 @@ public class VariableTypeRoster {
 	public void remove(VariableIdentifier name, ConcreteType type) {
 		pairs.remove(name, type);
 	}
-	public void add(Field field) {
+	public void add(TypedVariable field) {
 		add(field.name, field.type);
 	}
 	public ConcreteType typeOf(VariableIdentifier name) {

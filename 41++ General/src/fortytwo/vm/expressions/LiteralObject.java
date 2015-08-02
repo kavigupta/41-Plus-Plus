@@ -2,7 +2,8 @@ package fortytwo.vm.expressions;
 
 import java.util.function.Consumer;
 
-import lib.standard.collections.Pair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.VariableIdentifier;

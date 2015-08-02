@@ -2,7 +2,8 @@ package fortytwo.vm.environment;
 
 import java.util.List;
 
-import lib.standard.collections.Pair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
@@ -67,7 +68,7 @@ public class StaticEnvironment {
 			List<ConcreteType> types) {
 		Pair<Function42, ConcreteType> func = StdLib42
 				.matchCompiledFieldAccess(this, name, types);
-		if (func != null) return func.key.signature();
+		if (func != null) return func.getKey().signature();
 		FunctionSignature sig = funcs.referenceTo(name, types);
 		if (sig != null) return sig;
 		if (container == null) DNEErrors.functionSignatureDNE(name, types);

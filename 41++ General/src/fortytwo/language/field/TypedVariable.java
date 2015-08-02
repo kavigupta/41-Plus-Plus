@@ -9,10 +9,10 @@ import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class Field extends Expression {
+public class TypedVariable extends Expression {
 	public final VariableIdentifier name;
 	public final ConcreteType type;
-	public Field(VariableIdentifier name, ConcreteType type) {
+	public TypedVariable(VariableIdentifier name, ConcreteType type) {
 		this.name = name;
 		this.type = type;
 	}
@@ -21,15 +21,11 @@ public class Field extends Expression {
 		return env.referenceTo(this.name);
 	}
 	@Override
-	public ConcreteType resolveType1(StaticEnvironment env) {
+	public ConcreteType findType(StaticEnvironment env) {
 		return type;
 	}
 	@Override
-	public void execute(LocalEnvironment environment) {
-		// no-op
-	}
-	@Override
-	public SentenceType type() {
+	public SentenceType kind() {
 		return SentenceType.PURE_EXPRESSION;
 	}
 	@Override
@@ -53,7 +49,7 @@ public class Field extends Expression {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		Field other = (Field) obj;
+		TypedVariable other = (TypedVariable) obj;
 		if (name == null) {
 			if (other.name != null) return false;
 		} else if (!name.equals(other.name)) return false;

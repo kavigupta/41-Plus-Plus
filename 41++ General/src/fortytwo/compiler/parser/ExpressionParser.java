@@ -183,8 +183,7 @@ public class ExpressionParser {
 			return new TypeVariable(VariableIdentifier.getInstance(token));
 		while (token.token.startsWith(Resources.OPEN_PAREN))
 			token = Language.deparenthesize(token);
-		for (PrimitiveTypeWithoutContext type : PrimitiveTypeWithoutContext
-				.values()) {
+		for (PrimitiveTypeWOC type : PrimitiveTypeWOC.values()) {
 			if (type.typeID().equals(token.token))
 				return new PrimitiveType(type, token.context);
 		}
@@ -245,12 +244,12 @@ public class ExpressionParser {
 			this.context = context;
 		}
 		@Override
-		public ConcreteType resolveType1(StaticEnvironment env) {
+		public ConcreteType findType(StaticEnvironment env) {
 			// should never be called
 			return null;
 		}
 		@Override
-		public SentenceType type() {
+		public SentenceType kind() {
 			// should never be called
 			return null;
 		}
@@ -266,10 +265,6 @@ public class ExpressionParser {
 		@Override
 		public Context context() {
 			return context;
-		}
-		@Override
-		public void execute(LocalEnvironment environment) {
-			// should never be called
 		}
 		@Override
 		public LiteralExpression literalValue(LocalEnvironment environment) {

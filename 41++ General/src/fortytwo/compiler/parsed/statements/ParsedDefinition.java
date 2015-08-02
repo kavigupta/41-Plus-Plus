@@ -3,24 +3,38 @@ package fortytwo.compiler.parsed.statements;
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
-import fortytwo.language.field.Field;
+import fortytwo.language.field.TypedVariable;
 import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.StructureRoster;
 
+/**
+ * Represents statements that create new variables.
+ */
 public class ParsedDefinition extends ParsedStatement {
-	public final Field toCreate;
+	/**
+	 * The name and type of the variable to create.
+	 */
+	public final TypedVariable toCreate;
+	/**
+	 * The fields the variable will contain.
+	 */
 	public final VariableRoster<?> fields;
 	private final Context context;
-	public ParsedDefinition(Field name, VariableRoster<?> fields,
+	/**
+	 * @param name The name and type of the variable to create.
+	 * @param fields The fields the variable will contain.
+	 * @param context The context of the sentence
+	 */
+	public ParsedDefinition(TypedVariable name, VariableRoster<?> fields,
 			Context context) {
 		this.toCreate = name;
 		this.fields = fields;
 		this.context = context;
 	}
 	@Override
-	public boolean typeCheck1(StaticEnvironment environment) {
+	public boolean typeCheck(StaticEnvironment environment) {
 		environment.addType(toCreate.name, toCreate.type);
 		return environment.structs.typeCheckConstructor(environment,
 				toCreate, fields, context);
@@ -36,7 +50,7 @@ public class ParsedDefinition extends ParsedStatement {
 		environment.vars.deregister(toCreate.name);
 	}
 	@Override
-	public SentenceType type() {
+	public SentenceType kind() {
 		return SentenceType.DEFINITION;
 	}
 	@Override

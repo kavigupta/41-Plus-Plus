@@ -5,7 +5,7 @@ import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
@@ -22,12 +22,12 @@ public class ParsedWhileLoop extends ParsedStatement {
 		this.context = context;
 	}
 	@Override
-	public boolean typeCheck1(StaticEnvironment env) {
+	public boolean typeCheck(StaticEnvironment env) {
 		if (!condition.type(env).equals(
-				new PrimitiveType(PrimitiveTypeWithoutContext.BOOL,
+				new PrimitiveType(PrimitiveTypeWOC.BOOL,
 						Context.SYNTHETIC)))
 			TypingErrors.expectedBoolInCondition(false, condition, env);
-		return statement.checkType(env);
+		return statement.isTypeChecked(env);
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {
@@ -41,7 +41,7 @@ public class ParsedWhileLoop extends ParsedStatement {
 		// forms a closure, no need to clean
 	}
 	@Override
-	public SentenceType type() {
+	public SentenceType kind() {
 		return SentenceType.CONTROL_FLOW;
 	}
 	@Override

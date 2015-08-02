@@ -57,7 +57,7 @@ public class FunctionDefinition implements Sentence {
 		}
 	}
 	@Override
-	public SentenceType type() {
+	public SentenceType kind() {
 		return SentenceType.DECLARATION_FUNCT;
 	}
 	@Override

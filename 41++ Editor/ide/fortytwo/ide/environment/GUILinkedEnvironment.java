@@ -38,7 +38,7 @@ public class GUILinkedEnvironment {
 	public void execute(String cmd) {
 		if (cmd.trim().endsWith(".")) {
 			for (Sentence x : Parser.parse(cmd)) {
-				if (x.type().kind == SentenceKind.STATEMENT) {
+				if (x.kind().kind == SentenceKind.STATEMENT) {
 					((ParsedStatement) x).execute(console);
 				} else {
 					ParserErrors.expectedStatement(x);

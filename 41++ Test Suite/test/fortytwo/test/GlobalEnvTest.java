@@ -15,7 +15,7 @@ import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
@@ -77,7 +77,7 @@ public class GlobalEnvTest {
 								Arrays.asList(LiteralArray
 										.getInstance(
 												new PrimitiveType(
-														PrimitiveTypeWithoutContext.STRING,
+														PrimitiveTypeWOC.STRING,
 														Context.SYNTHETIC),
 												"world".chars()
 														.mapToObj(x -> new LiteralString(

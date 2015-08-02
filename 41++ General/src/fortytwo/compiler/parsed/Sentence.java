@@ -9,5 +9,5 @@ public interface Sentence extends ParsedConstruct {
 	/**
 	 * @return the type of this sentence
 	 */
-	public SentenceType type();
+	public SentenceType kind();
 }

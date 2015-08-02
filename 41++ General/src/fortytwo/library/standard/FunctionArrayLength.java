@@ -26,7 +26,7 @@ public class FunctionArrayLength extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return new PrimitiveType(PrimitiveTypeWithoutContext.NUMBER,
+		return new PrimitiveType(PrimitiveTypeWOC.NUMBER,
 				Context.SYNTHETIC);
 	}
 	@Override

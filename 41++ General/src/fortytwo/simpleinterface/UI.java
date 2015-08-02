@@ -4,11 +4,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 import javax.swing.*;
 
-import lib.standard.io.IO;
 import fortytwo.compiler.Compiler42;
 import fortytwo.vm.VirtualMachine;
 
@@ -28,9 +29,9 @@ public class UI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	private static void execute(JFrame parent, String path) {
-		ArrayList<String> str;
+		List<String> str;
 		try {
-			str = IO.readLines(new File(path));
+			str = Files.readAllLines(Paths.get(new File(path).toURI()));
 		} catch (Throwable t) {
 			JOptionPane
 					.showMessageDialog(

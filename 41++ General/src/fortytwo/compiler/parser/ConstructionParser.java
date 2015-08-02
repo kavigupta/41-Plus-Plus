@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import lib.standard.collections.Pair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
@@ -33,7 +34,7 @@ import fortytwo.vm.errors.TypingErrors;
 public class ConstructionParser {
 	public static ParsedFunctionCall composeFunction(List<LiteralToken> list) {
 		Pair<FunctionName, List<Expression>> fsig = parseFunctionSignature(list);
-		return ParsedFunctionCall.getInstance(fsig.key, fsig.value);
+		return ParsedFunctionCall.getInstance(fsig.getKey(), fsig.getValue());
 	}
 	public static StructureDefinition parseStructDefinition(
 			List<LiteralToken> line) {
@@ -114,7 +115,8 @@ public class ConstructionParser {
 		}
 		int outputloc = Language.indexOf(line, Resources.OUTPUTS);
 		Pair<FunctionName, List<Expression>> sig = parseFunctionSignature(funcExpress);
-		List<VariableIdentifier> variables = sig.value
+		List<VariableIdentifier> variables = sig
+				.getValue()
 				.stream()
 				.map(x -> {
 					if (!(x instanceof VariableIdentifier))
@@ -130,11 +132,11 @@ public class ConstructionParser {
 			types.add(gt);
 		}
 		if (outputloc < 0)
-			return new FunctionDefinition(FunctionSignature.getInstance(
-					sig.key, types,
-					new PrimitiveType(PrimitiveTypeWithoutContext.VOID,
-							line.get(line.size() - 1).context)),
-					variables, Context.sum(line));
+			return new FunctionDefinition(FunctionSignature.getInstance(sig
+					.getKey(), types, new PrimitiveType(
+					PrimitiveTypeWOC.VOID,
+					line.get(line.size() - 1).context)), variables,
+					Context.sum(line));
 		if (Language.isArticle(line.get(outputloc + 1).token)) outputloc++;
 		line.subList(0, outputloc + 1).clear();
 		GenericType outputType = ExpressionParser.parseType(LiteralToken
@@ -142,8 +144,9 @@ public class ConstructionParser {
 		// Check will be unecessary later LOWPRI
 		if (outputType.kind() != Kind.CONCRETE)
 			ParserErrors.expectedCTInFunctionDecl(outputType, line, -1);
-		return new FunctionDefinition(FunctionSignature.getInstance(sig.key,
-				types, outputType), variables, Context.sum(line));
+		return new FunctionDefinition(FunctionSignature.getInstance(
+				sig.getKey(), types, outputType), variables,
+				Context.sum(line));
 	}
 	private static Pair<FunctionName, List<Expression>> parseFunctionSignature(
 			List<LiteralToken> list) {

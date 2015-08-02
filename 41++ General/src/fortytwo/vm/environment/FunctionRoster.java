@@ -3,7 +3,8 @@ package fortytwo.vm.environment;
 import java.util.HashMap;
 import java.util.List;
 
-import lib.standard.collections.Pair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;

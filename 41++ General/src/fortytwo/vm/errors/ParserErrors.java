@@ -76,7 +76,7 @@ public class ParserErrors {
 						Language.uppercase(Language
 								.articleized(expectedClass)), actually
 								.toSourceCode(),
-						Language.articleized(actually.type().description)),
+						Language.articleized(actually.kind().description)),
 				actually.context());
 	}
 }

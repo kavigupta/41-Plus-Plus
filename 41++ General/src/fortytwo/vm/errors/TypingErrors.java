@@ -10,10 +10,10 @@ import fortytwo.compiler.parsed.expressions.BinaryOperation;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Language;
 import fortytwo.language.SourceCode;
-import fortytwo.language.field.Field;
+import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
-import fortytwo.language.type.PrimitiveTypeWithoutContext;
+import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.constructions.VariableRoster;
@@ -38,22 +38,22 @@ public class TypingErrors {
 			StaticEnvironment env) {
 		typeError("The " + (firstArgument ? "first" : "second")
 				+ " argument in " + operation.operation.noun.toLowerCase(),
-				PrimitiveTypeWithoutContext.NUMBER.toSourceCode(),
+				PrimitiveTypeWOC.NUMBER.toSourceCode(),
 				firstArgument ? operation.first : operation.second, env);
 	}
 	public static void expectedBoolInCondition(boolean ifIf,
 			Expression condition, StaticEnvironment env) {
 		typeError("The condition of " + (ifIf ? "an if" : "a while")
-				+ " loop", PrimitiveTypeWithoutContext.BOOL.toSourceCode(),
+				+ " loop", PrimitiveTypeWOC.BOOL.toSourceCode(),
 				condition, env);
 	}
-	public static void redefinitionTypeMismatch(Field name,
+	public static void redefinitionTypeMismatch(TypedVariable name,
 			Expression parsedExpression, StaticEnvironment env) {
 		typeError("The value of " + name.name.toSourceCode(),
 				name.type.toSourceCode(), parsedExpression, env);
 	}
 	public static void fieldAssignmentTypeMismatch(Structure struct,
-			Field field, Expression value, StaticEnvironment env) {
+			TypedVariable field, Expression value, StaticEnvironment env) {
 		typeError("The " + field.name.toSourceCode() + " of "
 				+ struct.type.toSourceCode(), field.type.toSourceCode(),
 				value, env);
@@ -124,7 +124,7 @@ public class TypingErrors {
 								"The type of the variable ~%s~ is not specified in this function declaration",
 								vid.toSourceCode()), vid.context());
 	}
-	public static void noValue(Field name) {
+	public static void noValue(TypedVariable name) {
 		VirtualMachine
 				.error(ErrorType.PARSING,
 						String.format(

@@ -25,7 +25,7 @@ public class FunctionOutput implements Sentence {
 		this.context = context;
 	}
 	@Override
-	public SentenceType type() {
+	public SentenceType kind() {
 		return SentenceType.FUNCTION_OUTPUT;
 	}
 	@Override

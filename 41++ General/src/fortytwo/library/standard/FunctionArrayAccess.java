@@ -42,7 +42,7 @@ public class FunctionArrayAccess extends Function42 {
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(StdLib42
 				.functArrayAccess(suffix), Arrays.asList(new PrimitiveType(
-				PrimitiveTypeWithoutContext.NUMBER, Context.SYNTHETIC),
+				PrimitiveTypeWOC.NUMBER, Context.SYNTHETIC),
 				new GenericArrayType(CONTENTS, Context.SYNTHETIC)),
 				CONTENTS);
 	}
