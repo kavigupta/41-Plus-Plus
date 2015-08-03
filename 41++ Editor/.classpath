@@ -5,6 +5,6 @@
 	<classpathentry kind="src" path="ide"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/41++ Interpreter"/>
 	<classpathentry kind="lib" path="/41++ Extern/commons-lang3-3.4.jar"/>
-	<classpathentry kind="lib" path="/41++ Extern/syntax_highlighting/build/libs/rsyntaxtextarea-2.5.6.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/41++ Extern"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
