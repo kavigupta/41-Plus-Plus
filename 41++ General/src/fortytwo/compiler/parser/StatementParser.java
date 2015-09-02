@@ -62,8 +62,7 @@ public class StatementParser {
 	}
 	private static ParsedStatement parseVoidFunctionCall(
 			List<LiteralToken> list) {
-		ParsedFunctionCall function = ConstructionParser
-				.composeFunction(list);
+		ParsedFunctionCall function = ConstructionParser.composeFunction(list);
 		if (function.name.function.size() != 1
 				|| !(function.name.function.get(0) instanceof FunctionArgument))
 			return function;
@@ -86,9 +85,11 @@ public class StatementParser {
 		VariableIdentifier name = VariableIdentifier.getInstance(line.get(4));
 		line.subList(0, 6).clear();
 		Expression expr = ExpressionParser.parseExpression(line);
-		return fieldT.token.equals(Resources.VALUE) ? new ParsedRedefinition(
-				name, expr, fullContext) : new ParsedFieldAssignment(name,
-				VariableIdentifier.getInstance(fieldT), expr, fullContext);
+		return fieldT.token.equals(Resources.VALUE)
+				? new ParsedRedefinition(name, expr, fullContext)
+				: new ParsedFieldAssignment(name,
+						VariableIdentifier.getInstance(fieldT), expr,
+						fullContext);
 	}
 	private static Sentence parseDefinition(List<LiteralToken> line) {
 		Context fullContext = Context.sum(line);
@@ -122,8 +123,9 @@ public class StatementParser {
 		GenericType genericType = ExpressionParser.parseType(type);
 		if (!(genericType instanceof ConcreteType))
 			ParserErrors.expectedCTInDefinition(genericType);
-		return new ParsedDefinition(new TypedVariable(
-				VariableIdentifier.getInstance(name),
-				(ConcreteType) genericType), fields, fullContext);
+		return new ParsedDefinition(
+				new TypedVariable(VariableIdentifier.getInstance(name),
+						(ConcreteType) genericType),
+				fields, fullContext);
 	}
 }

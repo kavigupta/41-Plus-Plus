@@ -15,18 +15,22 @@ import fortytwo.vm.environment.GlobalEnvironment;
 public class FunctionsTest {
 	public static final String TEST_FUNCTIONS = ""
 			+ "Define a function called \"x\" doubled that takes a number called \"x\" and outputs a number. Exit the function and output (\"x\"*2)."
-			+ "Define a function called \"x\" is prime that takes a number called \"x\" and outputs a bool. Define a number called \"i\" with a value of 2. Define a bool called \"isPrimeForNow\" with a value of (\"x\" is at least 2). While (\"i\" * \"i\" is at most \"x\") and \"isPrimeForNow\": Do the following: Set the value of \"i\" to \"i\"+1. If (\"x\" % \"i\") is equal to 0: Set the value of \"isPrimeForNow\" to false. That's all. Exit the function and output \"isPrimeForNow\"."
-			+ "Define a function called \"str\" with spaces intersperced that takes a string called \"str\" and outputs a string. "
-			+ "	Define an (array of string) called \"strLet\" with a value of (\"str\" split into individual letters). "
-			+ "	Define an (array of string) called \"strInter\" with a \"length\" of (2*(the \"length\" of \"strLet\")-1)."
-			+ "	Define a number called \"i\" with a value of 1."
-			+ "	While \"i\" is less than (the \"length\" of \"str\"): Do the following:"
-			+ "		Set the (2*\"i\"-1) th element of \"strInter\" to (the \"i\" th element of \"strLet\")."
-			+ "		Set the (2*\"i\") th element of \"strInter\" to ' '."
-			+ "		Set the value of \"i\" to (\"i\"+1)."
-			+ "	That's all."
-			+ "	Set the (2*\"i\"-1) th element of \"strInter\" to (the \"i\" th element of \"strLet\")."
-			+ "	Exit the function and output (the letters \"strInter\" combined to form a string)."
+			+ "Define a function called \"x\" is prime that takes a number called \"x\" and outputs a bool.\n"
+			+ "	Define a number called \"i\" with a value of 2. Define a bool called \"isPrimeForNow\" with a value of (\"x\" is at least 2).\n"
+			+ "	While (\"i\" * \"i\" is at most \"x\") and \"isPrimeForNow\":\n"
+			+ "		Set the value of \"i\" to \"i\"+1.\n"
+			+ "		If (\"x\" % \"i\") is equal to 0: Set the value of \"isPrimeForNow\" to false.\n"
+			+ "	Exit the function and output \"isPrimeForNow\".\n"
+			+ "Define a function called \"str\" with spaces intersperced that takes a string called \"str\" and outputs a string.\n"
+			+ "	Define an (array of string) called \"strLet\" with a value of (\"str\" split into individual letters).\n"
+			+ "	Define an (array of string) called \"strInter\" with a \"length\" of (2*(the \"length\" of \"strLet\")-1).\n"
+			+ "	Define a number called \"i\" with a value of 1.\n"
+			+ "	While \"i\" is less than (the \"length\" of \"str\"):\n"
+			+ "		Set the (2*\"i\"-1) th element of \"strInter\" to (the \"i\" th element of \"strLet\").\n"
+			+ "		Set the (2*\"i\") th element of \"strInter\" to ' '.\n"
+			+ "		Set the value of \"i\" to (\"i\"+1).\n"
+			+ "	Set the (2*\"i\"-1) th element of \"strInter\" to (the \"i\" th element of \"strLet\").\n"
+			+ "	Exit the function and output (the letters \"strInter\" combined to form a string).\n"
 			+ "Define a function called Test procedures. Define a (pair of number and number) called \"pair\" with a \"key\" of 2 and a \"value\" of 3. Tell me what \"pair\" is. Exit the function.";
 	GlobalEnvironment env;
 	@Before
@@ -60,13 +64,10 @@ public class FunctionsTest {
 				"'Hello, World' with spaces intersperced");
 	}
 	public void assertEquivalence(String result, String toEvaluate) {
-		assertEquals(
-				result,
+		assertEquals(result,
 				ExpressionParser
-						.parseExpression(
-								Tokenizer.tokenize(LiteralToken
-										.entire(toEvaluate)))
-						.literalValue(env.minimalLocalEnvironment())
-						.toSourceCode());
+						.parseExpression(Tokenizer
+								.tokenize(LiteralToken.entire(toEvaluate)))
+				.literalValue(env.minimalLocalEnvironment()).toSourceCode());
 	}
 }

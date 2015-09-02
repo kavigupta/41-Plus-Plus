@@ -1,6 +1,7 @@
 package fortytwo.language;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,8 +34,7 @@ public class SourceCode {
 		String fieldList = displayFieldList(sig.inputTypes, inputVariables);
 		return "Define a function called "
 				+ displayFunctionSignature(sig.name, inputVariables)
-				+ (fieldList.length() == 0 ? ""
-						: (" that takes " + fieldList))
+				+ (fieldList.length() == 0 ? "" : (" that takes " + fieldList))
 				+ displayOutputType(sig.outputType, fieldList.length() != 0);
 	}
 	public static String display(FunctionOutput functionReturn) {
@@ -46,20 +46,19 @@ public class SourceCode {
 			fields = " that contains " + fields;
 		}
 		return "Define a type called "
-				+ structureDeclaration.structure.type.toSourceCode()
-				+ fields;
+				+ structureDeclaration.structure.type.toSourceCode() + fields;
 	}
 	public static String display(ParsedDefinition parsedDefinition) {
 		return "Define "
-				+ Language.articleized(parsedDefinition.toCreate.type
-						.toSourceCode())
-				+ " called "
-				+ parsedDefinition.toCreate.name.name
+				+ Language.articleized(
+						parsedDefinition.toCreate.type.toSourceCode())
+				+ " called " + parsedDefinition.toCreate.name.name
 				+ (parsedDefinition.fields.numberOfVariables() == 0 ? ""
-						: (" with " + displayFieldList(parsedDefinition.fields)));
+						: (" with "
+								+ displayFieldList(parsedDefinition.fields)));
 	}
-	public static String display(ParsedConstruct obj,
-			VariableIdentifier field, ParsedConstruct value) {
+	public static String display(ParsedConstruct obj, VariableIdentifier field,
+			ParsedConstruct value) {
 		return "Set the " + field.name + " of " + obj.toSourceCode() + " to "
 				+ value.toSourceCode();
 	}
@@ -68,17 +67,16 @@ public class SourceCode {
 		String func = displayFunctionSignature(name, arguments).trim();
 		if (func.length() == 0) return "";
 		if (Character.isUpperCase(func.charAt(0))
-				&& Character.isAlphabetic(func.charAt(0))) return func;
+				&& Character.isAlphabetic(func.charAt(0)))
+			return func;
 		return "(" + func + ")";
 	}
 	public static String display(ParsedIfElse parsedIfElse) {
-		return "If "
-				+ parsedIfElse.condition.toSourceCode()
-				+ ": "
+		return "If " + parsedIfElse.condition.toSourceCode() + ":"
 				+ wrapInBraces(parsedIfElse.ifso)
 				+ (parsedIfElse.ifelse.statements.size() == 0 ? ""
-						: (". Otherwise: " + parsedIfElse.ifelse
-								.toSourceCode()));
+						: (".\nOtherwise:\n\t"
+								+ parsedIfElse.ifelse.toSourceCode()));
 	}
 	public static String displayRedefinition(ParsedConstruct name,
 			ParsedConstruct expr) {
@@ -92,12 +90,12 @@ public class SourceCode {
 			List<? extends ParsedConstruct> statements) {
 		if (statements.size() == 0) return "";
 		if (statements.size() == 1) return statements.get(0).toSourceCode();
-		String total = statements.stream().map(x -> x.toSourceCode())
-				.reduce("", (a, b) -> a + ". " + b);
+		String total = statements.stream().map(x -> x.toSourceCode()).reduce("",
+				(a, b) -> a + ".\n" + b);
 		return total.substring(2);
 	}
 	public static String display(ParsedWhileLoop parsedWhileLoop) {
-		return "While " + parsedWhileLoop.condition.toSourceCode() + ": "
+		return "While " + parsedWhileLoop.condition.toSourceCode() + ":"
 				+ wrapInBraces(parsedWhileLoop.statement);
 	}
 	public static String display(ParsedConstruct first, Operation operation,
@@ -113,8 +111,8 @@ public class SourceCode {
 		for (int i = 0; i < literalArray.length(); i++) {
 			// no issue here.
 			sbuff.append(
-					literalArray.get(i + 1, Context.SYNTHETIC)
-							.toSourceCode()).append(", ");
+					literalArray.get(i + 1, Context.SYNTHETIC).toSourceCode())
+					.append(", ");
 		}
 		return sbuff.delete(sbuff.length() - 2, sbuff.length()).append("]")
 				.toString();
@@ -129,9 +127,9 @@ public class SourceCode {
 		StringBuffer sbuff = new StringBuffer("{")
 				.append(literalObject.struct.type.toSourceCode());
 		if (literalObject.nFields() != 0) sbuff.append(": ");
-		literalObject.forEachField(e -> sbuff
-				.append(e.getKey().toSourceCode()).append(" <= ")
-				.append(e.getValue().toSourceCode()).append(", "));
+		literalObject.forEachField(
+				e -> sbuff.append(e.getKey().toSourceCode()).append(" <= ")
+						.append(e.getValue().toSourceCode()).append(", "));
 		return literalObject.nFields() == 0 ? sbuff.append("}").toString()
 				: sbuff.substring(0, sbuff.length() - 2) + ("}");
 	}
@@ -161,14 +159,15 @@ public class SourceCode {
 	}
 	private static String wrapInBraces(Sentence statement) {
 		String s = statement.toSourceCode();
-		if (statement.isSimple()) return s;
-		return "Do the following: " + s + "." + " That's all";
+		if (statement.isSimple()) return "\n\t" + s;
+		return Arrays.asList(s.split("\r|\n")).stream().map(x -> "\n\t" + x)
+				.reduce("", (a, b) -> a + b);
 	}
 	private static String displayFieldList(VariableRoster<?> fields) {
 		List<String> items = new ArrayList<>();
 		for (Pair<VariableIdentifier, ? extends Expression> e : fields.pairs) {
-			items.add(Language.articleized(e.getKey().toSourceCode()
-					+ " of " + e.getValue().toSourceCode()));
+			items.add(Language.articleized(e.getKey().toSourceCode() + " of "
+					+ e.getValue().toSourceCode()));
 		}
 		return displayList(items);
 	}
