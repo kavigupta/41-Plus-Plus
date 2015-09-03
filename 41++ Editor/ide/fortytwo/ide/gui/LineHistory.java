@@ -61,7 +61,6 @@ public class LineHistory extends JScrollPane {
 		entry.add(textBox, gbc);
 	}
 	public void displayCommand(String cmd) {
-		System.out.println("Command " + cmd);
 		cmd = process(cmd);
 		JTextPane command = new JTextPane();
 		command.setText(">> " + cmd);
@@ -71,8 +70,6 @@ public class LineHistory extends JScrollPane {
 		int i = cmd.length() - 1;
 		while (cmd.charAt(i) == '\r' || cmd.charAt(i) == '\n')
 			i--;
-		System.out.println(cmd + "\t" + i);
-		System.out.println(cmd.substring(0, i + 1));
 		return StringEscapeUtils.escapeHtml3(cmd.substring(0, i + 1))
 				.replaceAll("\n", "<br>&nbsp;&nbsp;&nbsp;");
 	}
@@ -86,8 +83,6 @@ public class LineHistory extends JScrollPane {
 		}
 		history.add(store);
 		JTextPane result = new JTextPane();
-		System.out.println(
-				"Lit: " + literalValue.toSourceCode().replace("\n", "\\n"));
 		result.setText("&nbsp;= " + output);
 		put(result, RESULT_COLOR);
 	}
