@@ -18,6 +18,12 @@ import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralString;
 
 public class LineHistory extends JScrollPane {
+	public static final String PROMPT_COLOR = "white";
+	public static final String PRINT_COLOR = "white";
+	public static final String ERROR_COLOR = "red";
+	public static final String ERROR_NAME_COLOR = "green";
+	public static final String ERROR_HIGHLIGHT_COLOR = "#8888FF";
+	public static final String RESULT_COLOR = "yellow";
 	private JPanel entry;
 	private int index = 0;
 	private ArrayList<String> history = new ArrayList<String>();
@@ -31,12 +37,13 @@ public class LineHistory extends JScrollPane {
 		setOpaque(true);
 		this.setViewportView(entry);
 	}
-	public void put(JTextPane textBox, boolean setForeground) {
-		if (setForeground) {
-			textBox.setForeground(Color.WHITE);
-		}
+	public void put(JTextPane textBox, String color) {
 		String text = textBox.getText();
 		textBox.setContentType("text/html");
+		text = String.format(
+				"<font face=\"monospace\" color = \"%s\">%s</font>", color,
+				text);
+		System.out.println(text);
 		textBox.setText(text);
 		// comp.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
 		textBox.setBackground(Color.BLACK);
@@ -58,7 +65,7 @@ public class LineHistory extends JScrollPane {
 		cmd = process(cmd);
 		JTextPane command = new JTextPane();
 		command.setText(">> " + cmd);
-		put(command, true);
+		put(command, PROMPT_COLOR);
 	}
 	public static String process(String cmd) {
 		int i = cmd.length() - 1;
@@ -73,46 +80,51 @@ public class LineHistory extends JScrollPane {
 		String output = process(literalValue.toSourceCode());
 		String store = literalValue.toSourceCode();
 		if (literalValue instanceof LiteralString) {
-			store = "'" + Tokenizer.escape(store.substring(1, store.length() - 1))
+			store = "'"
+					+ Tokenizer.escape(store.substring(1, store.length() - 1))
 					+ "'";
 		}
 		history.add(store);
 		JTextPane result = new JTextPane();
-		System.out.println("Lit: "
-				+ literalValue.toSourceCode().replace("\n", "\\n"));
+		System.out.println(
+				"Lit: " + literalValue.toSourceCode().replace("\n", "\\n"));
 		result.setText("&nbsp;= " + output);
-		System.out.println(result.getText());
-		result.setForeground(Color.YELLOW);
-		put(result, false);
+		put(result, RESULT_COLOR);
 	}
 	public void displayln(String line) {
 		JTextPane result = new JTextPane();
 		result.setText("   " + line);
-		put(result, true);
+		put(result, PRINT_COLOR);
 	}
 	public void displayerr(Error42 err) {
 		StringBuffer error = new StringBuffer();
-		error.append("<html>&nbsp;&nbsp;&nbsp;<font color=#ff0000>");
+		error.append(
+				"<html><font face = \"monospace\">&nbsp;&nbsp;&nbsp;<font color=#ff0000>");
 		boolean openTilde = true;
 		String msg = process(err.msg);
 		for (int i = 0; i < msg.length(); i++) {
 			if (msg.charAt(i) == '~') {
 				if (openTilde)
-					error.append("</font><font color=#00ff00>");
-				else error.append("</font><font color=#ff0000>");
+					error.append(String.format("</font><font color=\"%s\">",
+							ERROR_HIGHLIGHT_COLOR));
+				else error.append(String.format("</font><font color=\"%s\">",
+						ERROR_COLOR));
 				openTilde = !openTilde;
 			} else if (msg.charAt(i) == '{') {
-				error.append("</font><font color=#0000ff>");
+				error.append(String.format("</font><font color=\"%s\">",
+						ERROR_HIGHLIGHT_COLOR));
 			} else if (msg.charAt(i) == '}') {
-				error.append("</font><font color=#00ff00>");
+				error.append(String.format("</font><font color=\"%s\">",
+						ERROR_NAME_COLOR));
 			} else {
 				error.append(msg.charAt(i));
 			}
 		}
-		error.append("</font></html>");
+		error.append("</font></font></html>");
 		JTextPane pane = new JTextPane();
 		pane.setText(error.toString());
-		put(pane, false);
+		put(pane, "");
+		System.out.println(pane.getText());
 	}
 	public int nCommands() {
 		return history.size();

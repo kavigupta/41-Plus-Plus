@@ -34,7 +34,6 @@ public class Parser {
 				initTabs++;
 			}
 			List<List<LiteralToken>> unparsedSentences = findSentences(line);
-			System.out.println("SINGLE LINE:" + unparsedSentences);
 			int extraTabs = 0;
 			for (int i = 0; i < unparsedSentences.size(); i++) {
 				if (unparsedSentences.get(i).isEmpty()) continue;
@@ -97,7 +96,6 @@ public class Parser {
 	}
 	public static Sentence popIf(
 			List<Pair<Integer, List<LiteralToken>>> phrases) {
-		System.out.println(phrases);
 		List<LiteralToken> IF = phrases.remove(0).getValue();
 		IF.remove(0);
 		Expression condition = ExpressionParser.parseExpression(IF);

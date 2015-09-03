@@ -33,20 +33,17 @@ public class UI {
 		try {
 			str = Files.readAllLines(Paths.get(new File(path).toURI()));
 		} catch (Throwable t) {
-			JOptionPane
-					.showMessageDialog(
-							parent,
-							"Error in reading from the file "
-									+ path
-									+ ". Are you sure you typed in the path correctly?",
-							"File Read Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(parent,
+					"Error in reading from the file " + path
+							+ ". Are you sure you typed in the path correctly?",
+					"File Read Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		StringBuffer text = new StringBuffer();
 		str.forEach(s -> text.append(s).append(System.lineSeparator()));
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(path
-					+ "-output.txt"));
+			BufferedWriter bw = new BufferedWriter(
+					new FileWriter(path + "-output.txt"));
 			VirtualMachine.displayln = s -> {
 				try {
 					System.out.println("Writing " + s);
@@ -69,23 +66,18 @@ public class UI {
 			return;
 		}
 		JOptionPane.showMessageDialog(parent,
-				"Code run successfully. See your output at " + path,
-				"Success!", JOptionPane.INFORMATION_MESSAGE);
+				"Code run successfully. See your output at " + path, "Success!",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 	private static void errorInCode(JFrame parent) {
-		JOptionPane
-				.showMessageDialog(
-						parent,
-						"There was an error in your code. I'm sorry I can't be more descriptive but that part of the program hasn't been done yet. Sorry.",
-						"Error in code.", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(parent,
+				"There was an error in your code. I'm sorry I can't be more descriptive but that part of the program hasn't been done yet. Sorry.",
+				"Error in code.", JOptionPane.ERROR_MESSAGE);
 	}
 	private static void errorInWritingTo(JFrame parent, String path) {
-		JOptionPane
-				.showMessageDialog(
-						parent,
-						"Error in writing to the file"
-								+ path
-								+ ". Please make sure it is not being edited in another program.",
-						"File Write Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(parent,
+				"Error in writing to the file" + path
+						+ ". Please make sure it is not being edited in another program.",
+				"File Write Error", JOptionPane.ERROR_MESSAGE);
 	}
 }
