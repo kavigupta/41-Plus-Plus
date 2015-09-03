@@ -12,8 +12,8 @@ public class ArithmeticTest {
 	GlobalEnvironment env;
 	@Before
 	public void init() {
-		env = GlobalEnvironment.getDefaultEnvironment(StaticEnvironment
-				.getDefault());
+		env = GlobalEnvironment
+				.getDefaultEnvironment(StaticEnvironment.getDefault());
 	}
 	@Test
 	public void basicsTest() {

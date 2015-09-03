@@ -24,7 +24,8 @@ import fortytwo.vm.expressions.LiteralExpression;
 public class GlobalEnvironment {
 	public final StaticEnvironment staticEnv;
 	public final FunctionRoster funcs;
-	public GlobalEnvironment(StaticEnvironment staticEnv, FunctionRoster funcs) {
+	public GlobalEnvironment(StaticEnvironment staticEnv,
+			FunctionRoster funcs) {
 		this.staticEnv = staticEnv;
 		this.funcs = funcs;
 	}
@@ -48,7 +49,8 @@ public class GlobalEnvironment {
 					i++;
 					ArrayList<ParsedStatement> body = new ArrayList<>();
 					for (; i < sentences.size(); i++) {
-						if (sentences.get(i).kind() == SentenceType.FUNCTION_OUTPUT) {
+						if (sentences.get(i)
+								.kind() == SentenceType.FUNCTION_OUTPUT) {
 							r = (FunctionOutput) sentences.get(i);
 							break;
 						}
@@ -69,20 +71,14 @@ public class GlobalEnvironment {
 					VariableRoster<? extends Expression> fieldValues = new VariableRoster<>();
 					for (Entry<VariableIdentifier, ? extends Expression> pair : def.fields.pairs) {
 						LiteralExpression applied = pair.getValue()
-								.literalValue(
-										new LocalEnvironment(global));
+								.literalValue(new LocalEnvironment(global));
 						fieldValues.assign(pair.getKey(), applied);
 					}
-					environment
-							.addGlobalVariable(
-									def.toCreate.name,
-									environment.structs
-											.instance(def.toCreate,
-													fieldValues
-															.literalValue(global
-																	.minimalLocalEnvironment()),
-													def.toCreate.name
-															.context()));
+					environment.addGlobalVariable(def.toCreate.name,
+							environment.structs.instance(def.toCreate,
+									fieldValues.literalValue(
+											global.minimalLocalEnvironment()),
+									def.toCreate.name.context()));
 					break;
 				default:
 					ParserErrors.expectedDeclarationOrDefinition(s);

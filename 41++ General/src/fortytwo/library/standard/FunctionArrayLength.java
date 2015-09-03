@@ -21,19 +21,21 @@ public class FunctionArrayLength extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		return new LiteralNumber(BigDecimal.valueOf(((LiteralArray) arguments
-				.get(0)).length()), Context.SYNTHETIC);
-	}
-	@Override
-	public GenericType outputType() {
-		return new PrimitiveType(PrimitiveTypeWOC.NUMBER,
+		return new LiteralNumber(
+				BigDecimal.valueOf(((LiteralArray) arguments.get(0)).length()),
 				Context.SYNTHETIC);
 	}
 	@Override
+	public GenericType outputType() {
+		return new PrimitiveType(PrimitiveTypeWOC.NUMBER, Context.SYNTHETIC);
+	}
+	@Override
 	public FunctionSignature signature() {
-		return FunctionSignature.getInstance(FunctionName.getInstance("the",
-				TypeVariable.LENGTH.name.name.token, "of", ""), Arrays
-				.asList(new GenericArrayType(TypeVariable.LENGTH,
-						Context.SYNTHETIC)), outputType());
+		return FunctionSignature.getInstance(
+				FunctionName.getInstance("the",
+						TypeVariable.LENGTH.name.name.token, "of", ""),
+				Arrays.asList(new GenericArrayType(TypeVariable.LENGTH,
+						Context.SYNTHETIC)),
+				outputType());
 	}
 }

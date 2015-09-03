@@ -36,23 +36,24 @@ public class FunctionArrayModification extends Function42 {
 		LiteralArray array = (LiteralArray) arguments.get(1);
 		LiteralNumber index = (LiteralNumber) arguments.get(0);
 		LiteralExpression value = arguments.get(2);
-		array.set(index.contents.intValue(), value,
-				Context.sum(arguments));
+		array.set(index.contents.intValue(), value, Context.sum(arguments));
 		return null;
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return new PrimitiveType(PrimitiveTypeWOC.VOID,
-				Context.SYNTHETIC);
+		return new PrimitiveType(PrimitiveTypeWOC.VOID, Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {
-		return FunctionSignature.getInstance(FunctionName.getInstance("Set",
-				"the", "", suffix, "element", "of", "", "to", ""), Arrays
-				.asList(new PrimitiveType(
-						PrimitiveTypeWOC.NUMBER,
-						Context.SYNTHETIC), new GenericArrayType(
-						TypeVariable.LENGTH, Context.SYNTHETIC),
-						TypeVariable.LENGTH), outputType());
+		return FunctionSignature.getInstance(
+				FunctionName.getInstance("Set", "the", "", suffix, "element",
+						"of", "", "to", ""),
+				Arrays.asList(
+						new PrimitiveType(PrimitiveTypeWOC.NUMBER,
+								Context.SYNTHETIC),
+						new GenericArrayType(TypeVariable.LENGTH,
+								Context.SYNTHETIC),
+						TypeVariable.LENGTH),
+				outputType());
 	}
 }

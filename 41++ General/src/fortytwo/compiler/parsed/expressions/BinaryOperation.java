@@ -47,9 +47,9 @@ public class BinaryOperation extends Expression {
 	 * @return {@code -x}
 	 */
 	public static BinaryOperation getNegation(Expression x) {
-		return new BinaryOperation(LiteralNumber.getInstance(BigDecimal.ZERO,
-				Context.SYNTHETIC), x, Operation.SUBTRACT, x.context()
-				.withUnaryApplied());
+		return new BinaryOperation(
+				LiteralNumber.getInstance(BigDecimal.ZERO, Context.SYNTHETIC),
+				x, Operation.SUBTRACT, x.context().withUnaryApplied());
 	}
 	@Override
 	public LiteralExpression literalValue(LocalEnvironment environment) {
@@ -59,13 +59,11 @@ public class BinaryOperation extends Expression {
 	}
 	@Override
 	public ConcreteType findType(StaticEnvironment env) {
-		PrimitiveType number = PrimitiveType
-				.synthetic(PrimitiveTypeWOC.NUMBER);
+		PrimitiveType number = PrimitiveType.synthetic(PrimitiveTypeWOC.NUMBER);
 		if (!first.type(env).equals(number))
 			TypingErrors.expectedNumberInArithmeticOperator(this, true, env);
 		if (!second.type(env).equals(number))
-			TypingErrors
-					.expectedNumberInArithmeticOperator(this, false, env);
+			TypingErrors.expectedNumberInArithmeticOperator(this, false, env);
 		return number;
 	}
 	@Override

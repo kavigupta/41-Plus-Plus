@@ -37,10 +37,8 @@ public class ParsedFunctionCall extends Expression {
 		FunctionSignature sig = se.referenceTo(name, types);
 		Function42 f = env.global.funcs.get(sig, arguments, types);
 		if (f == null) throw new RuntimeException(sig.name.toString());
-		return f.apply(
-				env.global,
-				arguments.stream().map(x -> x.literalValue(env))
-						.collect(Collectors.toList()));
+		return f.apply(env.global, arguments.stream()
+				.map(x -> x.literalValue(env)).collect(Collectors.toList()));
 	}
 	@Override
 	public ConcreteType findType(StaticEnvironment env) {

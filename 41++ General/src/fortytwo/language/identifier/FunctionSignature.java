@@ -52,8 +52,8 @@ public class FunctionSignature {
 	}
 	@Override
 	public String toString() {
-		return "FunctionSignature [name=" + name + ", inputTypes="
-				+ inputTypes + ", outputType=" + outputType + "]";
+		return "FunctionSignature [name=" + name + ", inputTypes=" + inputTypes
+				+ ", outputType=" + outputType + "]";
 	}
 	public final TypeVariableRoster typeVariables(
 			List<? extends Expression> arguments, StaticEnvironment env) {
@@ -81,8 +81,7 @@ public class FunctionSignature {
 	public boolean accepts(List<ConcreteType> inputs) {
 		if (inputs.size() != inputTypes.size()) return false;
 		for (int i = 0; i < inputs.size(); i++)
-			if (inputTypes.get(i).match(inputs.get(i)) == null)
-				return false;;
+			if (inputTypes.get(i).match(inputs.get(i)) == null) return false;;
 		return true;
 	}
 }

@@ -43,9 +43,11 @@ public class Context implements Contextualized {
 		return new Context(in, start - 1, end);
 	}
 	/**
-	 * @param start the beginning of the subContext with respect to this
+	 * @param start
+	 *        the beginning of the subContext with respect to this
 	 *        context's start.
-	 * @param end the end of the subContext with respect to this context's
+	 * @param end
+	 *        the end of the subContext with respect to this context's
 	 *        start.
 	 * @return a context that spans [start, end) of this context's span.
 	 */
@@ -57,27 +59,29 @@ public class Context implements Contextualized {
 		return new Context(this.in, this.start + start, this.start + end);
 	}
 	/**
-	 * @param text the text to be turned into a token
+	 * @param text
+	 *        the text to be turned into a token
 	 * @return the Context of the entire text, treated as a single token.
 	 */
 	public static Context entire(String text) {
 		return new Context(text, 0, text.length());
 	}
 	/**
-	 * @param arguments contexts, perhaps attached to other data, to be summed.
+	 * @param arguments
+	 *        contexts, perhaps attached to other data, to be summed.
 	 * @return the sum of the given contexts, currently implemented as a simple
 	 *         hull of the union of their intervals.
 	 */
 	public static Context sum(List<? extends Contextualized> asList) {
 		if (asList.size() == 0) return SYNTHETIC;
-		return asList.stream().map(Contextualized::context)
-				.reduce(Context::sum).get();
+		return asList.stream().map(Contextualized::context).reduce(Context::sum)
+				.get();
 	}
 	private static Context sum(Context a, Context b) {
 		if (a.isSynthetic() || b.isSynthetic()) return SYNTHETIC;
 		assert a.in.equals(b.in);
-		return new Context(a.in, Math.min(a.start, b.start), Math.max(a.end,
-				b.end));
+		return new Context(a.in, Math.min(a.start, b.start),
+				Math.max(a.end, b.end));
 	}
 	private Context(String in, int start, int end) {
 		this.in = in;
@@ -90,12 +94,10 @@ public class Context implements Contextualized {
 	}
 	@Override
 	public String toString() {
-		return isSynthetic() ? "Synthetic" : in.substring(
-				Math.max(start - 10, 0), start)
-				+ "~"
-				+ in.substring(start, end)
-				+ "~"
-				+ in.substring(end, Math.min(end + 10, in.length()));
+		return isSynthetic() ? "Synthetic"
+				: in.substring(Math.max(start - 10, 0), start) + "~"
+						+ in.substring(start, end) + "~"
+						+ in.substring(end, Math.min(end + 10, in.length()));
 	}
 	@Override
 	public int hashCode() {

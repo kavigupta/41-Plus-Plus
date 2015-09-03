@@ -28,8 +28,7 @@ public class GenericStructureType implements GenericType {
 		for (int i = 0; i < type.types.size(); i++) {
 			// this doesn't worry about reassigning an existing variable for
 			// obvious reasons.
-			TypeVariableRoster thisone = inputs.get(i).match(
-					type.types.get(i));
+			TypeVariableRoster thisone = inputs.get(i).match(type.types.get(i));
 			if (thisone == null) return null;
 			roster.pairs.putAll(thisone.pairs);
 		}

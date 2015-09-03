@@ -17,8 +17,10 @@ public class FunctionOutput implements Sentence {
 	public final Expression output;
 	private final Context context;
 	/**
-	 * @param output the output of the function
-	 * @param context the context of the sentence
+	 * @param output
+	 *        the output of the function
+	 * @param context
+	 *        the context of the sentence
 	 */
 	public FunctionOutput(Expression output, Context context) {
 		this.output = output;

@@ -28,27 +28,22 @@ public class StructTest {
 	public void singletonTest() {
 		assertPrint("{singleton}\n",
 				"Define a singleton called \"x\". Tell me what \"x\" is.");
-		assertPrint(
-				"true\n",
+		assertPrint("true\n",
 				"Define a singleton called \"x\". Define a singleton called \"y\". Tell me what (\"x\" is equal to \"y\") is.");
 	}
 	@Test
 	public void concreteStructTest() {
-		assertPrint(
-				"{record: \"name\" <= '41++', \"dateOfBirth\" <= 2015}\n",
+		assertPrint("{record: \"name\" <= '41++', \"dateOfBirth\" <= 2015}\n",
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015. Tell me what \"lang\" is.");
-		assertPrint(
-				"false\n",
+		assertPrint("false\n",
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
 						+ "Define a record called \"lang_date_wrong\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2014."
 						+ "Tell me what (\"lang\" is equal to \"lang_date_wrong\") is.");
-		assertPrint(
-				"true\n",
+		assertPrint("true\n",
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
 						+ "Define a record called \"langcopy\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
 						+ "Tell me what (\"lang\" is equal to \"langcopy\") is.");
-		assertPrint(
-				"{record: \"name\" <= '41++', \"dateOfBirth\" <= 2015}\n",
+		assertPrint("{record: \"name\" <= '41++', \"dateOfBirth\" <= 2015}\n",
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
 						+ "Define a record called \"langcopy\" with a value of \"lang\"."
 						+ "Tell me what \"langcopy\" is.");
@@ -57,12 +52,10 @@ public class StructTest {
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
 						+ "Set the \"name\" of \"lang\" to 'te+-s()t[]'."
 						+ "Tell me what \"lang\" is.");
-		assertPrint(
-				"'41++'\n",
+		assertPrint("'41++'\n",
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
 						+ "Tell me what (the \"name\" of \"lang\") is.");
-		assertPrint(
-				"2015\n",
+		assertPrint("2015\n",
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
 						+ "Tell me what (the \"dateOfBirth\" of \"lang\") is.");
 	}
@@ -71,28 +64,20 @@ public class StructTest {
 		assertPrint(
 				"{(triple of number, string, and bool): \"x\" <= 2, \"y\" <= 'abc', \"z\" <= true}\n",
 				"Define a (triple of number, string, and bool) called \"st\" with a \"x\" of 2, a \"y\" of 'abc', and a \"z\" of true. Tell me what \"st\" is.");
-		assertPrint(
-				"true\n",
-				""
-						+ "Define a (triple of number, string, and bool) called \"st\" with a \"x\" of 2, a \"y\" of 'abc', and a \"z\" of true."
+		assertPrint("true\n",
+				"" + "Define a (triple of number, string, and bool) called \"st\" with a \"x\" of 2, a \"y\" of 'abc', and a \"z\" of true."
 						+ "Define a (triple of number, string, and bool) called \"st2\" with a \"x\" of 2, a \"y\" of 'abc', and a \"z\" of true."
 						+ "Tell me what (\"st\" is equal to \"st2\") is.");
-		assertPrint(
-				"false\n",
-				""
-						+ "Define a (triple of number, string, and bool) called \"st\" with a \"x\" of 2, a \"y\" of 'abc', and a \"z\" of true."
+		assertPrint("false\n",
+				"" + "Define a (triple of number, string, and bool) called \"st\" with a \"x\" of 2, a \"y\" of 'abc', and a \"z\" of true."
 						+ "Define a (triple of number, string, and bool) called \"st2\" with a \"x\" of 12345, a \"y\" of 'abc', and a \"z\" of true."
 						+ "Tell me what (\"st\" is equal to \"st2\") is.");
-		assertPrint(
-				"false\n",
-				""
-						+ "Define a (triple of string, string, and bool) called \"st\" with a \"x\" of '2', a \"y\" of 'abc', and a \"z\" of true."
+		assertPrint("false\n",
+				"" + "Define a (triple of string, string, and bool) called \"st\" with a \"x\" of '2', a \"y\" of 'abc', and a \"z\" of true."
 						+ "Define a (triple of number, string, and bool) called \"st2\" with a \"x\" of 12345, a \"y\" of 'abc', and a \"z\" of true."
 						+ "Tell me what (\"st\" is equal to \"st2\") is.");
-		assertPrint(
-				"true\n",
-				""
-						+ "Define a (triple of number, string, and bool) called \"st\" with a \"x\" of 2, a \"y\" of 'abc', and a \"z\" of true."
+		assertPrint("true\n",
+				"" + "Define a (triple of number, string, and bool) called \"st\" with a \"x\" of 2, a \"y\" of 'abc', and a \"z\" of true."
 						+ "Define a (triple of number, string, and bool) called \"st2\" with a \"x\" of 12345, a \"y\" of 'def', and a \"z\" of false."
 						+ "Set the \"x\" of \"st2\" to 2. Set the \"y\" of \"st2\" to 'abc'. Set the \"z\" of \"st2\" to true."
 						+ "Tell me what (\"st\" is equal to \"st2\") is.");
@@ -105,12 +90,10 @@ public class StructTest {
 	}
 	public void assertEquivalence(String result, String toEvaluate) {
 		LocalEnvironment loc = env.minimalLocalEnvironment();
-		assertEquals(
-				result,
+		assertEquals(result,
 				ExpressionParser
-						.parseExpression(
-								Tokenizer.tokenize(LiteralToken
-										.entire(toEvaluate)))
-						.literalValue(loc).toSourceCode());
+						.parseExpression(Tokenizer
+								.tokenize(LiteralToken.entire(toEvaluate)))
+				.literalValue(loc).toSourceCode());
 	}
 }

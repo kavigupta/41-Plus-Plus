@@ -23,21 +23,21 @@ public class FunctionStrlen extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		return new LiteralNumber(
-				BigDecimal.valueOf(((LiteralString) arguments.get(0)).contents.token
-						.length()), Context.SYNTHETIC);
-	}
-	@Override
-	public PrimitiveType outputType() {
-		return new PrimitiveType(PrimitiveTypeWOC.NUMBER,
+		return new LiteralNumber(BigDecimal.valueOf(
+				((LiteralString) arguments.get(0)).contents.token.length()),
 				Context.SYNTHETIC);
 	}
 	@Override
+	public PrimitiveType outputType() {
+		return new PrimitiveType(PrimitiveTypeWOC.NUMBER, Context.SYNTHETIC);
+	}
+	@Override
 	public FunctionSignature signature() {
-		return FunctionSignature.getInstance(FunctionName.getInstance("the",
-				TypeVariable.LENGTH.name.name.token, "of", ""), Arrays
-				.asList(new PrimitiveType(
-						PrimitiveTypeWOC.STRING,
-						Context.SYNTHETIC)), outputType());
+		return FunctionSignature.getInstance(
+				FunctionName.getInstance("the",
+						TypeVariable.LENGTH.name.name.token, "of", ""),
+				Arrays.asList(new PrimitiveType(PrimitiveTypeWOC.STRING,
+						Context.SYNTHETIC)),
+				outputType());
 	}
 }

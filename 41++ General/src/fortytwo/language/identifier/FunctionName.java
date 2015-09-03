@@ -14,19 +14,15 @@ import fortytwo.language.type.ConcreteType;
 public class FunctionName {
 	public final List<FunctionComponent> function;
 	public static FunctionName getInstance(String... name) {
-		return getInstance(Arrays
-				.asList(name)
-				.stream()
+		return getInstance(Arrays.asList(name).stream()
 				.map(x -> x.length() == 0 ? FunctionArgument.INSTANCE
 						: new FunctionToken(LiteralToken.entire(x)))
 				.collect(Collectors.toList()));
 	}
 	public static FunctionName getInstance(LiteralToken... name) {
-		return getInstance(Arrays
-				.asList(name)
-				.stream()
-				.map(x -> x.token.length() == 0 ? FunctionArgument.INSTANCE
-						: new FunctionToken(x))
+		return getInstance(Arrays.asList(name)
+				.stream().map(x -> x.token.length() == 0
+						? FunctionArgument.INSTANCE : new FunctionToken(x))
 				.collect(Collectors.toList()));
 	}
 	public static FunctionName getInstance(List<FunctionComponent> function) {
@@ -67,8 +63,7 @@ public class FunctionName {
 		StringBuffer sbuff = new StringBuffer();
 		for (FunctionComponent comp : function) {
 			if (comp instanceof FunctionToken)
-				sbuff.append(((FunctionToken) comp).token.token)
-						.append(" ");
+				sbuff.append(((FunctionToken) comp).token.token).append(" ");
 			else {
 				sbuff.append("{").append(types.get(count).toSourceCode())
 						.append("} ");

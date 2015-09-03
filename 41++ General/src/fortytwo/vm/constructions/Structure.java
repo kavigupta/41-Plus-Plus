@@ -36,8 +36,8 @@ public class Structure {
 		return true;
 	}
 	public boolean containsField(VariableIdentifier k) {
-		return fields.stream().map(x -> x.name.equals(k))
-				.reduce(false, (a, b) -> a || b);
+		return fields.stream().map(x -> x.name.equals(k)).reduce(false,
+				(a, b) -> a || b);
 	}
 	@Override
 	public String toString() {

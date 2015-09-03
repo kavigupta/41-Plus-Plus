@@ -16,7 +16,8 @@ public abstract class Expression extends ParsedStatement {
 	 * The type of this expression. After the first invocation, it returns a
 	 * cached copy, so a null environment can be passed.
 	 * 
-	 * @param env the static environment
+	 * @param env
+	 *        the static environment
 	 * @return the type of this expression
 	 */
 	public final ConcreteType type(StaticEnvironment env) {
@@ -36,7 +37,8 @@ public abstract class Expression extends ParsedStatement {
 	 * @param environment
 	 * @return the literal value of the expression
 	 */
-	public abstract LiteralExpression literalValue(LocalEnvironment environment);
+	public abstract LiteralExpression literalValue(
+			LocalEnvironment environment);
 	@Override
 	public final void execute(LocalEnvironment environment) {
 		literalValue(environment);

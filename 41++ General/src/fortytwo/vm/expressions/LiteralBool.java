@@ -16,8 +16,7 @@ public class LiteralBool extends LiteralExpression {
 	}
 	@Override
 	public PrimitiveType resolveType() {
-		return new PrimitiveType(PrimitiveTypeWOC.BOOL,
-				Context.SYNTHETIC);
+		return new PrimitiveType(PrimitiveTypeWOC.BOOL, Context.SYNTHETIC);
 	}
 	@Override
 	public String toSourceCode() {

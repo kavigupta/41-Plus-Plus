@@ -19,7 +19,8 @@ public class VariableParserTest {
 	}
 	public static void assertVariableParse(String name) {
 		Utilities.assertParse(
-				VariableIdentifier.getInstance(LiteralToken.synthetic("\""
-						+ name + "\"")), "\"" + name + "\"");
+				VariableIdentifier.getInstance(
+						LiteralToken.synthetic("\"" + name + "\"")),
+				"\"" + name + "\"");
 	}
 }

@@ -26,8 +26,8 @@ public class GlobalEnvTest {
 	GlobalEnvironment env;
 	@Before
 	public void init() {
-		env = GlobalEnvironment.getDefaultEnvironment(StaticEnvironment
-				.getDefault());
+		env = GlobalEnvironment
+				.getDefaultEnvironment(StaticEnvironment.getDefault());
 	}
 	@Test
 	public void printTest() {
@@ -67,37 +67,26 @@ public class GlobalEnvTest {
 	public void stringLetterSplitTest() {
 		assertEquivalence("['h', 'e', 'l', 'l', 'o']",
 				"'hello' split into individual letters");
-		assertEquals(
-				"'world'",
-				ParsedFunctionCall
-						.getInstance(
-								FunctionName.getInstance("the",
-										"letters", "", "combined",
-										"to", "form", "a", "string"),
-								Arrays.asList(LiteralArray
-										.getInstance(
-												new PrimitiveType(
-														PrimitiveTypeWOC.STRING,
-														Context.SYNTHETIC),
-												"world".chars()
-														.mapToObj(x -> new LiteralString(
-																LiteralToken
-																		.synthetic(Character
-																				.toString((char) x))))
-														.collect(Collectors
-																.toList()),
-												Context.SYNTHETIC)))
-						.literalValue(env.minimalLocalEnvironment())
-						.toSourceCode());
+		assertEquals("'world'", ParsedFunctionCall
+				.getInstance(
+						FunctionName.getInstance("the", "letters", "",
+								"combined", "to", "form", "a", "string"),
+				Arrays.asList(LiteralArray.getInstance(
+						new PrimitiveType(PrimitiveTypeWOC.STRING,
+								Context.SYNTHETIC),
+						"world".chars()
+								.mapToObj(x -> new LiteralString(
+										LiteralToken.synthetic(
+												Character.toString((char) x))))
+								.collect(Collectors.toList()),
+						Context.SYNTHETIC)))
+				.literalValue(env.minimalLocalEnvironment()).toSourceCode());
 	}
 	public void assertEquivalence(String result, String toEvaluate) {
-		assertEquals(
-				result,
+		assertEquals(result,
 				ExpressionParser
-						.parseExpression(
-								Tokenizer.tokenize(LiteralToken
-										.entire(toEvaluate)))
-						.literalValue(env.minimalLocalEnvironment())
-						.toSourceCode());
+						.parseExpression(Tokenizer
+								.tokenize(LiteralToken.entire(toEvaluate)))
+				.literalValue(env.minimalLocalEnvironment()).toSourceCode());
 	}
 }

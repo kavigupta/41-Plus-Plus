@@ -23,9 +23,12 @@ public class ParsedDefinition extends ParsedStatement {
 	public final VariableRoster<?> fields;
 	private final Context context;
 	/**
-	 * @param name The name and type of the variable to create.
-	 * @param fields The fields the variable will contain.
-	 * @param context The context of the sentence
+	 * @param name
+	 *        The name and type of the variable to create.
+	 * @param fields
+	 *        The fields the variable will contain.
+	 * @param context
+	 *        The context of the sentence
 	 */
 	public ParsedDefinition(TypedVariable name, VariableRoster<?> fields,
 			Context context) {
@@ -36,8 +39,8 @@ public class ParsedDefinition extends ParsedStatement {
 	@Override
 	public boolean typeCheck(StaticEnvironment environment) {
 		environment.addType(toCreate.name, toCreate.type);
-		return environment.structs.typeCheckConstructor(environment,
-				toCreate, fields, context);
+		return environment.structs.typeCheckConstructor(environment, toCreate,
+				fields, context);
 	}
 	@Override
 	public void execute(LocalEnvironment environment) {

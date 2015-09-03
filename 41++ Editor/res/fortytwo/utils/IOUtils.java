@@ -23,8 +23,8 @@ public class IOUtils {
 		}
 		return lines;
 	}
-	public static String read(String file) throws FileNotFoundException,
-			IOException {
+	public static String read(String file)
+			throws FileNotFoundException, IOException {
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			return read(br);
 		}

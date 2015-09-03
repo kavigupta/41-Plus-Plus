@@ -25,27 +25,29 @@ import fortytwo.vm.expressions.LiteralExpression;
 
 public class FunctionEquivalence extends Function42 {
 	public static final TypeVariable TO_BE_COMPARED = new TypeVariable(
-			VariableIdentifier.getInstance(LiteralToken
-					.entire("\"FunctionEquivalence_compare\"")));
+			VariableIdentifier.getInstance(
+					LiteralToken.entire("\"FunctionEquivalence_compare\"")));
 	public static enum Comparator {
-		EQUALS(true, "is", "equal", "to"), NOT_EQUALS(false, "is", "not",
-				"equal", "to"), SAME_AS(true, "is", "the", "same", "as"),
+		EQUALS(true, "is", "equal", "to"),
+		NOT_EQUALS(false, "is", "not", "equal", "to"),
+		SAME_AS(true, "is", "the", "same", "as"),
 		DIFFERENT_FROM(false, "is", "different", "from");
 		public FunctionSignature sig;
 		public boolean eq;
 		private Comparator(boolean eq, String... name) {
 			List<FunctionComponent> s = new ArrayList<>();
 			s.add(FunctionArgument.INSTANCE);
-			s.addAll(Arrays
-					.asList(name)
-					.stream()
-					.map(x -> new FunctionToken(LiteralToken.synthetic(x)))
+			s.addAll(
+					Arrays.asList(name).stream()
+							.map(x -> new FunctionToken(
+									LiteralToken.synthetic(x)))
 					.collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
-			this.sig = FunctionSignature.getInstance(FunctionName
-					.getInstance(s), Arrays.asList(TO_BE_COMPARED,
-					TO_BE_COMPARED), new PrimitiveType(
-					PrimitiveTypeWOC.BOOL, Context.SYNTHETIC));
+			this.sig = FunctionSignature.getInstance(
+					FunctionName.getInstance(s),
+					Arrays.asList(TO_BE_COMPARED, TO_BE_COMPARED),
+					new PrimitiveType(PrimitiveTypeWOC.BOOL,
+							Context.SYNTHETIC));
 			this.eq = eq;
 		}
 	}
@@ -70,8 +72,7 @@ public class FunctionEquivalence extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return new PrimitiveType(PrimitiveTypeWOC.BOOL,
-				Context.SYNTHETIC);
+		return new PrimitiveType(PrimitiveTypeWOC.BOOL, Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {

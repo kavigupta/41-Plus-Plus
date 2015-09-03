@@ -26,16 +26,16 @@ public class FunctionStringAppend extends Function42 {
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return new PrimitiveType(PrimitiveTypeWOC.STRING,
-				Context.SYNTHETIC);
+		return new PrimitiveType(PrimitiveTypeWOC.STRING, Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {
 		return FunctionSignature.getInstance(StdLib42.FUNC_STRING_APPEND,
-				Arrays.asList(new PrimitiveType(
-						PrimitiveTypeWOC.STRING,
-						Context.SYNTHETIC), new PrimitiveType(
-						PrimitiveTypeWOC.STRING,
-						Context.SYNTHETIC)), outputType());
+				Arrays.asList(
+						new PrimitiveType(PrimitiveTypeWOC.STRING,
+								Context.SYNTHETIC),
+						new PrimitiveType(PrimitiveTypeWOC.STRING,
+								Context.SYNTHETIC)),
+				outputType());
 	}
 }

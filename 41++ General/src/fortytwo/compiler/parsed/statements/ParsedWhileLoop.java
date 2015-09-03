@@ -23,8 +23,8 @@ public class ParsedWhileLoop extends ParsedStatement {
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment env) {
-		if (!condition.type(env).equals(
-				new PrimitiveType(PrimitiveTypeWOC.BOOL,
+		if (!condition.type(env)
+				.equals(new PrimitiveType(PrimitiveTypeWOC.BOOL,
 						Context.SYNTHETIC)))
 			TypingErrors.expectedBoolInCondition(false, condition, env);
 		return statement.isTypeChecked(env);

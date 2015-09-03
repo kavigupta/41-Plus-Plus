@@ -32,8 +32,8 @@ public abstract class TextEditor extends JFrame {
 			}
 		});
 		contentPane = new JScrollPane();
-		contentPane
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		contentPane.setHorizontalScrollBarPolicy(
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		fileMenu = new JMenu("File");
@@ -50,8 +50,8 @@ public abstract class TextEditor extends JFrame {
 		fileMenu.add(getMenuItem("Open", VK_O, false, e -> this.cmdOpen()));
 		fileMenu.add(getMenuItem("Save", VK_S, false, e -> this.cmdSave()));
 		fileMenu.add(getMenuItem("Save As", VK_S, true, e -> this.cmdSaveAs()));
-		fileMenu.add(getMenuItem("Select All", VK_A, false,
-				getSelectAllAction()));
+		fileMenu.add(
+				getMenuItem("Select All", VK_A, false, getSelectAllAction()));
 		bar.add(fileMenu);
 		editMenu.add(getMenuItem("Undo", VK_Z, false, getUndoAction()));
 		editMenu.add(getMenuItem("Redo", VK_Y, false, getRedoAction()));
@@ -103,12 +103,11 @@ public abstract class TextEditor extends JFrame {
 			setText(IOUtils.read(path));
 			lastSaved = getText();
 		} catch (FileNotFoundException e) {
-			displayError(
-					String.format("The file \"%s\" was not found", path),
+			displayError(String.format("The file \"%s\" was not found", path),
 					e);
 		} catch (IOException e) {
-			displayError(
-					String.format("Error in reading from \"%s\"", path), e);
+			displayError(String.format("Error in reading from \"%s\"", path),
+					e);
 		}
 	}
 	public void cmdSave() {
@@ -117,8 +116,7 @@ public abstract class TextEditor extends JFrame {
 			IOUtils.write(path, getText());
 			lastSaved = getText();
 		} catch (IOException e) {
-			displayError(String.format("Error in writing to \"%s\"", path),
-					e);
+			displayError(String.format("Error in writing to \"%s\"", path), e);
 		}
 	}
 	public void cmdSaveAs() {
@@ -132,11 +130,12 @@ public abstract class TextEditor extends JFrame {
 	}
 	private boolean promptSave(String type) {
 		System.out.println("Prompting Save");
-		int response = JOptionPane.showOptionDialog(this, String.format(
-				"Do you want to save your changes before you %s?", type),
+		int response = JOptionPane.showOptionDialog(this,
+				String.format("Do you want to save your changes before you %s?",
+						type),
 				"Save your changes?", JOptionPane.OK_CANCEL_OPTION,
-				JOptionPane.PLAIN_MESSAGE, null, new String[] { "Yes",
-						"No", "Cancel" }, "Yes");
+				JOptionPane.PLAIN_MESSAGE, null,
+				new String[] { "Yes", "No", "Cancel" }, "Yes");
 		if (response == 2) return false;
 		if (response == 1) return true;
 		cmdSave();

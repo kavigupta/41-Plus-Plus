@@ -20,7 +20,8 @@ public class LiteralToken implements GenericToken {
 	/**
 	 * A synthetic context representing an empty string {@code ""}
 	 */
-	public static final LiteralToken SYNTHETIC_EMPTY_STRING = synthetic(new String());
+	public static final LiteralToken SYNTHETIC_EMPTY_STRING = synthetic(
+			new String());
 	/**
 	 * The literal text this token represents.
 	 */
@@ -31,7 +32,8 @@ public class LiteralToken implements GenericToken {
 	 */
 	public final Context context;
 	/**
-	 * @param line the line to be converted to a token
+	 * @param line
+	 *        the line to be converted to a token
 	 * @return a token representing an entire line
 	 */
 	private LiteralToken(String token, Context context) {
@@ -39,44 +41,51 @@ public class LiteralToken implements GenericToken {
 		this.context = context;
 	}
 	/**
-	 * @param line the line to convert to a token
+	 * @param line
+	 *        the line to convert to a token
 	 * @return a token representing the entire line, with an offset of 0.
 	 */
 	public static LiteralToken entire(String line) {
 		return new LiteralToken(line, Context.entire(line));
 	}
 	/**
-	 * @param token a token containing an error
+	 * @param token
+	 *        a token containing an error
 	 * @return a token representing an error token
 	 */
 	public static LiteralToken errorToken(String token) {
 		return new LiteralToken(token, null);
 	}
 	/**
-	 * @param token a generic token
+	 * @param token
+	 *        a generic token
 	 * @return the literal string and context version of the token
 	 */
 	public static LiteralToken literalVersionOf(GenericToken token) {
 		return new LiteralToken(token.toSourceCode(), token.context());
 	}
 	/**
-	 * @param token a string that was generated synthetically
+	 * @param token
+	 *        a string that was generated synthetically
 	 * @return a token representing the synthetic case of that string.
 	 */
 	public static LiteralToken synthetic(String token) {
 		return new LiteralToken(token, Context.SYNTHETIC);
 	}
 	/**
-	 * @param a the first token
-	 * @param b the second token
+	 * @param a
+	 *        the first token
+	 * @param b
+	 *        the second token
 	 * @return a token with strings appended and contexts summed.
 	 */
 	public static LiteralToken append(LiteralToken a, LiteralToken b) {
-		return new LiteralToken(a.token + b.token, Context.sum(Arrays.asList(
-				a, b)));
+		return new LiteralToken(a.token + b.token,
+				Context.sum(Arrays.asList(a, b)));
 	}
 	/**
-	 * @param line a list of tokens to be put in parenthesis
+	 * @param line
+	 *        a list of tokens to be put in parenthesis
 	 * @return the tokens in parenthesis separated by spaces
 	 */
 	public static LiteralToken parenthesize(List<LiteralToken> line) {
@@ -86,17 +95,19 @@ public class LiteralToken implements GenericToken {
 		for (LiteralToken l : line) {
 			s.append(l.token).append(SPACE);
 		}
-		return new LiteralToken(s.append(CLOSE_PAREN).toString(), Context
-				.sum(line).inParen());
+		return new LiteralToken(s.append(CLOSE_PAREN).toString(),
+				Context.sum(line).inParen());
 	}
 	/**
-	 * @param i start
-	 * @param j end
+	 * @param i
+	 *        start
+	 * @param j
+	 *        end
 	 * @return The literal token representing substring(i, j)
 	 */
 	public LiteralToken subToken(int i, int j) {
-		return new LiteralToken(token.substring(i, j), context.subContext(i,
-				j));
+		return new LiteralToken(token.substring(i, j),
+				context.subContext(i, j));
 	}
 	/**
 	 * @return {@code true} if the token is meaningful syntactically
@@ -120,8 +131,7 @@ public class LiteralToken implements GenericToken {
 	public LiteralToken unescape() {
 		if (token.charAt(0) != '\'') return this;
 		String str = token.substring(1, token.length() - 1);
-		return new LiteralToken('\'' + Tokenizer.unescape(str) + '\'',
-				context);
+		return new LiteralToken('\'' + Tokenizer.unescape(str) + '\'', context);
 	}
 	public boolean doesEqual(String token) {
 		return this.token.equals(token);

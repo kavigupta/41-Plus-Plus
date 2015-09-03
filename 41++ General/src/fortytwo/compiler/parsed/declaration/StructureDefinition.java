@@ -16,11 +16,13 @@ public class StructureDefinition implements Sentence {
 	public final GenericStructureSignature structure;
 	private final Context context;
 	/**
-	 * @param structure the structure to be used. It may seem strange that a
+	 * @param structure
+	 *        the structure to be used. It may seem strange that a
 	 *        structure declaration would take a generic structure as an
 	 *        argument. However, a declaration is by definition generic. What
 	 *        can't be generic is an object definition
-	 * @param context the context of the declaration
+	 * @param context
+	 *        the context of the declaration
 	 */
 	public StructureDefinition(GenericStructureSignature structure,
 			Context context) {

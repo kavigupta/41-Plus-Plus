@@ -22,7 +22,8 @@ public class GroupingTest {
 	@Test
 	public void commentTest() {
 		assertCorrectTokenization("[Comments][do][nothing]");
-		assertCorrectTokenization("[Comments can conta(in anything 'ps[dfs[[[[[[[[[ sdfgs }Dfghfg.\f but a close bracket (there is no escape)\\]");
+		assertCorrectTokenization(
+				"[Comments can conta(in anything 'ps[dfs[[[[[[[[[ sdfgs }Dfghfg.\f but a close bracket (there is no escape)\\]");
 	}
 	@Test
 	public void stringCommentTest() {

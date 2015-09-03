@@ -11,8 +11,9 @@ import fortytwo.vm.expressions.LiteralString;
 
 public enum PrimitiveTypeWOC {
 	NUMBER(LiteralNumber.getInstance(BigDecimal.ZERO, Context.SYNTHETIC)),
-	STRING(new LiteralString(LiteralToken.SYNTHETIC_EMPTY_STRING)), BOOL(LiteralBool
-			.getInstance(false, Context.SYNTHETIC)), TYPE(null), VOID(null);
+	STRING(new LiteralString(LiteralToken.SYNTHETIC_EMPTY_STRING)),
+	BOOL(LiteralBool.getInstance(false, Context.SYNTHETIC)), TYPE(null),
+	VOID(null);
 	public final LiteralExpression def;
 	private PrimitiveTypeWOC(LiteralExpression def) {
 		this.def = def;

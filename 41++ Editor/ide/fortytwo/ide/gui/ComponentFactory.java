@@ -12,8 +12,7 @@ public class ComponentFactory {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory) TokenMakerFactory
 				.getDefaultInstance();
-		atmf.putMapping("text/41++",
-				"fortytwo.ide.highlighting.Highlighter42");
+		atmf.putMapping("text/41++", "fortytwo.ide.highlighting.Highlighter42");
 		textArea.setSyntaxEditingStyle("text/41++");
 		return textArea;
 	}
@@ -24,7 +23,8 @@ public class ComponentFactory {
 		textArea.setWrapStyleWord(true);
 		return textArea;
 	}
-	public static RSyntaxTextArea getLine42(boolean editable, Runnable onEnter) {
+	public static RSyntaxTextArea getLine42(boolean editable,
+			Runnable onEnter) {
 		RSyntaxTextArea textArea = get42();
 		textArea.setEditable(editable);
 		textArea.addKeyListener(new KeyListener() {

@@ -43,8 +43,8 @@ public class ParsedIfElse extends ParsedStatement {
 	@Override
 	public boolean typeCheck(StaticEnvironment env) {
 		if (condition.type(env).equals(
-				new PrimitiveType(PrimitiveTypeWOC.BOOL,
-						Context.SYNTHETIC))) return true;
+				new PrimitiveType(PrimitiveTypeWOC.BOOL, Context.SYNTHETIC)))
+			return true;
 		TypingErrors.expectedBoolInCondition(true, condition, env);
 		// unreachable
 		return false;

@@ -25,9 +25,12 @@ public class FunctionDefinition implements Sentence {
 	private final List<VariableIdentifier> inputVariables;
 	private final Context context;
 	/**
-	 * @param signature the signature to be used
-	 * @param inputVariables the names of the input variables
-	 * @param context the context of the definition
+	 * @param signature
+	 *        the signature to be used
+	 * @param inputVariables
+	 *        the names of the input variables
+	 * @param context
+	 *        the context of the definition
 	 */
 	public FunctionDefinition(FunctionSignature signature,
 			List<VariableIdentifier> inputVariables, Context context) {
@@ -43,7 +46,7 @@ public class FunctionDefinition implements Sentence {
 		for (int i = 0; i < sig.inputTypes.size(); i++) {
 			environment.addType(inputVariables.get(i), (ConcreteType)
 			// LOWPRI remove cast once generic typing is allowed
-					sig.inputTypes.get(i));
+			sig.inputTypes.get(i));
 		}
 	}
 	/**
@@ -76,10 +79,8 @@ public class FunctionDefinition implements Sentence {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((context == null) ? 0 : context.hashCode());
 		result = prime * result
-				+ ((context == null) ? 0 : context.hashCode());
-		result = prime
-				* result
 				+ ((inputVariables == null) ? 0 : inputVariables.hashCode());
 		result = prime * result + ((sig == null) ? 0 : sig.hashCode());
 		return result;
@@ -95,8 +96,7 @@ public class FunctionDefinition implements Sentence {
 		} else if (!context.equals(other.context)) return false;
 		if (inputVariables == null) {
 			if (other.inputVariables != null) return false;
-		} else if (!inputVariables.equals(other.inputVariables))
-			return false;
+		} else if (!inputVariables.equals(other.inputVariables)) return false;
 		if (sig == null) {
 			if (other.sig != null) return false;
 		} else if (!sig.equals(other.sig)) return false;

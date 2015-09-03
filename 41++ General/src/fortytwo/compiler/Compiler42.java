@@ -17,27 +17,27 @@ public class Compiler42 {
 	/**
 	 * Compiles the given text
 	 * 
-	 * @param text 41++ source code to be compiled
+	 * @param text
+	 *        41++ source code to be compiled
 	 * @return a global environment representing the source code given
 	 */
 	public static GlobalEnvironment compile(String text) {
 		return GlobalEnvironment.interpret(Parser.parse(text));
 	}
 	/**
-	 * @param text 41++ code to execute
+	 * @param text
+	 *        41++ code to execute
 	 */
 	public static void execute(String text) {
-		GlobalEnvironment env = GlobalEnvironment.interpret(Parser
-				.parse(text));
+		GlobalEnvironment env = GlobalEnvironment.interpret(Parser.parse(text));
 		try {
 			ParsedFunctionCall pfc = ParsedFunctionCall.getInstance(
-					FunctionName.getInstance("This", "first"),
-					Arrays.asList());
+					FunctionName.getInstance("This", "first"), Arrays.asList());
 			pfc.isTypeChecked(env.staticEnv);
 			pfc.execute(env.minimalLocalEnvironment());
 		} catch (Throwable t) {
-			VirtualMachine.error(ErrorType.PARSING,
-					"Main method not found.", Context.entire(text));
+			VirtualMachine.error(ErrorType.PARSING, "Main method not found.",
+					Context.entire(text));
 		}
 	}
 }

@@ -56,13 +56,11 @@ public class Editor42 extends TextEditor {
 				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 					if (Desktop.isDesktopSupported()) {
 						try {
-							Desktop.getDesktop().browse(
-									e.getURL().toURI());
+							Desktop.getDesktop().browse(e.getURL().toURI());
 							return;
 						} catch (IOException | URISyntaxException e1) {}
 					}
-					JOptionPane.showMessageDialog(
-							Editor42.this,
+					JOptionPane.showMessageDialog(Editor42.this,
 							String.format(
 									"Hyperlinks do not appear to be supported by your platform, you will have to manually navigate to \"%s\"",
 									e.getURL()),
@@ -112,8 +110,7 @@ public class Editor42 extends TextEditor {
 	}
 	public static void main(String[] args) {
 		try {
-			UIManager.setLookAndFeel(UIManager
-					.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | UnsupportedLookAndFeelException e1) {
 			// do nothing here, just use the normal one...

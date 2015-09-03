@@ -33,7 +33,8 @@ import fortytwo.vm.errors.TypingErrors;
 
 public class ConstructionParser {
 	public static ParsedFunctionCall composeFunction(List<LiteralToken> list) {
-		Pair<FunctionName, List<Expression>> fsig = parseFunctionSignature(list);
+		Pair<FunctionName, List<Expression>> fsig = parseFunctionSignature(
+				list);
 		return ParsedFunctionCall.getInstance(fsig.getKey(), fsig.getValue());
 	}
 	public static StructureDefinition parseStructDefinition(
@@ -46,8 +47,7 @@ public class ConstructionParser {
 		 */
 		if (!line.get(1).doesEqual(Resources.A)
 				|| !line.get(3).doesEqual(Resources.CALLED))
-			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_STRUCT,
-					line);
+			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_STRUCT, line);
 		line.subList(0, 4).clear();
 		ArrayList<LiteralToken> structExpression = new ArrayList<>();
 		int i = 0;
@@ -58,23 +58,25 @@ public class ConstructionParser {
 		List<GenericType> typeVariables = new ArrayList<>();
 		if (i < line.size() && line.get(i).doesEqual(Resources.OF)) {
 			i++;
-			for (; i < line.size() && !line.get(i).doesEqual(Resources.THAT); i++) {
+			for (; i < line.size()
+					&& !line.get(i).doesEqual(Resources.THAT); i++) {
 				if (Language.isValidVariableIdentifier(line.get(i))) {
-					typeVariables.add(new TypeVariable(VariableIdentifier
-							.getInstance(line.get(i))));
+					typeVariables.add(new TypeVariable(
+							VariableIdentifier.getInstance(line.get(i))));
 				}
 			}
 		}
 		ArrayList<GenericField> fields = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).doesEqual(Resources.CALLED)) continue;
-			fields.add(new GenericField(VariableIdentifier.getInstance(line
-					.get(i + 1)), ExpressionParser.parseType(line
-					.get(i - 1))));
+			fields.add(new GenericField(
+					VariableIdentifier.getInstance(line.get(i + 1)),
+					ExpressionParser.parseType(line.get(i - 1))));
 		}
-		return new StructureDefinition(new GenericStructureSignature(
-				new GenericStructureType(structExpression, typeVariables,
-						context), fields), Context.sum(line));
+		return new StructureDefinition(
+				new GenericStructureSignature(new GenericStructureType(
+						structExpression, typeVariables, context), fields),
+				Context.sum(line));
 	}
 	public static FunctionDefinition parseFunctionDefinition(
 			List<LiteralToken> line) {
@@ -86,8 +88,7 @@ public class ConstructionParser {
 		if (!line.get(1).doesEqual(Resources.A)
 				|| !line.get(2).doesEqual(Resources.DECL_FUNCTION)
 				|| !line.get(3).doesEqual(Resources.CALLED))
-			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_FUNCT,
-					line);
+			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_FUNCT, line);
 		int i = 4;
 		ArrayList<LiteralToken> funcExpress = new ArrayList<>();
 		for (; i < line.size() && !line.get(i).doesEqual(Resources.THAT); i++) {
@@ -98,32 +99,28 @@ public class ConstructionParser {
 		if (i < line.size()) {
 			if (line.get(i).doesEqual(Resources.TAKES)) {
 				for (; i < line.size(); i++) {
-					if (!line.get(i).doesEqual(Resources.CALLED))
-						continue;
-					GenericType type = ExpressionParser.parseType(line
-							.get(i - 1));
+					if (!line.get(i).doesEqual(Resources.CALLED)) continue;
+					GenericType type = ExpressionParser
+							.parseType(line.get(i - 1));
 					// LOWPRI allow generic typing in functions...
 					// later
-					if (type.kind() != Kind.CONCRETE)
-						ParserErrors.expectedCTInFunctionDecl(type, line,
-								vars.size());
-					vars.put(VariableIdentifier.getInstance(line
-							.get(i + 1)), type);
+					if (type.kind() != Kind.CONCRETE) ParserErrors
+							.expectedCTInFunctionDecl(type, line, vars.size());
+					vars.put(VariableIdentifier.getInstance(line.get(i + 1)),
+							type);
 				}
-			} else if (line.get(i).doesEqual(Resources.OUTPUTS)) {} else SyntaxErrors
-					.invalidSentence(SentenceType.DECLARATION_FUNCT, line);
+			} else if (line.get(i).doesEqual(Resources.OUTPUTS)) {} else
+				SyntaxErrors.invalidSentence(SentenceType.DECLARATION_FUNCT,
+						line);
 		}
 		int outputloc = Language.indexOf(line, Resources.OUTPUTS);
-		Pair<FunctionName, List<Expression>> sig = parseFunctionSignature(funcExpress);
-		List<VariableIdentifier> variables = sig
-				.getValue()
-				.stream()
-				.map(x -> {
-					if (!(x instanceof VariableIdentifier))
-						ParserErrors.expectedVariableInDecl(true,
-								x.toToken(), line);
-					return (VariableIdentifier) x;
-				}).collect(Collectors.toList());
+		Pair<FunctionName, List<Expression>> sig = parseFunctionSignature(
+				funcExpress);
+		List<VariableIdentifier> variables = sig.getValue().stream().map(x -> {
+			if (!(x instanceof VariableIdentifier))
+				ParserErrors.expectedVariableInDecl(true, x.toToken(), line);
+			return (VariableIdentifier) x;
+		}).collect(Collectors.toList());
 		List<GenericType> types = new ArrayList<>();
 		for (VariableIdentifier vid : variables) {
 			GenericType gt = vars.get(vid);
@@ -131,22 +128,21 @@ public class ConstructionParser {
 				TypingErrors.incompleteFieldTypingInFunctionDecl(vid, line);
 			types.add(gt);
 		}
-		if (outputloc < 0)
-			return new FunctionDefinition(FunctionSignature.getInstance(sig
-					.getKey(), types, new PrimitiveType(
-					PrimitiveTypeWOC.VOID,
-					line.get(line.size() - 1).context)), variables,
-					Context.sum(line));
+		if (outputloc < 0) return new FunctionDefinition(
+				FunctionSignature.getInstance(sig.getKey(), types,
+						new PrimitiveType(PrimitiveTypeWOC.VOID,
+								line.get(line.size() - 1).context)),
+				variables, Context.sum(line));
 		if (Language.isArticle(line.get(outputloc + 1).token)) outputloc++;
 		line.subList(0, outputloc + 1).clear();
-		GenericType outputType = ExpressionParser.parseType(LiteralToken
-				.parenthesize(line));
+		GenericType outputType = ExpressionParser
+				.parseType(LiteralToken.parenthesize(line));
 		// Check will be unecessary later LOWPRI
 		if (outputType.kind() != Kind.CONCRETE)
 			ParserErrors.expectedCTInFunctionDecl(outputType, line, -1);
-		return new FunctionDefinition(FunctionSignature.getInstance(
-				sig.getKey(), types, outputType), variables,
-				Context.sum(line));
+		return new FunctionDefinition(
+				FunctionSignature.getInstance(sig.getKey(), types, outputType),
+				variables, Context.sum(line));
 	}
 	private static Pair<FunctionName, List<Expression>> parseFunctionSignature(
 			List<LiteralToken> list) {

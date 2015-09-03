@@ -88,12 +88,9 @@ public class StaticEnvironment {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((funcs == null) ? 0 : funcs.hashCode());
-		result = prime
-				* result
-				+ ((globalVariables == null) ? 0 : globalVariables
-						.hashCode());
 		result = prime * result
-				+ ((structs == null) ? 0 : structs.hashCode());
+				+ ((globalVariables == null) ? 0 : globalVariables.hashCode());
+		result = prime * result + ((structs == null) ? 0 : structs.hashCode());
 		result = prime * result + ((types == null) ? 0 : types.hashCode());
 		return result;
 	}
@@ -108,8 +105,7 @@ public class StaticEnvironment {
 		} else if (!funcs.equals(other.funcs)) return false;
 		if (globalVariables == null) {
 			if (other.globalVariables != null) return false;
-		} else if (!globalVariables.equals(other.globalVariables))
-			return false;
+		} else if (!globalVariables.equals(other.globalVariables)) return false;
 		if (structs == null) {
 			if (other.structs != null) return false;
 		} else if (!structs.equals(other.structs)) return false;

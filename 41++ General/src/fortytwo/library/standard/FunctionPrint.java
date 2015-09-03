@@ -19,8 +19,8 @@ import fortytwo.vm.expressions.LiteralExpression;
 public class FunctionPrint extends Function42 {
 	public static final FunctionPrint INSTANCE = new FunctionPrint();
 	public static final TypeVariable TO_PRINT = new TypeVariable(
-			VariableIdentifier.getInstance(LiteralToken
-					.synthetic("\"toPrint\"")));
+			VariableIdentifier
+					.getInstance(LiteralToken.synthetic("\"toPrint\"")));
 	private FunctionPrint() {}
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
@@ -30,8 +30,7 @@ public class FunctionPrint extends Function42 {
 	}
 	@Override
 	public PrimitiveType outputType() {
-		return new PrimitiveType(PrimitiveTypeWOC.VOID,
-				Context.SYNTHETIC);
+		return new PrimitiveType(PrimitiveTypeWOC.VOID, Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {

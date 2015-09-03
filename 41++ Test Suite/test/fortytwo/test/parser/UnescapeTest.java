@@ -36,7 +36,8 @@ public class UnescapeTest {
 	}
 	@Test
 	public void complexTestCase() {
-		assertUE("\t\t\t\tArrays.asList(\"If\", \"4.0\", \"+\", \"4.0\", \"=\", \"2\", \":\",",
+		assertUE(
+				"\t\t\t\tArrays.asList(\"If\", \"4.0\", \"+\", \"4.0\", \"=\", \"2\", \":\",",
 				"\\t\\t\\t\\tArrays.asList(\"If\", \"4.0\", \"+\", \"4.0\", \"=\", \"2\", \":\",");
 	}
 	public static void assertUE(String unescaped, String escaped) {

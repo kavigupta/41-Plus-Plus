@@ -33,8 +33,7 @@ import fortytwo.vm.expressions.LiteralString;
 
 public class ExpressionParser {
 	public static Expression parseExpression(List<LiteralToken> list) {
-		ParsedFunctionCall function = ConstructionParser
-				.composeFunction(list);
+		ParsedFunctionCall function = ConstructionParser.composeFunction(list);
 		if (function.name.function.size() == 1
 				&& function.name.function.get(0) instanceof FunctionArgument)
 			return function.arguments.get(0);
@@ -60,17 +59,16 @@ public class ExpressionParser {
 			if (token instanceof UnevaluatedOperator
 					&& ((UnevaluatedOperator) token).operator.precendence <= precendence) {
 				if (exp.size() == 0)
-					SyntaxErrors.invalidExpression(
-							ExpressionType.ARITHMETIC, expressions
-									.stream().map(Expression::toToken)
+					SyntaxErrors.invalidExpression(ExpressionType.ARITHMETIC,
+							expressions.stream().map(Expression::toToken)
 									.collect(Collectors.toList()));
 				Expression first = exp.pop();
 				i++;
 				Expression second = expressions.get(i);
 				UnevaluatedOperator op = (UnevaluatedOperator) token;
 				exp.push(new BinaryOperation(first, second, op.operator,
-						Context.sum(Arrays.asList(first.context(),
-								op.context(), second.context()))));
+						Context.sum(Arrays.asList(first.context(), op.context(),
+								second.context()))));
 			} else {
 				exp.push(token);
 			}
@@ -84,15 +82,14 @@ public class ExpressionParser {
 			if (expressions.get(i) instanceof UnevaluatedOperator) {
 				UnevaluatedOperator uneop = (UnevaluatedOperator) expressions
 						.get(i);
-				if (i == 0
-						|| expressions.get(i - 1) instanceof UnevaluatedOperator) {
+				if (i == 0 || expressions
+						.get(i - 1) instanceof UnevaluatedOperator) {
 					if (uneop.operator.equals(Operation.ADD)) {
 						continue;
 					} else if (uneop.operator.equals(Operation.SUBTRACT)) {
 						i++;
 						Expression next = expressions.get(i);
-						expressionsWoUO.add(BinaryOperation
-								.getNegation(next));
+						expressionsWoUO.add(BinaryOperation.getNegation(next));
 					}
 				} else {
 					expressionsWoUO.add(expressions.get(i));
@@ -119,8 +116,7 @@ public class ExpressionParser {
 				case '9':
 					try {
 						expressions.add(LiteralNumber.getInstance(
-								new BigDecimal(token.token),
-								token.context));
+								new BigDecimal(token.token), token.context));
 						break;
 					} catch (NumberFormatException e) {
 						SyntaxErrors.invalidExpression(
@@ -128,28 +124,28 @@ public class ExpressionParser {
 								Arrays.asList(token));
 					}
 				case '\'':
-					expressions.add(LiteralString.getInstance(token
-							.subToken(1, token.token.length() - 1)));
+					expressions.add(LiteralString.getInstance(
+							token.subToken(1, token.token.length() - 1)));
 					break;
 				case 't':
-					expressions.add(LiteralBool.getInstance(true,
-							Context.SYNTHETIC));
+					expressions.add(
+							LiteralBool.getInstance(true, Context.SYNTHETIC));
 					break;
 				case 'f':
-					expressions.add(LiteralBool.getInstance(false,
-							Context.SYNTHETIC));
+					expressions.add(
+							LiteralBool.getInstance(false, Context.SYNTHETIC));
 					break;
 				case '+':
 					expressions.add(new UnevaluatedOperator(Operation.ADD,
 							token.context));
 					break;
 				case '-':
-					expressions.add(new UnevaluatedOperator(
-							Operation.SUBTRACT, token.context));
+					expressions.add(new UnevaluatedOperator(Operation.SUBTRACT,
+							token.context));
 					break;
 				case '*':
-					expressions.add(new UnevaluatedOperator(
-							Operation.MULTIPLY, token.context));
+					expressions.add(new UnevaluatedOperator(Operation.MULTIPLY,
+							token.context));
 					break;
 				case '%':
 					expressions.add(new UnevaluatedOperator(Operation.MOD,
@@ -169,8 +165,7 @@ public class ExpressionParser {
 					break;
 				case '(':
 					LiteralToken depar = Language.deparenthesize(token);
-					expressions.add(parseExpression(Tokenizer
-							.tokenize(depar)));
+					expressions.add(parseExpression(Tokenizer.tokenize(depar)));
 					break;
 				case '[':
 					break;
@@ -193,7 +188,8 @@ public class ExpressionParser {
 		Context context = Context.sum(tokens);
 		ArrayList<LiteralToken> struct = new ArrayList<>();
 		int i = 0;
-		for (; i < tokens.size() && !tokens.get(i).token.equals(Resources.OF); i++) {
+		for (; i < tokens.size()
+				&& !tokens.get(i).token.equals(Resources.OF); i++) {
 			struct.add(tokens.get(i));
 		}
 		List<GenericType> typeVariables = new ArrayList<>();
@@ -232,8 +228,8 @@ public class ExpressionParser {
 			return new StructureType(struct, new ArrayList<>(), context);
 		if (arguments == Kind.CONCRETE)
 			return new StructureType(struct, typeVariables.stream()
-					.map(x -> (ConcreteType) x)
-					.collect(Collectors.toList()), context);
+					.map(x -> (ConcreteType) x).collect(Collectors.toList()),
+					context);
 		return new GenericStructureType(struct, typeVariables, context);
 	}
 	private static class UnevaluatedOperator extends Expression {

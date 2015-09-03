@@ -54,13 +54,13 @@ public class StructureRoster {
 		if (value != null) return value;
 		typeCheckConstructor(null, name, fieldValues, context);
 		if (name.type instanceof StructureType)
-			return new LiteralObject(
-					getStructure((StructureType) name.type), fieldValues,
-					Context.SYNTHETIC);
+			return new LiteralObject(getStructure((StructureType) name.type),
+					fieldValues, Context.SYNTHETIC);
 		return new LiteralArray(((ArrayType) name.type).contentType,
 				((LiteralNumber) fieldValues
 						.referenceTo(TypeVariable.LENGTH.name)).contents
-						.intValue(), Context.SYNTHETIC);
+								.intValue(),
+				Context.SYNTHETIC);
 	}
 	public Structure getStructure(StructureType struct) {
 		GenericStructureType genericType = genericVersionOf(struct);
@@ -94,23 +94,20 @@ public class StructureRoster {
 			TypedVariable name,
 			VariableRoster<? extends Expression> fieldValues, Context context) {
 		if (fieldValues.value() != null) {
-			if (fieldValues.value().type(env).equals(name.type))
-				return true;
+			if (fieldValues.value().type(env).equals(name.type)) return true;
 			TypingErrors.redefinitionTypeMismatch(name, fieldValues.value(),
 					env);
 		}
 		if (name.type instanceof ArrayType) {
 			Expression length = fieldValues
 					.referenceTo(TypeVariable.LENGTH.name);
-			if (fieldValues.numberOfVariables() == 1
-					&& length != null
-					&& length.type(env).equals(
-							new PrimitiveType(PrimitiveTypeWOC.NUMBER,
-									Context.SYNTHETIC))) return true;
+			if (fieldValues.numberOfVariables() == 1 && length != null
+					&& length.type(env).equals(new PrimitiveType(
+							PrimitiveTypeWOC.NUMBER, Context.SYNTHETIC)))
+				return true;
 			if (fieldValues.numberOfVariables() == 0)
 				TypingErrors.incompleteArrayConstructor(context);
-			else DNEErrors
-					.fieldDNEInArray(fieldValues.pairs.get(0).getKey());
+			else DNEErrors.fieldDNEInArray(fieldValues.pairs.get(0).getKey());
 		}
 		if (!(name.type instanceof StructureType)) {
 			if (fieldValues.numberOfVariables() == 0)
@@ -130,9 +127,7 @@ public class StructureRoster {
 			if (!struct.containsField(x.getKey()))
 				DNEErrors.fieldDNE(struct, x.getKey());
 		});
-		struct.fields
-				.stream()
-				.filter(f -> !fieldValues.assigned(f.name))
+		struct.fields.stream().filter(f -> !fieldValues.assigned(f.name))
 				.forEach(f -> TypingErrors.incompleteConstructor(struct,
 						fieldValues));
 		return true;
@@ -147,8 +142,7 @@ public class StructureRoster {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((structs == null) ? 0 : structs.hashCode());
+		result = prime * result + ((structs == null) ? 0 : structs.hashCode());
 		return result;
 	}
 	@Override

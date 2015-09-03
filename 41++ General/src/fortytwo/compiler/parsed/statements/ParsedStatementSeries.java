@@ -14,8 +14,7 @@ public class ParsedStatementSeries extends ParsedStatement {
 	private final Context context;
 	public static ParsedStatementSeries getInstance(ParsedStatement s,
 			Context context) {
-		if (s.kind() == SentenceType.COMPOUND)
-			return (ParsedStatementSeries) s;
+		if (s.kind() == SentenceType.COMPOUND) return (ParsedStatementSeries) s;
 		return new ParsedStatementSeries(Arrays.asList(s), context);
 	}
 	public ParsedStatementSeries(List<ParsedStatement> statements,

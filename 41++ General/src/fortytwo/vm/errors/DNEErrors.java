@@ -12,11 +12,12 @@ import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Structure;
 
 public class DNEErrors {
-	public static void dneError(String description, String name,
-			String suffix, Context context) {
+	public static void dneError(String description, String name, String suffix,
+			Context context) {
 		// The <description> ~<name>~ does not exist here
-		VirtualMachine.error(ErrorType.DNE, String.format(
-				"The %s ~%s~ does not exist%s", description, name, suffix),
+		VirtualMachine.error(ErrorType.DNE,
+				String.format("The %s ~%s~ does not exist%s", description, name,
+						suffix),
 				context);
 	}
 	public static void typeDNE(GenericType id) {
@@ -45,8 +46,9 @@ public class DNEErrors {
 	}
 	public static void fieldAccessOnPrimitive(ConcreteType type,
 			List<VariableIdentifier> field) {
-		dneError("field", "the " + field.get(0).toSourceCode() + " of "
-				+ type.toSourceCode(), "; no fields exist on primitives",
-				field.get(0).context());
+		dneError("field",
+				"the " + field.get(0).toSourceCode() + " of "
+						+ type.toSourceCode(),
+				"; no fields exist on primitives", field.get(0).context());
 	}
 }

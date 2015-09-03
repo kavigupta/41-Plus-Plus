@@ -13,14 +13,14 @@ public class StringParserTest {
 	public void includeSpaces() {
 		assertCorrectTokenization("'abc def ghi'", "'abc def ghi'");
 		assertCorrectTokenization("'abc def   ghi'", "'abc def   ghi'");
-		assertCorrectTokenization("'abc def   		ghi'", "'abc def   		ghi'");
+		assertCorrectTokenization("'abc def   		ghi'",
+				"'abc def   		ghi'");
 		assertCorrectTokenization("'abc def   	\r\n\f	ghi'",
 				"'abc def   	\r\n\f	ghi'");
 	}
 	@Test
 	public void controlChars() {
-		assertCorrectTokenization("'( [)] \\'unmatched'",
-				"'( [)] 'unmatched'");
+		assertCorrectTokenization("'( [)] \\'unmatched'", "'( [)] 'unmatched'");
 		assertCorrectTokenization("'Hello, World!'", "'Hello, World!'");
 		assertCorrectTokenization(
 				"'~!@#$%^&*)_+{}|:\"<>?`1234567890-=[\\\\;\\',./'",

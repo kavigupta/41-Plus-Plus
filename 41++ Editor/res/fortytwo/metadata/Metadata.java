@@ -6,8 +6,7 @@ import fortytwo.icon.IconManager;
 
 public class Metadata {
 	public static enum Macro implements Function<String, String> {
-		VERSION("1.0"),
-		LICENSE("Apache Licence 2.0"),
+		VERSION("1.0"), LICENSE("Apache Licence 2.0"),
 		LICENSE_URL("http://www.apache.org/licenses/LICENSE-2.0"),
 		SYNTAX_HIGHLIGHTER("RSyntaxTextArea"),
 		SYNTAX_HIGHLIGHTER_URL("http://bobbylight.github.io/RSyntaxTextArea/"),

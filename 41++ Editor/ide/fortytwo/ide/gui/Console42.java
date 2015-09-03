@@ -40,8 +40,7 @@ public class Console42 extends JDialog {
 				if (e.getKeyCode() == KeyEvent.VK_UP
 						|| e.getKeyCode() == KeyEvent.VK_KP_UP)
 					movePointer(+1);
-				else if (e.getKeyCode() == KeyEvent.VK_DOWN)
-					movePointer(-1);
+				else if (e.getKeyCode() == KeyEvent.VK_DOWN) movePointer(-1);
 			}
 		});
 		contentPane.add(line, BorderLayout.SOUTH);
@@ -50,8 +49,8 @@ public class Console42 extends JDialog {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				owner.dispatchEvent(new WindowEvent(owner,
-						WindowEvent.WINDOW_CLOSING));
+				owner.dispatchEvent(
+						new WindowEvent(owner, WindowEvent.WINDOW_CLOSING));
 			}
 		});
 	}
@@ -61,8 +60,7 @@ public class Console42 extends JDialog {
 		if (size == 0) return;
 		if (pointer != history.nCommands())
 			history.set(pointer, line.getText());
-		System.out.printf("Cached %s at location %s.", line.getText(),
-				pointer);
+		System.out.printf("Cached %s at location %s.", line.getText(), pointer);
 		pointer += -direction;
 		if (pointer == size || pointer == -1) {
 			pointer = size;

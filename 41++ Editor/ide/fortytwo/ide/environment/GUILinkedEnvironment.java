@@ -25,9 +25,8 @@ public class GUILinkedEnvironment {
 	public GUILinkedEnvironment(LineHistory history, Supplier<String> editor) {
 		super();
 		this.history = history;
-		this.console = new LocalEnvironment(
-				GlobalEnvironment.getDefaultEnvironment(StaticEnvironment
-						.getDefault()));
+		this.console = new LocalEnvironment(GlobalEnvironment
+				.getDefaultEnvironment(StaticEnvironment.getDefault()));
 		VirtualMachine.displayln = history::displayln;
 		VirtualMachine.displayerr = error -> {
 			history.displayerr(error);
@@ -45,8 +44,9 @@ public class GUILinkedEnvironment {
 				}
 			}
 		} else {
-			history.displayOutput(ExpressionParser.parseExpression(
-					Tokenizer.tokenize(LiteralToken.entire(cmd)))
+			history.displayOutput(ExpressionParser
+					.parseExpression(
+							Tokenizer.tokenize(LiteralToken.entire(cmd)))
 					.literalValue(console));
 		}
 	}

@@ -37,8 +37,8 @@ public class FunctionImplemented extends Function42 {
 	/**
 	 * Simple struct constructor
 	 */
-	public FunctionImplemented(FunctionDefinition f,
-			List<ParsedStatement> body, FunctionOutput r) {
+	public FunctionImplemented(FunctionDefinition f, List<ParsedStatement> body,
+			FunctionOutput r) {
 		this.f = f;
 		this.body = body;
 		this.r = r;
@@ -47,7 +47,8 @@ public class FunctionImplemented extends Function42 {
 	 * Contextualizes this function into one that can actually be used (linking
 	 * to other functions is done here)
 	 * 
-	 * @param environment the environment against which to contextualize this
+	 * @param environment
+	 *        the environment against which to contextualize this
 	 * @return an implemented function representing this function
 	 */
 	public FunctionImplemented contextualize(StaticEnvironment environment) {
@@ -65,8 +66,8 @@ public class FunctionImplemented extends Function42 {
 		LocalEnvironment local = env.minimalLocalEnvironment();
 		f.assignInputs(inputs, local);
 		body.stream().forEach(x -> x.execute(local));
-		LiteralExpression out = r.output == null ? null : r.output
-				.literalValue(local);
+		LiteralExpression out = r.output == null ? null
+				: r.output.literalValue(local);
 		// no need to clean the local environment, as it will be garbage
 		// collected after now.
 		return out;
@@ -76,8 +77,8 @@ public class FunctionImplemented extends Function42 {
 		StaticEnvironment local = StaticEnvironment.getDefault();
 		f.registerParameters(local);
 		body.forEach(x -> x.isTypeChecked(local));
-		return r.output == null ? new PrimitiveType(
-				PrimitiveTypeWOC.VOID, Context.SYNTHETIC)
+		return r.output == null
+				? new PrimitiveType(PrimitiveTypeWOC.VOID, Context.SYNTHETIC)
 				: r.output.type(local);
 	}
 	@Override

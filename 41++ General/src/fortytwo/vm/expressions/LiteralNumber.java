@@ -19,8 +19,7 @@ public class LiteralNumber extends LiteralExpression {
 	}
 	@Override
 	public PrimitiveType resolveType() {
-		return new PrimitiveType(PrimitiveTypeWOC.NUMBER,
-				Context.SYNTHETIC);
+		return new PrimitiveType(PrimitiveTypeWOC.NUMBER, Context.SYNTHETIC);
 	}
 	@Override
 	public String toSourceCode() {

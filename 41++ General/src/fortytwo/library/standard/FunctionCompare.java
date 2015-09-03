@@ -25,31 +25,34 @@ import fortytwo.vm.expressions.LiteralNumber;
 
 public class FunctionCompare extends Function42 {
 	public static enum Comparator {
-		LESS(true, false, false, "is", "less", "than"), AT_MOST(true, true,
-				false, "is", "at", "most"), LESS_THAN_OR_EQUAL(true, true,
-				false, "is", "less", "than", "or", "equal", "to"),
+		LESS(true, false, false, "is", "less", "than"),
+		AT_MOST(true, true, false, "is", "at", "most"),
+		LESS_THAN_OR_EQUAL(true, true, false, "is", "less", "than", "or",
+				"equal", "to"),
 		AT_LEAST(false, true, true, "is", "at", "least"),
-		GREATER_THAN_OR_EQUAL(false, true, true, "is", "greater", "than",
-				"or", "equal", "to"), GREATER(false, false, true, "is",
-				"greater", "than");
+		GREATER_THAN_OR_EQUAL(false, true, true, "is", "greater", "than", "or",
+				"equal", "to"),
+		GREATER(false, false, true, "is", "greater", "than");
 		public FunctionSignature sig;
 		public boolean lt, eq, gt;
 		private Comparator(boolean lt, boolean eq, boolean gt, String... name) {
 			List<FunctionComponent> s = new ArrayList<>();
 			s.add(FunctionArgument.INSTANCE);
-			s.addAll(Arrays
-					.asList(name)
-					.stream()
-					.map(x -> new FunctionToken(LiteralToken.synthetic(x)))
+			s.addAll(
+					Arrays.asList(name).stream()
+							.map(x -> new FunctionToken(
+									LiteralToken.synthetic(x)))
 					.collect(Collectors.toList()));
 			s.add(FunctionArgument.INSTANCE);
-			this.sig = FunctionSignature.getInstance(FunctionName
-					.getInstance(s), Arrays.asList(
-					new PrimitiveType(PrimitiveTypeWOC.NUMBER,
-							Context.SYNTHETIC), new PrimitiveType(
-							PrimitiveTypeWOC.NUMBER,
-							Context.SYNTHETIC)), new PrimitiveType(
-					PrimitiveTypeWOC.BOOL, Context.SYNTHETIC));
+			this.sig = FunctionSignature.getInstance(
+					FunctionName.getInstance(s),
+					Arrays.asList(
+							new PrimitiveType(PrimitiveTypeWOC.NUMBER,
+									Context.SYNTHETIC),
+							new PrimitiveType(PrimitiveTypeWOC.NUMBER,
+									Context.SYNTHETIC)),
+					new PrimitiveType(PrimitiveTypeWOC.BOOL,
+							Context.SYNTHETIC));
 			this.lt = lt;
 			this.eq = eq;
 			this.gt = gt;
@@ -73,8 +76,7 @@ public class FunctionCompare extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return new PrimitiveType(PrimitiveTypeWOC.BOOL,
-				Context.SYNTHETIC);
+		return new PrimitiveType(PrimitiveTypeWOC.BOOL, Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {

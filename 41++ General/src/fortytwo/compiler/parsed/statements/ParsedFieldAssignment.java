@@ -41,8 +41,8 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	public boolean typeCheck(StaticEnvironment env) {
 		// TODO handle when not fed a structure...
 		if (!env.typeOf(field).equals(value.type(env)))
-			TypingErrors.fieldAssignmentTypeMismatch(env.structs
-					.getStructure((StructureType) name.type(env)),
+			TypingErrors.fieldAssignmentTypeMismatch(
+					env.structs.getStructure((StructureType) name.type(env)),
 					new TypedVariable(name, env.typeOf(name)), value, env);
 		return true;
 	}

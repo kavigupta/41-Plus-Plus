@@ -8,8 +8,8 @@ import fortytwo.vm.errors.DNEErrors;
 
 public class TypeVariable implements GenericType {
 	public static final TypeVariable LENGTH = new TypeVariable(
-			VariableIdentifier.getInstance(LiteralToken
-					.synthetic("\"length\"")));
+			VariableIdentifier
+					.getInstance(LiteralToken.synthetic("\"length\"")));
 	public final VariableIdentifier name;
 	public TypeVariable(VariableIdentifier name) {
 		this.name = name;

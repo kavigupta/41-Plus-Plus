@@ -43,19 +43,17 @@ public class FunctionLogicalOperator extends Function42 {
 	}
 	@Override
 	public GenericType outputType() {
-		return new PrimitiveType(PrimitiveTypeWOC.BOOL,
-				Context.SYNTHETIC);
+		return new PrimitiveType(PrimitiveTypeWOC.BOOL, Context.SYNTHETIC);
 	}
 	@Override
 	public FunctionSignature signature() {
 		ArrayList<GenericType> args = new ArrayList<>();
 		for (FunctionComponent fc : name.function) {
 			if (fc instanceof FunctionArgument)
-				args.add(new PrimitiveType(
-						PrimitiveTypeWOC.BOOL,
+				args.add(new PrimitiveType(PrimitiveTypeWOC.BOOL,
 						Context.SYNTHETIC));
 		}
-		return FunctionSignature.getInstance(name, args, new PrimitiveType(
-				PrimitiveTypeWOC.BOOL, Context.SYNTHETIC));
+		return FunctionSignature.getInstance(name, args,
+				new PrimitiveType(PrimitiveTypeWOC.BOOL, Context.SYNTHETIC));
 	}
 }

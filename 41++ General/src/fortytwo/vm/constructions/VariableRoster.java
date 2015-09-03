@@ -102,10 +102,11 @@ public class VariableRoster<T extends Expression> {
 		}
 		DNEErrors.variableDNE(name);
 	}
-	public VariableRoster<LiteralExpression> literalValue(LocalEnvironment env) {
+	public VariableRoster<LiteralExpression> literalValue(
+			LocalEnvironment env) {
 		VariableRoster<LiteralExpression> roster = new VariableRoster<LiteralExpression>();
-		this.pairs.forEach(x -> roster.assign(x.getKey(), x.getValue()
-				.literalValue(env)));
+		this.pairs.forEach(
+				x -> roster.assign(x.getKey(), x.getValue().literalValue(env)));
 		return roster;
 	}
 }

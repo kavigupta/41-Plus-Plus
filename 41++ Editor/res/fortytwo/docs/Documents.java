@@ -12,10 +12,9 @@ public class Documents {
 	static {
 		String aboutLocal;
 		try {
-			aboutLocal = Metadata
-					.applyMacroes(IOUtils.read(new BufferedReader(
-							new InputStreamReader(Documents.class
-									.getResourceAsStream("about.html")))));
+			aboutLocal = Metadata.applyMacroes(IOUtils.read(
+					new BufferedReader(new InputStreamReader(Documents.class
+							.getResourceAsStream("about.html")))));
 		} catch (Throwable t) {
 			aboutLocal = "About documentation not found.\n" + t.toString()
 					+ "\n" + Arrays.asList(t.getStackTrace());
