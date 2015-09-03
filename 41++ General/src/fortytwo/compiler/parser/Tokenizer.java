@@ -94,8 +94,9 @@ public class Tokenizer {
 					continue loop;
 				case '\'':
 				case '\"':
-					if (i - 1 < 0 || Language
-							.isTerminator(parentToken.token.charAt(i - 1))) {
+					char prev = parentToken.token.charAt(i - 1);
+					if (i - 1 < 0 || Language.isTerminator(prev)
+							|| Character.isDigit(prev)) {
 						add(parentToken, i, toklen, tokens);
 						toklen = 0;
 						int closequote = findCloseQuote(parentToken.token, i);
