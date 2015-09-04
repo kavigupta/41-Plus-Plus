@@ -14,7 +14,7 @@ import fortytwo.vm.environment.GlobalEnvironment;
 
 public class FunctionsTest {
 	public static final String TEST_FUNCTIONS = ""
-			+ "Define a function called \"x\" doubled that takes a number called \"x\" and outputs a number. Exit the function and output (\"x\"*2)."
+			+ "Define a function called \"x\" doubled that takes a number called \"x\" and outputs a number. Exit the function and output (\"x\"*2).\n"
 			+ "Define a function called \"x\" is prime that takes a number called \"x\" and outputs a bool.\n"
 			+ "	Define a number called \"i\" with a value of 2. Define a bool called \"isPrimeForNow\" with a value of (\"x\" is at least 2).\n"
 			+ "	While (\"i\" * \"i\" is at most \"x\") and \"isPrimeForNow\":\n"
@@ -31,7 +31,9 @@ public class FunctionsTest {
 			+ "		Set the value of \"i\" to (\"i\"+1).\n"
 			+ "	Set the (2*\"i\"-1) th element of \"strInter\" to (the \"i\" th element of \"strLet\").\n"
 			+ "	Exit the function and output (the letters \"strInter\" combined to form a string).\n"
-			+ "Define a function called Test procedures. Define a (pair of number and number) called \"pair\" with a \"key\" of 2 and a \"value\" of 3. Tell me what \"pair\" is. Exit the function.";
+			+ "Define a function called Test procedures.\n"
+			+ "	Define a (pair of number and number) called \"pair\" with a \"key\" of 2 and a \"value\" of 3.\n"
+			+ "	Tell me what \"pair\" is.\n" + "	Exit the function.";
 	GlobalEnvironment env;
 	@Before
 	public void init() {

@@ -13,7 +13,8 @@ public enum SentenceType {
 	COMPOUND("compound statement", STATEMENT),
 	PURE_EXPRESSION("pure expression", STATEMENT),
 	CONTROL_FLOW("control flow statement", DECLARATION),
-	IMPURE_EXPRESSION("impure expression", STATEMENT);
+	IMPURE_EXPRESSION("impure expression", STATEMENT),
+	FUNCTION("entire function", DECLARATION);
 	public final String description;
 	public final SentenceKind kind;
 	private SentenceType(String description, SentenceKind kind) {

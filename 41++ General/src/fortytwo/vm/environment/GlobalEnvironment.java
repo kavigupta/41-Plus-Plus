@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import fortytwo.compiler.parsed.Sentence;
+import fortytwo.compiler.parsed.declaration.FunctionConstruct;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedDefinition;
-import fortytwo.compiler.parsed.statements.ParsedStatement;
-import fortytwo.language.classification.SentenceType;
+import fortytwo.compiler.parser.Parser;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.constructions.Function42;
@@ -42,25 +42,18 @@ public class GlobalEnvironment {
 		for (int i = 0; i < sentences.size(); i++) {
 			Sentence s = sentences.get(i);
 			switch (s.kind()) {
-				case DECLARATION_FUNCT:
-					FunctionDefinition f = (FunctionDefinition) s;
-					environment.putReference(f);
-					FunctionOutput r = null;
-					i++;
-					ArrayList<ParsedStatement> body = new ArrayList<>();
-					for (; i < sentences.size(); i++) {
-						if (sentences.get(i)
-								.kind() == SentenceType.FUNCTION_OUTPUT) {
-							r = (FunctionOutput) sentences.get(i);
-							break;
-						}
-						Sentence sC = sentences.get(i);
-						if (!(sC instanceof ParsedStatement))
-							ParserErrors.expectedStatement(sC);
-						body.add((ParsedStatement) sC);
-					}
-					if (r == null) ParserErrors.noExit(f);
-					functions.add(new FunctionImplemented(f, body, r));
+				case FUNCTION:
+					FunctionConstruct f = (FunctionConstruct) s;
+					environment.putReference(f.declaration);
+					// TODO remove once multiple exit is undefined
+					if (f.suite.size() == 0) ParserErrors.noExit(f.declaration);
+					Sentence output = f.suite.remove(f.suite.size() - 1);
+					if (!(output instanceof FunctionOutput))
+						ParserErrors.noExit(f.declaration);
+					System.out.println("DECLADD" + f.declaration.sig);
+					functions.add(new FunctionImplemented(f.declaration,
+							Parser.temporaryHack(f.suite).statements,
+							(FunctionOutput) output));
 					break;
 				case DECLARATION_STRUCT:
 					environment.structs

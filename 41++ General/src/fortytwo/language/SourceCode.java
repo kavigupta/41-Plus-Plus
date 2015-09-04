@@ -157,7 +157,7 @@ public class SourceCode {
 		return name.toString().trim()
 				+ (list.length() == 0 ? "" : (" of " + list));
 	}
-	private static String wrapInBraces(Sentence statement) {
+	public static String wrapInBraces(Sentence statement) {
 		String s = statement.toSourceCode();
 		if (statement.isSimple()) return "\n\t" + s;
 		return Arrays.asList(s.split("\r|\n")).stream().map(x -> "\n\t" + x)
