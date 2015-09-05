@@ -1,6 +1,7 @@
 package fortytwo.language.identifier;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.expressions.Expression;
@@ -40,6 +41,10 @@ public class VariableIdentifier extends Expression {
 	@Override
 	public SentenceType kind() {
 		return SentenceType.PURE_EXPRESSION;
+	}
+	@Override
+	public Optional<VariableIdentifier> identifier() {
+		return Optional.of(this);
 	}
 	@Override
 	public int hashCode() {

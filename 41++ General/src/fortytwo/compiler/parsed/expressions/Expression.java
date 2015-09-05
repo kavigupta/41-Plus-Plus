@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.LocalEnvironment;
@@ -36,6 +37,10 @@ public abstract class Expression extends ParsedStatement {
 		return true;
 	}
 	protected abstract ConcreteType findType(StaticEnvironment env);
+	/**
+	 * @return the name of this expression, if it is a variable identifier
+	 */
+	public abstract Optional<VariableIdentifier> identifier();
 	/**
 	 * Determines the literal value of this expression given the local
 	 * environment

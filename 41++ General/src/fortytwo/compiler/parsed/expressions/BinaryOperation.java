@@ -1,11 +1,13 @@
 package fortytwo.compiler.parsed.expressions;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.Operation;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
@@ -76,6 +78,10 @@ public class BinaryOperation extends Expression {
 	@Override
 	public String toSourceCode() {
 		return SourceCode.display(first, operation, second);
+	}
+	@Override
+	public Optional<VariableIdentifier> identifier() {
+		return Optional.empty();
 	}
 	@Override
 	public String toString() {

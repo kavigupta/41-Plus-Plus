@@ -1,9 +1,11 @@
 package fortytwo.vm.constructions;
 
 import java.util.List;
+import java.util.Optional;
 
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.StructureType;
 
 public class Structure {
@@ -12,6 +14,12 @@ public class Structure {
 	public Structure(StructureType type, List<TypedVariable> fields) {
 		this.type = type;
 		this.fields = fields;
+	}
+	public Optional<ConcreteType> typeof(VariableIdentifier fieldName) {
+		for (TypedVariable field : fields) {
+			if (field.name.equals(fieldName)) return Optional.of(field.type);
+		}
+		return Optional.empty();
 	}
 	@Override
 	public int hashCode() {

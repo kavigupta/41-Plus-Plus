@@ -7,10 +7,13 @@ import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.StructureType;
+import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
@@ -23,7 +26,7 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	 * The name of the variable whose field is being modified.
 	 * TODO allow other things to be modified.
 	 */
-	public final VariableIdentifier name;
+	public final Expression name;
 	/**
 	 * The field to be set.
 	 */
@@ -32,9 +35,8 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	 * The value to set the field to.
 	 */
 	public final Expression value;
-	public ParsedFieldAssignment(VariableIdentifier name,
-			VariableIdentifier field, Expression parseExpression,
-			Context context) {
+	public ParsedFieldAssignment(Expression name, VariableIdentifier field,
+			Expression parseExpression, Context context) {
 		super(context);
 		this.name = name;
 		this.field = field;
@@ -42,18 +44,25 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment env) {
-		// TODO handle when not fed a structure...
-		if (!env.typeOf(field).equals(value.type(env)))
-			TypingErrors.fieldAssignmentTypeMismatch(
-					env.structs.getStructure((StructureType) name.type(env)),
-					new TypedVariable(name, env.typeOf(name)), value, env);
+		if (!(name.type(env) instanceof StructureType)) {
+			// TODO handle when not fed a structure...
+		}
+		StructureType type = (StructureType) name.type(env);
+		Structure struct = env.structs.getStructure(type);
+		Optional<ConcreteType> potentialFieldType = struct.typeof(field);
+		if (!potentialFieldType.isPresent()) DNEErrors.fieldDNE(struct, field);
+		ConcreteType fieldType = potentialFieldType.get();
+		if (!fieldType.equals(value.type(env)))
+			TypingErrors.fieldAssignmentTypeMismatch(struct,
+					new TypedVariable(field, fieldType), value, env);
 		return true;
 	}
 	@Override
 	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
 		final StaticEnvironment se = environment.staticEnvironment();
-		if (!(name.type(se) instanceof StructureType)) // should never happen.
-			return Optional.empty();
+		if (!(name.type(se) instanceof StructureType))
+			// should never happen.if type checking did it's job
+			throw new RuntimeException();
 		((LiteralObject) name.literalValue(environment)).redefine(field,
 				value.literalValue(environment));
 		return Optional.empty();

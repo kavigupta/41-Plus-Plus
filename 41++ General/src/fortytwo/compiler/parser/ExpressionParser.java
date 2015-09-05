@@ -1,10 +1,7 @@
 package fortytwo.compiler.parser;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
@@ -250,6 +247,11 @@ public class ExpressionParser {
 		}
 		@Override
 		public LiteralExpression literalValue(LocalEnvironment environment) {
+			// should never be called
+			return null;
+		}
+		@Override
+		public Optional<VariableIdentifier> identifier() {
 			// should never be called
 			return null;
 		}

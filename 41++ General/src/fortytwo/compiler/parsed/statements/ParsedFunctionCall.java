@@ -9,6 +9,7 @@ import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.LocalEnvironment;
@@ -55,6 +56,10 @@ public class ParsedFunctionCall extends Expression {
 	@Override
 	public String toSourceCode() {
 		return SourceCode.display(this.name, this.arguments);
+	}
+	@Override
+	public Optional<VariableIdentifier> identifier() {
+		return Optional.empty();
 	}
 	@Override
 	public int hashCode() {

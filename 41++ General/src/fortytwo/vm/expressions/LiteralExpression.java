@@ -1,8 +1,11 @@
 package fortytwo.vm.expressions;
 
+import java.util.Optional;
+
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.classification.SentenceType;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
@@ -18,6 +21,10 @@ public abstract class LiteralExpression extends Expression {
 	@Override
 	public final LiteralExpression literalValue(LocalEnvironment env) {
 		return this;
+	}
+	@Override
+	public final Optional<VariableIdentifier> identifier() {
+		return Optional.empty();
 	}
 	@Override
 	public SentenceType kind() {

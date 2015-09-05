@@ -1,5 +1,7 @@
 package fortytwo.language.field;
 
+import java.util.Optional;
+
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -31,6 +33,10 @@ public class TypedVariable extends Expression {
 	@Override
 	public String toSourceCode() {
 		return name.toSourceCode();
+	}
+	@Override
+	public Optional<VariableIdentifier> identifier() {
+		return Optional.of(name);
 	}
 	@Override
 	public int hashCode() {

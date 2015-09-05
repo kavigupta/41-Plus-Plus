@@ -1,7 +1,9 @@
 package fortytwo.compiler.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
@@ -84,15 +86,18 @@ public class StatementParser {
 				|| !line.get(5).token.equals(Resources.TO))
 			SyntaxErrors.invalidSentence(SentenceType.ASSIGNMENT, line);
 		final LiteralToken fieldT = line.get(2);
-		final VariableIdentifier name = VariableIdentifier
-				.getInstance(line.get(4));
+		final Expression toModify = ExpressionParser
+				.parseExpression(Arrays.asList(line.get(4)));
 		line.subList(0, 6).clear();
 		final Expression expr = ExpressionParser.parseExpression(line);
-		return fieldT.token.equals(Resources.VALUE)
-				? new ParsedRedefinition(name, expr, fullContext)
-				: new ParsedFieldAssignment(name,
-						VariableIdentifier.getInstance(fieldT), expr,
-						fullContext);
+		if (!fieldT.token.equals(Resources.VALUE))
+			return new ParsedFieldAssignment(toModify,
+					VariableIdentifier.getInstance(fieldT), expr, fullContext);
+		Optional<VariableIdentifier> name = toModify.identifier();
+		if (!name.isPresent()) {
+			// TODO handle redefinition of a non-variable
+		}
+		return new ParsedRedefinition(name.get(), expr, fullContext);
 	}
 	private static Sentence parseDefinition(List<LiteralToken> line) {
 		final Context fullContext = Context.sum(line);
