@@ -45,13 +45,13 @@ public class LiteralObject extends LiteralExpression {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fields == null) ? 0 : fields.hashCode());
-		result = prime * result + ((struct == null) ? 0 : struct.hashCode());
+		result = prime * result + (fields == null ? 0 : fields.hashCode());
+		result = prime * result + (struct == null ? 0 : struct.hashCode());
 		return result;
 	}
 	@Override
 	public boolean typedEquals(LiteralExpression obj) {
-		LiteralObject other = (LiteralObject) obj;
+		final LiteralObject other = (LiteralObject) obj;
 		if (fields == null) {
 			if (other.fields != null) return false;
 		} else if (!fields.equals(other.fields)) return false;

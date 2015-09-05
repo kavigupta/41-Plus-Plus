@@ -48,26 +48,24 @@ public class FunctionImplemented extends Function42 {
 		return this;
 	}
 	public boolean typeCheck(StaticEnvironment env) {
-		StaticEnvironment local = StaticEnvironment.getChild(env);
+		final StaticEnvironment local = StaticEnvironment.getChild(env);
 		f.registerParameters(local);
-		for (ParsedStatement s : body) {
-			Optional<GenericType> actual = s.returnType(local);
+		for (final ParsedStatement s : body) {
+			final Optional<GenericType> actual = s.returnType(local);
 			s.isTypeChecked(local);
-			if (actual.isPresent()) {
-				if (!actual.get().equals(f.sig.outputType))
-					TypingErrors.incorrectOutput(f.sig, actual.get(),
-							(FunctionOutput) s);
-			}
+			if (actual.isPresent()) if (!actual.get().equals(f.sig.outputType))
+				TypingErrors.incorrectOutput(f.sig, actual.get(),
+						(FunctionOutput) s);
 		}
 		return true;
 	}
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> inputs, TypeVariableRoster roster) {
-		LocalEnvironment local = env.minimalLocalEnvironment();
+		final LocalEnvironment local = env.minimalLocalEnvironment();
 		f.assignInputs(inputs, local);
-		for (ParsedStatement s : body) {
-			Optional<LiteralExpression> exp = s.execute(local);
+		for (final ParsedStatement s : body) {
+			final Optional<LiteralExpression> exp = s.execute(local);
 			if (exp.isPresent()) return exp.get();
 		}
 		// no need to clean the local environment, as it will be garbage
@@ -93,8 +91,8 @@ public class FunctionImplemented extends Function42 {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((body == null) ? 0 : body.hashCode());
-		result = prime * result + ((f == null) ? 0 : f.hashCode());
+		result = prime * result + (body == null ? 0 : body.hashCode());
+		result = prime * result + (f == null ? 0 : f.hashCode());
 		return result;
 	}
 	@Override
@@ -102,7 +100,7 @@ public class FunctionImplemented extends Function42 {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		FunctionImplemented other = (FunctionImplemented) obj;
+		final FunctionImplemented other = (FunctionImplemented) obj;
 		if (body == null) {
 			if (other.body != null) return false;
 		} else if (!body.equals(other.body)) return false;

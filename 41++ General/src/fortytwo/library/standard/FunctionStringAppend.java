@@ -20,8 +20,8 @@ public class FunctionStringAppend extends Function42 {
 	@Override
 	protected LiteralString apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		LiteralToken a = ((LiteralString) arguments.get(0)).contents;
-		LiteralToken b = ((LiteralString) arguments.get(1)).contents;
+		final LiteralToken a = ((LiteralString) arguments.get(0)).contents;
+		final LiteralToken b = ((LiteralString) arguments.get(1)).contents;
 		return new LiteralString(LiteralToken.append(a, b));
 	}
 	@Override

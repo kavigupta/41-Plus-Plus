@@ -34,9 +34,9 @@ public class FunctionArrayModification extends Function42 {
 	@Override
 	public LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		LiteralArray array = (LiteralArray) arguments.get(1);
-		LiteralNumber index = (LiteralNumber) arguments.get(0);
-		LiteralExpression value = arguments.get(2);
+		final LiteralArray array = (LiteralArray) arguments.get(1);
+		final LiteralNumber index = (LiteralNumber) arguments.get(0);
+		final LiteralExpression value = arguments.get(2);
 		array.set(index.contents.intValue(), value, Context.sum(arguments));
 		return LiteralVoid.INSTANCE;
 	}

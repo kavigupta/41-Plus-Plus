@@ -22,10 +22,9 @@ public class FunctionLogicalOperator extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		boolean[] array = new boolean[arguments.size()];
-		for (int k = 0; k < arguments.size(); k++) {
+		final boolean[] array = new boolean[arguments.size()];
+		for (int k = 0; k < arguments.size(); k++)
 			array[k] = ((LiteralBool) arguments.get(k)).contents;
-		}
 		return LiteralBool.getInstance(op.apply(array), Context.SYNTHETIC);
 	}
 	public static final FunctionLogicalOperator AND = new FunctionLogicalOperator(
@@ -47,12 +46,11 @@ public class FunctionLogicalOperator extends Function42 {
 	}
 	@Override
 	public FunctionSignature signature() {
-		ArrayList<GenericType> args = new ArrayList<>();
-		for (FunctionComponent fc : name.function) {
+		final ArrayList<GenericType> args = new ArrayList<>();
+		for (final FunctionComponent fc : name.function)
 			if (fc instanceof FunctionArgument)
 				args.add(new PrimitiveType(PrimitiveTypeWOC.BOOL,
 						Context.SYNTHETIC));
-		}
 		return FunctionSignature.getInstance(name, args,
 				new PrimitiveType(PrimitiveTypeWOC.BOOL, Context.SYNTHETIC));
 	}

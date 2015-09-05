@@ -20,17 +20,17 @@ public class FunctionRoster {
 	}
 	public Optional<Function42> get(FunctionSignature signature,
 			List<Expression> arguments, List<ConcreteType> types) {
-		Pair<Function42, ConcreteType> func = StdLib42
+		final Pair<Function42, ConcreteType> func = StdLib42
 				.matchCompiledFieldAccess(env, signature.name, types);
 		if (func != null) return Optional.of(func.getKey());
-		Function42 f = functions.get(signature);
+		final Function42 f = functions.get(signature);
 		return f == null ? Optional.empty() : Optional.of(f);
 	}
 	public void add(Function42 function) {
 		functions.put(function.signature(), function);
 	}
 	public static FunctionRoster getDefault(StaticEnvironment env) {
-		FunctionRoster funcs = new FunctionRoster(env);
+		final FunctionRoster funcs = new FunctionRoster(env);
 		StdLib42.defaultFunctions(funcs);
 		return funcs;
 	}
@@ -39,7 +39,7 @@ public class FunctionRoster {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((functions == null) ? 0 : functions.hashCode());
+				+ (functions == null ? 0 : functions.hashCode());
 		return result;
 	}
 	@Override
@@ -47,7 +47,7 @@ public class FunctionRoster {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		FunctionRoster other = (FunctionRoster) obj;
+		final FunctionRoster other = (FunctionRoster) obj;
 		if (functions == null) {
 			if (other.functions != null) return false;
 		} else if (!functions.equals(other.functions)) return false;

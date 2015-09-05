@@ -23,13 +23,13 @@ public class GenericStructureType implements GenericType {
 	@Override
 	public Optional<TypeVariableRoster> match(ConcreteType toMatch) {
 		if (!(toMatch instanceof StructureType)) return Optional.empty();
-		StructureType type = (StructureType) toMatch;
+		final StructureType type = (StructureType) toMatch;
 		if (type.types.size() != inputs.size()) return Optional.empty();
-		TypeVariableRoster roster = new TypeVariableRoster();
+		final TypeVariableRoster roster = new TypeVariableRoster();
 		for (int i = 0; i < type.types.size(); i++) {
 			// this doesn't worry about reassigning an existing variable for
 			// obvious reasons.
-			Optional<TypeVariableRoster> thisone = inputs.get(i)
+			final Optional<TypeVariableRoster> thisone = inputs.get(i)
 					.match(type.types.get(i));
 			if (!thisone.isPresent()) return Optional.empty();
 			roster.pairs.putAll(thisone.get().pairs);
@@ -38,9 +38,9 @@ public class GenericStructureType implements GenericType {
 	}
 	@Override
 	public ConcreteType resolve(TypeVariableRoster roster) {
-		List<ConcreteType> types = new ArrayList<>();
-		for (GenericType gt : inputs) {
-			ConcreteType typeParameter = gt.resolve(roster);
+		final List<ConcreteType> types = new ArrayList<>();
+		for (final GenericType gt : inputs) {
+			final ConcreteType typeParameter = gt.resolve(roster);
 			TypingErrors.inresolubleType(gt);
 			types.add(typeParameter);
 		}
@@ -58,8 +58,8 @@ public class GenericStructureType implements GenericType {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((inputs == null) ? 0 : inputs.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		result = prime * result + (inputs == null ? 0 : inputs.hashCode());
 		return result;
 	}
 	@Override
@@ -67,7 +67,7 @@ public class GenericStructureType implements GenericType {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		GenericStructureType other = (GenericStructureType) obj;
+		final GenericStructureType other = (GenericStructureType) obj;
 		if (name == null) {
 			if (other.name != null) return false;
 		} else if (!name.equals(other.name)) return false;

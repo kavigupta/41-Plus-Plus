@@ -15,13 +15,13 @@ import fortytwo.vm.VirtualMachine;
 
 public class UI {
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("41++ executor");
+		final JFrame frame = new JFrame("41++ executor");
 		frame.getContentPane().setLayout(
 				new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		frame.add(new JLabel("Put a path to your 41++ source code file below"));
-		JTextField path = new JTextField();
+		final JTextField path = new JTextField();
 		frame.add(path);
-		JButton execute = new JButton("Execute Code");
+		final JButton execute = new JButton("Execute Code");
 		execute.addActionListener(e -> execute(frame, path.getText()));
 		frame.add(execute);
 		frame.setVisible(true);
@@ -32,24 +32,24 @@ public class UI {
 		List<String> str;
 		try {
 			str = Files.readAllLines(Paths.get(new File(path).toURI()));
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			JOptionPane.showMessageDialog(parent,
 					"Error in reading from the file " + path
 							+ ". Are you sure you typed in the path correctly?",
 					"File Read Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		StringBuffer text = new StringBuffer();
+		final StringBuffer text = new StringBuffer();
 		str.forEach(s -> text.append(s).append(System.lineSeparator()));
 		try {
-			BufferedWriter bw = new BufferedWriter(
+			final BufferedWriter bw = new BufferedWriter(
 					new FileWriter(path + "-output.txt"));
 			VirtualMachine.displayln = s -> {
 				try {
 					System.out.println("Writing " + s);
 					bw.write(s);
 					bw.write(System.lineSeparator());
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					errorInWritingTo(parent, path + "-output.txt");
 					e.printStackTrace();
 				}
@@ -57,10 +57,10 @@ public class UI {
 			Compiler42.execute(text.toString());
 			bw.close();
 			bw.close();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			errorInWritingTo(parent, path + "-output.txt");
 			return;
-		} catch (RuntimeException e) {
+		} catch (final RuntimeException e) {
 			errorInCode(parent);
 			e.printStackTrace();
 			return;

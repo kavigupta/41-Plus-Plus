@@ -26,12 +26,12 @@ public final class VirtualMachine {
 		return err != null;
 	}
 	public static String popMessage() {
-		String temp = msg;
+		final String temp = msg;
 		msg = "";
 		return temp;
 	}
 	public static Error42 popError() {
-		Error42 temp = err;
+		final Error42 temp = err;
 		err = null;
 		return temp;
 	}

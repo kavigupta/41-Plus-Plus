@@ -22,11 +22,11 @@ public class StaticEnvironment {
 	private final VariableRoster<LiteralExpression> globalVariables;
 	private final VariableTypeRoster types;
 	public static StaticEnvironment getDefault() {
-		StructureRoster structs = StdLib42.DEF_STRUCT;
-		FunctionSignatureRoster funcs = new FunctionSignatureRoster();
+		final StructureRoster structs = StdLib42.DEF_STRUCT;
+		final FunctionSignatureRoster funcs = new FunctionSignatureRoster();
 		StdLib42.defaultSignatures(funcs);
-		VariableRoster<LiteralExpression> globalVariables = new VariableRoster<>();
-		VariableTypeRoster types = new VariableTypeRoster();
+		final VariableRoster<LiteralExpression> globalVariables = new VariableRoster<>();
+		final VariableTypeRoster types = new VariableTypeRoster();
 		return new StaticEnvironment(structs, funcs, globalVariables, types);
 	}
 	public static StaticEnvironment getChild(StaticEnvironment environment) {
@@ -52,35 +52,33 @@ public class StaticEnvironment {
 	public void addGlobalVariable(VariableIdentifier name,
 			LiteralExpression express) {
 		this.globalVariables.assign(name, express);
-		this.addType(name, express.resolveType());
+		addType(name, express.resolveType());
 	}
 	public void addType(VariableIdentifier variableIdentifier,
 			ConcreteType concreteType) {
 		types.add(variableIdentifier, concreteType);
 	}
 	public ConcreteType typeOf(VariableIdentifier name) {
-		ConcreteType type = types.typeOf(name);
+		final ConcreteType type = types.typeOf(name);
 		if (type != null) return type;
 		if (container == null) DNEErrors.variableDNE(name);
 		return container.typeOf(name);
 	}
 	public FunctionSignature referenceTo(FunctionName name,
 			List<ConcreteType> types) {
-		Pair<Function42, ConcreteType> func = StdLib42
+		final Pair<Function42, ConcreteType> func = StdLib42
 				.matchCompiledFieldAccess(this, name, types);
 		if (func != null) return func.getKey().signature();
-		FunctionSignature sig = funcs.referenceTo(name, types);
+		final FunctionSignature sig = funcs.referenceTo(name, types);
 		if (sig != null) return sig;
-		if (container == null) {
-			DNEErrors.functionSignatureDNE(name, types);
-		}
+		if (container == null) DNEErrors.functionSignatureDNE(name, types);
 		return container.referenceTo(name, types);
 	}
 	public void putReference(FunctionDefinition f) {
 		funcs.putReference(f);
 	}
 	public LiteralExpression referenceTo(VariableIdentifier name) {
-		LiteralExpression expr = globalVariables.referenceTo(name);
+		final LiteralExpression expr = globalVariables.referenceTo(name);
 		if (expr != null) return expr;
 		if (container == null) DNEErrors.variableDNE(name);
 		return container.referenceTo(name);
@@ -89,11 +87,11 @@ public class StaticEnvironment {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((funcs == null) ? 0 : funcs.hashCode());
+		result = prime * result + (funcs == null ? 0 : funcs.hashCode());
 		result = prime * result
-				+ ((globalVariables == null) ? 0 : globalVariables.hashCode());
-		result = prime * result + ((structs == null) ? 0 : structs.hashCode());
-		result = prime * result + ((types == null) ? 0 : types.hashCode());
+				+ (globalVariables == null ? 0 : globalVariables.hashCode());
+		result = prime * result + (structs == null ? 0 : structs.hashCode());
+		result = prime * result + (types == null ? 0 : types.hashCode());
 		return result;
 	}
 	@Override
@@ -101,7 +99,7 @@ public class StaticEnvironment {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		StaticEnvironment other = (StaticEnvironment) obj;
+		final StaticEnvironment other = (StaticEnvironment) obj;
 		if (funcs == null) {
 			if (other.funcs != null) return false;
 		} else if (!funcs.equals(other.funcs)) return false;

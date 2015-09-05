@@ -13,23 +13,24 @@ public class LocalEnvironment {
 		vars = new VariableRoster<>();
 	}
 	public LocalEnvironment reinitialize(GlobalEnvironment newEnvironment) {
-		LocalEnvironment newlocal = new LocalEnvironment(newEnvironment);
+		final LocalEnvironment newlocal = new LocalEnvironment(newEnvironment);
 		vars.pairs.forEach(x -> newlocal.vars.assign(x.getKey(), x.getValue()));
 		return newlocal;
 	}
 	public LiteralExpression referenceTo(VariableIdentifier id) {
-		LiteralExpression localE = vars.referenceTo(id);
+		final LiteralExpression localE = vars.referenceTo(id);
 		if (localE != null) return localE;
-		LiteralExpression globalE = global.staticEnv.referenceTo(id);
+		final LiteralExpression globalE = global.staticEnv.referenceTo(id);
 		return globalE;
 	}
 	public ConcreteType typeOf(VariableIdentifier name) {
-		ConcreteType type = vars.referenceTo(name).resolveType();
+		final ConcreteType type = vars.referenceTo(name).resolveType();
 		if (type != null) return type;
 		return global.staticEnv.typeOf(name);
 	}
 	public StaticEnvironment staticEnvironment() {
-		StaticEnvironment env = StaticEnvironment.getChild(global.staticEnv);
+		final StaticEnvironment env = StaticEnvironment
+				.getChild(global.staticEnv);
 		vars.pairs.forEach(variable -> env.addType(variable.getKey(),
 				variable.getValue().resolveType()));
 		return env;
@@ -38,8 +39,8 @@ public class LocalEnvironment {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((global == null) ? 0 : global.hashCode());
-		result = prime * result + ((vars == null) ? 0 : vars.hashCode());
+		result = prime * result + (global == null ? 0 : global.hashCode());
+		result = prime * result + (vars == null ? 0 : vars.hashCode());
 		return result;
 	}
 	@Override
@@ -47,7 +48,7 @@ public class LocalEnvironment {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		LocalEnvironment other = (LocalEnvironment) obj;
+		final LocalEnvironment other = (LocalEnvironment) obj;
 		if (global == null) {
 			if (other.global != null) return false;
 		} else if (!global.equals(other.global)) return false;

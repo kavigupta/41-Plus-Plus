@@ -47,7 +47,7 @@ public class ParsedDefinition extends ParsedStatement {
 	}
 	@Override
 	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
-		StructureRoster struct = environment.global.staticEnv.structs;
+		final StructureRoster struct = environment.global.staticEnv.structs;
 		environment.vars.assign(toCreate.name, struct.instance(toCreate,
 				fields.literalValue(environment), toCreate.name.context()));
 		return Optional.empty();
@@ -76,9 +76,8 @@ public class ParsedDefinition extends ParsedStatement {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fields == null) ? 0 : fields.hashCode());
-		result = prime * result
-				+ ((toCreate == null) ? 0 : toCreate.hashCode());
+		result = prime * result + (fields == null ? 0 : fields.hashCode());
+		result = prime * result + (toCreate == null ? 0 : toCreate.hashCode());
 		return result;
 	}
 	@Override
@@ -86,7 +85,7 @@ public class ParsedDefinition extends ParsedStatement {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		ParsedDefinition other = (ParsedDefinition) obj;
+		final ParsedDefinition other = (ParsedDefinition) obj;
 		if (fields == null) {
 			if (other.fields != null) return false;
 		} else if (!fields.equals(other.fields)) return false;

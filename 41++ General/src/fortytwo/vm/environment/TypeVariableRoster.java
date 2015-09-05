@@ -11,7 +11,7 @@ public class TypeVariableRoster {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((pairs == null) ? 0 : pairs.hashCode());
+		result = prime * result + (pairs == null ? 0 : pairs.hashCode());
 		return result;
 	}
 	@Override
@@ -19,7 +19,7 @@ public class TypeVariableRoster {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		TypeVariableRoster other = (TypeVariableRoster) obj;
+		final TypeVariableRoster other = (TypeVariableRoster) obj;
 		if (pairs == null) {
 			if (other.pairs != null) return false;
 		} else if (!pairs.equals(other.pairs)) return false;
@@ -30,7 +30,7 @@ public class TypeVariableRoster {
 		pairs.put(name, express);
 	}
 	public ConcreteType referenceTo(TypeVariable id) {
-		ConcreteType le = pairs.get(id);
+		final ConcreteType le = pairs.get(id);
 		if (le == null) DNEErrors.typeDNE(id);
 		return le;
 	}

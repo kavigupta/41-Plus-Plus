@@ -51,11 +51,9 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	}
 	@Override
 	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
-		StaticEnvironment se = environment.staticEnvironment();
-		if (!(name.type(se) instanceof StructureType)) {
-			// should never happen.
+		final StaticEnvironment se = environment.staticEnvironment();
+		if (!(name.type(se) instanceof StructureType)) // should never happen.
 			return Optional.empty();
-		}
 		((LiteralObject) name.literalValue(environment)).redefine(field,
 				value.literalValue(environment));
 		return Optional.empty();
@@ -80,9 +78,9 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((field == null) ? 0 : field.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		result = prime * result + (field == null ? 0 : field.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		result = prime * result + (value == null ? 0 : value.hashCode());
 		return result;
 	}
 	@Override
@@ -90,7 +88,7 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		ParsedFieldAssignment other = (ParsedFieldAssignment) obj;
+		final ParsedFieldAssignment other = (ParsedFieldAssignment) obj;
 		if (field == null) {
 			if (other.field != null) return false;
 		} else if (!field.equals(other.field)) return false;

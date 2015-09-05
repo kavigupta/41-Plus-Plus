@@ -29,13 +29,14 @@ public class Compiler42 {
 	 *        41++ code to execute
 	 */
 	public static void execute(String text) {
-		GlobalEnvironment env = GlobalEnvironment.interpret(Parser.parse(text));
+		final GlobalEnvironment env = GlobalEnvironment
+				.interpret(Parser.parse(text));
 		try {
-			ParsedFunctionCall pfc = ParsedFunctionCall.getInstance(
+			final ParsedFunctionCall pfc = ParsedFunctionCall.getInstance(
 					FunctionName.getInstance("This", "first"), Arrays.asList());
 			pfc.isTypeChecked(env.staticEnv);
 			pfc.execute(env.minimalLocalEnvironment());
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			VirtualMachine.error(ErrorType.PARSING, "Main method not found.",
 					Context.entire(text));
 		}

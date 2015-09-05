@@ -52,7 +52,7 @@ public class Context implements Contextualized {
 	 * @return a context that spans [start, end) of this context's span.
 	 */
 	public Context subContext(int start, int end) {
-		if (this.isSynthetic()) return SYNTHETIC;
+		if (isSynthetic()) return SYNTHETIC;
 		assert start >= 0;
 		assert end >= 0;
 		assert this.start + end < this.end;
@@ -104,7 +104,7 @@ public class Context implements Contextualized {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + end;
-		result = prime * result + ((in == null) ? 0 : in.hashCode());
+		result = prime * result + (in == null ? 0 : in.hashCode());
 		result = prime * result + start;
 		return result;
 	}
@@ -113,7 +113,7 @@ public class Context implements Contextualized {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		Context other = (Context) obj;
+		final Context other = (Context) obj;
 		if (end != other.end) return false;
 		if (in == null) {
 			if (other.in != null) return false;

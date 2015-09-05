@@ -36,13 +36,12 @@ public class VariableRoster<T extends Expression> {
 		// a variable being assigned twice should never happen if typechecking
 		// did its job
 		@SuppressWarnings("unchecked")
-		T val = (T) express;
+		final T val = (T) express;
 		pairs.add(Pair.<VariableIdentifier, T> of(name, val));
 	}
 	public boolean assigned(VariableIdentifier name) {
-		for (Pair<VariableIdentifier, T> entry : pairs) {
+		for (final Pair<VariableIdentifier, T> entry : pairs)
 			if (entry.getKey().equals(name)) return true;
-		}
 		return false;
 	}
 	public void deregister(VariableIdentifier name) {
@@ -56,13 +55,13 @@ public class VariableRoster<T extends Expression> {
 	public T value() {
 		try {
 			return referenceTo(VariableIdentifier.VALUE);
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			return null;
 		}
 	}
 	public T referenceTo(VariableIdentifier id) {
-		for (Pair<VariableIdentifier, T> entry : pairs) {
-			T val = entry.getValue();
+		for (final Pair<VariableIdentifier, T> entry : pairs) {
+			final T val = entry.getValue();
 			if (entry.getKey().equals(id)) return val;
 		}
 		// this should never happen if typechecking did its job.
@@ -72,7 +71,7 @@ public class VariableRoster<T extends Expression> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((pairs == null) ? 0 : pairs.hashCode());
+		result = prime * result + (pairs == null ? 0 : pairs.hashCode());
 		return result;
 	}
 	@Override
@@ -81,7 +80,7 @@ public class VariableRoster<T extends Expression> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		@SuppressWarnings("unchecked")
-		VariableRoster<T> other = (VariableRoster<T>) obj;
+		final VariableRoster<T> other = (VariableRoster<T>) obj;
 		if (pairs == null) {
 			if (other.pairs != null) return false;
 		} else if (!pairs.equals(other.pairs)) return false;
@@ -92,19 +91,18 @@ public class VariableRoster<T extends Expression> {
 		return "ParsedVariableRoster [pairs=" + pairs + "]";
 	}
 	public void redefine(VariableIdentifier name, LiteralExpression express) {
-		for (int i = 0; i < pairs.size(); i++) {
+		for (int i = 0; i < pairs.size(); i++)
 			if (pairs.get(i).getKey().equals(name)) {
 				@SuppressWarnings("unchecked")
-				T ex = (T) express;
+				final T ex = (T) express;
 				pairs.set(i, Pair.<VariableIdentifier, T> of(name, ex));
 				return;
 			}
-		}
 		DNEErrors.variableDNE(name);
 	}
 	public VariableRoster<LiteralExpression> literalValue(
 			LocalEnvironment env) {
-		VariableRoster<LiteralExpression> roster = new VariableRoster<LiteralExpression>();
+		final VariableRoster<LiteralExpression> roster = new VariableRoster<LiteralExpression>();
 		this.pairs.forEach(
 				x -> roster.assign(x.getKey(), x.getValue().literalValue(env)));
 		return roster;

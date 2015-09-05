@@ -36,7 +36,7 @@ public class FunctionCompare extends Function42 {
 		public FunctionSignature sig;
 		public boolean lt, eq, gt;
 		private Comparator(boolean lt, boolean eq, boolean gt, String... name) {
-			List<FunctionComponent> s = new ArrayList<>();
+			final List<FunctionComponent> s = new ArrayList<>();
 			s.add(FunctionArgument.INSTANCE);
 			s.addAll(
 					Arrays.asList(name).stream()
@@ -65,9 +65,9 @@ public class FunctionCompare extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		BigDecimal a = ((LiteralNumber) arguments.get(0)).contents;
-		BigDecimal b = ((LiteralNumber) arguments.get(1)).contents;
-		int comp = a.compareTo(b);
+		final BigDecimal a = ((LiteralNumber) arguments.get(0)).contents;
+		final BigDecimal b = ((LiteralNumber) arguments.get(1)).contents;
+		final int comp = a.compareTo(b);
 		if (comp == 0)
 			return LiteralBool.getInstance(compare.eq, Context.SYNTHETIC);
 		if (comp > 0)

@@ -16,9 +16,9 @@ public class Error42 {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((context == null) ? 0 : context.hashCode());
-		result = prime * result + ((msg == null) ? 0 : msg.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + (context == null ? 0 : context.hashCode());
+		result = prime * result + (msg == null ? 0 : msg.hashCode());
+		result = prime * result + (type == null ? 0 : type.hashCode());
 		return result;
 	}
 	@Override
@@ -26,7 +26,7 @@ public class Error42 {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		Error42 other = (Error42) obj;
+		final Error42 other = (Error42) obj;
 		if (context == null) {
 			if (other.context != null) return false;
 		} else if (!context.equals(other.context)) return false;

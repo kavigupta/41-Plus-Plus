@@ -29,7 +29,7 @@ public class StatementParser {
 		switch (line.get(0).token) {
 			case Resources.RUN:
 				line.remove(0);
-				Expression e = ExpressionParser.parseExpression(line);
+				final Expression e = ExpressionParser.parseExpression(line);
 				if (e.kind() == SentenceType.PURE_EXPRESSION)
 					ParserErrors.expectedFunctionCall(e);
 				return e;
@@ -47,7 +47,7 @@ public class StatementParser {
 		return parseVoidFunctionCall(line);
 	}
 	private static FunctionOutput parseReturn(List<LiteralToken> line) {
-		Context fullContext = Context.sum(line);
+		final Context fullContext = Context.sum(line);
 		/* Exit the function( and output <output>)?. */
 		if (!line.get(1).token.equals(Resources.THE)
 				|| !line.get(2).token.equals(Resources.DECL_FUNCTION))
@@ -63,18 +63,19 @@ public class StatementParser {
 	}
 	private static ParsedStatement parseVoidFunctionCall(
 			List<LiteralToken> list) {
-		ParsedFunctionCall function = ConstructionParser.composeFunction(list);
+		final ParsedFunctionCall function = ConstructionParser
+				.composeFunction(list);
 		if (function.name.function.size() != 1
 				|| !(function.name.function.get(0) instanceof FunctionArgument))
 			return function;
-		Expression exp = function.arguments.get(0);
+		final Expression exp = function.arguments.get(0);
 		if (exp instanceof ParsedFunctionCall) return exp;
 		ParserErrors.expectedFunctionCall(exp);
 		// should never get here
 		throw new IllegalStateException();
 	}
 	private static ParsedAssignment parseAssignment(List<LiteralToken> line) {
-		Context fullContext = Context.sum(line);
+		final Context fullContext = Context.sum(line);
 		/*
 		 * Set the <field> of <name> to <value>.
 		 */
@@ -82,10 +83,11 @@ public class StatementParser {
 				|| !line.get(3).token.equals(Resources.OF)
 				|| !line.get(5).token.equals(Resources.TO))
 			SyntaxErrors.invalidSentence(SentenceType.ASSIGNMENT, line);
-		LiteralToken fieldT = line.get(2);
-		VariableIdentifier name = VariableIdentifier.getInstance(line.get(4));
+		final LiteralToken fieldT = line.get(2);
+		final VariableIdentifier name = VariableIdentifier
+				.getInstance(line.get(4));
 		line.subList(0, 6).clear();
-		Expression expr = ExpressionParser.parseExpression(line);
+		final Expression expr = ExpressionParser.parseExpression(line);
 		return fieldT.token.equals(Resources.VALUE)
 				? new ParsedRedefinition(name, expr, fullContext)
 				: new ParsedFieldAssignment(name,
@@ -93,7 +95,7 @@ public class StatementParser {
 						fullContext);
 	}
 	private static Sentence parseDefinition(List<LiteralToken> line) {
-		Context fullContext = Context.sum(line);
+		final Context fullContext = Context.sum(line);
 		/*
 		 * Define a[n] <type> called <name>( with a <field1> of <value1>, a
 		 * <field2> of <value2>, ...)?.
@@ -101,17 +103,17 @@ public class StatementParser {
 		if (line.size() < 5 || !Language.isArticle(line.get(1).token)
 				|| !line.get(3).token.equals(Resources.CALLED))
 			SyntaxErrors.invalidSentence(SentenceType.DEFINITION, line);
-		LiteralToken type = Language.deparenthesize(line.get(2));
+		final LiteralToken type = Language.deparenthesize(line.get(2));
 		if (type.token.equals(Resources.DECL_FUNCTION))
 			return ConstructionParser.parseFunctionDefinition(line);
 		if (type.token.equals(Resources.TYPE))
 			return ConstructionParser.parseStructDefinition(line);
-		LiteralToken name = line.get(4);
-		VariableRoster<Expression> fields = new VariableRoster<>();
+		final LiteralToken name = line.get(4);
+		final VariableRoster<Expression> fields = new VariableRoster<>();
 		for (int i = 5; i < line.size(); i++) {
 			if (!line.get(i).token.equals(Resources.OF)) continue;
-			LiteralToken fieldT = line.get(i - 1);
-			ArrayList<LiteralToken> tokens2 = new ArrayList<>();
+			final LiteralToken fieldT = line.get(i - 1);
+			final ArrayList<LiteralToken> tokens2 = new ArrayList<>();
 			i++;
 			while (i < line.size()
 					&& !Language.isListElement(line.get(i).token)) {
@@ -121,7 +123,7 @@ public class StatementParser {
 			fields.assign(VariableIdentifier.getInstance(fieldT),
 					ExpressionParser.parseExpression(tokens2));
 		}
-		GenericType genericType = ExpressionParser.parseType(type);
+		final GenericType genericType = ExpressionParser.parseType(type);
 		if (!(genericType instanceof ConcreteType))
 			ParserErrors.expectedCTInDefinition(genericType);
 		return new ParsedDefinition(

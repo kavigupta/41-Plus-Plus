@@ -58,7 +58,8 @@ public class BinaryOperation extends Expression {
 	}
 	@Override
 	public ConcreteType findType(StaticEnvironment env) {
-		PrimitiveType number = PrimitiveType.synthetic(PrimitiveTypeWOC.NUMBER);
+		final PrimitiveType number = PrimitiveType
+				.synthetic(PrimitiveTypeWOC.NUMBER);
 		if (!first.type(env).equals(number))
 			TypingErrors.expectedNumberInArithmeticOperator(this, true, env);
 		if (!second.type(env).equals(number))
@@ -84,10 +85,10 @@ public class BinaryOperation extends Expression {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((first == null) ? 0 : first.hashCode());
+		result = prime * result + (first == null ? 0 : first.hashCode());
 		result = prime * result
-				+ ((operation == null) ? 0 : operation.hashCode());
-		result = prime * result + ((second == null) ? 0 : second.hashCode());
+				+ (operation == null ? 0 : operation.hashCode());
+		result = prime * result + (second == null ? 0 : second.hashCode());
 		return result;
 	}
 	@Override
@@ -95,7 +96,7 @@ public class BinaryOperation extends Expression {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		BinaryOperation other = (BinaryOperation) obj;
+		final BinaryOperation other = (BinaryOperation) obj;
 		if (first == null) {
 			if (other.first != null) return false;
 		} else if (!first.equals(other.first)) return false;

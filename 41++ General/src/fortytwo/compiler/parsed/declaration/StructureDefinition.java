@@ -50,7 +50,7 @@ public class StructureDefinition implements Sentence {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((structure == null) ? 0 : structure.hashCode());
+				+ (structure == null ? 0 : structure.hashCode());
 		return result;
 	}
 	@Override
@@ -58,7 +58,7 @@ public class StructureDefinition implements Sentence {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		StructureDefinition other = (StructureDefinition) obj;
+		final StructureDefinition other = (StructureDefinition) obj;
 		if (structure == null) {
 			if (other.structure != null) return false;
 		} else if (!structure.equals(other.structure)) return false;

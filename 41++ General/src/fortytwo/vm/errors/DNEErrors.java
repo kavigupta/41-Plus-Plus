@@ -30,7 +30,7 @@ public class DNEErrors {
 			List<ConcreteType> types) {
 		if (name.function.size() == 0)
 			throw new RuntimeException("Zero length function??????");
-		ArrayList<Context> context = new ArrayList<>();
+		final ArrayList<Context> context = new ArrayList<>();
 		context.add(name.context());
 		types.forEach(x -> context.add(x.context()));
 		dneError("function", name.display(types), " here",

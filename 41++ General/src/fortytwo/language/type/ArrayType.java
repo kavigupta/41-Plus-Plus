@@ -29,7 +29,7 @@ public class ArrayType implements ConcreteType {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((contentType == null) ? 0 : contentType.hashCode());
+				+ (contentType == null ? 0 : contentType.hashCode());
 		return result;
 	}
 	@Override
@@ -37,7 +37,7 @@ public class ArrayType implements ConcreteType {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		ArrayType other = (ArrayType) obj;
+		final ArrayType other = (ArrayType) obj;
 		if (contentType == null) {
 			if (other.contentType != null) return false;
 		} else if (!contentType.equals(other.contentType)) return false;

@@ -30,21 +30,22 @@ public class ParsedFunctionCall extends Expression {
 	}
 	@Override
 	public LiteralExpression literalValue(LocalEnvironment env) {
-		StaticEnvironment se = env.staticEnvironment();
-		List<ConcreteType> types = arguments.stream()
+		final StaticEnvironment se = env.staticEnvironment();
+		final List<ConcreteType> types = arguments.stream()
 				.map(x -> x.type(env.staticEnvironment()))
 				.collect(Collectors.toList());
-		FunctionSignature sig = se.referenceTo(name, types);
-		Optional<Function42> f = env.global.funcs.get(sig, arguments, types);
+		final FunctionSignature sig = se.referenceTo(name, types);
+		final Optional<Function42> f = env.global.funcs.get(sig, arguments,
+				types);
 		if (!f.isPresent()) throw new RuntimeException(sig.name.toString());
 		return f.get().apply(env.global, arguments.stream()
 				.map(x -> x.literalValue(env)).collect(Collectors.toList()));
 	}
 	@Override
 	public ConcreteType findType(StaticEnvironment env) {
-		List<ConcreteType> types = arguments.stream().map(x -> x.type(env))
-				.collect(Collectors.toList());
-		FunctionSignature sig = env.referenceTo(name, types);
+		final List<ConcreteType> types = arguments.stream()
+				.map(x -> x.type(env)).collect(Collectors.toList());
+		final FunctionSignature sig = env.referenceTo(name, types);
 		return sig.outputType.resolve(sig.typeVariables(arguments, env));
 	}
 	@Override
@@ -60,8 +61,8 @@ public class ParsedFunctionCall extends Expression {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((arguments == null) ? 0 : arguments.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+				+ (arguments == null ? 0 : arguments.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
 		return result;
 	}
 	@Override
@@ -69,7 +70,7 @@ public class ParsedFunctionCall extends Expression {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		ParsedFunctionCall other = (ParsedFunctionCall) obj;
+		final ParsedFunctionCall other = (ParsedFunctionCall) obj;
 		if (arguments == null) {
 			if (other.arguments != null) return false;
 		} else if (!arguments.equals(other.arguments)) return false;

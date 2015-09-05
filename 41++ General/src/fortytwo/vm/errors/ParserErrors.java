@@ -27,8 +27,8 @@ public class ParserErrors {
 	 */
 	public static void expectedCTInFunctionDecl(GenericType type,
 			List<LiteralToken> line, int argument) {
-		String location = argument < 0 ? "output"
-				: (Language.ordinal(argument) + " input");
+		final String location = argument < 0 ? "output"
+				: Language.ordinal(argument) + " input";
 		VirtualMachine.error(ErrorType.PARSING,
 				String.format(
 						"Function declarations must only include concrete types;"

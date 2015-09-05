@@ -21,21 +21,22 @@ import fortytwo.language.Resources;
 public class Parser {
 	private Parser() {}
 	public static List<Sentence> parse(String text) {
-		List<Sentence> sentences = parseSuite(getTabbedSuite(text));
+		final List<Sentence> sentences = parseSuite(getTabbedSuite(text));
 		System.out.println(text);
 		System.out.println(sentences);
 		return sentences;
 	}
 	private static List<Pair<Integer, List<LiteralToken>>> getTabbedSuite(
 			String text) {
-		List<Pair<Integer, List<LiteralToken>>> tabbedLines = new ArrayList<>();
-		for (String line : text.split("\r|\n")) {
+		final List<Pair<Integer, List<LiteralToken>>> tabbedLines = new ArrayList<>();
+		for (final String line : text.split("\r|\n")) {
 			int initTabs = 0;
 			for (int i = 0; i < line.length(); i++) {
 				if (line.charAt(i) != '\t') break;
 				initTabs++;
 			}
-			List<List<LiteralToken>> unparsedSentences = findSentences(line);
+			final List<List<LiteralToken>> unparsedSentences = findSentences(
+					line);
 			int extraTabs = 0;
 			for (int i = 0; i < unparsedSentences.size(); i++) {
 				if (unparsedSentences.get(i).isEmpty()) continue;
@@ -60,12 +61,12 @@ public class Parser {
 		return tabbedLines;
 	}
 	private static List<List<LiteralToken>> findSentences(String line) {
-		List<LiteralToken> tokens = Tokenizer
+		final List<LiteralToken> tokens = Tokenizer
 				.tokenize(LiteralToken.entire(line));
-		List<List<LiteralToken>> phrases = new ArrayList<>();
+		final List<List<LiteralToken>> phrases = new ArrayList<>();
 		List<LiteralToken> current = new ArrayList<>();
 		for (int i = 0; i < tokens.size(); i++) {
-			LiteralToken token = tokens.get(i);
+			final LiteralToken token = tokens.get(i);
 			if (!token.token.equals(Resources.COLON)) current.add(token);
 			if (token.token.equals(Resources.PERIOD)
 					|| token.token.equals(Resources.COLON)) {
@@ -77,10 +78,9 @@ public class Parser {
 	}
 	private static List<Sentence> parseSuite(
 			List<Pair<Integer, List<LiteralToken>>> suite) {
-		List<Sentence> sentences = new ArrayList<>();
-		while (suite.size() != 0) {
+		final List<Sentence> sentences = new ArrayList<>();
+		while (suite.size() != 0)
 			sentences.add(pop(suite));
-		}
 		return sentences;
 	}
 	public static Sentence pop(
@@ -103,12 +103,12 @@ public class Parser {
 	}
 	public static Sentence popFunctionDecl(
 			List<Pair<Integer, List<LiteralToken>>> phrases) {
-		List<LiteralToken> defn = phrases.remove(0).getValue();
+		final List<LiteralToken> defn = phrases.remove(0).getValue();
 		System.out.println("DEFN" + defn);
 		defn.remove(defn.size() - 1);
-		FunctionDefinition declaration = ConstructionParser
+		final FunctionDefinition declaration = ConstructionParser
 				.parseFunctionDefinition(defn);
-		List<Sentence> suite = popSeries(phrases);
+		final List<Sentence> suite = popSeries(phrases);
 		System.out.println(declaration.sig);
 		return new FunctionConstruct(declaration, suite);
 	}
@@ -118,10 +118,10 @@ public class Parser {
 	}
 	public static Sentence popIf(
 			List<Pair<Integer, List<LiteralToken>>> phrases) {
-		List<LiteralToken> IF = phrases.remove(0).getValue();
+		final List<LiteralToken> IF = phrases.remove(0).getValue();
 		IF.remove(0);
-		Expression condition = ExpressionParser.parseExpression(IF);
-		ParsedStatementSeries ifso = temporaryHack(popSeries(phrases));
+		final Expression condition = ExpressionParser.parseExpression(IF);
+		final ParsedStatementSeries ifso = temporaryHack(popSeries(phrases));
 		ParsedStatementSeries ifelse = new ParsedStatementSeries(
 				Arrays.asList(), Context.SYNTHETIC);
 		if (phrases.size() > 0 && phrases.get(0).getValue().get(0).token
@@ -133,30 +133,31 @@ public class Parser {
 	}
 	private static Sentence popWhile(
 			List<Pair<Integer, List<LiteralToken>>> phrases) {
-		List<LiteralToken> WHILE = phrases.remove(0).getRight();
+		final List<LiteralToken> WHILE = phrases.remove(0).getRight();
 		WHILE.remove(0);
-		Expression condition = ExpressionParser.parseExpression(WHILE);
-		ParsedStatementSeries whileTrue = temporaryHack(popSeries(phrases));
+		final Expression condition = ExpressionParser.parseExpression(WHILE);
+		final ParsedStatementSeries whileTrue = temporaryHack(
+				popSeries(phrases));
 		return new ParsedWhileLoop(condition, whileTrue, Context
 				.sum(Arrays.asList(condition.context(), whileTrue.context())));
 	}
 	public static ParsedStatementSeries temporaryHack(
 			List<Sentence> popSeries) {
 		// TODO temporary hack
-		List<ParsedStatement> statement = new ArrayList<>();
-		for (Sentence s : popSeries)
+		final List<ParsedStatement> statement = new ArrayList<>();
+		for (final Sentence s : popSeries)
 			statement.add((ParsedStatement) s);
 		return new ParsedStatementSeries(statement, Context.sum(popSeries));
 	}
 	private static List<Sentence> popSeries(
 			List<Pair<Integer, List<LiteralToken>>> phrases) {
 		if (phrases.size() == 0) return new ArrayList<>();
-		int tabs = phrases.get(0).getKey();
+		final int tabs = phrases.get(0).getKey();
 		// TODO REMOVE semantic limitation of no declarations within suites.
-		List<Sentence> sentences = new ArrayList<>();
+		final List<Sentence> sentences = new ArrayList<>();
 		while (phrases.size() > 0) {
 			if (phrases.get(0).getKey() < tabs) break;
-			Sentence s = pop(phrases);
+			final Sentence s = pop(phrases);
 			sentences.add(s);
 		}
 		return sentences;

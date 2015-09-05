@@ -22,14 +22,13 @@ public class FunctionStringSplit extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		LiteralToken token = ((LiteralString) arguments.get(0)).contents;
-		LiteralArray array = new LiteralArray(
+		final LiteralToken token = ((LiteralString) arguments.get(0)).contents;
+		final LiteralArray array = new LiteralArray(
 				new PrimitiveType(PrimitiveTypeWOC.STRING, Context.SYNTHETIC),
 				token.token.length(), Context.SYNTHETIC);
-		for (int i = 0; i < token.token.length(); i++) {
+		for (int i = 0; i < token.token.length(); i++)
 			array.set(i + 1, new LiteralString(token.subToken(i, i + 1)),
 					Context.sum(arguments));
-		}
 		return array;
 	}
 	@Override

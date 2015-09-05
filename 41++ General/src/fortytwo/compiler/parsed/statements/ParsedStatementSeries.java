@@ -32,8 +32,8 @@ public class ParsedStatementSeries extends ParsedStatement {
 	}
 	@Override
 	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
-		for (ParsedStatement s : statements) {
-			Optional<LiteralExpression> expr = s.execute(environment);
+		for (final ParsedStatement s : statements) {
+			final Optional<LiteralExpression> expr = s.execute(environment);
 			if (expr.isPresent()) return expr;
 		}
 		return Optional.empty();
@@ -41,8 +41,8 @@ public class ParsedStatementSeries extends ParsedStatement {
 	@Override
 	public Optional<GenericType> returnType(StaticEnvironment env) {
 		Optional<GenericType> type = Optional.empty();
-		for (ParsedStatement s : statements) {
-			Optional<GenericType> state = s.returnType(env);
+		for (final ParsedStatement s : statements) {
+			final Optional<GenericType> state = s.returnType(env);
 			if (!state.isPresent()) continue;
 			if (!type.isPresent()) {
 				type = state;
@@ -77,7 +77,7 @@ public class ParsedStatementSeries extends ParsedStatement {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((statements == null) ? 0 : statements.hashCode());
+				+ (statements == null ? 0 : statements.hashCode());
 		return result;
 	}
 	@Override
@@ -85,7 +85,7 @@ public class ParsedStatementSeries extends ParsedStatement {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		ParsedStatementSeries other = (ParsedStatementSeries) obj;
+		final ParsedStatementSeries other = (ParsedStatementSeries) obj;
 		if (statements == null) {
 			if (other.statements != null) return false;
 		} else if (!statements.equals(other.statements)) return false;

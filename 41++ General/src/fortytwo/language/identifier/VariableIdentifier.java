@@ -50,7 +50,7 @@ public class VariableIdentifier extends Expression {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		VariableIdentifier other = (VariableIdentifier) obj;
+		final VariableIdentifier other = (VariableIdentifier) obj;
 		return this.name.token.equals(other.name.token);
 	}
 	@Override

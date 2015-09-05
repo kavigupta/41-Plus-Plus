@@ -91,10 +91,9 @@ public class LiteralToken implements GenericToken {
 	public static LiteralToken parenthesize(List<LiteralToken> line) {
 		if (line.size() == 0) return SYNTHETIC_EMPTY_STRING;
 		if (line.size() == 1) return line.get(0);
-		StringBuilder s = new StringBuilder(OPEN_PAREN);
-		for (LiteralToken l : line) {
+		final StringBuilder s = new StringBuilder(OPEN_PAREN);
+		for (final LiteralToken l : line)
 			s.append(l.token).append(SPACE);
-		}
 		return new LiteralToken(s.append(CLOSE_PAREN).toString(),
 				Context.sum(line).inParen());
 	}
@@ -130,7 +129,7 @@ public class LiteralToken implements GenericToken {
 	 */
 	public LiteralToken unescape() {
 		if (token.charAt(0) != '\'') return this;
-		String str = token.substring(1, token.length() - 1);
+		final String str = token.substring(1, token.length() - 1);
 		return new LiteralToken('\'' + Tokenizer.unescape(str) + '\'', context);
 	}
 	public boolean doesEqual(String token) {
@@ -140,7 +139,7 @@ public class LiteralToken implements GenericToken {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((token == null) ? 0 : token.hashCode());
+		result = prime * result + (token == null ? 0 : token.hashCode());
 		return result;
 	}
 	@Override
@@ -149,7 +148,7 @@ public class LiteralToken implements GenericToken {
 		if (obj == null) return false;
 		if (obj instanceof String) return ((String) obj).equals(token);
 		if (getClass() != obj.getClass()) return false;
-		LiteralToken other = (LiteralToken) obj;
+		final LiteralToken other = (LiteralToken) obj;
 		if (token == null) {
 			if (other.token != null) return false;
 		} else if (!token.equals(other.token)) return false;

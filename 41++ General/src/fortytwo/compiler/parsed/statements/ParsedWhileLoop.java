@@ -35,7 +35,8 @@ public class ParsedWhileLoop extends ParsedStatement {
 	@Override
 	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
 		while (((LiteralBool) condition.literalValue(environment)).contents) {
-			Optional<LiteralExpression> expr = statement.execute(environment);
+			final Optional<LiteralExpression> expr = statement
+					.execute(environment);
 			if (expr.isPresent()) return expr;
 			statement.clean(environment);
 		}
@@ -66,9 +67,9 @@ public class ParsedWhileLoop extends ParsedStatement {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((condition == null) ? 0 : condition.hashCode());
+				+ (condition == null ? 0 : condition.hashCode());
 		result = prime * result
-				+ ((statement == null) ? 0 : statement.hashCode());
+				+ (statement == null ? 0 : statement.hashCode());
 		return result;
 	}
 	@Override
@@ -76,7 +77,7 @@ public class ParsedWhileLoop extends ParsedStatement {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		ParsedWhileLoop other = (ParsedWhileLoop) obj;
+		final ParsedWhileLoop other = (ParsedWhileLoop) obj;
 		if (condition == null) {
 			if (other.condition != null) return false;
 		} else if (!condition.equals(other.condition)) return false;

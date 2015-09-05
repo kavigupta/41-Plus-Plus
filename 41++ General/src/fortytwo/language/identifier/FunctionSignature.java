@@ -24,10 +24,10 @@ public class FunctionSignature {
 	}
 	public final TypeVariableRoster typeVariables(
 			List<? extends Expression> arguments, StaticEnvironment env) {
-		TypeVariableRoster roster = new TypeVariableRoster();
+		final TypeVariableRoster roster = new TypeVariableRoster();
 		for (int i = 0; i < this.inputTypes.size(); i++) {
-			ConcreteType arg = arguments.get(i).type(env);
-			GenericType expected = this.inputTypes.get(i);
+			final ConcreteType arg = arguments.get(i).type(env);
+			final GenericType expected = this.inputTypes.get(i);
 			switch (expected.kind()) {
 				case CONCRETE:
 					// this should be the same because of prior checking.
@@ -59,10 +59,10 @@ public class FunctionSignature {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((inputTypes == null) ? 0 : inputTypes.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+				+ (inputTypes == null ? 0 : inputTypes.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
 		result = prime * result
-				+ ((outputType == null) ? 0 : outputType.hashCode());
+				+ (outputType == null ? 0 : outputType.hashCode());
 		return result;
 	}
 	@Override
@@ -70,7 +70,7 @@ public class FunctionSignature {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		FunctionSignature other = (FunctionSignature) obj;
+		final FunctionSignature other = (FunctionSignature) obj;
 		if (inputTypes == null) {
 			if (other.inputTypes != null) return false;
 		} else if (!inputTypes.equals(other.inputTypes)) return false;

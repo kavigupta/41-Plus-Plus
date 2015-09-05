@@ -26,14 +26,14 @@ public class TypeVariable implements GenericType {
 	}
 	@Override
 	public Optional<TypeVariableRoster> match(ConcreteType toMatch) {
-		TypeVariableRoster roster = new TypeVariableRoster();
+		final TypeVariableRoster roster = new TypeVariableRoster();
 		// doesn't worry about reassigning for obvious reasons
 		roster.assign(this, toMatch);
 		return Optional.of(roster);
 	}
 	@Override
 	public ConcreteType resolve(TypeVariableRoster roster) {
-		ConcreteType type = roster.referenceTo(this);
+		final ConcreteType type = roster.referenceTo(this);
 		if (type == null) DNEErrors.typeDNE(this);
 		return type;
 	}
@@ -45,7 +45,7 @@ public class TypeVariable implements GenericType {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
 		return result;
 	}
 	@Override
@@ -53,7 +53,7 @@ public class TypeVariable implements GenericType {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		TypeVariable other = (TypeVariable) obj;
+		final TypeVariable other = (TypeVariable) obj;
 		if (name == null) {
 			if (other.name != null) return false;
 		} else if (!name.equals(other.name)) return false;

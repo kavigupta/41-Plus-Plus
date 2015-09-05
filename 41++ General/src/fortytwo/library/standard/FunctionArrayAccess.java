@@ -30,8 +30,8 @@ public class FunctionArrayAccess extends Function42 {
 	@Override
 	public LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		LiteralArray array = (LiteralArray) arguments.get(1);
-		LiteralNumber index = (LiteralNumber) arguments.get(0);
+		final LiteralArray array = (LiteralArray) arguments.get(1);
+		final LiteralNumber index = (LiteralNumber) arguments.get(0);
 		return array.get(index.contents.intValue(), Context.sum(arguments));
 	}
 	@Override

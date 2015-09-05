@@ -27,7 +27,7 @@ public class FunctionConstruct implements Sentence {
 	}
 	@Override
 	public Context context() {
-		ArrayList<Sentence> s = new ArrayList<>(suite);
+		final ArrayList<Sentence> s = new ArrayList<>(suite);
 		suite.add(declaration);
 		return Context.sum(s);
 	}

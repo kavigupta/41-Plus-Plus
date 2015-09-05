@@ -33,7 +33,8 @@ import fortytwo.vm.expressions.LiteralString;
 
 public class ExpressionParser {
 	public static Expression parseExpression(List<LiteralToken> list) {
-		ParsedFunctionCall function = ConstructionParser.composeFunction(list);
+		final ParsedFunctionCall function = ConstructionParser
+				.composeFunction(list);
 		if (function.name.function.size() == 1
 				&& function.name.function.get(0) instanceof FunctionArgument)
 			return function.arguments.get(0);
@@ -41,11 +42,11 @@ public class ExpressionParser {
 	}
 	public static Expression parsePureExpression(
 			List<LiteralToken> currentExpression) {
-		ArrayList<Expression> originalExpressions = tokenize(currentExpression);
+		final ArrayList<Expression> originalExpressions = tokenize(
+				currentExpression);
 		ArrayList<Expression> expressions = removeUnary(originalExpressions);
-		for (int precendence = 0; precendence <= Operation.MAX_PRECDENCE; precendence++) {
+		for (int precendence = 0; precendence <= Operation.MAX_PRECDENCE; precendence++)
 			expressions = removeBinary(expressions, precendence);
-		}
 		if (expressions.size() != 1)
 			SyntaxErrors.invalidExpression(ExpressionType.ARITHMETIC,
 					currentExpression);
@@ -53,56 +54,49 @@ public class ExpressionParser {
 	}
 	private static ArrayList<Expression> removeBinary(
 			ArrayList<Expression> expressions, int precendence) {
-		Stack<Expression> exp = new Stack<>();
+		final Stack<Expression> exp = new Stack<>();
 		for (int i = 0; i < expressions.size(); i++) {
-			Expression token = expressions.get(i);
+			final Expression token = expressions.get(i);
 			if (token instanceof UnevaluatedOperator
 					&& ((UnevaluatedOperator) token).operator.precendence <= precendence) {
 				if (exp.size() == 0)
 					SyntaxErrors.invalidExpression(ExpressionType.ARITHMETIC,
 							expressions.stream().map(Expression::toToken)
 									.collect(Collectors.toList()));
-				Expression first = exp.pop();
+				final Expression first = exp.pop();
 				i++;
-				Expression second = expressions.get(i);
-				UnevaluatedOperator op = (UnevaluatedOperator) token;
+				final Expression second = expressions.get(i);
+				final UnevaluatedOperator op = (UnevaluatedOperator) token;
 				exp.push(new BinaryOperation(first, second, op.operator,
 						Context.sum(Arrays.asList(first.context(), op.context(),
 								second.context()))));
-			} else {
-				exp.push(token);
-			}
+			} else exp.push(token);
 		}
 		return new ArrayList<>(exp);
 	}
 	private static ArrayList<Expression> removeUnary(
 			ArrayList<Expression> expressions) {
-		ArrayList<Expression> expressionsWoUO = new ArrayList<>();
-		for (int i = 0; i < expressions.size(); i++) {
+		final ArrayList<Expression> expressionsWoUO = new ArrayList<>();
+		for (int i = 0; i < expressions.size(); i++)
 			if (expressions.get(i) instanceof UnevaluatedOperator) {
-				UnevaluatedOperator uneop = (UnevaluatedOperator) expressions
+				final UnevaluatedOperator uneop = (UnevaluatedOperator) expressions
 						.get(i);
 				if (i == 0 || expressions
 						.get(i - 1) instanceof UnevaluatedOperator) {
-					if (uneop.operator.equals(Operation.ADD)) {
+					if (uneop.operator.equals(Operation.ADD))
 						continue;
-					} else if (uneop.operator.equals(Operation.SUBTRACT)) {
+					else if (uneop.operator.equals(Operation.SUBTRACT)) {
 						i++;
-						Expression next = expressions.get(i);
+						final Expression next = expressions.get(i);
 						expressionsWoUO.add(BinaryOperation.getNegation(next));
 					}
-				} else {
-					expressionsWoUO.add(expressions.get(i));
-				}
-			} else {
-				expressionsWoUO.add(expressions.get(i));
-			}
-		}
+				} else expressionsWoUO.add(expressions.get(i));
+			} else expressionsWoUO.add(expressions.get(i));
 		return expressionsWoUO;
 	}
 	private static ArrayList<Expression> tokenize(List<LiteralToken> exp) {
-		ArrayList<Expression> expressions = new ArrayList<>();
-		for (LiteralToken token : exp) {
+		final ArrayList<Expression> expressions = new ArrayList<>();
+		for (final LiteralToken token : exp)
 			switch (token.token.charAt(0)) {
 				case '0':
 				case '1':
@@ -118,7 +112,7 @@ public class ExpressionParser {
 						expressions.add(LiteralNumber.getInstance(
 								new BigDecimal(token.token), token.context));
 						break;
-					} catch (NumberFormatException e) {
+					} catch (final NumberFormatException e) {
 						SyntaxErrors.invalidExpression(
 								ExpressionType.LITERAL_NUMBER,
 								Arrays.asList(token));
@@ -164,13 +158,12 @@ public class ExpressionParser {
 					expressions.add(VariableIdentifier.getInstance(token));
 					break;
 				case '(':
-					LiteralToken depar = Language.deparenthesize(token);
+					final LiteralToken depar = Language.deparenthesize(token);
 					expressions.add(parseExpression(Tokenizer.tokenize(depar)));
 					break;
 				case '[':
 					break;
 			}
-		}
 		return expressions;
 	}
 	public static GenericType parseType(LiteralToken token) {
@@ -178,27 +171,25 @@ public class ExpressionParser {
 			return new TypeVariable(VariableIdentifier.getInstance(token));
 		while (token.token.startsWith(Resources.OPEN_PAREN))
 			token = Language.deparenthesize(token);
-		for (PrimitiveTypeWOC type : PrimitiveTypeWOC.values()) {
+		for (final PrimitiveTypeWOC type : PrimitiveTypeWOC.values())
 			if (type.typeID().equals(token.token))
 				return new PrimitiveType(type, token.context);
-		}
 		return parseStructType(Tokenizer.tokenize(token));
 	}
 	private static GenericType parseStructType(List<LiteralToken> tokens) {
-		Context context = Context.sum(tokens);
-		ArrayList<LiteralToken> struct = new ArrayList<>();
+		final Context context = Context.sum(tokens);
+		final ArrayList<LiteralToken> struct = new ArrayList<>();
 		int i = 0;
 		for (; i < tokens.size()
-				&& !tokens.get(i).token.equals(Resources.OF); i++) {
+				&& !tokens.get(i).token.equals(Resources.OF); i++)
 			struct.add(tokens.get(i));
-		}
-		List<GenericType> typeVariables = new ArrayList<>();
+		final List<GenericType> typeVariables = new ArrayList<>();
 		Kind arguments = null;
 		if (i < tokens.size() && tokens.get(i).token.equals(Resources.OF)) {
 			i++;
 			for (; i < tokens.size(); i++) {
 				if (Language.isListElement(tokens.get(i).token)) continue;
-				GenericType var = parseType(tokens.get(i));
+				final GenericType var = parseType(tokens.get(i));
 				switch (var.kind()) {
 					case CONCRETE:
 						if (arguments == Kind.VARIABLE)

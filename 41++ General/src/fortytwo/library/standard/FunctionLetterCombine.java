@@ -22,14 +22,13 @@ public class FunctionLetterCombine extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		LiteralArray array = (LiteralArray) arguments.get(0);
-		char[] c = new char[array.length()];
-		for (int i = 0; i < array.length(); i++) {
+		final LiteralArray array = (LiteralArray) arguments.get(0);
+		final char[] c = new char[array.length()];
+		for (int i = 0; i < array.length(); i++)
 			// pass a synthetic context because we know there will be no
 			// error.
 			c[i] = ((LiteralString) array.get(i + 1,
 					Context.SYNTHETIC)).contents.token.charAt(0);
-		}
 		return new LiteralString(LiteralToken.synthetic(new String(c)));
 	}
 	@Override

@@ -30,9 +30,8 @@ public class StructureRoster {
 		structs.add(structure);
 	}
 	public GenericStructureSignature referenceTo(GenericStructureType type) {
-		for (GenericStructureSignature struct : structs) {
+		for (final GenericStructureSignature struct : structs)
 			if (struct.type.equals(type)) return struct;
-		}
 		DNEErrors.typeDNE(type);
 		// should not be reachable.
 		return null;
@@ -40,17 +39,16 @@ public class StructureRoster {
 	public TypedVariable typeOf(ConcreteType type, VariableIdentifier field) {
 		if (!(type instanceof StructureType))
 			DNEErrors.fieldAccessOnPrimitive(type, Arrays.asList(field));
-		Structure struct = getStructure((StructureType) type);
-		for (TypedVariable f : struct.fields) {
-			if (f.name.equals(field)) { return f; }
-		}
+		final Structure struct = getStructure((StructureType) type);
+		for (final TypedVariable f : struct.fields)
+			if (f.name.equals(field)) return f;
 		DNEErrors.fieldDNE(struct, field);
 		// should not be reachable.
 		return null;
 	}
 	public LiteralExpression instance(TypedVariable name,
 			VariableRoster<LiteralExpression> fieldValues, Context context) {
-		LiteralExpression value = fieldValues.value();
+		final LiteralExpression value = fieldValues.value();
 		if (value != null) return value;
 		typeCheckConstructor(null, name, fieldValues, context);
 		if (name.type instanceof StructureType)
@@ -63,10 +61,10 @@ public class StructureRoster {
 				Context.SYNTHETIC);
 	}
 	public Structure getStructure(StructureType struct) {
-		GenericStructureType genericType = genericVersionOf(struct);
-		List<ConcreteType> typeParameters = new ArrayList<>(struct.types);
-		List<TypedVariable> fields = new ArrayList<>();
-		for (GenericField f : getGenericStructure(genericType).fields) {
+		final GenericStructureType genericType = genericVersionOf(struct);
+		final List<ConcreteType> typeParameters = new ArrayList<>(struct.types);
+		final List<TypedVariable> fields = new ArrayList<>();
+		for (final GenericField f : getGenericStructure(genericType).fields) {
 			if (f.type instanceof ConcreteType) {
 				fields.add(new TypedVariable(f.name, (ConcreteType) f.type));
 				continue;
@@ -77,14 +75,14 @@ public class StructureRoster {
 	}
 	private GenericStructureSignature getGenericStructure(
 			GenericStructureType genericType) {
-		for (GenericStructureSignature gs : structs)
+		for (final GenericStructureSignature gs : structs)
 			if (gs.type.equals(genericType)) return gs;
 		DNEErrors.typeDNE(genericType);
 		// should never get here
 		return null;
 	}
 	private GenericStructureType genericVersionOf(StructureType type) {
-		for (GenericStructureSignature gs : structs)
+		for (final GenericStructureSignature gs : structs)
 			if (gs.type.name.equals(type.name)) return gs.type;
 		DNEErrors.typeDNE(type);
 		// should never happen
@@ -99,7 +97,7 @@ public class StructureRoster {
 					env);
 		}
 		if (name.type instanceof ArrayType) {
-			Expression length = fieldValues
+			final Expression length = fieldValues
 					.referenceTo(TypeVariable.LENGTH.name);
 			if (fieldValues.numberOfVariables() == 1 && length != null
 					&& length.type(env).equals(new PrimitiveType(
@@ -117,12 +115,11 @@ public class StructureRoster {
 					fieldValues.pairs.stream().map(x -> x.getKey())
 							.collect(Collectors.toList()));
 		}
-		Structure struct = getStructure((StructureType) name.type);
-		for (TypedVariable f : struct.fields) {
+		final Structure struct = getStructure((StructureType) name.type);
+		for (final TypedVariable f : struct.fields)
 			if (!fieldValues.referenceTo(f.name).type(env).equals(f.type))
 				TypingErrors.fieldAssignmentTypeMismatch(struct, f,
 						fieldValues.referenceTo(f.name), env);
-		}
 		fieldValues.pairs.forEach(x -> {
 			if (!struct.containsField(x.getKey()))
 				DNEErrors.fieldDNE(struct, x.getKey());
@@ -134,7 +131,7 @@ public class StructureRoster {
 	}
 	@Override
 	public StructureRoster clone() {
-		StructureRoster other = new StructureRoster();
+		final StructureRoster other = new StructureRoster();
 		other.structs.addAll(structs);
 		return other;
 	}
@@ -142,7 +139,7 @@ public class StructureRoster {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((structs == null) ? 0 : structs.hashCode());
+		result = prime * result + (structs == null ? 0 : structs.hashCode());
 		return result;
 	}
 	@Override
@@ -150,7 +147,7 @@ public class StructureRoster {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		StructureRoster other = (StructureRoster) obj;
+		final StructureRoster other = (StructureRoster) obj;
 		if (structs == null) {
 			if (other.structs != null) return false;
 		} else if (!structs.equals(other.structs)) return false;

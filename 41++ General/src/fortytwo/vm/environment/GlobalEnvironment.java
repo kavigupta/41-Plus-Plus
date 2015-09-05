@@ -34,15 +34,15 @@ public class GlobalEnvironment {
 				FunctionRoster.getDefault(staticEnv));
 	}
 	public static GlobalEnvironment interpret(List<Sentence> sentences) {
-		StaticEnvironment environment = StaticEnvironment.getDefault();
-		GlobalEnvironment global = GlobalEnvironment
+		final StaticEnvironment environment = StaticEnvironment.getDefault();
+		final GlobalEnvironment global = GlobalEnvironment
 				.getDefaultEnvironment(environment);
-		ArrayList<FunctionImplemented> functions = new ArrayList<>();
+		final ArrayList<FunctionImplemented> functions = new ArrayList<>();
 		for (int i = 0; i < sentences.size(); i++) {
-			Sentence s = sentences.get(i);
+			final Sentence s = sentences.get(i);
 			switch (s.kind()) {
 				case FUNCTION:
-					FunctionConstruct f = (FunctionConstruct) s;
+					final FunctionConstruct f = (FunctionConstruct) s;
 					environment.putReference(f.declaration);
 					// TODO remove once multiple exit is defined
 					functions.add(new FunctionImplemented(f.declaration,
@@ -53,10 +53,10 @@ public class GlobalEnvironment {
 							.addStructure(((StructureDefinition) s).structure);
 					break;
 				case DEFINITION:
-					ParsedDefinition def = (ParsedDefinition) s;
-					VariableRoster<? extends Expression> fieldValues = new VariableRoster<>();
-					for (Entry<VariableIdentifier, ? extends Expression> pair : def.fields.pairs) {
-						LiteralExpression applied = pair.getValue()
+					final ParsedDefinition def = (ParsedDefinition) s;
+					final VariableRoster<? extends Expression> fieldValues = new VariableRoster<>();
+					for (final Entry<VariableIdentifier, ? extends Expression> pair : def.fields.pairs) {
+						final LiteralExpression applied = pair.getValue()
 								.literalValue(new LocalEnvironment(global));
 						fieldValues.assign(pair.getKey(), applied);
 					}
@@ -70,11 +70,11 @@ public class GlobalEnvironment {
 					ParserErrors.expectedDeclarationOrDefinition(s);
 			}
 		}
-		HashMap<FunctionSignature, Function42> implFunctions = new HashMap<>();
-		for (FunctionImplemented func : functions) {
+		final HashMap<FunctionSignature, Function42> implFunctions = new HashMap<>();
+		for (final FunctionImplemented func : functions) {
 			func.typeCheck(environment);
-			FunctionImplemented impl = func.contextualize(environment);
-			FunctionDefinition f = func.definition();
+			final FunctionImplemented impl = func.contextualize(environment);
+			final FunctionDefinition f = func.definition();
 			implFunctions.put(f.sig, impl);
 		}
 		global.funcs.functions.putAll(implFunctions);
@@ -87,9 +87,9 @@ public class GlobalEnvironment {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((funcs == null) ? 0 : funcs.hashCode());
+		result = prime * result + (funcs == null ? 0 : funcs.hashCode());
 		result = prime * result
-				+ ((staticEnv == null) ? 0 : staticEnv.hashCode());
+				+ (staticEnv == null ? 0 : staticEnv.hashCode());
 		return result;
 	}
 	@Override
@@ -97,7 +97,7 @@ public class GlobalEnvironment {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		GlobalEnvironment other = (GlobalEnvironment) obj;
+		final GlobalEnvironment other = (GlobalEnvironment) obj;
 		if (funcs == null) {
 			if (other.funcs != null) return false;
 		} else if (!funcs.equals(other.funcs)) return false;

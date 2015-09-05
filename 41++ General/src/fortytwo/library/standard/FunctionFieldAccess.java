@@ -27,14 +27,13 @@ public class FunctionFieldAccess extends Function42 {
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		// calling on a structure other than the target should not happen if
 		// typechecking did it's job
-		LiteralObject obj = (LiteralObject) arguments.get(0);
+		final LiteralObject obj = (LiteralObject) arguments.get(0);
 		return obj.valueOf(field);
 	}
 	@Override
 	public ConcreteType outputType() {
-		for (TypedVariable f : from.fields) {
+		for (final TypedVariable f : from.fields)
 			if (f.name.equals(field)) return f.type;
-		}
 		throw new RuntimeException(/**/);
 	}
 	@Override

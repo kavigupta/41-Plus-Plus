@@ -35,7 +35,7 @@ public class FunctionEquivalence extends Function42 {
 		public FunctionSignature sig;
 		public boolean eq;
 		private Comparator(boolean eq, String... name) {
-			List<FunctionComponent> s = new ArrayList<>();
+			final List<FunctionComponent> s = new ArrayList<>();
 			s.add(FunctionArgument.INSTANCE);
 			s.addAll(
 					Arrays.asList(name).stream()

@@ -16,17 +16,15 @@ public class LiteralArray extends LiteralExpression {
 		super(context);
 		this.contents = contents;
 		this.elements = new LiteralExpression[length];
-		for (int i = 0; i < elements.length; i++) {
+		for (int i = 0; i < elements.length; i++)
 			elements[i] = contents.defaultValue();
-		}
 	}
 	public static LiteralArray getInstance(ConcreteType contents,
 			List<? extends LiteralExpression> elements, Context context) {
-		LiteralArray array = new LiteralArray(contents, elements.size(),
+		final LiteralArray array = new LiteralArray(contents, elements.size(),
 				context);
-		for (int i = 0; i < elements.size(); i++) {
+		for (int i = 0; i < elements.size(); i++)
 			array.elements[i] = elements.get(i);
-		}
 		return array;
 	}
 	@Override
@@ -37,14 +35,14 @@ public class LiteralArray extends LiteralExpression {
 		// no type checking here --- should have been done earlier
 		try {
 			elements[i - 1] = e;
-		} catch (ArrayIndexOutOfBoundsException exc) {
+		} catch (final ArrayIndexOutOfBoundsException exc) {
 			RuntimeErrors.indexOutOfBoundsException(this, i, context);
 		}
 	}
 	public LiteralExpression get(int i, Context context) {
 		try {
 			return elements[i - 1];
-		} catch (ArrayIndexOutOfBoundsException exc) {
+		} catch (final ArrayIndexOutOfBoundsException exc) {
 			RuntimeErrors.indexOutOfBoundsException(this, i, context);
 			return null;
 		}

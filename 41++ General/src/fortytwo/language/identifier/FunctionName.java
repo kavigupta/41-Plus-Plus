@@ -35,8 +35,7 @@ public class FunctionName {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((function == null) ? 0 : function.hashCode());
+		result = prime * result + (function == null ? 0 : function.hashCode());
 		return result;
 	}
 	public Context context() {
@@ -45,8 +44,8 @@ public class FunctionName {
 	}
 	public String display(List<ConcreteType> types) {
 		int count = 0;
-		StringBuffer sbuff = new StringBuffer();
-		for (FunctionComponent comp : function) {
+		final StringBuffer sbuff = new StringBuffer();
+		for (final FunctionComponent comp : function)
 			if (comp instanceof FunctionToken)
 				sbuff.append(((FunctionToken) comp).token.token).append(" ");
 			else {
@@ -54,7 +53,6 @@ public class FunctionName {
 						.append("} ");
 				count++;
 			}
-		}
 		if (sbuff.length() == 0) return "";
 		return sbuff.substring(0, sbuff.length() - 1);
 	}
@@ -63,7 +61,7 @@ public class FunctionName {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		FunctionName other = (FunctionName) obj;
+		final FunctionName other = (FunctionName) obj;
 		if (function == null) {
 			if (other.function != null) return false;
 		} else if (!function.equals(other.function)) return false;

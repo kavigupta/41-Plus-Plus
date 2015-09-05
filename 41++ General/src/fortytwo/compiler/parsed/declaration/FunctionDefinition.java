@@ -43,11 +43,10 @@ public class FunctionDefinition implements Sentence {
 	 * environment (which incidentally should be newly minted)
 	 */
 	public void registerParameters(StaticEnvironment environment) {
-		for (int i = 0; i < sig.inputTypes.size(); i++) {
+		for (int i = 0; i < sig.inputTypes.size(); i++)
 			environment.addType(inputVariables.get(i), (ConcreteType)
 			// LOWPRI remove cast once generic typing is allowed
 			sig.inputTypes.get(i));
-		}
 	}
 	/**
 	 * Registers this function's variables' values as given with the given
@@ -55,9 +54,8 @@ public class FunctionDefinition implements Sentence {
 	 */
 	public void assignInputs(List<LiteralExpression> inputs,
 			LocalEnvironment local) {
-		for (int i = 0; i < inputVariables.size(); i++) {
+		for (int i = 0; i < inputVariables.size(); i++)
 			local.vars.assign(inputVariables.get(i), inputs.get(i));
-		}
 	}
 	@Override
 	public SentenceType kind() {
@@ -79,10 +77,10 @@ public class FunctionDefinition implements Sentence {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((context == null) ? 0 : context.hashCode());
+		result = prime * result + (context == null ? 0 : context.hashCode());
 		result = prime * result
-				+ ((inputVariables == null) ? 0 : inputVariables.hashCode());
-		result = prime * result + ((sig == null) ? 0 : sig.hashCode());
+				+ (inputVariables == null ? 0 : inputVariables.hashCode());
+		result = prime * result + (sig == null ? 0 : sig.hashCode());
 		return result;
 	}
 	@Override
@@ -90,7 +88,7 @@ public class FunctionDefinition implements Sentence {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		FunctionDefinition other = (FunctionDefinition) obj;
+		final FunctionDefinition other = (FunctionDefinition) obj;
 		if (context == null) {
 			if (other.context != null) return false;
 		} else if (!context.equals(other.context)) return false;

@@ -34,11 +34,11 @@ public class ParsedIfElse extends ParsedStatement {
 	@Override
 	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
 		if (((LiteralBool) condition.literalValue(environment)).contents) {
-			Optional<LiteralExpression> ret = ifso.execute(environment);
+			final Optional<LiteralExpression> ret = ifso.execute(environment);
 			if (ret.isPresent()) return ret;
 			ifso.clean(environment);
 		} else {
-			Optional<LiteralExpression> ret = ifelse.execute(environment);
+			final Optional<LiteralExpression> ret = ifelse.execute(environment);
 			if (ret.isPresent()) return ret;
 			ifelse.clean(environment);
 		}
@@ -46,13 +46,13 @@ public class ParsedIfElse extends ParsedStatement {
 	}
 	@Override
 	public Optional<GenericType> returnType(StaticEnvironment env) {
-		Optional<GenericType> a = ifso.returnType(env),
+		final Optional<GenericType> a = ifso.returnType(env),
 				b = ifelse.returnType(env);
 		if (!a.isPresent() && !b.isPresent()) return Optional.empty();
 		if (a.isPresent() && b.isPresent()) {
 			if (a.get().equals(b.get())) return a;
 			TypingErrors.inconsistentBranchTyping("if statement", a.get(),
-					b.get(), this.context());
+					b.get(), context());
 		}
 		return a.isPresent() ? a : b;
 	}
@@ -87,9 +87,9 @@ public class ParsedIfElse extends ParsedStatement {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((condition == null) ? 0 : condition.hashCode());
-		result = prime * result + ((ifelse == null) ? 0 : ifelse.hashCode());
-		result = prime * result + ((ifso == null) ? 0 : ifso.hashCode());
+				+ (condition == null ? 0 : condition.hashCode());
+		result = prime * result + (ifelse == null ? 0 : ifelse.hashCode());
+		result = prime * result + (ifso == null ? 0 : ifso.hashCode());
 		return result;
 	}
 	@Override
@@ -97,7 +97,7 @@ public class ParsedIfElse extends ParsedStatement {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		ParsedIfElse other = (ParsedIfElse) obj;
+		final ParsedIfElse other = (ParsedIfElse) obj;
 		if (condition == null) {
 			if (other.condition != null) return false;
 		} else if (!condition.equals(other.condition)) return false;

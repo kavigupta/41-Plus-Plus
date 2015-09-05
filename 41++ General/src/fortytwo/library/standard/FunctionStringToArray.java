@@ -21,14 +21,14 @@ public class FunctionStringToArray extends Function42 {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
-		LiteralToken tokenVal = ((LiteralString) arguments.get(0)).contents;
-		LiteralArray larray = new LiteralArray(
+		final LiteralToken tokenVal = ((LiteralString) arguments
+				.get(0)).contents;
+		final LiteralArray larray = new LiteralArray(
 				new PrimitiveType(PrimitiveTypeWOC.STRING, Context.SYNTHETIC),
 				tokenVal.token.length(), Context.SYNTHETIC);
-		for (int i = 0; i < tokenVal.token.length(); i++) {
+		for (int i = 0; i < tokenVal.token.length(); i++)
 			larray.set(i + 1, new LiteralString(tokenVal.subToken(i, i + 1)),
 					Context.sum(arguments));
-		}
 		return larray;
 	}
 	@Override

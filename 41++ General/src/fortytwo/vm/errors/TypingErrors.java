@@ -68,13 +68,13 @@ public class TypingErrors {
 			VariableRoster<? extends Expression> fieldValues) {
 		String actual = "no fields";
 		if (fieldValues.numberOfVariables() != 0) {
-			String displayedFields = SourceCode.displayList(
+			final String displayedFields = SourceCode.displayList(
 					struct.fields.stream().map(ParsedConstruct::toSourceCode)
 							.collect(Collectors.toList()));
 			actual = "only " + displayedFields;
 		}
-		actual += (fieldValues.numberOfVariables() == 1 ? "was" : "were");
-		String msg = String.format(
+		actual += fieldValues.numberOfVariables() == 1 ? "was" : "were";
+		final String msg = String.format(
 				"The structure %s must contain the field%s %s, but %s defined here.",
 				struct.type.toSourceCode(),
 				struct.fields.size() == 1 ? "" : "s",
@@ -102,11 +102,9 @@ public class TypingErrors {
 		String contentType;
 		if (typeVariables.size() == 0)
 			contentType = "no content type";
-		else {
-			contentType = "the content types " + SourceCode.displayList(
-					typeVariables.stream().map(ParsedConstruct::toSourceCode)
-							.collect(Collectors.toList()));
-		}
+		else contentType = "the content types " + SourceCode.displayList(
+				typeVariables.stream().map(ParsedConstruct::toSourceCode)
+						.collect(Collectors.toList()));
 		VirtualMachine.error(ErrorType.PARSING, String.format(
 				"Arrays must be defined in terms of "
 						+ "exactly one type of content, but ~%s~ is defined with %s",

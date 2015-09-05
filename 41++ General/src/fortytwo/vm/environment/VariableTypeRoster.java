@@ -19,7 +19,7 @@ public class VariableTypeRoster {
 		add(field.name, field.type);
 	}
 	public ConcreteType typeOf(VariableIdentifier name) {
-		ConcreteType type = pairs.get(name);
+		final ConcreteType type = pairs.get(name);
 		if (type == null) return null;
 		return type;
 	}
@@ -27,7 +27,7 @@ public class VariableTypeRoster {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((pairs == null) ? 0 : pairs.hashCode());
+		result = prime * result + (pairs == null ? 0 : pairs.hashCode());
 		return result;
 	}
 	@Override
@@ -35,7 +35,7 @@ public class VariableTypeRoster {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		VariableTypeRoster other = (VariableTypeRoster) obj;
+		final VariableTypeRoster other = (VariableTypeRoster) obj;
 		if (pairs == null) {
 			if (other.pairs != null) return false;
 		} else if (!pairs.equals(other.pairs)) return false;
@@ -43,7 +43,7 @@ public class VariableTypeRoster {
 	}
 	@Override
 	public VariableTypeRoster clone() {
-		VariableTypeRoster other = new VariableTypeRoster();
+		final VariableTypeRoster other = new VariableTypeRoster();
 		other.pairs.putAll(pairs);
 		return other;
 	}

@@ -19,14 +19,15 @@ public class Tokenizer {
 		// This function, unlike others, contains return statements after
 		// error throw statements. This is because for syntax highlighting
 		// purposes, it will be called in an error-tolerant environment.
-		List<LiteralToken> tokens = new ArrayList<>();
+		final List<LiteralToken> tokens = new ArrayList<>();
 		int toklen = 0;
 		loop: for (int i = 0; i < parentToken.token.length(); i++) {
 			switch (parentToken.token.charAt(i)) {
 				case '[':
 					add(parentToken, i, toklen, tokens);
 					toklen = 0;
-					int closebracket = findCloseBracket(parentToken.token, i);
+					final int closebracket = findCloseBracket(parentToken.token,
+							i);
 					if (closebracket < 0) {
 						SyntaxErrors.matchingSymbolDNE(parentToken.context,
 								parentToken.token, i);
@@ -43,7 +44,7 @@ public class Tokenizer {
 				case '(':
 					add(parentToken, i, toklen, tokens);
 					toklen = 0;
-					int closeparen = findCloseParen(parentToken.token, i);
+					final int closeparen = findCloseParen(parentToken.token, i);
 					if (closeparen < 0) {
 						SyntaxErrors.matchingSymbolDNE(parentToken.context,
 								parentToken.token, i);
@@ -94,13 +95,14 @@ public class Tokenizer {
 					continue loop;
 				case '\'':
 				case '\"':
-					char prev = i - 1 >= 0 ? parentToken.token.charAt(i - 1)
-							: 0;
+					final char prev = i - 1 >= 0
+							? parentToken.token.charAt(i - 1) : 0;
 					if (i - 1 < 0 || Language.isTerminator(prev)
 							|| Character.isDigit(prev)) {
 						add(parentToken, i, toklen, tokens);
 						toklen = 0;
-						int closequote = findCloseQuote(parentToken.token, i);
+						final int closequote = findCloseQuote(parentToken.token,
+								i);
 						if (closequote < 0) {
 							SyntaxErrors.matchingSymbolDNE(parentToken.context,
 									parentToken.token, i);
@@ -122,7 +124,7 @@ public class Tokenizer {
 				continue loop;
 			}
 			if (i - 1 >= 0 && Character.isDigit(parentToken.token.charAt(i - 1))
-					&& (!Character.isDigit(parentToken.token.charAt(i)))
+					&& !Character.isDigit(parentToken.token.charAt(i))
 					&& parentToken.token.charAt(i) != '.') {
 				add(parentToken, i, toklen, tokens);
 				toklen = 0;
@@ -136,7 +138,7 @@ public class Tokenizer {
 		return tokens;
 	}
 	private static int findCloseQuote(String input, int i) {
-		char open = input.charAt(i);
+		final char open = input.charAt(i);
 		int backslashstate = 0;
 		for (int j = i + 1; j < input.length(); j++) {
 			if (input.charAt(j) == open && backslashstate % 2 == 0) return j;
@@ -176,8 +178,8 @@ public class Tokenizer {
 		return input.indexOf(']', i);
 	}
 	public static String unescape(String str) {
-		StringBuffer buff = new StringBuffer();
-		for (int i = 0; i < str.length(); i++) {
+		final StringBuffer buff = new StringBuffer();
+		for (int i = 0; i < str.length(); i++)
 			if (str.charAt(i) == '\\') {
 				if (i + 1 >= str.length()) {
 					buff.append('\\');
@@ -202,7 +204,7 @@ public class Tokenizer {
 							buff.append("\\u");
 							continue;
 						}
-						String sub = str.substring(i + 1, i + 5);
+						final String sub = str.substring(i + 1, i + 5);
 						if (sub.matches(
 								"[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]")) {
 							buff.append((char) Integer
@@ -215,10 +217,7 @@ public class Tokenizer {
 						i--;
 						break;
 				}
-			} else {
-				buff.append(str.charAt(i));
-			}
-		}
+			} else buff.append(str.charAt(i));
 		return buff.toString();
 	}
 	public static String escape(String str) {

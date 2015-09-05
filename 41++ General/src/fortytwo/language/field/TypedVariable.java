@@ -36,8 +36,8 @@ public class TypedVariable extends Expression {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		result = prime * result + (type == null ? 0 : type.hashCode());
 		return result;
 	}
 	@Override
@@ -45,7 +45,7 @@ public class TypedVariable extends Expression {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		TypedVariable other = (TypedVariable) obj;
+		final TypedVariable other = (TypedVariable) obj;
 		if (name == null) {
 			if (other.name != null) return false;
 		} else if (!name.equals(other.name)) return false;

@@ -15,11 +15,10 @@ public class Language {
 		else return A + SPACE + word;
 	}
 	private static boolean startsWithVowel(String word) {
-		for (int i = 0; i < word.length(); i++) {
+		for (int i = 0; i < word.length(); i++)
 			if (isVowel(word.charAt(i)))
 				return true;
 			else if (Character.isAlphabetic(word.charAt(i))) return false;
-		}
 		return false;
 	}
 	public static boolean isVowel(char c) {
@@ -30,7 +29,7 @@ public class Language {
 			Function<T, String> howToSay) {
 		if (fields.size() == 0) return new String();
 		if (fields.size() == 1) return howToSay.apply(fields.get(0));
-		StringBuffer sbuff = new StringBuffer();
+		final StringBuffer sbuff = new StringBuffer();
 		for (int i = 0; i < fields.size() - 1; i++)
 			sbuff.append(howToSay.apply(fields.get(i))).append(COMMA + SPACE);
 		return sbuff.append(AND + SPACE)
@@ -52,7 +51,7 @@ public class Language {
 	}
 	public static boolean isExpression(String token) {
 		if (token.equals(TRUE) || token.equals(FALSE)) return true;
-		char start = token.charAt(0);
+		final char start = token.charAt(0);
 		return start == '(' || start == '+' || start == '-' || start == '*'
 				|| start == '/' || start == '%' || Character.isDigit(start)
 				|| start == '\'' || start == '\"';
@@ -122,9 +121,8 @@ public class Language {
 		return c == ',' || c == '.';
 	}
 	public static int indexOf(List<LiteralToken> tokens, String s) {
-		for (int i = 0; i < tokens.size(); i++) {
+		for (int i = 0; i < tokens.size(); i++)
 			if (tokens.get(i).token.equals(s)) return i;
-		}
 		return -1;
 	}
 	public static boolean isQuote(char c) {

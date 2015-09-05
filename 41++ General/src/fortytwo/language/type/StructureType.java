@@ -33,10 +33,10 @@ public class StructureType implements ConcreteType {
 	}
 	@Override
 	public LiteralExpression defaultValue() {
-		List<TypedVariable> vars = new ArrayList<>();
-		VariableRoster<LiteralExpression> values = new VariableRoster<>();
+		final List<TypedVariable> vars = new ArrayList<>();
+		final VariableRoster<LiteralExpression> values = new VariableRoster<>();
 		for (int i = 0; i < types.size(); i++) {
-			VariableIdentifier vid = VariableIdentifier
+			final VariableIdentifier vid = VariableIdentifier
 					.getInstance(name.get(i));
 			vars.add(new TypedVariable(vid, types.get(i)));
 			values.assign(vid, types.get(i).defaultValue());
@@ -47,8 +47,8 @@ public class StructureType implements ConcreteType {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((types == null) ? 0 : types.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		result = prime * result + (types == null ? 0 : types.hashCode());
 		return result;
 	}
 	@Override
@@ -56,7 +56,7 @@ public class StructureType implements ConcreteType {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		StructureType other = (StructureType) obj;
+		final StructureType other = (StructureType) obj;
 		if (name == null) {
 			if (other.name != null) return false;
 		} else if (!name.equals(other.name)) return false;
