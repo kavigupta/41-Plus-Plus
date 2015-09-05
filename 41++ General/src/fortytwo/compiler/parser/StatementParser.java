@@ -20,6 +20,7 @@ import fortytwo.language.type.GenericType;
 import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.SyntaxErrors;
+import fortytwo.vm.expressions.LiteralVoid;
 
 public class StatementParser {
 	public static Sentence parseStatement(List<LiteralToken> line) {
@@ -52,7 +53,7 @@ public class StatementParser {
 				|| !line.get(2).token.equals(Resources.DECL_FUNCTION))
 			SyntaxErrors.invalidSentence(SentenceType.FUNCTION_OUTPUT, line);
 		if (line.size() == 3)
-			return new FunctionOutput(null, Context.sum(line));
+			return new FunctionOutput(LiteralVoid.INSTANCE, Context.sum(line));
 		if (!line.get(3).token.equals(Resources.AND)
 				|| !line.get(4).token.equals(Resources.OUTPUT))
 			SyntaxErrors.invalidSentence(SentenceType.FUNCTION_OUTPUT, line);
@@ -70,7 +71,7 @@ public class StatementParser {
 		if (exp instanceof ParsedFunctionCall) return exp;
 		ParserErrors.expectedFunctionCall(exp);
 		// should never get here
-		return null;
+		throw new IllegalStateException();
 	}
 	private static ParsedAssignment parseAssignment(List<LiteralToken> line) {
 		Context fullContext = Context.sum(line);

@@ -1,11 +1,17 @@
 package fortytwo.language.type;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.language.SourceCode;
+import fortytwo.language.field.TypedVariable;
+import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.vm.constructions.Structure;
+import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
+import fortytwo.vm.expressions.LiteralObject;
 
 public class StructureType implements ConcreteType {
 	public final List<LiteralToken> name;
@@ -20,6 +26,22 @@ public class StructureType implements ConcreteType {
 	@Override
 	public Context context() {
 		return context;
+	}
+	@Override
+	public String toSourceCode() {
+		return SourceCode.display(this);
+	}
+	@Override
+	public LiteralExpression defaultValue() {
+		List<TypedVariable> vars = new ArrayList<>();
+		VariableRoster<LiteralExpression> values = new VariableRoster<>();
+		for (int i = 0; i < types.size(); i++) {
+			VariableIdentifier vid = VariableIdentifier
+					.getInstance(name.get(i));
+			vars.add(new TypedVariable(vid, types.get(i)));
+			values.assign(vid, types.get(i).defaultValue());
+		}
+		return new LiteralObject(new Structure(this, vars), values, context);
 	}
 	@Override
 	public int hashCode() {
@@ -42,14 +64,6 @@ public class StructureType implements ConcreteType {
 			if (other.types != null) return false;
 		} else if (!types.equals(other.types)) return false;
 		return true;
-	}
-	@Override
-	public String toSourceCode() {
-		return SourceCode.display(this);
-	}
-	@Override
-	public LiteralExpression defaultValue() {
-		return null;
 	}
 	@Override
 	public String toString() {

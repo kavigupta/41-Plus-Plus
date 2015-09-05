@@ -1,20 +1,20 @@
 package fortytwo.vm.constructions;
 
 import java.util.List;
+import java.util.Optional;
 
-import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.GenericType;
-import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
+import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
+import fortytwo.vm.expressions.LiteralVoid;
 
 /**
  * A class representing a function that has been parsed from 41++ source
@@ -29,19 +29,12 @@ public class FunctionImplemented extends Function42 {
 	 */
 	private final List<ParsedStatement> body;
 	/**
-	 * The function output, which can be evaluated against the environment
-	 * after the statements are executed. TODO allow multiple function output
-	 * statements, simply allow first "unnested" one to end the function
-	 */
-	private final FunctionOutput r;
-	/**
 	 * Simple struct constructor
 	 */
-	public FunctionImplemented(FunctionDefinition f, List<ParsedStatement> body,
-			FunctionOutput r) {
+	public FunctionImplemented(FunctionDefinition f,
+			List<ParsedStatement> body) {
 		this.f = f;
 		this.body = body;
-		this.r = r;
 	}
 	/**
 	 * Contextualizes this function into one that can actually be used (linking
@@ -57,7 +50,15 @@ public class FunctionImplemented extends Function42 {
 	public boolean typeCheck(StaticEnvironment env) {
 		StaticEnvironment local = StaticEnvironment.getChild(env);
 		f.registerParameters(local);
-		body.forEach(x -> x.isTypeChecked(local));
+		for (ParsedStatement s : body) {
+			Optional<GenericType> actual = s.returnType(local);
+			s.isTypeChecked(local);
+			if (actual.isPresent()) {
+				if (!actual.get().equals(f.sig.outputType))
+					TypingErrors.incorrectOutput(f.sig, actual.get(),
+							(FunctionOutput) s);
+			}
+		}
 		return true;
 	}
 	@Override
@@ -65,21 +66,18 @@ public class FunctionImplemented extends Function42 {
 			List<LiteralExpression> inputs, TypeVariableRoster roster) {
 		LocalEnvironment local = env.minimalLocalEnvironment();
 		f.assignInputs(inputs, local);
-		body.stream().forEach(x -> x.execute(local));
-		LiteralExpression out = r.output == null ? null
-				: r.output.literalValue(local);
+		for (ParsedStatement s : body) {
+			Optional<LiteralExpression> exp = s.execute(local);
+			if (exp.isPresent()) return exp.get();
+		}
 		// no need to clean the local environment, as it will be garbage
 		// collected after now.
-		return out;
+		// if no return, return LiteralVoid, signifying the void marker
+		return LiteralVoid.INSTANCE;
 	}
 	@Override
 	public GenericType outputType() {
-		StaticEnvironment local = StaticEnvironment.getDefault();
-		f.registerParameters(local);
-		body.forEach(x -> x.isTypeChecked(local));
-		return r.output == null
-				? new PrimitiveType(PrimitiveTypeWOC.VOID, Context.SYNTHETIC)
-				: r.output.type(local);
+		return f.sig.outputType;
 	}
 	@Override
 	public FunctionSignature signature() {
@@ -97,7 +95,6 @@ public class FunctionImplemented extends Function42 {
 		int result = 1;
 		result = prime * result + ((body == null) ? 0 : body.hashCode());
 		result = prime * result + ((f == null) ? 0 : f.hashCode());
-		result = prime * result + ((r == null) ? 0 : r.hashCode());
 		return result;
 	}
 	@Override
@@ -112,9 +109,6 @@ public class FunctionImplemented extends Function42 {
 		if (f == null) {
 			if (other.f != null) return false;
 		} else if (!f.equals(other.f)) return false;
-		if (r == null) {
-			if (other.r != null) return false;
-		} else if (!r.equals(other.r)) return false;
 		return true;
 	}
 }

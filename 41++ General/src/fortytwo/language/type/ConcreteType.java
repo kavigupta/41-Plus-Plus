@@ -1,5 +1,7 @@
 package fortytwo.language.type;
 
+import java.util.Optional;
+
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -9,9 +11,9 @@ public interface ConcreteType extends GenericType {
 		return Kind.CONCRETE;
 	}
 	@Override
-	public default TypeVariableRoster match(ConcreteType toMatch) {
-		if (toMatch.equals(this)) return new TypeVariableRoster();
-		return null;
+	public default Optional<TypeVariableRoster> match(ConcreteType toMatch) {
+		if (toMatch.equals(this)) return Optional.of(new TypeVariableRoster());
+		return Optional.empty();
 	}
 	@Override
 	public default ConcreteType resolve(TypeVariableRoster roster) {

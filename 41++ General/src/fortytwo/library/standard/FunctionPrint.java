@@ -15,6 +15,7 @@ import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
+import fortytwo.vm.expressions.LiteralVoid;
 
 public class FunctionPrint extends Function42 {
 	public static final FunctionPrint INSTANCE = new FunctionPrint();
@@ -26,7 +27,7 @@ public class FunctionPrint extends Function42 {
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		VirtualMachine.displayLine(arguments.get(0).toSourceCode());
-		return null;
+		return LiteralVoid.INSTANCE;
 	}
 	@Override
 	public PrimitiveType outputType() {

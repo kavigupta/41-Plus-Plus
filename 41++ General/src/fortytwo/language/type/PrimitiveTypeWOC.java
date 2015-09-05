@@ -4,16 +4,13 @@ import java.math.BigDecimal;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
-import fortytwo.vm.expressions.LiteralBool;
-import fortytwo.vm.expressions.LiteralExpression;
-import fortytwo.vm.expressions.LiteralNumber;
-import fortytwo.vm.expressions.LiteralString;
+import fortytwo.vm.expressions.*;
 
 public enum PrimitiveTypeWOC {
 	NUMBER(LiteralNumber.getInstance(BigDecimal.ZERO, Context.SYNTHETIC)),
 	STRING(new LiteralString(LiteralToken.SYNTHETIC_EMPTY_STRING)),
 	BOOL(LiteralBool.getInstance(false, Context.SYNTHETIC)), TYPE(null),
-	VOID(null);
+	VOID(LiteralVoid.INSTANCE);
 	public final LiteralExpression def;
 	private PrimitiveTypeWOC(LiteralExpression def) {
 		this.def = def;

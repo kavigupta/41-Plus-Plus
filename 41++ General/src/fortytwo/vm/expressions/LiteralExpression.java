@@ -8,9 +8,8 @@ import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 
 public abstract class LiteralExpression extends Expression {
-	protected Context context;
 	public LiteralExpression(Context context) {
-		this.context = context;
+		super(context);
 	}
 	@Override
 	public ConcreteType findType(StaticEnvironment env) {
@@ -23,10 +22,6 @@ public abstract class LiteralExpression extends Expression {
 	@Override
 	public SentenceType kind() {
 		return SentenceType.PURE_EXPRESSION;
-	}
-	@Override
-	public final Context context() {
-		return context;
 	}
 	public abstract ConcreteType resolveType();
 	@Override

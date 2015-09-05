@@ -2,16 +2,19 @@ package fortytwo.compiler.parsed.statements;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
+import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.errors.TypingErrors;
+import fortytwo.vm.expressions.LiteralExpression;
 
 public class ParsedStatementSeries extends ParsedStatement {
 	public final List<ParsedStatement> statements;
-	private final Context context;
 	public static ParsedStatementSeries getInstance(ParsedStatement s,
 			Context context) {
 		if (s.kind() == SentenceType.COMPOUND) return (ParsedStatementSeries) s;
@@ -19,8 +22,8 @@ public class ParsedStatementSeries extends ParsedStatement {
 	}
 	public ParsedStatementSeries(List<ParsedStatement> statements,
 			Context context) {
+		super(context);
 		this.statements = statements;
-		this.context = context;
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment env) {
@@ -28,8 +31,28 @@ public class ParsedStatementSeries extends ParsedStatement {
 		return true;
 	}
 	@Override
-	public void execute(LocalEnvironment environment) {
-		statements.forEach(s -> s.execute(environment));
+	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
+		for (ParsedStatement s : statements) {
+			Optional<LiteralExpression> expr = s.execute(environment);
+			if (expr.isPresent()) return expr;
+		}
+		return Optional.empty();
+	}
+	@Override
+	public Optional<GenericType> returnType(StaticEnvironment env) {
+		Optional<GenericType> type = Optional.empty();
+		for (ParsedStatement s : statements) {
+			Optional<GenericType> state = s.returnType(env);
+			if (!state.isPresent()) continue;
+			if (!type.isPresent()) {
+				type = state;
+				continue;
+			}
+			if (type.get().equals(state.get())) continue;
+			TypingErrors.inconsistentBranchTyping("suite", type.get(),
+					state.get(), context());
+		}
+		return type;
 	}
 	@Override
 	public void clean(LocalEnvironment environment) {
@@ -48,10 +71,6 @@ public class ParsedStatementSeries extends ParsedStatement {
 		if (statements.size() > 1) return false;
 		if (statements.size() == 0) return true;
 		return statements.get(0).isSimple();
-	}
-	@Override
-	public Context context() {
-		return context;
 	}
 	@Override
 	public int hashCode() {

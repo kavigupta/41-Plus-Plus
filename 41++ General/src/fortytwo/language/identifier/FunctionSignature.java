@@ -22,6 +22,38 @@ public class FunctionSignature {
 		this.inputTypes = inputTypes;
 		this.outputType = outputType;
 	}
+	public final TypeVariableRoster typeVariables(
+			List<? extends Expression> arguments, StaticEnvironment env) {
+		TypeVariableRoster roster = new TypeVariableRoster();
+		for (int i = 0; i < this.inputTypes.size(); i++) {
+			ConcreteType arg = arguments.get(i).type(env);
+			GenericType expected = this.inputTypes.get(i);
+			switch (expected.kind()) {
+				case CONCRETE:
+					// this should be the same because of prior checking.
+					break;
+				case CONSTRUCTOR:
+				case VARIABLE:
+					// does not check the other condition since variable match
+					// should always succeed
+					roster.pairs.putAll(expected.match(arg).get().pairs);
+					break;
+			}
+		}
+		return roster;
+	}
+	public boolean matches(FunctionName name, List<ConcreteType> inputs) {
+		if (!this.name.equals(name)) return false;
+		if (this.inputTypes.size() != inputs.size()) return false;
+		return accepts(inputs);
+	}
+	public boolean accepts(List<ConcreteType> inputs) {
+		if (inputs.size() != inputTypes.size()) return false;
+		for (int i = 0; i < inputs.size(); i++)
+			if (!inputTypes.get(i).match(inputs.get(i)).isPresent())
+				return false;;
+		return true;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -54,34 +86,5 @@ public class FunctionSignature {
 	public String toString() {
 		return "FunctionSignature [name=" + name + ", inputTypes=" + inputTypes
 				+ ", outputType=" + outputType + "]";
-	}
-	public final TypeVariableRoster typeVariables(
-			List<? extends Expression> arguments, StaticEnvironment env) {
-		TypeVariableRoster roster = new TypeVariableRoster();
-		for (int i = 0; i < this.inputTypes.size(); i++) {
-			ConcreteType arg = arguments.get(i).type(env);
-			GenericType expected = this.inputTypes.get(i);
-			switch (expected.kind()) {
-				case CONCRETE:
-					// this should be the same because of prior checking.
-					break;
-				case CONSTRUCTOR:
-				case VARIABLE:
-					roster.pairs.putAll(expected.match(arg).pairs);
-					break;
-			}
-		}
-		return roster;
-	}
-	public boolean matches(FunctionName name, List<ConcreteType> inputs) {
-		if (!this.name.equals(name)) return false;
-		if (this.inputTypes.size() != inputs.size()) return false;
-		return accepts(inputs);
-	}
-	public boolean accepts(List<ConcreteType> inputs) {
-		if (inputs.size() != inputTypes.size()) return false;
-		for (int i = 0; i < inputs.size(); i++)
-			if (inputTypes.get(i).match(inputs.get(i)) == null) return false;;
-		return true;
 	}
 }

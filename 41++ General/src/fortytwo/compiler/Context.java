@@ -12,7 +12,7 @@ public class Context implements Contextualized {
 	 * A context representing a "synthetic" context, such as a value created by
 	 * a natively implemented function.
 	 */
-	public static final Context SYNTHETIC = new Context(null, -1, -1);
+	public static final Context SYNTHETIC = new Context("", -1, -1);
 	private final String in;
 	/**
 	 * The starting position within the string.

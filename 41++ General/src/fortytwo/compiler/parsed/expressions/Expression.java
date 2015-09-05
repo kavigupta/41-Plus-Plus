@@ -1,8 +1,11 @@
 package fortytwo.compiler.parsed.expressions;
 
+import java.util.Optional;
+
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -12,6 +15,9 @@ import fortytwo.vm.expressions.LiteralExpression;
  */
 public abstract class Expression extends ParsedStatement {
 	private ConcreteType type = null;
+	protected Expression(Context context) {
+		super(context);
+	}
 	/**
 	 * The type of this expression. After the first invocation, it returns a
 	 * cached copy, so a null environment can be passed.
@@ -40,17 +46,21 @@ public abstract class Expression extends ParsedStatement {
 	public abstract LiteralExpression literalValue(
 			LocalEnvironment environment);
 	@Override
-	public final void execute(LocalEnvironment environment) {
+	public final Optional<LiteralExpression> execute(
+			LocalEnvironment environment) {
 		literalValue(environment);
+		return Optional.empty();
 	}
 	@Override
 	public final void clean(LocalEnvironment environment) {
 		// no op deliberately
 	}
 	@Override
-	public abstract Context context();
-	@Override
 	public final boolean isSimple() {
 		return true;
+	}
+	@Override
+	public Optional<GenericType> returnType(StaticEnvironment env) {
+		return Optional.empty();
 	}
 }

@@ -2,6 +2,7 @@ package fortytwo.vm.environment;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -17,12 +18,13 @@ public class FunctionRoster {
 	private FunctionRoster(StaticEnvironment env) {
 		this.env = env;
 	}
-	public Function42 get(FunctionSignature signature,
+	public Optional<Function42> get(FunctionSignature signature,
 			List<Expression> arguments, List<ConcreteType> types) {
 		Pair<Function42, ConcreteType> func = StdLib42
 				.matchCompiledFieldAccess(env, signature.name, types);
-		if (func != null) return func.getKey();
-		return functions.get(signature);
+		if (func != null) return Optional.of(func.getKey());
+		Function42 f = functions.get(signature);
+		return f == null ? Optional.empty() : Optional.of(f);
 	}
 	public void add(Function42 function) {
 		functions.put(function.signature(), function);

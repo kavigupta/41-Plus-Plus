@@ -1,14 +1,18 @@
 package fortytwo.compiler.parsed.statements;
 
+import java.util.Optional;
+
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.GenericType;
 import fortytwo.language.type.StructureType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
+import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
 
 /**
@@ -28,14 +32,13 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	 * The value to set the field to.
 	 */
 	public final Expression value;
-	private final Context context;
 	public ParsedFieldAssignment(VariableIdentifier name,
 			VariableIdentifier field, Expression parseExpression,
 			Context context) {
+		super(context);
 		this.name = name;
 		this.field = field;
 		this.value = parseExpression;
-		this.context = context;
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment env) {
@@ -47,14 +50,15 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		return true;
 	}
 	@Override
-	public void execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
 		StaticEnvironment se = environment.staticEnvironment();
 		if (!(name.type(se) instanceof StructureType)) {
 			// should never happen.
-			return;
+			return Optional.empty();
 		}
 		((LiteralObject) name.literalValue(environment)).redefine(field,
 				value.literalValue(environment));
+		return Optional.empty();
 	}
 	@Override
 	public void clean(LocalEnvironment environment) {
@@ -69,8 +73,8 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		return true;
 	}
 	@Override
-	public Context context() {
-		return context;
+	public Optional<GenericType> returnType(StaticEnvironment env) {
+		return Optional.empty();
 	}
 	@Override
 	public int hashCode() {

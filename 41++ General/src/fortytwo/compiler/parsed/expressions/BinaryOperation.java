@@ -32,16 +32,15 @@ public class BinaryOperation extends Expression {
 	 * The operation to be used
 	 */
 	public final Operation operation;
-	private final Context context;
 	/**
 	 * Struct constructor.
 	 */
 	public BinaryOperation(Expression first, Expression second,
 			Operation operation, Context context) {
+		super(context);
 		this.first = first;
 		this.second = second;
 		this.operation = operation;
-		this.context = context;
 	}
 	/**
 	 * @return {@code -x}
@@ -76,10 +75,6 @@ public class BinaryOperation extends Expression {
 	@Override
 	public String toSourceCode() {
 		return SourceCode.display(first, operation, second);
-	}
-	@Override
-	public Context context() {
-		return context;
 	}
 	@Override
 	public String toString() {

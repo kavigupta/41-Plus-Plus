@@ -1,6 +1,5 @@
 package fortytwo.language.field;
 
-import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -13,6 +12,7 @@ public class TypedVariable extends Expression {
 	public final VariableIdentifier name;
 	public final ConcreteType type;
 	public TypedVariable(VariableIdentifier name, ConcreteType type) {
+		super(name.context());
 		this.name = name;
 		this.type = type;
 	}
@@ -27,10 +27,6 @@ public class TypedVariable extends Expression {
 	@Override
 	public SentenceType kind() {
 		return SentenceType.PURE_EXPRESSION;
-	}
-	@Override
-	public Context context() {
-		return name.context();
 	}
 	@Override
 	public String toSourceCode() {

@@ -234,10 +234,9 @@ public class ExpressionParser {
 	}
 	private static class UnevaluatedOperator extends Expression {
 		public Operation operator;
-		public Context context;
 		public UnevaluatedOperator(Operation operator, Context context) {
+			super(context);
 			this.operator = operator;
-			this.context = context;
 		}
 		@Override
 		public ConcreteType findType(StaticEnvironment env) {
@@ -257,10 +256,6 @@ public class ExpressionParser {
 		@Override
 		public String toString() {
 			return toSourceCode();
-		}
-		@Override
-		public Context context() {
-			return context;
 		}
 		@Override
 		public LiteralExpression literalValue(LocalEnvironment environment) {

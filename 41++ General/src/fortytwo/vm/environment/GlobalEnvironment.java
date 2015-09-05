@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.declaration.FunctionConstruct;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
-import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedDefinition;
@@ -45,15 +44,9 @@ public class GlobalEnvironment {
 				case FUNCTION:
 					FunctionConstruct f = (FunctionConstruct) s;
 					environment.putReference(f.declaration);
-					// TODO remove once multiple exit is undefined
-					if (f.suite.size() == 0) ParserErrors.noExit(f.declaration);
-					Sentence output = f.suite.remove(f.suite.size() - 1);
-					if (!(output instanceof FunctionOutput))
-						ParserErrors.noExit(f.declaration);
-					System.out.println("DECLADD" + f.declaration.sig);
+					// TODO remove once multiple exit is defined
 					functions.add(new FunctionImplemented(f.declaration,
-							Parser.temporaryHack(f.suite).statements,
-							(FunctionOutput) output));
+							Parser.temporaryHack(f.suite).statements));
 					break;
 				case DECLARATION_STRUCT:
 					environment.structs

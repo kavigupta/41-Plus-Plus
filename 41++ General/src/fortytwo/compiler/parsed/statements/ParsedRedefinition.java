@@ -1,23 +1,26 @@
 package fortytwo.compiler.parsed.statements;
 
+import java.util.Optional;
+
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
+import fortytwo.vm.expressions.LiteralExpression;
 
 public class ParsedRedefinition extends ParsedAssignment {
 	public final VariableIdentifier name;
 	public final Expression value;
-	private final Context context;
 	public ParsedRedefinition(VariableIdentifier name, Expression expr,
 			Context context) {
+		super(context);
 		this.name = name;
 		this.value = expr;
-		this.context = context;
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment env) {
@@ -28,8 +31,13 @@ public class ParsedRedefinition extends ParsedAssignment {
 		return false;
 	}
 	@Override
-	public void execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
 		environment.vars.redefine(name, value.literalValue(environment));
+		return Optional.empty();
+	}
+	@Override
+	public Optional<GenericType> returnType(StaticEnvironment env) {
+		return Optional.empty();
 	}
 	@Override
 	public void clean(LocalEnvironment environment) {
@@ -42,10 +50,6 @@ public class ParsedRedefinition extends ParsedAssignment {
 	@Override
 	public boolean isSimple() {
 		return true;
-	}
-	@Override
-	public Context context() {
-		return context;
 	}
 	@Override
 	public int hashCode() {

@@ -39,21 +39,6 @@ public class FunctionName {
 				+ ((function == null) ? 0 : function.hashCode());
 		return result;
 	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		FunctionName other = (FunctionName) obj;
-		if (function == null) {
-			if (other.function != null) return false;
-		} else if (!function.equals(other.function)) return false;
-		return true;
-	}
-	@Override
-	public String toString() {
-		return function.toString();
-	}
 	public Context context() {
 		return Context.sum(function.stream().map(FunctionComponent::context)
 				.collect(Collectors.toList()));
@@ -72,5 +57,20 @@ public class FunctionName {
 		}
 		if (sbuff.length() == 0) return "";
 		return sbuff.substring(0, sbuff.length() - 1);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		FunctionName other = (FunctionName) obj;
+		if (function == null) {
+			if (other.function != null) return false;
+		} else if (!function.equals(other.function)) return false;
+		return true;
+	}
+	@Override
+	public String toString() {
+		return function.toString();
 	}
 }

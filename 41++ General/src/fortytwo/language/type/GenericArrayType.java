@@ -1,5 +1,7 @@
 package fortytwo.language.type;
 
+import java.util.Optional;
+
 import fortytwo.compiler.Context;
 import fortytwo.vm.environment.TypeVariableRoster;
 
@@ -19,8 +21,8 @@ public class GenericArrayType implements GenericType {
 		return context;
 	}
 	@Override
-	public TypeVariableRoster match(ConcreteType toMatch) {
-		if (!(toMatch instanceof ArrayType)) return null;
+	public Optional<TypeVariableRoster> match(ConcreteType toMatch) {
+		if (!(toMatch instanceof ArrayType)) return Optional.empty();
 		return contents.match(((ArrayType) toMatch).contentType);
 	}
 	@Override

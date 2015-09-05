@@ -33,7 +33,10 @@ public class FunctionsTest {
 			+ "	Exit the function and output (the letters \"strInter\" combined to form a string).\n"
 			+ "Define a function called Test procedures.\n"
 			+ "	Define a (pair of number and number) called \"pair\" with a \"key\" of 2 and a \"value\" of 3.\n"
-			+ "	Tell me what \"pair\" is.\n" + "	Exit the function.";
+			+ "	Tell me what \"pair\" is.\n" + "	Exit the function.\n"
+			+ "Define a function called multiple return on \"branch\" that takes a bool called \"branch\" and outputs a number.\n"
+			+ "	If \"branch\":\n" + "\t\tExit the function and output 1.\n"
+			+ "	Otherwise:\n" + "		Exit the function and output 0.";
 	GlobalEnvironment env;
 	@Before
 	public void init() {

@@ -2,7 +2,6 @@ package fortytwo.language.identifier;
 
 import java.util.Arrays;
 
-import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Language;
@@ -27,6 +26,7 @@ public class VariableIdentifier extends Expression {
 		return new VariableIdentifier(token);
 	}
 	private VariableIdentifier(LiteralToken name) {
+		super(name.context);
 		this.name = name;
 	}
 	@Override
@@ -40,10 +40,6 @@ public class VariableIdentifier extends Expression {
 	@Override
 	public SentenceType kind() {
 		return SentenceType.PURE_EXPRESSION;
-	}
-	@Override
-	public Context context() {
-		return name.context;
 	}
 	@Override
 	public int hashCode() {

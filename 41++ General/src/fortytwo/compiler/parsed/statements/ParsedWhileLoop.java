@@ -1,25 +1,28 @@
 package fortytwo.compiler.parsed.statements;
 
+import java.util.Optional;
+
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
+import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralBool;
+import fortytwo.vm.expressions.LiteralExpression;
 
 public class ParsedWhileLoop extends ParsedStatement {
 	public final Expression condition;
 	public final ParsedStatement statement;
-	private final Context context;
 	public ParsedWhileLoop(Expression condition,
 			ParsedStatement ParsedStatement, Context context) {
+		super(context);
 		this.condition = condition;
 		this.statement = ParsedStatement;
-		this.context = context;
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment env) {
@@ -30,11 +33,17 @@ public class ParsedWhileLoop extends ParsedStatement {
 		return statement.isTypeChecked(env);
 	}
 	@Override
-	public void execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
 		while (((LiteralBool) condition.literalValue(environment)).contents) {
-			statement.execute(environment);
+			Optional<LiteralExpression> expr = statement.execute(environment);
+			if (expr.isPresent()) return expr;
 			statement.clean(environment);
 		}
+		return Optional.empty();
+	}
+	@Override
+	public Optional<GenericType> returnType(StaticEnvironment env) {
+		return statement.returnType(env);
 	}
 	@Override
 	public void clean(LocalEnvironment environment) {
@@ -51,10 +60,6 @@ public class ParsedWhileLoop extends ParsedStatement {
 	@Override
 	public boolean isSimple() {
 		return false;
-	}
-	@Override
-	public Context context() {
-		return context;
 	}
 	@Override
 	public int hashCode() {

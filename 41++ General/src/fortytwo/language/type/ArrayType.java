@@ -1,6 +1,7 @@
 package fortytwo.language.type;
 
 import fortytwo.compiler.Context;
+import fortytwo.vm.expressions.LiteralArray;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class ArrayType implements ConcreteType {
@@ -13,6 +14,15 @@ public class ArrayType implements ConcreteType {
 	@Override
 	public Context context() {
 		return context;
+	}
+	@Override
+	public String toSourceCode() {
+		return "(array of " + contentType.toSourceCode() + ")";
+	}
+	@Override
+	public LiteralExpression defaultValue() {
+		return new LiteralArray(PrimitiveType.synthetic(PrimitiveTypeWOC.VOID),
+				0, Context.SYNTHETIC);
 	}
 	@Override
 	public int hashCode() {
@@ -32,13 +42,5 @@ public class ArrayType implements ConcreteType {
 			if (other.contentType != null) return false;
 		} else if (!contentType.equals(other.contentType)) return false;
 		return true;
-	}
-	@Override
-	public String toSourceCode() {
-		return "(array of " + contentType.toSourceCode() + ")";
-	}
-	@Override
-	public LiteralExpression defaultValue() {
-		return null;
 	}
 }

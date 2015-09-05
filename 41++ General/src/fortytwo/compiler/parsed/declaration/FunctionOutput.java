@@ -1,21 +1,26 @@
 package fortytwo.compiler.parsed.declaration;
 
+import java.util.Optional;
+
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.expressions.Expression;
+import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
+import fortytwo.language.type.GenericType;
+import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.expressions.LiteralExpression;
 
 /**
  * A ParsedExpression wrapped up with a context so it can function as a
  * sentence.
  */
-public class FunctionOutput implements Sentence {
+public class FunctionOutput extends ParsedStatement {
 	/**
 	 * The output, in the form of an Expression
 	 */
 	public final Expression output;
-	private final Context context;
 	/**
 	 * @param output
 	 *        the output of the function
@@ -23,8 +28,25 @@ public class FunctionOutput implements Sentence {
 	 *        the context of the sentence
 	 */
 	public FunctionOutput(Expression output, Context context) {
+		super(context);
 		this.output = output;
-		this.context = context;
+	}
+	@Override
+	protected boolean typeCheck(StaticEnvironment environment) {
+		return output.isTypeChecked(environment);
+	}
+	@Override
+	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
+		return Optional.of(output.literalValue(environment));
+	}
+	@Override
+	public void clean(LocalEnvironment environment) {
+		// no-op
+	}
+	@Override
+	public boolean isSimple() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 	@Override
 	public SentenceType kind() {
@@ -35,12 +57,8 @@ public class FunctionOutput implements Sentence {
 		return SourceCode.display(this);
 	}
 	@Override
-	public boolean isSimple() {
-		return true;
-	}
-	@Override
-	public Context context() {
-		return context;
+	public Optional<GenericType> returnType(StaticEnvironment env) {
+		return Optional.of(output.type(env));
 	}
 	@Override
 	public int hashCode() {

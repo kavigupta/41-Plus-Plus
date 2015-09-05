@@ -1,5 +1,7 @@
 package fortytwo.language.type;
 
+import java.util.Optional;
+
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -23,11 +25,11 @@ public class TypeVariable implements GenericType {
 		return name.context();
 	}
 	@Override
-	public TypeVariableRoster match(ConcreteType toMatch) {
+	public Optional<TypeVariableRoster> match(ConcreteType toMatch) {
 		TypeVariableRoster roster = new TypeVariableRoster();
 		// doesn't worry about reassigning for obvious reasons
 		roster.assign(this, toMatch);
-		return roster;
+		return Optional.of(roster);
 	}
 	@Override
 	public ConcreteType resolve(TypeVariableRoster roster) {

@@ -1,13 +1,17 @@
 package fortytwo.compiler.parsed.statements;
 
+import java.util.Optional;
+
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.TypedVariable;
+import fortytwo.language.type.GenericType;
 import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.StructureRoster;
+import fortytwo.vm.expressions.LiteralExpression;
 
 /**
  * Represents statements that create new variables.
@@ -21,7 +25,6 @@ public class ParsedDefinition extends ParsedStatement {
 	 * The fields the variable will contain.
 	 */
 	public final VariableRoster<?> fields;
-	private final Context context;
 	/**
 	 * @param name
 	 *        The name and type of the variable to create.
@@ -32,21 +35,22 @@ public class ParsedDefinition extends ParsedStatement {
 	 */
 	public ParsedDefinition(TypedVariable name, VariableRoster<?> fields,
 			Context context) {
+		super(context);
 		this.toCreate = name;
 		this.fields = fields;
-		this.context = context;
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment environment) {
 		environment.addType(toCreate.name, toCreate.type);
 		return environment.structs.typeCheckConstructor(environment, toCreate,
-				fields, context);
+				fields, context());
 	}
 	@Override
-	public void execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
 		StructureRoster struct = environment.global.staticEnv.structs;
 		environment.vars.assign(toCreate.name, struct.instance(toCreate,
 				fields.literalValue(environment), toCreate.name.context()));
+		return Optional.empty();
 	}
 	@Override
 	public void clean(LocalEnvironment environment) {
@@ -65,8 +69,8 @@ public class ParsedDefinition extends ParsedStatement {
 		return true;
 	}
 	@Override
-	public Context context() {
-		return context;
+	public Optional<GenericType> returnType(StaticEnvironment env) {
+		return Optional.empty();
 	}
 	@Override
 	public int hashCode() {

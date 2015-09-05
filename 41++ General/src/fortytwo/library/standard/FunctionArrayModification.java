@@ -16,6 +16,7 @@ import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralArray;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
+import fortytwo.vm.expressions.LiteralVoid;
 
 public class FunctionArrayModification extends Function42 {
 	public static final FunctionArrayModification ST = new FunctionArrayModification(
@@ -37,7 +38,7 @@ public class FunctionArrayModification extends Function42 {
 		LiteralNumber index = (LiteralNumber) arguments.get(0);
 		LiteralExpression value = arguments.get(2);
 		array.set(index.contents.intValue(), value, Context.sum(arguments));
-		return null;
+		return LiteralVoid.INSTANCE;
 	}
 	@Override
 	public PrimitiveType outputType() {

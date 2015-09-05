@@ -1,17 +1,20 @@
 package fortytwo.compiler.parsed.statements;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
+import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralBool;
+import fortytwo.vm.expressions.LiteralExpression;
 
 public class ParsedIfElse extends ParsedStatement {
 	public final Expression condition;
@@ -22,19 +25,36 @@ public class ParsedIfElse extends ParsedStatement {
 	}
 	private ParsedIfElse(Expression condition, ParsedStatementSeries ifso,
 			ParsedStatementSeries ifelse) {
+		super(Context.sum(Arrays.asList(condition.context(), ifso.context(),
+				ifelse.context())));
 		this.condition = condition;
 		this.ifso = ifso;
 		this.ifelse = ifelse;
 	}
 	@Override
-	public void execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
 		if (((LiteralBool) condition.literalValue(environment)).contents) {
-			ifso.execute(environment);
+			Optional<LiteralExpression> ret = ifso.execute(environment);
+			if (ret.isPresent()) return ret;
 			ifso.clean(environment);
 		} else {
-			ifelse.execute(environment);
+			Optional<LiteralExpression> ret = ifelse.execute(environment);
+			if (ret.isPresent()) return ret;
 			ifelse.clean(environment);
 		}
+		return Optional.empty();
+	}
+	@Override
+	public Optional<GenericType> returnType(StaticEnvironment env) {
+		Optional<GenericType> a = ifso.returnType(env),
+				b = ifelse.returnType(env);
+		if (!a.isPresent() && !b.isPresent()) return Optional.empty();
+		if (a.isPresent() && b.isPresent()) {
+			if (a.get().equals(b.get())) return a;
+			TypingErrors.inconsistentBranchTyping("if statement", a.get(),
+					b.get(), this.context());
+		}
+		return a.isPresent() ? a : b;
 	}
 	@Override
 	public void clean(LocalEnvironment environment) {
@@ -45,6 +65,7 @@ public class ParsedIfElse extends ParsedStatement {
 		if (condition.type(env).equals(
 				new PrimitiveType(PrimitiveTypeWOC.BOOL, Context.SYNTHETIC)))
 			return true;
+		returnType(env);
 		TypingErrors.expectedBoolInCondition(true, condition, env);
 		// unreachable
 		return false;
@@ -60,11 +81,6 @@ public class ParsedIfElse extends ParsedStatement {
 	@Override
 	public boolean isSimple() {
 		return false;
-	}
-	@Override
-	public Context context() {
-		return Context.sum(Arrays.asList(condition.context(), ifso.context(),
-				ifelse.context()));
 	}
 	@Override
 	public int hashCode() {

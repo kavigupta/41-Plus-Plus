@@ -2,6 +2,7 @@ package fortytwo.language.type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
@@ -20,19 +21,20 @@ public class GenericStructureType implements GenericType {
 		this.context = context;
 	}
 	@Override
-	public TypeVariableRoster match(ConcreteType toMatch) {
-		if (!(toMatch instanceof StructureType)) return null;
+	public Optional<TypeVariableRoster> match(ConcreteType toMatch) {
+		if (!(toMatch instanceof StructureType)) return Optional.empty();
 		StructureType type = (StructureType) toMatch;
-		if (type.types.size() != inputs.size()) return null;
+		if (type.types.size() != inputs.size()) return Optional.empty();
 		TypeVariableRoster roster = new TypeVariableRoster();
 		for (int i = 0; i < type.types.size(); i++) {
 			// this doesn't worry about reassigning an existing variable for
 			// obvious reasons.
-			TypeVariableRoster thisone = inputs.get(i).match(type.types.get(i));
-			if (thisone == null) return null;
-			roster.pairs.putAll(thisone.pairs);
+			Optional<TypeVariableRoster> thisone = inputs.get(i)
+					.match(type.types.get(i));
+			if (!thisone.isPresent()) return Optional.empty();
+			roster.pairs.putAll(thisone.get().pairs);
 		}
-		return roster;
+		return Optional.of(roster);
 	}
 	@Override
 	public ConcreteType resolve(TypeVariableRoster roster) {

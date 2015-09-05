@@ -172,8 +172,9 @@ public class SourceCode {
 		return displayList(items);
 	}
 	private static String displayReturn(Expression output) {
-		if (output == null) return "";
-		return " and output " + output.toSourceCode();
+		String ret = output.toSourceCode();
+		if (ret.length() == 0) return "";
+		return " and output " + ret;
 	}
 	private static String displayOutputType(GenericType outputType,
 			boolean hasFields) {

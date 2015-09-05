@@ -6,11 +6,13 @@ import java.util.stream.Collectors;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.ParsedConstruct;
+import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.expressions.BinaryOperation;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Language;
 import fortytwo.language.SourceCode;
 import fortytwo.language.field.TypedVariable;
+import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveTypeWOC;
@@ -126,5 +128,24 @@ public class TypingErrors {
 						"The primitive variable ~%s~, of type ~%s~, cannot be defined without a value",
 						name.name.toSourceCode(), name.type.toSourceCode()),
 				name.context());
+	}
+	public static void incorrectOutput(FunctionSignature sig,
+			GenericType actual, FunctionOutput s) {
+		VirtualMachine.error(ErrorType.TYPING,
+				String.format(
+						"The function ~%s~ should output ~%s~, but the sentence ~%s~ outputs ~%s~, which is of type ~%s~",
+						sig.toString(),
+						Language.articleized(sig.outputType.toSourceCode()),
+						s.toSourceCode(), s.output.toSourceCode(),
+						actual.toSourceCode()),
+				s.context());
+	}
+	public static void inconsistentBranchTyping(String inWhat,
+			GenericType first, GenericType second, Context context) {
+		VirtualMachine.error(ErrorType.TYPING,
+				String.format(
+						"The two branches of this %s contain outputs of types ~%s~ and ~%s~, when in fact they should return the same type",
+						inWhat, first, second),
+				context);
 	}
 }
