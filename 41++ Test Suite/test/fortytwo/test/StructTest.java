@@ -18,7 +18,8 @@ import fortytwo.vm.environment.LocalEnvironment;
 public class StructTest {
 	public static final String TEST_STRUCTS = "Define a type called singleton."
 			+ "Define a type called record that contains a string called \"name\" and a number called \"dateOfBirth\"."
-			+ "Define a type called triple of \"Tx\", \"Ty\", and \"Tz\" that contains a \"Tx\" called \"x\", a \"Ty\" called \"y\", and a \"Tz\" called \"z\".";
+			+ "Define a type called triple of \"Tx\", \"Ty\", and \"Tz\" that contains a \"Tx\" called \"x\", a \"Ty\" called \"y\", and a \"Tz\" called \"z\"."
+			+ "Define a type called pair of \"k\" and \"v\" that contains a \"k\" called \"key\" and a \"v\" called \"value\".";
 	GlobalEnvironment env;
 	@Before
 	public void init() {
@@ -81,6 +82,21 @@ public class StructTest {
 						+ "Define a (triple of number, string, and bool) called \"st2\" with a \"x\" of 12345, a \"y\" of 'def', and a \"z\" of false."
 						+ "Set the \"x\" of \"st2\" to 2. Set the \"y\" of \"st2\" to 'abc'. Set the \"z\" of \"st2\" to true."
 						+ "Tell me what (\"st\" is equal to \"st2\") is.");
+	}
+	@Test
+	public void nestedModificationTest() {
+		assertPrint(
+				"{(pair of (pair of number and number) and number): \"key\" <= {(pair of number and number): \"key\" <= 0, \"value\" <= 1}, \"value\" <= 2}\n"
+						+ "{(pair of number and number): \"key\" <= 0, \"value\" <= 1}\n"
+						+ "{(pair of number and number): \"key\" <= 12345, \"value\" <= 1}\n"
+						+ "12345\n",
+				"Define a (pair of number and number) called \"par\" with a \"key\" of 0 and a \"value\" of 1.\n"
+						+ "Define a (pair of (pair of number and number) and number) called \"trip\" with a \"key\" of \"par\" and a \"value\" of 2.\n"
+						+ "Tell me what \"trip\" is.\n"
+						+ "Tell me what (the \"key\" of \"trip\") is.\n"
+						+ "Set the \"key\" of (the \"key\" of \"trip\") to 12345.\n"
+						+ "Tell me what (the \"key\" of \"trip\") is.\n"
+						+ "Tell me what (the \"key\" of (the \"key\" of \"trip\")) is.");
 	}
 	public void assertPrint(String result, String statement) {
 		LocalEnvironment loc = env.minimalLocalEnvironment();
