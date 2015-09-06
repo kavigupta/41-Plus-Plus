@@ -21,8 +21,7 @@ public class ArrayType implements ConcreteType {
 	}
 	@Override
 	public LiteralExpression defaultValue() {
-		return new LiteralArray(PrimitiveType.synthetic(PrimitiveTypeWOC.VOID),
-				0, Context.SYNTHETIC);
+		return new LiteralArray(PrimitiveType.SYNTH_VOID, 0, Context.SYNTHETIC);
 	}
 	@Override
 	public int hashCode() {

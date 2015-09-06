@@ -11,10 +11,12 @@ import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.language.type.FunctionType;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.expressions.LiteralExpression;
+import fortytwo.vm.expressions.LiteralFunction;
 
 public class ParsedFunctionCall extends Expression {
 	public final FunctionName name;
@@ -35,10 +37,13 @@ public class ParsedFunctionCall extends Expression {
 		final List<ConcreteType> types = arguments.stream()
 				.map(x -> x.type(env.staticEnvironment()))
 				.collect(Collectors.toList());
-		final FunctionSignature sig = se.referenceTo(name, types);
-		final Optional<Function42> f = env.global.funcs.get(sig, arguments,
-				types);
-		if (!f.isPresent()) throw new RuntimeException(sig.name.toString());
+		// call get because it should have been checked already
+		final FunctionType sig = se.referenceTo(name, types).get();
+		final Optional<LiteralFunction> f = env.global.funcs
+				.get(new FunctionSignature(name, sig), arguments, types);
+		if (!f.isPresent())
+			// crash. There is no reason this point should have been reached.
+			throw new RuntimeException(name.toString());
 		return f.get().apply(env.global, arguments.stream()
 				.map(x -> x.literalValue(env)).collect(Collectors.toList()));
 	}
@@ -46,8 +51,15 @@ public class ParsedFunctionCall extends Expression {
 	public ConcreteType findType(StaticEnvironment env) {
 		final List<ConcreteType> types = arguments.stream()
 				.map(x -> x.type(env)).collect(Collectors.toList());
-		final FunctionSignature sig = env.referenceTo(name, types);
-		return sig.outputType.resolve(sig.typeVariables(arguments, env));
+		final Optional<FunctionType> sigOpt = env.referenceTo(name, types);
+		if (!sigOpt.isPresent()) DNEErrors.functionSignatureDNE(name, types);
+		return sigOpt.get().outputType
+				.resolve(sigOpt.get().typeVariables(arguments, env));
+	}
+	@Override
+	public boolean typeCheck(StaticEnvironment environment) {
+		findType(environment);
+		return true;
 	}
 	@Override
 	public SentenceType kind() {

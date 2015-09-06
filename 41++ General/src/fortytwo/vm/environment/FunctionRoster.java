@@ -4,30 +4,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.library.standard.StdLib42;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.expressions.LiteralFunction;
 
 public class FunctionRoster {
 	private final StaticEnvironment env;
-	public final HashMap<FunctionSignature, Function42> functions = new HashMap<>();
+	public final HashMap<FunctionSignature, LiteralFunction> functions = new HashMap<>();
 	private FunctionRoster(StaticEnvironment env) {
 		this.env = env;
 	}
-	public Optional<Function42> get(FunctionSignature signature,
+	public Optional<LiteralFunction> get(FunctionSignature signature,
 			List<Expression> arguments, List<ConcreteType> types) {
-		final Pair<Function42, ConcreteType> func = StdLib42
+		final Optional<LiteralFunction> func = StdLib42
 				.matchCompiledFieldAccess(env, signature.name, types);
-		if (func != null) return Optional.of(func.getKey());
-		final Function42 f = functions.get(signature);
+		if (func.isPresent()) return func;
+		final LiteralFunction f = functions.get(signature);
 		return f == null ? Optional.empty() : Optional.of(f);
 	}
-	public void add(Function42 function) {
-		functions.put(function.signature(), function);
+	public void add(FunctionSignature sig, LiteralFunction func) {
+		functions.put(sig, func);
 	}
 	public static FunctionRoster getDefault(StaticEnvironment env) {
 		final FunctionRoster funcs = new FunctionRoster(env);

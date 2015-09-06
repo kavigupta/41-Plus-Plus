@@ -31,12 +31,13 @@ import fortytwo.vm.expressions.*;
 public class SourceCode {
 	public static String displayFunctionDefinition(FunctionSignature sig,
 			List<VariableIdentifier> inputVariables) {
-		final String fieldList = displayFieldList(sig.inputTypes,
+		final String fieldList = displayFieldList(sig.type.inputTypes,
 				inputVariables);
 		return "Define a function called "
 				+ displayFunctionSignature(sig.name, inputVariables)
 				+ (fieldList.length() == 0 ? "" : " that takes " + fieldList)
-				+ displayOutputType(sig.outputType, fieldList.length() != 0);
+				+ displayOutputType(sig.type.outputType,
+						fieldList.length() != 0);
 	}
 	public static String display(FunctionOutput functionReturn) {
 		return "Exit the function" + displayReturn(functionReturn.output);

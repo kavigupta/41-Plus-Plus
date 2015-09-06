@@ -23,7 +23,7 @@ public abstract class LiteralExpression extends Expression {
 		return this;
 	}
 	@Override
-	public final Optional<VariableIdentifier> identifier() {
+	public Optional<VariableIdentifier> identifier() {
 		return Optional.empty();
 	}
 	@Override

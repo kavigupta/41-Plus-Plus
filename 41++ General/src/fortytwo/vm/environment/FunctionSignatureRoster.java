@@ -1,35 +1,39 @@
 package fortytwo.vm.environment;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
-import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ConcreteType;
 
 public class FunctionSignatureRoster {
-	public final ArrayList<FunctionSignature> funcs = new ArrayList<>();
-	public FunctionSignature referenceTo(FunctionName name,
-			List<ConcreteType> inputs) {
-		for (final FunctionSignature f : funcs)
-			if (f.name.equals(name)) if (f.accepts(inputs)) return f;
-		return null;
+	private final HashSet<FunctionSignature> typeMap;
+	public FunctionSignatureRoster() {
+		this.typeMap = new HashSet<>();
 	}
-	public void putReference(FunctionDefinition f) {
-		funcs.add(f.sig);
+	public Optional<FunctionSignature> referenceTo(FunctionName name,
+			List<ConcreteType> inputs) {
+		for (final FunctionSignature f : typeMap)
+			if (f.name.equals(name))
+				if (f.type.accepts(inputs)) return Optional.of(f);
+		return Optional.empty();
+	}
+	public void putReference(FunctionSignature sig) {
+		typeMap.add(sig);
 	}
 	@Override
 	public FunctionSignatureRoster clone() {
 		final FunctionSignatureRoster other = new FunctionSignatureRoster();
-		other.funcs.addAll(funcs);
+		other.typeMap.addAll(typeMap);
 		return other;
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (funcs == null ? 0 : funcs.hashCode());
+		result = prime * result + ((typeMap == null) ? 0 : typeMap.hashCode());
 		return result;
 	}
 	@Override
@@ -37,10 +41,14 @@ public class FunctionSignatureRoster {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final FunctionSignatureRoster other = (FunctionSignatureRoster) obj;
-		if (funcs == null) {
-			if (other.funcs != null) return false;
-		} else if (!funcs.equals(other.funcs)) return false;
+		FunctionSignatureRoster other = (FunctionSignatureRoster) obj;
+		if (typeMap == null) {
+			if (other.typeMap != null) return false;
+		} else if (!typeMap.equals(other.typeMap)) return false;
 		return true;
+	}
+	@Override
+	public String toString() {
+		return "FunctionSignatureRoster [typeMap=" + typeMap + "]";
 	}
 }

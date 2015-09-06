@@ -1,19 +1,19 @@
 package fortytwo.vm.environment;
 
 import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.Optional;
 
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.FunctionType;
 import fortytwo.library.standard.StdLib42;
-import fortytwo.vm.constructions.Function42;
 import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.expressions.LiteralExpression;
+import fortytwo.vm.expressions.LiteralFunction;
 
 public class StaticEnvironment {
 	private final StaticEnvironment container;
@@ -64,18 +64,18 @@ public class StaticEnvironment {
 		if (container == null) DNEErrors.variableDNE(name);
 		return container.typeOf(name);
 	}
-	public FunctionSignature referenceTo(FunctionName name,
+	public Optional<FunctionType> referenceTo(FunctionName name,
 			List<ConcreteType> types) {
-		final Pair<Function42, ConcreteType> func = StdLib42
+		final Optional<LiteralFunction> func = StdLib42
 				.matchCompiledFieldAccess(this, name, types);
-		if (func != null) return func.getKey().signature();
-		final FunctionSignature sig = funcs.referenceTo(name, types);
-		if (sig != null) return sig;
+		if (func.isPresent()) return Optional.of(func.get().type);
+		final Optional<FunctionSignature> sig = funcs.referenceTo(name, types);
+		if (sig.isPresent()) return Optional.of(sig.get().type);
 		if (container == null) DNEErrors.functionSignatureDNE(name, types);
 		return container.referenceTo(name, types);
 	}
 	public void putReference(FunctionDefinition f) {
-		funcs.putReference(f);
+		funcs.putReference(f.sig);
 	}
 	public LiteralExpression referenceTo(VariableIdentifier name) {
 		final LiteralExpression expr = globalVariables.referenceTo(name);

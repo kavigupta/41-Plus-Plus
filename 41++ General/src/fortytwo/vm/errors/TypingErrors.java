@@ -12,7 +12,6 @@ import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Language;
 import fortytwo.language.SourceCode;
 import fortytwo.language.field.TypedVariable;
-import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveTypeWOC;
@@ -127,13 +126,12 @@ public class TypingErrors {
 						name.name.toSourceCode(), name.type.toSourceCode()),
 				name.context());
 	}
-	public static void incorrectOutput(FunctionSignature sig,
+	public static void incorrectOutput(String debugName, GenericType output,
 			GenericType actual, FunctionOutput s) {
 		VirtualMachine.error(ErrorType.TYPING,
 				String.format(
 						"The function ~%s~ should output ~%s~, but the sentence ~%s~ outputs ~%s~, which is of type ~%s~",
-						sig.toString(),
-						Language.articleized(sig.outputType.toSourceCode()),
+						debugName, Language.articleized(output.toSourceCode()),
 						s.toSourceCode(), s.output.toSourceCode(),
 						actual.toSourceCode()),
 				s.context());

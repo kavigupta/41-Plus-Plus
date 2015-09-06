@@ -8,10 +8,6 @@ import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.language.type.ConcreteType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
-import fortytwo.vm.expressions.LiteralExpression;
 
 /**
  * A class representing the initial definition of a function, which provides a
@@ -22,7 +18,7 @@ public class FunctionDefinition implements Sentence {
 	 * The signature of this function
 	 */
 	public final FunctionSignature sig;
-	private final List<VariableIdentifier> inputVariables;
+	public final List<VariableIdentifier> inputVariables;
 	private final Context context;
 	/**
 	 * @param signature
@@ -37,25 +33,6 @@ public class FunctionDefinition implements Sentence {
 		this.sig = signature;
 		this.inputVariables = inputVariables;
 		this.context = context;
-	}
-	/**
-	 * Registers the function's parameters' types on the given static
-	 * environment (which incidentally should be newly minted)
-	 */
-	public void registerParameters(StaticEnvironment environment) {
-		for (int i = 0; i < sig.inputTypes.size(); i++)
-			environment.addType(inputVariables.get(i), (ConcreteType)
-			// LOWPRI remove cast once generic typing is allowed
-			sig.inputTypes.get(i));
-	}
-	/**
-	 * Registers this function's variables' values as given with the given
-	 * local environment.
-	 */
-	public void assignInputs(List<LiteralExpression> inputs,
-			LocalEnvironment local) {
-		for (int i = 0; i < inputVariables.size(); i++)
-			local.vars.assign(inputVariables.get(i), inputs.get(i));
 	}
 	@Override
 	public SentenceType kind() {

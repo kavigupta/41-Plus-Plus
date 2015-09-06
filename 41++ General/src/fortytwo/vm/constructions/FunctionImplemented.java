@@ -1,47 +1,43 @@
 package fortytwo.vm.constructions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.declaration.FunctionConstruct;
-import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
-import fortytwo.language.identifier.FunctionSignature;
+import fortytwo.language.SourceCode;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
 import fortytwo.language.type.GenericType;
-import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
-import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
+import fortytwo.vm.expressions.LiteralFunction;
 import fortytwo.vm.expressions.LiteralVoid;
 
 /**
  * A class representing a function that has been parsed from 41++ source
  */
-public class FunctionImplemented extends Function42 {
-	/**
-	 * The function definition
-	 */
-	private final FunctionDefinition declaration;
+public class FunctionImplemented extends LiteralFunction {
+	private final List<VariableIdentifier> variables;
 	/**
 	 * The function body, which is composed of statements.
 	 */
 	private final List<ParsedStatement> body;
+	private String debugName;
 	/**
 	 * Simple struct constructor
 	 */
-	public FunctionImplemented(FunctionDefinition f,
-			List<ParsedStatement> body) {
-		super(Context.sum(Arrays.asList(f.context(), Context.sum(body))));
-		this.declaration = f;
+	public FunctionImplemented(FunctionType type,
+			List<VariableIdentifier> variables, List<ParsedStatement> body,
+			String debugName) {
+		super(Context.sum(body), type, getImplementedFunction(variables, body));
+		this.variables = variables;
 		this.body = body;
+		this.debugName = debugName;
 	}
 	/**
 	 * Contextualizes this function into one that can actually be used (linking
@@ -51,46 +47,52 @@ public class FunctionImplemented extends Function42 {
 	 *        the environment against which to contextualize this
 	 * @return an implemented function representing this function
 	 */
+	@Override
 	public FunctionImplemented contextualize(StaticEnvironment environment) {
 		return this;
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment env) {
 		final StaticEnvironment local = StaticEnvironment.getChild(env);
-		declaration.registerParameters(local);
+		registerParameters(local);
 		for (final ParsedStatement s : body) {
 			final Optional<GenericType> actual = s.returnType(local);
 			s.isTypeChecked(local);
-			if (actual.isPresent())
-				if (!actual.get().equals(declaration.sig.outputType))
-					TypingErrors.incorrectOutput(declaration.sig, actual.get(),
-							(FunctionOutput) s);
+			if (actual.isPresent()) if (!actual.get().equals(type.outputType))
+				TypingErrors.incorrectOutput(debugName, type.outputType,
+						actual.get(), (FunctionOutput) s);
 		}
 		return true;
 	}
-	@Override
-	protected LiteralExpression apply(GlobalEnvironment env,
-			List<LiteralExpression> inputs, TypeVariableRoster roster) {
-		final LocalEnvironment local = env.minimalLocalEnvironment();
-		declaration.assignInputs(inputs, local);
-		for (final ParsedStatement s : body) {
-			final Optional<LiteralExpression> exp = s.execute(local);
-			if (exp.isPresent()) return exp.get();
-		}
-		// no need to clean the local environment, as it will be garbage
-		// collected after now.
-		// if no return, return LiteralVoid, signifying the void marker
-		return LiteralVoid.INSTANCE;
+	public static FunctionImplementation getImplementedFunction(
+			List<VariableIdentifier> variables, List<ParsedStatement> body) {
+		return (env, inputs, roster) -> {
+			final LocalEnvironment local = env.minimalLocalEnvironment();
+			for (int i = 0; i < variables.size(); i++)
+				local.vars.assign(variables.get(i), inputs.get(i));
+			for (final ParsedStatement s : body) {
+				final Optional<LiteralExpression> exp = s.execute(local);
+				if (exp.isPresent()) return exp.get();
+			}
+			// no need to clean the local environment, as it will be garbage
+			// collected after now.
+			// if no return, return LiteralVoid, signifying the void marker
+			return LiteralVoid.INSTANCE;
+		};
 	}
-	@Override
-	public ConcreteType resolveType() {
-		return new FunctionType(declaration.sig.inputTypes,
-				declaration.sig.outputType);
+	/**
+	 * Registers the function's parameters' types on the given static
+	 * environment (which incidentally should be newly minted)
+	 */
+	public void registerParameters(StaticEnvironment environment) {
+		for (int i = 0; i < type.inputTypes.size(); i++)
+			environment.addType(variables.get(i), (ConcreteType)
+			// LOWPRI remove cast once generic typing is allowed
+			type.inputTypes.get(i));
 	}
 	@Override
 	public String toSourceCode() {
-		return new FunctionConstruct(this.declaration,
-				new ArrayList<>(this.body)).toSourceCode();
+		return body.size() == 0 ? "" : SourceCode.displaySeries(body);
 	}
 	@Override
 	public boolean typedEquals(LiteralExpression other) {
@@ -98,40 +100,21 @@ public class FunctionImplemented extends Function42 {
 		return false;
 	}
 	@Override
-	public GenericType outputType() {
-		return declaration.sig.outputType;
-	}
-	@Override
-	public FunctionSignature signature() {
-		return declaration.sig;
-	}
-	/**
-	 * @return the definition of this function
-	 */
-	public FunctionDefinition definition() {
-		return declaration;
-	}
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (body == null ? 0 : body.hashCode());
-		result = prime * result
-				+ (declaration == null ? 0 : declaration.hashCode());
+		result = prime * result + ((body == null) ? 0 : body.hashCode());
 		return result;
 	}
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
-		if (obj == null) return false;
+		if (!super.equals(obj)) return false;
 		if (getClass() != obj.getClass()) return false;
-		final FunctionImplemented other = (FunctionImplemented) obj;
+		FunctionImplemented other = (FunctionImplemented) obj;
 		if (body == null) {
 			if (other.body != null) return false;
 		} else if (!body.equals(other.body)) return false;
-		if (declaration == null) {
-			if (other.declaration != null) return false;
-		} else if (!declaration.equals(other.declaration)) return false;
 		return true;
 	}
 }

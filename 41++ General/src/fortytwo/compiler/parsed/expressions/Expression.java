@@ -32,7 +32,7 @@ public abstract class Expression extends ParsedStatement {
 		return type;
 	}
 	@Override
-	protected boolean typeCheck(StaticEnvironment environment) {
+	public boolean typeCheck(StaticEnvironment environment) {
 		type(environment);
 		return true;
 	}

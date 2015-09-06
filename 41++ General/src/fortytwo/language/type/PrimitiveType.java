@@ -4,13 +4,19 @@ import fortytwo.compiler.Context;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class PrimitiveType implements ConcreteType {
+	public static final PrimitiveType //
+	SYNTH_NUMBER = synthetic(PrimitiveTypeWOC.NUMBER),
+			SYNTH_BOOL = synthetic(PrimitiveTypeWOC.BOOL),
+			SYNTH_STRING = synthetic(PrimitiveTypeWOC.STRING),
+			SYNTH_TYPE = synthetic(PrimitiveTypeWOC.TYPE),
+			SYNTH_VOID = synthetic(PrimitiveTypeWOC.VOID);
 	public final PrimitiveTypeWOC type;
 	private final Context context;
 	public PrimitiveType(PrimitiveTypeWOC types, Context context) {
 		this.type = types;
 		this.context = context;
 	}
-	public static PrimitiveType synthetic(PrimitiveTypeWOC type) {
+	private static PrimitiveType synthetic(PrimitiveTypeWOC type) {
 		return new PrimitiveType(type, Context.SYNTHETIC);
 	}
 	@Override

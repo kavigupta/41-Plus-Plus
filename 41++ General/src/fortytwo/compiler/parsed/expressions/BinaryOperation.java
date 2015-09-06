@@ -10,7 +10,6 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.TypingErrors;
@@ -60,8 +59,7 @@ public class BinaryOperation extends Expression {
 	}
 	@Override
 	public ConcreteType findType(StaticEnvironment env) {
-		final PrimitiveType number = PrimitiveType
-				.synthetic(PrimitiveTypeWOC.NUMBER);
+		final PrimitiveType number = PrimitiveType.SYNTH_NUMBER;
 		if (!first.type(env).equals(number))
 			TypingErrors.expectedNumberInArithmeticOperator(this, true, env);
 		if (!second.type(env).equals(number))

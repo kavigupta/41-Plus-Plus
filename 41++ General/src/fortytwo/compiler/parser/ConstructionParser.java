@@ -121,11 +121,14 @@ public class ConstructionParser {
 				TypingErrors.incompleteFieldTypingInFunctionDecl(vid, line);
 			types.add(gt);
 		}
-		if (outputloc < 0) return new FunctionDefinition(
-				FunctionSignature.getInstance(sig.getKey(), types,
-						new PrimitiveType(PrimitiveTypeWOC.VOID,
-								line.get(line.size() - 1).context)),
-				variables, Context.sum(line));
+		if (outputloc < 0)
+			return new FunctionDefinition(
+					new FunctionSignature(sig.getKey(),
+							new FunctionType(types,
+									new PrimitiveType(PrimitiveTypeWOC.VOID,
+											line.get(
+													line.size() - 1).context))),
+					variables, Context.sum(line));
 		if (Language.isArticle(line.get(outputloc + 1).token)) outputloc++;
 		line.subList(0, outputloc + 1).clear();
 		final GenericType outputType = ExpressionParser
@@ -134,7 +137,8 @@ public class ConstructionParser {
 		if (outputType.kind() != Kind.CONCRETE)
 			ParserErrors.expectedCTInFunctionDecl(outputType, line, -1);
 		return new FunctionDefinition(
-				FunctionSignature.getInstance(sig.getKey(), types, outputType),
+				new FunctionSignature(sig.getKey(),
+						new FunctionType(types, outputType)),
 				variables, Context.sum(line));
 	}
 	private static Pair<FunctionName, List<Expression>> parseFunctionSignature(

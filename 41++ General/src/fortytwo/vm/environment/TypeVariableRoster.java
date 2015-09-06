@@ -7,6 +7,19 @@ import fortytwo.language.type.TypeVariable;
 import fortytwo.vm.errors.DNEErrors;
 
 public class TypeVariableRoster {
+	public final HashMap<TypeVariable, ConcreteType> pairs = new HashMap<>();
+	public void assign(TypeVariable name, ConcreteType express) {
+		pairs.put(name, express);
+	}
+	public ConcreteType referenceTo(TypeVariable id) {
+		final ConcreteType le = pairs.get(id);
+		if (le == null) DNEErrors.typeDNE(id);
+		return le;
+	}
+	public void redefine(TypeVariable name, ConcreteType express) {
+		if (!pairs.containsKey(name)) DNEErrors.typeDNE(name);
+		pairs.put(name, express);
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -24,18 +37,5 @@ public class TypeVariableRoster {
 			if (other.pairs != null) return false;
 		} else if (!pairs.equals(other.pairs)) return false;
 		return true;
-	}
-	public final HashMap<TypeVariable, ConcreteType> pairs = new HashMap<>();
-	public void assign(TypeVariable name, ConcreteType express) {
-		pairs.put(name, express);
-	}
-	public ConcreteType referenceTo(TypeVariable id) {
-		final ConcreteType le = pairs.get(id);
-		if (le == null) DNEErrors.typeDNE(id);
-		return le;
-	}
-	public void redefine(TypeVariable name, ConcreteType express) {
-		if (!pairs.containsKey(name)) DNEErrors.typeDNE(name);
-		pairs.put(name, express);
 	}
 }
