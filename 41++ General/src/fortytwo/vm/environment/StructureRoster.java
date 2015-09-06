@@ -3,7 +3,6 @@ package fortytwo.vm.environment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
@@ -13,7 +12,6 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.*;
 import fortytwo.vm.constructions.GenericStructureSignature;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralArray;
@@ -105,24 +103,23 @@ public class StructureRoster {
 				return true;
 			if (fieldValues.numberOfVariables() == 0)
 				TypingErrors.incompleteArrayConstructor(context);
-			else DNEErrors.fieldDNEInArray(fieldValues.pairs.get(0).getKey());
+			else DNEErrors.fieldDNEInArray(
+					new ArrayList<>(fieldValues.pairs.keySet()).get(0));
 		}
 		if (!(name.type instanceof StructureType)) {
 			if (fieldValues.numberOfVariables() == 0)
 				TypingErrors.noValue(name);
 			// nothing but a structure or array has anything but a value
 			DNEErrors.fieldAccessOnPrimitive(name.type,
-					fieldValues.pairs.stream().map(x -> x.getKey())
-							.collect(Collectors.toList()));
+					new ArrayList<>(fieldValues.pairs.keySet()));
 		}
 		final Structure struct = getStructure((StructureType) name.type);
 		for (final TypedVariable f : struct.fields)
 			if (!fieldValues.referenceTo(f.name).type(env).equals(f.type))
 				TypingErrors.fieldAssignmentTypeMismatch(struct, f,
 						fieldValues.referenceTo(f.name), env);
-		fieldValues.pairs.forEach(x -> {
-			if (!struct.containsField(x.getKey()))
-				DNEErrors.fieldDNE(struct, x.getKey());
+		fieldValues.pairs.keySet().forEach(x -> {
+			if (!struct.containsField(x)) DNEErrors.fieldDNE(struct, x);
 		});
 		struct.fields.stream().filter(f -> !fieldValues.assigned(f.name))
 				.forEach(f -> TypingErrors.incompleteConstructor(struct,

@@ -55,12 +55,12 @@ public class Console42 extends JDialog {
 		});
 	}
 	public void movePointer(int direction) {
-		System.out.println("Travelling in the direction " + direction);
 		int size = history.nCommands();
 		if (size == 0) return;
 		if (pointer != history.nCommands())
 			history.set(pointer, line.getText());
-		System.out.printf("Cached %s at location %s.", line.getText(), pointer);
+		// System.out.printf("Cached %s at location %s.", line.getText(),
+		// pointer);
 		pointer += -direction;
 		if (pointer == size || pointer == -1) {
 			pointer = size;

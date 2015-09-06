@@ -13,7 +13,6 @@ import fortytwo.compiler.parser.Parser;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.constructions.FunctionImplemented;
-import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
@@ -55,7 +54,8 @@ public class GlobalEnvironment {
 				case DEFINITION:
 					final ParsedDefinition def = (ParsedDefinition) s;
 					final VariableRoster<? extends Expression> fieldValues = new VariableRoster<>();
-					for (final Entry<VariableIdentifier, ? extends Expression> pair : def.fields.pairs) {
+					for (final Entry<VariableIdentifier, ? extends Expression> pair : def.fields.pairs
+							.entrySet()) {
 						final LiteralExpression applied = pair.getValue()
 								.literalValue(new LocalEnvironment(global));
 						fieldValues.assign(pair.getKey(), applied);

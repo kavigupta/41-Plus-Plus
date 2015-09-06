@@ -36,11 +36,16 @@ public class ParserTest {
 				"Define an (array of number) called \"arr\" with a \"length\" of 2.");
 		validateLineParse(
 				"Define an (array of (array of number)) called \"arr\" with a \"length\" of 2.");
-		validateLineParse(
-				"Define a matrix called \"mat\" with a \"width\" of 3 and a \"height\" of \"width\".");
-		validateLineParse(
-				"Define a (triple of number, number, and number) called \"cuboid\" with a \"width\" of (1*(2+3)),"
-						+ " a \"height\" of (the 3 rd element of \"arr\"), and a \"depth\" of 342.31234567898765432113243565432.");
+		assertEquals(
+				"Define a matrix called \"mat\" with a \"height\" of \"width\" and a \"width\" of 3.",
+				cdLoopLine(
+						"Define a matrix called \"mat\" with a \"width\" of 3 and a \"height\" of \"width\"."));
+		assertEquals(
+				"Define a (triple of number, number, and number) called \"cuboid\" with a \"depth\" of 342.31234567898765432113243565432,"
+						+ " a \"height\" of (the 3 rd element of \"arr\"), and a \"width\" of (1*(2+3)).",
+				cdLoopLine(
+						"Define a (triple of number, number, and number) called \"cuboid\" with a \"width\" of (1*(2+3)),"
+								+ " a \"height\" of (the 3 rd element of \"arr\"), and a \"depth\" of 342.31234567898765432113243565432."));
 	}
 	@Test
 	public void reassignmentParserTest() {

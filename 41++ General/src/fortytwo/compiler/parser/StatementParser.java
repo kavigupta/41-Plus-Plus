@@ -18,7 +18,7 @@ import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
-import fortytwo.vm.constructions.VariableRoster;
+import fortytwo.vm.environment.VariableRoster;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.expressions.LiteralVoid;

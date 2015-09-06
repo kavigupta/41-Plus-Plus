@@ -43,7 +43,6 @@ public class LineHistory extends JScrollPane {
 		text = String.format(
 				"<font face=\"monospace\" color = \"%s\">%s</font>", color,
 				text);
-		System.out.println(text);
 		textBox.setText(text);
 		// comp.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
 		textBox.setBackground(Color.BLACK);
@@ -119,7 +118,6 @@ public class LineHistory extends JScrollPane {
 		JTextPane pane = new JTextPane();
 		pane.setText(error.toString());
 		put(pane, "");
-		System.out.println(pane.getText());
 	}
 	public int nCommands() {
 		return history.size();

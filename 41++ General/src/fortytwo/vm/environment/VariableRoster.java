@@ -1,12 +1,11 @@
-package fortytwo.vm.constructions;
+package fortytwo.vm.environment;
 
-import java.util.ArrayList;
-
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -14,7 +13,7 @@ import fortytwo.vm.expressions.LiteralExpression;
  * A class representing a roster of variables.
  */
 public class VariableRoster<T extends Expression> {
-	public final ArrayList<Pair<VariableIdentifier, T>> pairs = new ArrayList<>();
+	public final Map<VariableIdentifier, T> pairs = new TreeMap<>();
 	/**
 	 * ww public void add(VariableIdentifier id, T expr) {
 	 * pairs.add(Pair.getInstance(id, expr));
@@ -23,8 +22,8 @@ public class VariableRoster<T extends Expression> {
 	 * 
 	 * @return an iterator over the variables
 	 */
-	public Iterable<Pair<VariableIdentifier, T>> entryIterator() {
-		return pairs;
+	public Iterable<Entry<VariableIdentifier, T>> entryIterator() {
+		return pairs.entrySet();
 	}
 	/**
 	 * @return the number of variables in this roster
@@ -37,20 +36,13 @@ public class VariableRoster<T extends Expression> {
 		// did its job
 		@SuppressWarnings("unchecked")
 		final T val = (T) express;
-		pairs.add(Pair.<VariableIdentifier, T> of(name, val));
+		pairs.put(name, val);
 	}
 	public boolean assigned(VariableIdentifier name) {
-		for (final Pair<VariableIdentifier, T> entry : pairs)
-			if (entry.getKey().equals(name)) return true;
-		return false;
+		return pairs.containsKey(name);
 	}
 	public void deregister(VariableIdentifier name) {
-		for (int i = 0; i < pairs.size(); i++) {
-			if (!pairs.get(i).getKey().equals(name)) continue;
-			pairs.remove(i);
-			return;
-		}
-		// this should never happen if typechecking did its job.
+		pairs.remove(name);
 	}
 	public T value() {
 		try {
@@ -60,12 +52,17 @@ public class VariableRoster<T extends Expression> {
 		}
 	}
 	public T referenceTo(VariableIdentifier id) {
-		for (final Pair<VariableIdentifier, T> entry : pairs) {
-			final T val = entry.getValue();
-			if (entry.getKey().equals(id)) return val;
-		}
-		// this should never happen if typechecking did its job.
-		return null;
+		return pairs.get(id);
+	}
+	public void redefine(VariableIdentifier name, LiteralExpression express) {
+		if (!assigned(name)) DNEErrors.variableDNE(name);
+		this.assign(name, express);
+	}
+	public VariableRoster<LiteralExpression> literalValue(
+			LocalEnvironment env) {
+		final VariableRoster<LiteralExpression> roster = new VariableRoster<LiteralExpression>();
+		this.pairs.forEach((k, v) -> roster.assign(k, v.literalValue(env)));
+		return roster;
 	}
 	@Override
 	public int hashCode() {
@@ -89,22 +86,5 @@ public class VariableRoster<T extends Expression> {
 	@Override
 	public String toString() {
 		return "ParsedVariableRoster [pairs=" + pairs + "]";
-	}
-	public void redefine(VariableIdentifier name, LiteralExpression express) {
-		for (int i = 0; i < pairs.size(); i++)
-			if (pairs.get(i).getKey().equals(name)) {
-				@SuppressWarnings("unchecked")
-				final T ex = (T) express;
-				pairs.set(i, Pair.<VariableIdentifier, T> of(name, ex));
-				return;
-			}
-		DNEErrors.variableDNE(name);
-	}
-	public VariableRoster<LiteralExpression> literalValue(
-			LocalEnvironment env) {
-		final VariableRoster<LiteralExpression> roster = new VariableRoster<LiteralExpression>();
-		this.pairs.forEach(
-				x -> roster.assign(x.getKey(), x.getValue().literalValue(env)));
-		return roster;
 	}
 }

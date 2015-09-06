@@ -106,8 +106,8 @@ public class Tokenizer {
 						if (closequote < 0) {
 							SyntaxErrors.matchingSymbolDNE(parentToken.context,
 									parentToken.token, i);
-							tokens.add(LiteralToken
-									.synthetic(parentToken.token.substring(i)));
+							tokens.add(LiteralToken.errorToken(
+									parentToken.token.substring(i)));
 							return tokens;
 						}
 						tokens.add(parentToken.subToken(i, closequote + 1)

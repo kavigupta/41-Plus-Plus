@@ -15,7 +15,8 @@ import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class VariableIdentifier extends Expression {
+public class VariableIdentifier extends Expression
+		implements Comparable<VariableIdentifier> {
 	public static final VariableIdentifier VALUE = new VariableIdentifier(
 			LiteralToken.synthetic(Resources.VALUE));
 	public final LiteralToken name;
@@ -45,6 +46,10 @@ public class VariableIdentifier extends Expression {
 	@Override
 	public Optional<VariableIdentifier> identifier() {
 		return Optional.of(this);
+	}
+	@Override
+	public int compareTo(VariableIdentifier o) {
+		return name.token.compareTo(o.name.token);
 	}
 	@Override
 	public int hashCode() {

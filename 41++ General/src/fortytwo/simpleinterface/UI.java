@@ -46,7 +46,6 @@ public class UI {
 					new FileWriter(path + "-output.txt"));
 			VirtualMachine.displayln = s -> {
 				try {
-					System.out.println("Writing " + s);
 					bw.write(s);
 					bw.write(System.lineSeparator());
 				} catch (final IOException e) {

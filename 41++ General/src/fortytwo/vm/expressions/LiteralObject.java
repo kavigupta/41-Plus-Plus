@@ -1,15 +1,13 @@
 package fortytwo.vm.expressions;
 
-import java.util.function.Consumer;
-
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.function.BiConsumer;
 
 import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.constructions.VariableRoster;
+import fortytwo.vm.environment.VariableRoster;
 
 public class LiteralObject extends LiteralExpression {
 	public final Structure struct;
@@ -27,7 +25,7 @@ public class LiteralObject extends LiteralExpression {
 		return fields.numberOfVariables();
 	}
 	public void forEachField(
-			Consumer<Pair<VariableIdentifier, LiteralExpression>> le) {
+			BiConsumer<VariableIdentifier, LiteralExpression> le) {
 		fields.pairs.forEach(le);
 	}
 	public LiteralExpression valueOf(VariableIdentifier field) {

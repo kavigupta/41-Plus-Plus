@@ -10,7 +10,6 @@ import org.fife.ui.rsyntaxtextarea.AbstractTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMap;
 
-import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.language.Language;
@@ -57,12 +56,11 @@ public class Highlighter42 extends AbstractTokenMaker {
 		if (tokens.size() == 0) return;
 		LiteralToken error = null;
 		int errorStart = 0;
-		if (tokens.get(tokens.size() - 1).context == Context.SYNTHETIC) {
+		if (tokens.get(tokens.size() - 1).context == null) {
 			error = tokens.remove(tokens.size() - 1);
 			if (tokens.size() != 0)
 				errorStart = tokens.get(tokens.size() - 1).context.end;
 		}
-		System.out.println(error + "\t" + errorStart);
 		for (int i = 0; i < tokens.size(); i++) {
 			LiteralToken tok = tokens.get(i);
 			if (tok.token.startsWith("(")) {

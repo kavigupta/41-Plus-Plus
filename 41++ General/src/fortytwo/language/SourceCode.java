@@ -3,9 +3,8 @@ package fortytwo.language;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
@@ -25,7 +24,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.*;
-import fortytwo.vm.constructions.VariableRoster;
+import fortytwo.vm.environment.VariableRoster;
 import fortytwo.vm.expressions.*;
 
 public class SourceCode {
@@ -126,8 +125,8 @@ public class SourceCode {
 				.append(literalObject.struct.type.toSourceCode());
 		if (literalObject.nFields() != 0) sbuff.append(": ");
 		literalObject.forEachField(
-				e -> sbuff.append(e.getKey().toSourceCode()).append(" <= ")
-						.append(e.getValue().toSourceCode()).append(", "));
+				(name, expr) -> sbuff.append(name.toSourceCode()).append(" <= ")
+						.append(expr.toSourceCode()).append(", "));
 		return literalObject.nFields() == 0 ? sbuff.append("}").toString()
 				: sbuff.substring(0, sbuff.length() - 2) + "}";
 	}
@@ -162,7 +161,8 @@ public class SourceCode {
 	}
 	private static String displayFieldList(VariableRoster<?> fields) {
 		final List<String> items = new ArrayList<>();
-		for (final Pair<VariableIdentifier, ? extends Expression> e : fields.pairs)
+		for (final Entry<VariableIdentifier, ? extends Expression> e : fields.pairs
+				.entrySet())
 			items.add(Language.articleized(e.getKey().toSourceCode() + " of "
 					+ e.getValue().toSourceCode()));
 		return displayList(items);

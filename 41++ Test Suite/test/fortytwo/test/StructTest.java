@@ -34,7 +34,7 @@ public class StructTest {
 	}
 	@Test
 	public void concreteStructTest() {
-		assertPrint("{record: \"name\" <= '41++', \"dateOfBirth\" <= 2015}\n",
+		assertPrint("{record: \"dateOfBirth\" <= 2015, \"name\" <= '41++'}\n",
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015. Tell me what \"lang\" is.");
 		assertPrint("false\n",
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
@@ -44,12 +44,12 @@ public class StructTest {
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
 						+ "Define a record called \"langcopy\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
 						+ "Tell me what (\"lang\" is equal to \"langcopy\") is.");
-		assertPrint("{record: \"name\" <= '41++', \"dateOfBirth\" <= 2015}\n",
+		assertPrint("{record: \"dateOfBirth\" <= 2015, \"name\" <= '41++'}\n",
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
 						+ "Define a record called \"langcopy\" with a value of \"lang\"."
 						+ "Tell me what \"langcopy\" is.");
 		assertPrint(
-				"{record: \"name\" <= 'te+-s()t[]', \"dateOfBirth\" <= 2015}\n",
+				"{record: \"dateOfBirth\" <= 2015, \"name\" <= 'te+-s()t[]'}\n",
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
 						+ "Set the \"name\" of \"lang\" to 'te+-s()t[]'."
 						+ "Tell me what \"lang\" is.");
