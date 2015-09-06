@@ -110,9 +110,9 @@ public class ConstructionParser {
 				funcExpress);
 		final List<VariableIdentifier> variables = sig.getValue().stream()
 				.map(x -> {
-					if (!(x instanceof VariableIdentifier)) ParserErrors
+					if (!x.identifier().isPresent()) ParserErrors
 							.expectedVariableInDecl(true, x.toToken(), line);
-					return (VariableIdentifier) x;
+					return x.identifier().get();
 				}).collect(Collectors.toList());
 		final List<GenericType> types = new ArrayList<>();
 		for (final VariableIdentifier vid : variables) {

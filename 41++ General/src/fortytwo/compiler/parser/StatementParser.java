@@ -16,7 +16,6 @@ import fortytwo.language.Resources;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.constructions.VariableRoster;
@@ -68,11 +67,9 @@ public class StatementParser {
 		final ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() != 1
-				|| !(function.name.function.get(0) instanceof FunctionArgument))
+				|| !(function.name.function.get(0).isArgument()))
 			return function;
-		final Expression exp = function.arguments.get(0);
-		if (exp instanceof ParsedFunctionCall) return exp;
-		ParserErrors.expectedFunctionCall(exp);
+		ParserErrors.expectedFunctionCall(function);
 		// should never get here
 		throw new IllegalStateException();
 	}
@@ -129,7 +126,7 @@ public class StatementParser {
 					ExpressionParser.parseExpression(tokens2));
 		}
 		final GenericType genericType = ExpressionParser.parseType(type);
-		if (!(genericType instanceof ConcreteType))
+		if (!genericType.isConcrete())
 			ParserErrors.expectedCTInDefinition(genericType);
 		return new ParsedDefinition(
 				new TypedVariable(VariableIdentifier.getInstance(name),

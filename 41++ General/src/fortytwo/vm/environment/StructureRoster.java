@@ -65,7 +65,7 @@ public class StructureRoster {
 		final List<ConcreteType> typeParameters = new ArrayList<>(struct.types);
 		final List<TypedVariable> fields = new ArrayList<>();
 		for (final GenericField f : getGenericStructure(genericType).fields) {
-			if (f.type instanceof ConcreteType) {
+			if (f.type.isConcrete()) {
 				fields.add(new TypedVariable(f.name, (ConcreteType) f.type));
 				continue;
 			}

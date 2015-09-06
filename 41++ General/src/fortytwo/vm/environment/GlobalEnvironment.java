@@ -44,7 +44,6 @@ public class GlobalEnvironment {
 				case FUNCTION:
 					final FunctionConstruct f = (FunctionConstruct) s;
 					environment.putReference(f.declaration);
-					// TODO remove once multiple exit is defined
 					functions.add(new FunctionImplemented(f.declaration,
 							Parser.temporaryHack(f.suite).statements));
 					break;

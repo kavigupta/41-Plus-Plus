@@ -46,7 +46,7 @@ public class FunctionName {
 		int count = 0;
 		final StringBuffer sbuff = new StringBuffer();
 		for (final FunctionComponent comp : function)
-			if (comp instanceof FunctionToken)
+			if (!comp.isArgument())
 				sbuff.append(((FunctionToken) comp).token.token).append(" ");
 			else {
 				sbuff.append("{").append(types.get(count).toSourceCode())

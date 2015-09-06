@@ -15,7 +15,6 @@ import fortytwo.language.Resources;
 import fortytwo.language.classification.ExpressionType;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.type.*;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.environment.LocalEnvironment;
@@ -33,7 +32,7 @@ public class ExpressionParser {
 		final ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() == 1
-				&& function.name.function.get(0) instanceof FunctionArgument)
+				&& function.name.function.get(0).isArgument())
 			return function.arguments.get(0);
 		return function;
 	}

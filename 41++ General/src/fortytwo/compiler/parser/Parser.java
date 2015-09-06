@@ -153,7 +153,6 @@ public class Parser {
 			List<Pair<Integer, List<LiteralToken>>> phrases) {
 		if (phrases.size() == 0) return new ArrayList<>();
 		final int tabs = phrases.get(0).getKey();
-		// TODO REMOVE semantic limitation of no declarations within suites.
 		final List<Sentence> sentences = new ArrayList<>();
 		while (phrases.size() > 0) {
 			if (phrases.get(0).getKey() < tabs) break;

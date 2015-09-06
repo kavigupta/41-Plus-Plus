@@ -10,6 +10,10 @@ public class FunctionArgument implements FunctionComponent {
 		return Context.SYNTHETIC;
 	}
 	@Override
+	public boolean isArgument() {
+		return true;
+	}
+	@Override
 	public String toString() {
 		return "<arg>";
 	}

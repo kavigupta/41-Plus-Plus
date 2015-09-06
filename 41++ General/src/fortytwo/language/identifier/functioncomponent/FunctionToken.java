@@ -17,6 +17,10 @@ public class FunctionToken implements FunctionComponent {
 		return token.token;
 	}
 	@Override
+	public boolean isArgument() {
+		return false;
+	}
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

@@ -3,6 +3,7 @@ package fortytwo.library.standard;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -13,7 +14,6 @@ import fortytwo.language.Language;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.*;
@@ -85,11 +85,10 @@ public class StdLib42 {
 			List<FunctionComponent> name, List<Expression> arguments) {
 		if (FunctionName.getInstance(name)
 				.equals(StdLib42.FUNC_FIELD_ACCESS_NAME_APPARENT)) {
-			if (!(arguments.get(0) instanceof VariableIdentifier))
+			Optional<VariableIdentifier> field = arguments.get(0).identifier();
+			if (!field.isPresent())
 				ParserErrors.expectedVariableInFieldAccess(arguments.get(0));
-			return Pair.of(
-					getFieldAccess(
-							((VariableIdentifier) arguments.get(0)).name.token),
+			return Pair.of(getFieldAccess(field.get().name.token),
 					Arrays.asList(arguments.get(1)));
 		}
 		return Pair.of(FunctionName.getInstance(name), arguments);
@@ -103,11 +102,11 @@ public class StdLib42 {
 		if (!name.function.get(0)
 				.equals(new FunctionToken(LiteralToken.synthetic("the"))))
 			return null;
-		if (!(name.function.get(1) instanceof FunctionArgument)) return null;
+		if (!(name.function.get(1).isArgument())) return null;
 		if (!name.function.get(2)
 				.equals(new FunctionToken(LiteralToken.synthetic("of"))))
 			return null;
-		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
+		if (!(name.function.get(3).isArgument())) return null;
 		if (!(inputs.get(0) instanceof VariableIdentifier)) return null;
 		final VariableIdentifier field = (VariableIdentifier) inputs.get(0);
 		final ConcreteType type = inputs.get(1).type(se);
@@ -138,7 +137,7 @@ public class StdLib42 {
 		if (!name.function.get(2)
 				.equals(new FunctionToken(LiteralToken.synthetic("of"))))
 			return null;
-		if (!(name.function.get(3) instanceof FunctionArgument)) return null;
+		if (!(name.function.get(3).isArgument())) return null;
 		final VariableIdentifier field = VariableIdentifier
 				.getInstance(((FunctionToken) name.function.get(1)).token);
 		final ConcreteType type = inputs.get(0);

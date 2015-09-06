@@ -26,7 +26,7 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	 * The name of the variable whose field is being modified.
 	 * TODO allow other things to be modified.
 	 */
-	public final Expression name;
+	public final Expression toModify;
 	/**
 	 * The field to be set.
 	 */
@@ -38,16 +38,16 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	public ParsedFieldAssignment(Expression name, VariableIdentifier field,
 			Expression parseExpression, Context context) {
 		super(context);
-		this.name = name;
+		this.toModify = name;
 		this.field = field;
 		this.value = parseExpression;
 	}
 	@Override
 	public boolean typeCheck(StaticEnvironment env) {
-		if (!(name.type(env) instanceof StructureType)) {
+		if (!(toModify.type(env) instanceof StructureType)) {
 			// TODO handle when not fed a structure...
 		}
-		StructureType type = (StructureType) name.type(env);
+		StructureType type = (StructureType) toModify.type(env);
 		Structure struct = env.structs.getStructure(type);
 		Optional<ConcreteType> potentialFieldType = struct.typeof(field);
 		if (!potentialFieldType.isPresent()) DNEErrors.fieldDNE(struct, field);
@@ -59,11 +59,7 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	}
 	@Override
 	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
-		final StaticEnvironment se = environment.staticEnvironment();
-		if (!(name.type(se) instanceof StructureType))
-			// should never happen.if type checking did it's job
-			throw new RuntimeException();
-		((LiteralObject) name.literalValue(environment)).redefine(field,
+		((LiteralObject) toModify.literalValue(environment)).redefine(field,
 				value.literalValue(environment));
 		return Optional.empty();
 	}
@@ -73,7 +69,7 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 	}
 	@Override
 	public String toSourceCode() {
-		return SourceCode.display(name, field, value);
+		return SourceCode.display(toModify, field, value);
 	}
 	@Override
 	public boolean isSimple() {
@@ -88,7 +84,7 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (field == null ? 0 : field.hashCode());
-		result = prime * result + (name == null ? 0 : name.hashCode());
+		result = prime * result + (toModify == null ? 0 : toModify.hashCode());
 		result = prime * result + (value == null ? 0 : value.hashCode());
 		return result;
 	}
@@ -101,9 +97,9 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		if (field == null) {
 			if (other.field != null) return false;
 		} else if (!field.equals(other.field)) return false;
-		if (name == null) {
-			if (other.name != null) return false;
-		} else if (!name.equals(other.name)) return false;
+		if (toModify == null) {
+			if (other.toModify != null) return false;
+		} else if (!toModify.equals(other.toModify)) return false;
 		if (value == null) {
 			if (other.value != null) return false;
 		} else if (!value.equals(other.value)) return false;
