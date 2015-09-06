@@ -26,7 +26,6 @@ public class Metadata {
 		for (Macro m : Macro.values()) {
 			aboutLocal = m.apply(aboutLocal);
 		}
-		System.out.println(aboutLocal);
 		return aboutLocal;
 	}
 }

@@ -83,7 +83,6 @@ public abstract class TextEditor extends JFrame {
 	protected abstract void setText(String text);
 	protected abstract String getText();
 	public void cmdNew(ActionEvent e) {
-		System.out.println("New File Dialog");
 		if (!saved()) {
 			if (!promptSave("create a new file")) return;
 		}
@@ -129,7 +128,6 @@ public abstract class TextEditor extends JFrame {
 		return lastSaved.equals(getText());
 	}
 	private boolean promptSave(String type) {
-		System.out.println("Prompting Save");
 		int response = JOptionPane.showOptionDialog(this,
 				String.format("Do you want to save your changes before you %s?",
 						type),

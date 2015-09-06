@@ -17,8 +17,8 @@ import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.VariableRoster;
 
 public class TypingErrors {
 	public static void typeError(String expressionDescription,

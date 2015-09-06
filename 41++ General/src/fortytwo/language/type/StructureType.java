@@ -9,7 +9,7 @@ import fortytwo.language.SourceCode;
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.constructions.VariableRoster;
+import fortytwo.vm.environment.VariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
 

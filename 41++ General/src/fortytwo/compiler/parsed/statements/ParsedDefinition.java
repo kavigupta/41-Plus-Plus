@@ -7,10 +7,10 @@ import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.type.GenericType;
-import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.environment.LocalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.StructureRoster;
+import fortytwo.vm.environment.VariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 
 /**

@@ -10,7 +10,6 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
 import fortytwo.library.standard.StdLib42;
-import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;

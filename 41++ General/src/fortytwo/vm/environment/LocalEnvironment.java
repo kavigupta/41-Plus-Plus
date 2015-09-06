@@ -2,7 +2,6 @@ package fortytwo.vm.environment;
 
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
-import fortytwo.vm.constructions.VariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class LocalEnvironment {
@@ -14,7 +13,7 @@ public class LocalEnvironment {
 	}
 	public LocalEnvironment reinitialize(GlobalEnvironment newEnvironment) {
 		final LocalEnvironment newlocal = new LocalEnvironment(newEnvironment);
-		vars.pairs.forEach(x -> newlocal.vars.assign(x.getKey(), x.getValue()));
+		vars.pairs.forEach((k, v) -> newlocal.vars.assign(k, v));
 		return newlocal;
 	}
 	public LiteralExpression referenceTo(VariableIdentifier id) {
@@ -31,8 +30,8 @@ public class LocalEnvironment {
 	public StaticEnvironment staticEnvironment() {
 		final StaticEnvironment env = StaticEnvironment
 				.getChild(global.staticEnv);
-		vars.pairs.forEach(variable -> env.addType(variable.getKey(),
-				variable.getValue().resolveType()));
+		vars.pairs
+				.forEach((name, expr) -> env.addType(name, expr.resolveType()));
 		return env;
 	}
 	@Override

@@ -22,8 +22,6 @@ public class Parser {
 	private Parser() {}
 	public static List<Sentence> parse(String text) {
 		final List<Sentence> sentences = parseSuite(getTabbedSuite(text));
-		System.out.println(text);
-		System.out.println(sentences);
 		return sentences;
 	}
 	private static List<Pair<Integer, List<LiteralToken>>> getTabbedSuite(
@@ -104,12 +102,10 @@ public class Parser {
 	public static Sentence popFunctionDecl(
 			List<Pair<Integer, List<LiteralToken>>> phrases) {
 		final List<LiteralToken> defn = phrases.remove(0).getValue();
-		System.out.println("DEFN" + defn);
 		defn.remove(defn.size() - 1);
 		final FunctionDefinition declaration = ConstructionParser
 				.parseFunctionDefinition(defn);
 		final List<Sentence> suite = popSeries(phrases);
-		System.out.println(declaration.sig);
 		return new FunctionConstruct(declaration, suite);
 	}
 	public static Sentence popSentence(
