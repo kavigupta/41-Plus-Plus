@@ -45,7 +45,6 @@ public class FunctionOutput extends ParsedStatement {
 	}
 	@Override
 	public boolean isSimple() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	@Override

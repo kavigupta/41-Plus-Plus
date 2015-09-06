@@ -16,14 +16,14 @@ import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
 
-public class FunctionCompare extends Function42 {
+public class FunctionCompare extends FunctionSynthetic {
 	public static enum Comparator {
 		LESS(true, false, false, "is", "less", "than"),
 		AT_MOST(true, true, false, "is", "at", "most"),

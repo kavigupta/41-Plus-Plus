@@ -24,7 +24,6 @@ import fortytwo.vm.expressions.LiteralObject;
 public class ParsedFieldAssignment extends ParsedAssignment {
 	/**
 	 * The name of the variable whose field is being modified.
-	 * TODO allow other things to be modified.
 	 */
 	public final Expression toModify;
 	/**

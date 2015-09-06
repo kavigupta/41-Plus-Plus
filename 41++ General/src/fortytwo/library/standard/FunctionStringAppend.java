@@ -8,13 +8,13 @@ import fortytwo.compiler.LiteralToken;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralString;
 
-public class FunctionStringAppend extends Function42 {
+public class FunctionStringAppend extends FunctionSynthetic {
 	public static final FunctionStringAppend INSTANCE = new FunctionStringAppend();
 	private FunctionStringAppend() {}
 	@Override

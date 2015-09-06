@@ -12,13 +12,13 @@ import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class FunctionLogicalOperator extends Function42 {
+public class FunctionLogicalOperator extends FunctionSynthetic {
 	@Override
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {

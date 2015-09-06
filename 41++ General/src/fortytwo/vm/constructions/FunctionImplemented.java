@@ -1,12 +1,18 @@
 package fortytwo.vm.constructions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import fortytwo.compiler.Context;
+import fortytwo.compiler.parsed.declaration.FunctionConstruct;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.language.identifier.FunctionSignature;
+import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.FunctionType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.LocalEnvironment;
@@ -23,7 +29,7 @@ public class FunctionImplemented extends Function42 {
 	/**
 	 * The function definition
 	 */
-	private final FunctionDefinition f;
+	private final FunctionDefinition declaration;
 	/**
 	 * The function body, which is composed of statements.
 	 */
@@ -33,7 +39,8 @@ public class FunctionImplemented extends Function42 {
 	 */
 	public FunctionImplemented(FunctionDefinition f,
 			List<ParsedStatement> body) {
-		this.f = f;
+		super(Context.sum(Arrays.asList(f.context(), Context.sum(body))));
+		this.declaration = f;
 		this.body = body;
 	}
 	/**
@@ -47,15 +54,17 @@ public class FunctionImplemented extends Function42 {
 	public FunctionImplemented contextualize(StaticEnvironment environment) {
 		return this;
 	}
+	@Override
 	public boolean typeCheck(StaticEnvironment env) {
 		final StaticEnvironment local = StaticEnvironment.getChild(env);
-		f.registerParameters(local);
+		declaration.registerParameters(local);
 		for (final ParsedStatement s : body) {
 			final Optional<GenericType> actual = s.returnType(local);
 			s.isTypeChecked(local);
-			if (actual.isPresent()) if (!actual.get().equals(f.sig.outputType))
-				TypingErrors.incorrectOutput(f.sig, actual.get(),
-						(FunctionOutput) s);
+			if (actual.isPresent())
+				if (!actual.get().equals(declaration.sig.outputType))
+					TypingErrors.incorrectOutput(declaration.sig, actual.get(),
+							(FunctionOutput) s);
 		}
 		return true;
 	}
@@ -63,7 +72,7 @@ public class FunctionImplemented extends Function42 {
 	protected LiteralExpression apply(GlobalEnvironment env,
 			List<LiteralExpression> inputs, TypeVariableRoster roster) {
 		final LocalEnvironment local = env.minimalLocalEnvironment();
-		f.assignInputs(inputs, local);
+		declaration.assignInputs(inputs, local);
 		for (final ParsedStatement s : body) {
 			final Optional<LiteralExpression> exp = s.execute(local);
 			if (exp.isPresent()) return exp.get();
@@ -74,25 +83,41 @@ public class FunctionImplemented extends Function42 {
 		return LiteralVoid.INSTANCE;
 	}
 	@Override
+	public ConcreteType resolveType() {
+		return new FunctionType(declaration.sig.inputTypes,
+				declaration.sig.outputType);
+	}
+	@Override
+	public String toSourceCode() {
+		return new FunctionConstruct(this.declaration,
+				new ArrayList<>(this.body)).toSourceCode();
+	}
+	@Override
+	public boolean typedEquals(LiteralExpression other) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
 	public GenericType outputType() {
-		return f.sig.outputType;
+		return declaration.sig.outputType;
 	}
 	@Override
 	public FunctionSignature signature() {
-		return f.sig;
+		return declaration.sig;
 	}
 	/**
 	 * @return the definition of this function
 	 */
 	public FunctionDefinition definition() {
-		return f;
+		return declaration;
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (body == null ? 0 : body.hashCode());
-		result = prime * result + (f == null ? 0 : f.hashCode());
+		result = prime * result
+				+ (declaration == null ? 0 : declaration.hashCode());
 		return result;
 	}
 	@Override
@@ -104,9 +129,9 @@ public class FunctionImplemented extends Function42 {
 		if (body == null) {
 			if (other.body != null) return false;
 		} else if (!body.equals(other.body)) return false;
-		if (f == null) {
-			if (other.f != null) return false;
-		} else if (!f.equals(other.f)) return false;
+		if (declaration == null) {
+			if (other.declaration != null) return false;
+		} else if (!declaration.equals(other.declaration)) return false;
 		return true;
 	}
 }

@@ -112,14 +112,13 @@ public class LiteralToken implements GenericToken {
 	 * @return {@code true} if the token is meaningful syntactically
 	 */
 	public boolean isMeaningful() {
-		if (token.length() == 0) return false;
+		if (token.trim().length() == 0) return false;
 		if (token.charAt(0) == '[') return false;
-		if (Character.isWhitespace(token.charAt(0))) return false;
 		return true;
 	}
 	/**
 	 * @return this token, but with an extra space at the end (for tokenization
-	 *         simplicity purposes) TODO replace with encapsulation
+	 *         simplicity purposes)
 	 */
 	public LiteralToken padWithSpace() {
 		return new LiteralToken(token + " ", context);
@@ -134,6 +133,18 @@ public class LiteralToken implements GenericToken {
 	}
 	public boolean doesEqual(String token) {
 		return this.token.equals(token);
+	}
+	@Override
+	public String toString() {
+		return token;
+	}
+	@Override
+	public String toSourceCode() {
+		return token;
+	}
+	@Override
+	public Context context() {
+		return context;
 	}
 	@Override
 	public int hashCode() {
@@ -153,17 +164,5 @@ public class LiteralToken implements GenericToken {
 			if (other.token != null) return false;
 		} else if (!token.equals(other.token)) return false;
 		return true;
-	}
-	@Override
-	public String toString() {
-		return token;
-	}
-	@Override
-	public String toSourceCode() {
-		return token;
-	}
-	@Override
-	public Context context() {
-		return context;
 	}
 }

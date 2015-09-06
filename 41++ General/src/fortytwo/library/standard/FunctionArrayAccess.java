@@ -8,14 +8,14 @@ import fortytwo.compiler.LiteralToken;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.*;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralArray;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
 
-public class FunctionArrayAccess extends Function42 {
+public class FunctionArrayAccess extends FunctionSynthetic {
 	private static final TypeVariable CONTENTS = new TypeVariable(
 			VariableIdentifier
 					.getInstance(LiteralToken.synthetic("\"contents\"")));

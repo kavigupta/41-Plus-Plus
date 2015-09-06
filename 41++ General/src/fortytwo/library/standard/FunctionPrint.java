@@ -11,13 +11,13 @@ import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.language.type.TypeVariable;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralVoid;
 
-public class FunctionPrint extends Function42 {
+public class FunctionPrint extends FunctionSynthetic {
 	public static final FunctionPrint INSTANCE = new FunctionPrint();
 	public static final TypeVariable TO_PRINT = new TypeVariable(
 			VariableIdentifier

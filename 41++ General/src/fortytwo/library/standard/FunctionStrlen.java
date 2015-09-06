@@ -10,14 +10,14 @@ import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.language.type.TypeVariable;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
 import fortytwo.vm.expressions.LiteralString;
 
-public class FunctionStrlen extends Function42 {
+public class FunctionStrlen extends FunctionSynthetic {
 	public static final FunctionStrlen INSTANCE = new FunctionStrlen();
 	private FunctionStrlen() {}
 	@Override

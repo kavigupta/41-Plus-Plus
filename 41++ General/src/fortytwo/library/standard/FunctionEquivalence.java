@@ -17,13 +17,13 @@ import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.language.type.TypeVariable;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class FunctionEquivalence extends Function42 {
+public class FunctionEquivalence extends FunctionSynthetic {
 	public static final TypeVariable TO_BE_COMPARED = new TypeVariable(
 			VariableIdentifier.getInstance(
 					LiteralToken.entire("\"FunctionEquivalence_compare\"")));

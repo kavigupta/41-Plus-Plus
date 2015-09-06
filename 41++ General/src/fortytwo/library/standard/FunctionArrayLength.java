@@ -8,14 +8,14 @@ import fortytwo.compiler.Context;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.*;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralArray;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
 
-public class FunctionArrayLength extends Function42 {
+public class FunctionArrayLength extends FunctionSynthetic {
 	public static final FunctionArrayLength INSTANCE = new FunctionArrayLength();
 	private FunctionArrayLength() {}
 	@Override

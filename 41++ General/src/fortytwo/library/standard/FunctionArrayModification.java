@@ -10,7 +10,7 @@ import fortytwo.language.type.GenericArrayType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.language.type.TypeVariable;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralArray;
@@ -18,7 +18,7 @@ import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
 import fortytwo.vm.expressions.LiteralVoid;
 
-public class FunctionArrayModification extends Function42 {
+public class FunctionArrayModification extends FunctionSynthetic {
 	public static final FunctionArrayModification ST = new FunctionArrayModification(
 			"st");
 	public static final FunctionArrayModification ND = new FunctionArrayModification(

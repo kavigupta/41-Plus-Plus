@@ -8,8 +8,18 @@ import fortytwo.compiler.parsed.Sentence;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 
+/**
+ * Represents a function that has been parsed but whose suite sub-declarations
+ * have not been fully parsed into a static environment.
+ */
 public class FunctionConstruct implements Sentence {
+	/**
+	 * The function definition
+	 */
 	public final FunctionDefinition declaration;
+	/**
+	 * The body of the function, in the form of a series of sentences
+	 */
 	public final List<Sentence> suite;
 	public FunctionConstruct(FunctionDefinition declaration,
 			List<Sentence> suite) {

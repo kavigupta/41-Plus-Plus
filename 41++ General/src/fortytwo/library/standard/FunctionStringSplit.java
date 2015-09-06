@@ -9,14 +9,14 @@ import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.type.ArrayType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralArray;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralString;
 
-public class FunctionStringSplit extends Function42 {
+public class FunctionStringSplit extends FunctionSynthetic {
 	public static final FunctionStringSplit INSTANCE = new FunctionStringSplit();
 	private FunctionStringSplit() {}
 	@Override

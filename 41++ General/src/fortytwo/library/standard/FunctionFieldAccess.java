@@ -8,14 +8,14 @@ import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
-import fortytwo.vm.constructions.Function42;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.constructions.Structure;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralObject;
 
-public class FunctionFieldAccess extends Function42 {
+public class FunctionFieldAccess extends FunctionSynthetic {
 	public final VariableIdentifier field;
 	public final Structure from;
 	public FunctionFieldAccess(VariableIdentifier field, Structure from) {
