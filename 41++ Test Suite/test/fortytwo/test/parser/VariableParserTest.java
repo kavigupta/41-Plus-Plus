@@ -20,7 +20,7 @@ public class VariableParserTest {
 	public static void assertVariableParse(String name) {
 		Utilities.assertParse(
 				VariableIdentifier.getInstance(
-						LiteralToken.synthetic("\"" + name + "\"")),
+						LiteralToken.synthetic("\"" + name + "\""), false),
 				"\"" + name + "\"");
 	}
 }

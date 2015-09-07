@@ -37,7 +37,7 @@ public class StructureType implements ConcreteType {
 		final VariableRoster<LiteralExpression> values = new VariableRoster<>();
 		for (int i = 0; i < types.size(); i++) {
 			final VariableIdentifier vid = VariableIdentifier
-					.getInstance(name.get(i));
+					.getInstance(name.get(i), false);
 			vars.add(new TypedVariable(vid, types.get(i)));
 			values.assign(vid, types.get(i).defaultValue());
 		}

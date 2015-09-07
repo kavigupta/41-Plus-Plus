@@ -151,7 +151,8 @@ public class ExpressionParser {
 					// should not happen.
 					break;
 				case '\"':
-					expressions.add(VariableIdentifier.getInstance(token));
+					expressions
+							.add(VariableIdentifier.getInstance(token, false));
 					break;
 				case '(':
 					final LiteralToken depar = Language.deparenthesize(token);
@@ -164,7 +165,8 @@ public class ExpressionParser {
 	}
 	public static GenericType parseType(LiteralToken token) {
 		if (token.token.startsWith(Resources.VARIABLE_BEGIN))
-			return new TypeVariable(VariableIdentifier.getInstance(token));
+			return new TypeVariable(
+					VariableIdentifier.getInstance(token, false));
 		while (token.token.startsWith(Resources.OPEN_PAREN))
 			token = Language.deparenthesize(token);
 		for (final PrimitiveTypeWOC type : PrimitiveTypeWOC.values())

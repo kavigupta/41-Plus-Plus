@@ -13,13 +13,11 @@ import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
-import fortytwo.language.identifier.functioncomponent.FunctionToken;
-import fortytwo.language.type.*;
-import fortytwo.vm.constructions.FunctionSynthetic;
+import fortytwo.language.type.GenericStructureType;
+import fortytwo.language.type.TypeVariable;
 import fortytwo.vm.constructions.GenericStructureSignature;
 import fortytwo.vm.environment.FunctionRoster;
 import fortytwo.vm.environment.FunctionSignatureRoster;
-import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.LiteralFunction;
@@ -29,7 +27,7 @@ public class StdLib42 {
 	public static final FunctionName FUNC_FIELD_ACCESS_NAME_APPARENT = FunctionName
 			.getInstance("the", "", "of", "");
 	public static final FunctionName FUNC_ARRAY_LEN = FunctionName
-			.getInstance("the", TypeVariable.LENGTH.name.name.token, "of", "");
+			.getInstance("the", "\"length\"", "of", "");
 	public static final List<String> STRUCT_ARRAY = Arrays.asList("array");
 	public static final Map<VariableIdentifier, LiteralFunction> DEFAULT_FUNCTIONS = new HashMap<>();
 	static {
@@ -83,24 +81,31 @@ public class StdLib42 {
 		addPair();
 	}
 	private static void addPair() {
-		final TypeVariable _k = new TypeVariable(
-				VariableIdentifier.getInstance(LiteralToken.entire("\"k\"")));
-		final TypeVariable _v = new TypeVariable(
-				VariableIdentifier.getInstance(LiteralToken.entire("\"v\"")));
+		final TypeVariable _k = new TypeVariable(VariableIdentifier
+				.getInstance(LiteralToken.entire("\"k\""), false));
+		final TypeVariable _v = new TypeVariable(VariableIdentifier
+				.getInstance(LiteralToken.entire("\"v\""), false));
 		DEF_STRUCT
-				.addStructure(new GenericStructureSignature(
-						new GenericStructureType(
-								Arrays.asList(LiteralToken.entire("pair")),
-								Arrays.asList(_k, _v), Context.SYNTHETIC),
-						Arrays.asList(
-								new GenericField(
-										VariableIdentifier.getInstance(
-												LiteralToken.entire("\"key\"")),
-								_k),
-						new GenericField(
-								VariableIdentifier.getInstance(
-										LiteralToken.entire("\"value\"")),
-								_v))));
+				.addStructure(
+						new GenericStructureSignature(
+								new GenericStructureType(
+										Arrays.asList(
+												LiteralToken.entire("pair")),
+										Arrays.asList(_k, _v),
+										Context.SYNTHETIC),
+								Arrays.asList(
+										new GenericField(
+												VariableIdentifier.getInstance(
+														LiteralToken
+																.entire("\"key\""),
+														false),
+												_k),
+										new GenericField(
+												VariableIdentifier.getInstance(
+														LiteralToken
+																.entire("\"value\""),
+														false),
+												_v))));
 		for (GenericStructureSignature sig : DEF_STRUCT.structs) {
 			DEFAULT_FUNCTIONS.putAll(sig.fieldFunctions());
 		}
@@ -123,39 +128,6 @@ public class StdLib42 {
 	public static FunctionName functArrayModification(String suffix) {
 		return FunctionName.getInstance("Set", "the", "", suffix, "element",
 				"of", "", "to", "");
-	}
-	public static Pair<LiteralFunction, ConcreteType> matchFieldAccess(
-			StaticEnvironment se, FunctionName name, List<Expression> inputs) {
-		if (name.function.size() != 4) return null;
-		if (!name.function.get(0)
-				.equals(new FunctionToken(LiteralToken.synthetic("the"))))
-			return null;
-		if (!(name.function.get(1).isArgument())) return null;
-		if (!name.function.get(2)
-				.equals(new FunctionToken(LiteralToken.synthetic("of"))))
-			return null;
-		if (!(name.function.get(3).isArgument())) return null;
-		if (!(inputs.get(0) instanceof VariableIdentifier)) return null;
-		final VariableIdentifier field = (VariableIdentifier) inputs.get(0);
-		final ConcreteType type = inputs.get(1).type(se);
-		if (type instanceof ArrayType) {
-			if (field.equals(TypeVariable.LENGTH.name))
-				return Pair.of(StdLibFunctions.ARRAY_ACCESS, new PrimitiveType(
-						PrimitiveTypeWOC.NUMBER, Context.SYNTHETIC));
-		} else if (type.equals(
-				new PrimitiveType(PrimitiveTypeWOC.STRING, Context.SYNTHETIC)))
-			return Pair.of(StdLibFunctions.STRING_LENGTH, new PrimitiveType(
-					PrimitiveTypeWOC.NUMBER, Context.SYNTHETIC));
-		if (!(type instanceof StructureType)) return null;
-		Optional<ConcreteType> output = se.structs
-				.getStructure((StructureType) type).typeof(field);
-		if (!output.isPresent()) {
-			// TODO handle
-		}
-		LiteralFunction fun = new FunctionSynthetic(
-				new FunctionType(Arrays.asList(type), output.get()),
-				StdLibImplementations.fieldAccess(field));
-		return Pair.of(fun, output.get());
 	}
 	public static void defaultFunctions(FunctionRoster funcs) {
 		for (final Entry<VariableIdentifier, LiteralFunction> f : DEFAULT_FUNCTIONS

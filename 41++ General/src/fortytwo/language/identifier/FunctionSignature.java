@@ -19,7 +19,7 @@ public class FunctionSignature implements GenericToken {
 		return type.accepts(inputs);
 	}
 	public VariableIdentifier identifier() {
-		return VariableIdentifier.getInstance(this.toToken());
+		return VariableIdentifier.getInstance(this.toToken(), true);
 	}
 	@Override
 	public String toSourceCode() {

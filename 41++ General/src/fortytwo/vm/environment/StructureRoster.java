@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import fortytwo.compiler.Context;
+import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.field.TypedVariable;
@@ -53,9 +54,9 @@ public class StructureRoster {
 			return new LiteralObject(getStructure((StructureType) name.type),
 					fieldValues, Context.SYNTHETIC);
 		return new LiteralArray(((ArrayType) name.type).contentType,
-				((LiteralNumber) fieldValues
-						.referenceTo(TypeVariable.LENGTH.name)).contents
-								.intValue(),
+				((LiteralNumber) fieldValues.referenceTo(VariableIdentifier
+						.getInstance(LiteralToken.synthetic("\"length\""),
+								false))).contents.intValue(),
 				Context.SYNTHETIC);
 	}
 	public Structure getStructure(StructureType struct) {
@@ -95,8 +96,8 @@ public class StructureRoster {
 					env);
 		}
 		if (name.type instanceof ArrayType) {
-			final Expression length = fieldValues
-					.referenceTo(TypeVariable.LENGTH.name);
+			final Expression length = fieldValues.referenceTo(VariableIdentifier
+					.getInstance(LiteralToken.synthetic("\"length\""), false));
 			if (fieldValues.numberOfVariables() == 1 && length != null
 					&& length.type(env).equals(new PrimitiveType(
 							PrimitiveTypeWOC.NUMBER, Context.SYNTHETIC)))

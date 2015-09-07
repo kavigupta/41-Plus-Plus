@@ -33,7 +33,7 @@ public class FunctionName implements GenericToken {
 		this.function = function;
 	}
 	public VariableIdentifier identifier() {
-		return VariableIdentifier.getInstance(this.toToken());
+		return VariableIdentifier.getInstance(this.toToken(), false);
 	}
 	@Override
 	public String toSourceCode() {

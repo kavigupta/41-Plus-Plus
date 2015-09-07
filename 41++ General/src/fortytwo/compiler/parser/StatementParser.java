@@ -89,7 +89,8 @@ public class StatementParser {
 		final Expression expr = ExpressionParser.parseExpression(line);
 		if (!fieldT.token.equals(Resources.VALUE))
 			return new ParsedFieldAssignment(toModify,
-					VariableIdentifier.getInstance(fieldT), expr, fullContext);
+					VariableIdentifier.getInstance(fieldT, false), expr,
+					fullContext);
 		Optional<VariableIdentifier> name = toModify.identifier();
 		if (!name.isPresent()) {
 			// TODO handle redefinition of a non-variable
@@ -122,14 +123,14 @@ public class StatementParser {
 				tokens2.add(line.get(i));
 				i++;
 			}
-			fields.assign(VariableIdentifier.getInstance(fieldT),
+			fields.assign(VariableIdentifier.getInstance(fieldT, false),
 					ExpressionParser.parseExpression(tokens2));
 		}
 		final GenericType genericType = ExpressionParser.parseType(type);
 		if (!genericType.isConcrete())
 			ParserErrors.expectedCTInDefinition(genericType);
 		return new ParsedDefinition(
-				new TypedVariable(VariableIdentifier.getInstance(name),
+				new TypedVariable(VariableIdentifier.getInstance(name, false),
 						(ConcreteType) genericType),
 				fields, fullContext);
 	}

@@ -56,13 +56,12 @@ public class Language {
 				|| start == '/' || start == '%' || Character.isDigit(start)
 				|| start == '\'' || start == '\"';
 	}
-	public static boolean isValidVariableIdentifier(String token) {
+	public static boolean isValidVariableIdentifier(String token,
+			boolean nativeFunc) {
 		if (token == null) return false;
+		if (!nativeFunc && token.indexOf(':') >= 0) return false;
 		if (token.equals(VALUE)) return true;
 		return token.startsWith(VARIABLE_BEGIN) && token.endsWith(VARIABLE_END);
-	}
-	public static boolean isValidVariableIdentifier(LiteralToken literalToken) {
-		return isValidVariableIdentifier(literalToken.token);
 	}
 	public static boolean isFunctionToken(String token) {
 		if (isExpression(token)) return false;

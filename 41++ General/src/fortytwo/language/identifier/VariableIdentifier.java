@@ -20,9 +20,10 @@ public class VariableIdentifier extends Expression
 	public static final VariableIdentifier VALUE = new VariableIdentifier(
 			LiteralToken.synthetic(Resources.VALUE));
 	public final LiteralToken name;
-	public static VariableIdentifier getInstance(LiteralToken token) {
+	public static VariableIdentifier getInstance(LiteralToken token,
+			boolean isNativeFunc) {
 		if (token.token.equals(Resources.VALUE)) return VALUE;
-		if (!Language.isValidVariableIdentifier(token))
+		if (!Language.isValidVariableIdentifier(token.token, isNativeFunc))
 			SyntaxErrors.invalidExpression(ExpressionType.VARIABLE,
 					Arrays.asList(token));
 		return new VariableIdentifier(token);

@@ -172,13 +172,13 @@ public class Highlighter42 extends AbstractTokenMaker {
 		switch (tokens.get(index).token) {
 			case "called":
 			case "the":
-				if (Language.isValidVariableIdentifier(next)
+				if (Language.isValidVariableIdentifier(next, true)
 						|| Resources.DO.equals(prev)
 						|| Resources.DECL_FUNCTION.equals(prev))
 					return Token.RESERVED_WORD_2;
 				else break;
 			case "of":
-				if (Language.isValidVariableIdentifier(prev))
+				if (Language.isValidVariableIdentifier(prev, true))
 					return Token.RESERVED_WORD_2;
 				else break;
 			case "all":

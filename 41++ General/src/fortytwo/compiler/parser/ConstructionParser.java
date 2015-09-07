@@ -59,15 +59,16 @@ public class ConstructionParser {
 			i++;
 			for (; i < line.size()
 					&& !line.get(i).doesEqual(Resources.THAT); i++)
-				if (Language.isValidVariableIdentifier(line.get(i)))
-					typeVariables.add(new TypeVariable(
-							VariableIdentifier.getInstance(line.get(i))));
+				if (Language.isValidVariableIdentifier(line.get(i).token,
+						false))
+					typeVariables.add(new TypeVariable(VariableIdentifier
+							.getInstance(line.get(i), false)));
 		}
 		final ArrayList<GenericField> fields = new ArrayList<>();
 		for (; i < line.size(); i++) {
 			if (!line.get(i).doesEqual(Resources.CALLED)) continue;
 			fields.add(new GenericField(
-					VariableIdentifier.getInstance(line.get(i + 1)),
+					VariableIdentifier.getInstance(line.get(i + 1), false),
 					ExpressionParser.parseType(line.get(i - 1))));
 		}
 		return new StructureDefinition(
@@ -101,7 +102,8 @@ public class ConstructionParser {
 				// later
 				if (type.kind() != Kind.CONCRETE) ParserErrors
 						.expectedCTInFunctionDecl(type, line, vars.size());
-				vars.put(VariableIdentifier.getInstance(line.get(i + 1)), type);
+				vars.put(VariableIdentifier.getInstance(line.get(i + 1), false),
+						type);
 			}
 		else if (line.get(i).doesEqual(Resources.OUTPUTS)) {} else
 			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_FUNCT, line);
