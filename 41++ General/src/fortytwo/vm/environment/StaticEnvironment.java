@@ -3,7 +3,6 @@ package fortytwo.vm.environment;
 import java.util.List;
 import java.util.Optional;
 
-import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
@@ -11,12 +10,11 @@ import fortytwo.language.type.FunctionType;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.expressions.LiteralExpression;
-import fortytwo.vm.expressions.LiteralFunction;
 
 public class StaticEnvironment {
 	private final StaticEnvironment container;
 	public final StructureRoster structs;
-	private final FunctionSignatureRoster funcs;
+	public final FunctionSignatureRoster funcs;
 	private final VariableRoster<LiteralExpression> globalVariables;
 	private final VariableTypeRoster types;
 	public static StaticEnvironment getDefault() {
@@ -64,9 +62,6 @@ public class StaticEnvironment {
 	}
 	public Optional<FunctionType> referenceTo(FunctionName name,
 			List<ConcreteType> types) {
-		final Optional<LiteralFunction> func = StdLib42
-				.matchCompiledFieldAccess(this, name, types);
-		if (func.isPresent()) return Optional.of(func.get().type);
 		final Optional<FunctionType> sig = funcs.typeof(name, types);
 		if (sig.isPresent()) return sig;
 		System.out.println(name);
@@ -74,8 +69,8 @@ public class StaticEnvironment {
 		if (container == null) DNEErrors.functionSignatureDNE(name, types);
 		return container.referenceTo(name, types);
 	}
-	public void putReference(FunctionDefinition f) {
-		funcs.putReference(f.sig.identifier(), f.sig.type);
+	public void putReference(VariableIdentifier id, FunctionType type) {
+		funcs.putReference(id, type);
 	}
 	public LiteralExpression referenceTo(VariableIdentifier name) {
 		final LiteralExpression expr = globalVariables.referenceTo(name);

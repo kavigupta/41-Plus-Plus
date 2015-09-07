@@ -39,7 +39,8 @@ public class GlobalEnvironment {
 			switch (s.kind()) {
 				case FUNCTION:
 					final FunctionConstruct f = (FunctionConstruct) s;
-					environment.putReference(f.declaration);
+					environment.putReference(f.declaration.sig.identifier(),
+							f.declaration.sig.type);
 					functions.put(f.declaration.sig.identifier(),
 							new FunctionImplemented(f.declaration.sig.type,
 									f.declaration.inputVariables,
@@ -50,6 +51,7 @@ public class GlobalEnvironment {
 					GenericStructureSignature struct = ((StructureDefinition) s).structure;
 					environment.structs.addStructure(struct);
 					functions.putAll(struct.fieldFunctions());
+					System.out.println("Func" + functions);
 					break;
 				case DEFINITION:
 					final ParsedDefinition def = (ParsedDefinition) s;
@@ -73,10 +75,13 @@ public class GlobalEnvironment {
 		final HashMap<VariableIdentifier, LiteralFunction> implFunctions = new HashMap<>();
 		for (final Entry<VariableIdentifier, LiteralFunction> func : functions
 				.entrySet()) {
+			System.out.println("F111" + func.getKey());
 			func.getValue().isTypeChecked(environment);
 			final LiteralFunction impl = func.getValue()
 					.contextualize(environment);
 			implFunctions.put(func.getKey(), impl);
+			environment.putReference(func.getKey().identifier().get(),
+					func.getValue().type);
 		}
 		global.funcs.functions.putAll(implFunctions);
 		return global;

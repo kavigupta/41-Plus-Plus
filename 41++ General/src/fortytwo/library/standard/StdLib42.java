@@ -8,7 +8,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.language.Language;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
@@ -157,41 +156,6 @@ public class StdLib42 {
 				new FunctionType(Arrays.asList(type), output.get()),
 				StdLibImplementations.fieldAccess(field));
 		return Pair.of(fun, output.get());
-	}
-	public static Optional<LiteralFunction> matchCompiledFieldAccess(
-			StaticEnvironment se, FunctionName name,
-			List<ConcreteType> inputs) {
-		if (name.function.size() != 4) return Optional.empty();
-		if (!name.function.get(0)
-				.equals(new FunctionToken(LiteralToken.synthetic("the"))))
-			return Optional.empty();
-		if (!(name.function.get(1) instanceof FunctionToken)
-				|| !Language.isValidVariableIdentifier(
-						((FunctionToken) name.function.get(1)).token))
-			return Optional.empty();
-		if (!name.function.get(2)
-				.equals(new FunctionToken(LiteralToken.synthetic("of"))))
-			return Optional.empty();
-		if (!(name.function.get(3).isArgument())) return Optional.empty();
-		final VariableIdentifier field = VariableIdentifier
-				.getInstance(((FunctionToken) name.function.get(1)).token);
-		final ConcreteType type = inputs.get(0);
-		if (type instanceof ArrayType) {
-			if (field.equals(TypeVariable.LENGTH.name))
-				return Optional.of(StdLibFunctions.ARRAY_LENGTH);
-		} else if (type.equals(
-				new PrimitiveType(PrimitiveTypeWOC.NUMBER, Context.SYNTHETIC)))
-			return Optional.of(StdLibFunctions.STRING_LENGTH);
-		if (!(type instanceof StructureType)) return Optional.empty();
-		Optional<ConcreteType> output = se.structs
-				.getStructure((StructureType) type).typeof(field);
-		if (!output.isPresent()) {
-			Optional.empty();
-		}
-		LiteralFunction fun = new FunctionSynthetic(
-				new FunctionType(Arrays.asList(type), output.get()),
-				StdLibImplementations.fieldAccess(field));
-		return Optional.of(fun);
 	}
 	public static void defaultFunctions(FunctionRoster funcs) {
 		for (final Entry<VariableIdentifier, LiteralFunction> f : DEFAULT_FUNCTIONS

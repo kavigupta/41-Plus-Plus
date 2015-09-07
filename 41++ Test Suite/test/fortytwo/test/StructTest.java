@@ -33,6 +33,12 @@ public class StructTest {
 				"Define a singleton called \"x\". Define a singleton called \"y\". Tell me what (\"x\" is equal to \"y\") is.");
 	}
 	@Test
+	public void fieldAccessTest() {
+		assertPrint("'41++'\n",
+				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015."
+						+ "Tell me what (the \"name\" of \"lang\") is.");
+	}
+	@Test
 	public void concreteStructTest() {
 		assertPrint("{record: \"dateOfBirth\" <= 2015, \"name\" <= '41++'}\n",
 				"Define a record called \"lang\" with a \"name\" of '41++' and a \"dateOfBirth\" of 2015. Tell me what \"lang\" is.");
