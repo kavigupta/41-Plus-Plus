@@ -1,32 +1,42 @@
 package fortytwo.vm.environment;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import fortytwo.language.identifier.FunctionName;
-import fortytwo.language.identifier.FunctionSignature;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
+import fortytwo.language.type.FunctionType;
 
 public class FunctionSignatureRoster {
-	private final HashSet<FunctionSignature> typeMap;
+	private final HashMap<VariableIdentifier, ConcreteType> typeMap;
 	public FunctionSignatureRoster() {
-		this.typeMap = new HashSet<>();
+		this.typeMap = new HashMap<>();
 	}
-	public Optional<FunctionSignature> referenceTo(FunctionName name,
+	public Optional<FunctionType> typeof(FunctionName name,
 			List<ConcreteType> inputs) {
-		for (final FunctionSignature f : typeMap)
-			if (f.name.equals(name))
-				if (f.type.accepts(inputs)) return Optional.of(f);
+		System.out.println("Finding " + name.toSourceCode());
+		for (final Entry<VariableIdentifier, ConcreteType> f : typeMap
+				.entrySet()) {
+			String unmangled = f.getKey().unmangledName();
+			System.out.println("\t" + unmangled);
+			if (!unmangled.equals(name.identifier().name.token)) continue;
+			System.out.println("\t" + unmangled);
+			if (!(f.getValue() instanceof FunctionType)) continue;
+			if (((FunctionType) f.getValue()).accepts(inputs))
+				return Optional.of((FunctionType) f.getValue());
+		}
 		return Optional.empty();
 	}
-	public void putReference(FunctionSignature sig) {
-		typeMap.add(sig);
+	public void putReference(VariableIdentifier id, ConcreteType type) {
+		typeMap.put(id, type);
 	}
 	@Override
 	public FunctionSignatureRoster clone() {
 		final FunctionSignatureRoster other = new FunctionSignatureRoster();
-		other.typeMap.addAll(typeMap);
+		other.typeMap.putAll(typeMap);
 		return other;
 	}
 	@Override

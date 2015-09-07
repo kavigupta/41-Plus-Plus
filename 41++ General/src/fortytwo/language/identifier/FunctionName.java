@@ -6,12 +6,13 @@ import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
+import fortytwo.compiler.parsed.GenericToken;
 import fortytwo.language.identifier.functioncomponent.FunctionArgument;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.identifier.functioncomponent.FunctionToken;
 import fortytwo.language.type.ConcreteType;
 
-public class FunctionName {
+public class FunctionName implements GenericToken {
 	public final List<FunctionComponent> function;
 	public static FunctionName getInstance(String... name) {
 		return getInstance(Arrays.asList(name).stream()
@@ -31,13 +32,15 @@ public class FunctionName {
 	private FunctionName(List<FunctionComponent> function) {
 		this.function = function;
 	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (function == null ? 0 : function.hashCode());
-		return result;
+	public VariableIdentifier identifier() {
+		return VariableIdentifier.getInstance(this.toToken());
 	}
+	@Override
+	public String toSourceCode() {
+		return "\"" + function.stream().map(FunctionComponent::toString)
+				.reduce((x, y) -> x + " " + y).get() + "\"";
+	}
+	@Override
 	public Context context() {
 		return Context.sum(function.stream().map(FunctionComponent::context)
 				.collect(Collectors.toList()));
@@ -55,6 +58,13 @@ public class FunctionName {
 			}
 		if (sbuff.length() == 0) return "";
 		return sbuff.substring(0, sbuff.length() - 1);
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (function == null ? 0 : function.hashCode());
+		return result;
 	}
 	@Override
 	public boolean equals(Object obj) {

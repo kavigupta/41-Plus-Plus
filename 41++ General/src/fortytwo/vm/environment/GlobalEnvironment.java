@@ -10,9 +10,9 @@ import fortytwo.compiler.parsed.declaration.StructureDefinition;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedDefinition;
 import fortytwo.compiler.parser.Parser;
-import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.constructions.FunctionImplemented;
+import fortytwo.vm.constructions.GenericStructureSignature;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
@@ -27,29 +27,29 @@ public class GlobalEnvironment {
 	}
 	public static GlobalEnvironment getDefaultEnvironment(
 			StaticEnvironment staticEnv) {
-		return new GlobalEnvironment(staticEnv,
-				FunctionRoster.getDefault(staticEnv));
+		return new GlobalEnvironment(staticEnv, FunctionRoster.getDefault());
 	}
 	public static GlobalEnvironment interpret(List<Sentence> sentences) {
 		final StaticEnvironment environment = StaticEnvironment.getDefault();
 		final GlobalEnvironment global = GlobalEnvironment
 				.getDefaultEnvironment(environment);
-		final HashMap<FunctionSignature, LiteralFunction> functions = new HashMap<>();
+		final HashMap<VariableIdentifier, LiteralFunction> functions = new HashMap<>();
 		for (int i = 0; i < sentences.size(); i++) {
 			final Sentence s = sentences.get(i);
 			switch (s.kind()) {
 				case FUNCTION:
 					final FunctionConstruct f = (FunctionConstruct) s;
 					environment.putReference(f.declaration);
-					functions.put(f.declaration.sig,
+					functions.put(f.declaration.sig.identifier(),
 							new FunctionImplemented(f.declaration.sig.type,
 									f.declaration.inputVariables,
 									Parser.temporaryHack(f.suite).statements,
 									f.declaration.sig.toSourceCode()));
 					break;
 				case DECLARATION_STRUCT:
-					environment.structs
-							.addStructure(((StructureDefinition) s).structure);
+					GenericStructureSignature struct = ((StructureDefinition) s).structure;
+					environment.structs.addStructure(struct);
+					functions.putAll(struct.fieldFunctions());
 					break;
 				case DEFINITION:
 					final ParsedDefinition def = (ParsedDefinition) s;
@@ -70,11 +70,11 @@ public class GlobalEnvironment {
 					ParserErrors.expectedDeclarationOrDefinition(s);
 			}
 		}
-		final HashMap<FunctionSignature, LiteralFunction> implFunctions = new HashMap<>();
-		for (final Entry<FunctionSignature, LiteralFunction> func : functions
+		final HashMap<VariableIdentifier, LiteralFunction> implFunctions = new HashMap<>();
+		for (final Entry<VariableIdentifier, LiteralFunction> func : functions
 				.entrySet()) {
 			func.getValue().isTypeChecked(environment);
-			final FunctionImplemented impl = func.getValue()
+			final LiteralFunction impl = func.getValue()
 					.contextualize(environment);
 			implFunctions.put(func.getKey(), impl);
 		}

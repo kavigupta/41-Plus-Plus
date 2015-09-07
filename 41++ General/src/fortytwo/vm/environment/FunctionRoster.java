@@ -2,33 +2,38 @@ package fortytwo.vm.environment;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 
-import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.identifier.FunctionSignature;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.expressions.LiteralFunction;
 
 public class FunctionRoster {
-	private final StaticEnvironment env;
-	public final HashMap<FunctionSignature, LiteralFunction> functions = new HashMap<>();
-	private FunctionRoster(StaticEnvironment env) {
-		this.env = env;
-	}
+	public final HashMap<VariableIdentifier, LiteralFunction> functions = new HashMap<>();
+	private FunctionRoster() {}
 	public Optional<LiteralFunction> get(FunctionSignature signature,
-			List<Expression> arguments, List<ConcreteType> types) {
-		final Optional<LiteralFunction> func = StdLib42
-				.matchCompiledFieldAccess(env, signature.name, types);
-		if (func.isPresent()) return func;
-		final LiteralFunction f = functions.get(signature);
-		return f == null ? Optional.empty() : Optional.of(f);
+			List<ConcreteType> types) {
+		// final Optional<LiteralFunction> func = StdLib42
+		// .matchCompiledFieldAccess(env, signature.name, types);
+		// if (func.isPresent()) return func;
+		for (Entry<VariableIdentifier, LiteralFunction> x : functions
+				.entrySet()) {
+			if (!x.getKey().unmangledName()
+					.equals(signature.name.identifier().unmangledName()))
+				continue;
+			if (!(x.getValue().type.accepts(types))) continue;
+			return Optional.of(x.getValue());
+		}
+		return Optional.empty();
 	}
-	public void add(FunctionSignature sig, LiteralFunction func) {
+	public void add(VariableIdentifier sig, LiteralFunction func) {
 		functions.put(sig, func);
 	}
-	public static FunctionRoster getDefault(StaticEnvironment env) {
-		final FunctionRoster funcs = new FunctionRoster(env);
+	public static FunctionRoster getDefault() {
+		final FunctionRoster funcs = new FunctionRoster();
 		StdLib42.defaultFunctions(funcs);
 		return funcs;
 	}

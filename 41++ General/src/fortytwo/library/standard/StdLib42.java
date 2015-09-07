@@ -32,7 +32,7 @@ public class StdLib42 {
 	public static final FunctionName FUNC_ARRAY_LEN = FunctionName
 			.getInstance("the", TypeVariable.LENGTH.name.name.token, "of", "");
 	public static final List<String> STRUCT_ARRAY = Arrays.asList("array");
-	public static final Map<FunctionName, LiteralFunction> DEFAULT_FUNCTIONS = new HashMap<>();
+	public static final Map<VariableIdentifier, LiteralFunction> DEFAULT_FUNCTIONS = new HashMap<>();
 	static {
 		// TODO for each in {st, nd, rd, th}
 		for (String suffix : new String[] { "st", "nd", "rd", "th" }) {
@@ -66,11 +66,16 @@ public class StdLib42 {
 		addFunction(StdLibFunctions.AND, "", "and", "");
 		addFunction(StdLibFunctions.OR, "", "or", "");
 		addFunction(StdLibFunctions.NOT, "not", "");
+		addFunction(StdLibFunctions.ARRAY_LENGTH, "the", "\"length\"", "of",
+				"");
 		// Arrays.asList(FunctionCompare.Comparator.values()).stream()
 		// .forEach(x -> DEFAULT_FUNCTIONS.add(new FunctionCompare(x)));
 	}
 	private static void addFunction(LiteralFunction func, String... name) {
-		DEFAULT_FUNCTIONS.put(FunctionName.getInstance(name), func);
+		DEFAULT_FUNCTIONS.put(
+				new FunctionSignature(FunctionName.getInstance(name), func.type)
+						.identifier(),
+				func);
 	}
 	public static FunctionName functArrayAccess(String suffix) {
 		return FunctionName.getInstance("the", "", suffix, "element", "of", "");
@@ -97,6 +102,9 @@ public class StdLib42 {
 								VariableIdentifier.getInstance(
 										LiteralToken.entire("\"value\"")),
 								_v))));
+		for (GenericStructureSignature sig : DEF_STRUCT.structs) {
+			DEFAULT_FUNCTIONS.putAll(sig.fieldFunctions());
+		}
 	}
 	public static Pair<FunctionName, List<Expression>> parseFunction(
 			List<FunctionComponent> name, List<Expression> arguments) {
@@ -186,15 +194,13 @@ public class StdLib42 {
 		return Optional.of(fun);
 	}
 	public static void defaultFunctions(FunctionRoster funcs) {
-		for (final Entry<FunctionName, LiteralFunction> f : DEFAULT_FUNCTIONS
+		for (final Entry<VariableIdentifier, LiteralFunction> f : DEFAULT_FUNCTIONS
 				.entrySet())
-			funcs.add(new FunctionSignature(f.getKey(), f.getValue().type),
-					f.getValue());
+			funcs.add(f.getKey(), f.getValue());
 	}
 	public static void defaultSignatures(FunctionSignatureRoster funcs) {
-		for (final Entry<FunctionName, LiteralFunction> f : DEFAULT_FUNCTIONS
+		for (final Entry<VariableIdentifier, LiteralFunction> f : DEFAULT_FUNCTIONS
 				.entrySet())
-			funcs.putReference(
-					new FunctionSignature(f.getKey(), f.getValue().type));
+			funcs.putReference(f.getKey(), f.getValue().type);
 	}
 }

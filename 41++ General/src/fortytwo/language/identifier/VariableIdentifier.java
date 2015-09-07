@@ -48,6 +48,19 @@ public class VariableIdentifier extends Expression
 		return Optional.of(this);
 	}
 	@Override
+	public String toSourceCode() {
+		return name.token;
+	}
+	/**
+	 * @return this name, without anything after a colon (internally used to
+	 *         represent function name mangling
+	 */
+	public String unmangledName() {
+		int index = this.name.token.indexOf(':');
+		if (index < 0) return this.name.token;
+		return this.name.token.substring(0, index) + "\"";
+	}
+	@Override
 	public int compareTo(VariableIdentifier o) {
 		return name.token.compareTo(o.name.token);
 	}
@@ -65,10 +78,6 @@ public class VariableIdentifier extends Expression
 	}
 	@Override
 	public String toString() {
-		return name.token;
-	}
-	@Override
-	public String toSourceCode() {
 		return name.token;
 	}
 }

@@ -128,4 +128,7 @@ public class Language {
 	public static boolean isQuote(char c) {
 		return c == '\'' || c == '"';
 	}
+	public static String sanitizeForUseInVID(String id) {
+		return id.replace("\\", "\\\\").replace("\"", "\\\"");
+	}
 }

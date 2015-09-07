@@ -40,10 +40,15 @@ public class ParsedFunctionCall extends Expression {
 		// call get because it should have been checked already
 		final FunctionType sig = se.referenceTo(name, types).get();
 		final Optional<LiteralFunction> f = env.global.funcs
-				.get(new FunctionSignature(name, sig), arguments, types);
-		if (!f.isPresent())
+				.get(new FunctionSignature(name, sig), types);
+		System.out.println(env.global.funcs.functions);
+		if (!f.isPresent()) {
+			System.out.println(name.identifier().unmangledName());
+			env.global.funcs.functions.entrySet().stream().forEach(
+					x -> System.out.println("\t" + x.getKey().unmangledName()));
 			// crash. There is no reason this point should have been reached.
-			throw new RuntimeException(name.toString());
+			throw new RuntimeException();
+		}
 		return f.get().apply(env.global, arguments.stream()
 				.map(x -> x.literalValue(env)).collect(Collectors.toList()));
 	}

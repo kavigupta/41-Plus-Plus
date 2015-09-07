@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.language.identifier.FunctionName;
-import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
@@ -68,13 +67,15 @@ public class StaticEnvironment {
 		final Optional<LiteralFunction> func = StdLib42
 				.matchCompiledFieldAccess(this, name, types);
 		if (func.isPresent()) return Optional.of(func.get().type);
-		final Optional<FunctionSignature> sig = funcs.referenceTo(name, types);
-		if (sig.isPresent()) return Optional.of(sig.get().type);
+		final Optional<FunctionType> sig = funcs.typeof(name, types);
+		if (sig.isPresent()) return sig;
+		System.out.println(name);
+		System.out.println(funcs);
 		if (container == null) DNEErrors.functionSignatureDNE(name, types);
 		return container.referenceTo(name, types);
 	}
 	public void putReference(FunctionDefinition f) {
-		funcs.putReference(f.sig);
+		funcs.putReference(f.sig.identifier(), f.sig.type);
 	}
 	public LiteralExpression referenceTo(VariableIdentifier name) {
 		final LiteralExpression expr = globalVariables.referenceTo(name);

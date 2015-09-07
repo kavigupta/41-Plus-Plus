@@ -4,7 +4,6 @@ import java.util.List;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.GenericToken;
-import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
 
@@ -24,18 +23,9 @@ public class FunctionSignature implements GenericToken {
 	}
 	@Override
 	public String toSourceCode() {
-		int argument = 0;
-		StringBuilder sourceCode = new StringBuilder();
-		for (FunctionComponent ft : name.function) {
-			if (ft.isArgument()) {
-				sourceCode.append(type.inputTypes.get(argument))
-						.append(" ");
-				argument++;
-			} else {
-				sourceCode.append(ft.toString()).append(" ");
-			}
-		}
-		return sourceCode.substring(0, sourceCode.length() - 1);
+		String name = this.name.identifier().toSourceCode();
+		return '"' + name.substring(1, name.length() - 1) + ":"
+				+ type.toSourceCode() + '"';
 	}
 	@Override
 	public Context context() {
@@ -46,8 +36,7 @@ public class FunctionSignature implements GenericToken {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result
-				+ ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 	@Override
@@ -66,7 +55,7 @@ public class FunctionSignature implements GenericToken {
 	}
 	@Override
 	public String toString() {
-		return "FunctionSignature [name=" + name + ", typeSignature="
-				+ type + "]";
+		return "FunctionSignature [name=" + name + ", typeSignature=" + type
+				+ "]";
 	}
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import fortytwo.compiler.Context;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
-import fortytwo.vm.constructions.FunctionImplemented;
 import fortytwo.vm.environment.GlobalEnvironment;
 import fortytwo.vm.environment.StaticEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
@@ -32,8 +31,7 @@ public abstract class LiteralFunction extends LiteralExpression {
 		return implementation.apply(env, arguments,
 				type.typeVariables(arguments, env.staticEnv));
 	}
-	public FunctionImplemented contextualize(StaticEnvironment environment) {
-		// TODO Auto-generated method stub
-		return null;
+	public LiteralFunction contextualize(StaticEnvironment environment) {
+		return this;
 	}
 }

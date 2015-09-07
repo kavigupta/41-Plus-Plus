@@ -1,9 +1,18 @@
 package fortytwo.vm.constructions;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fortytwo.language.field.GenericField;
+import fortytwo.language.identifier.FunctionName;
+import fortytwo.language.identifier.FunctionSignature;
+import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.FunctionType;
 import fortytwo.language.type.GenericStructureType;
+import fortytwo.library.standard.StdLibImplementations;
+import fortytwo.vm.expressions.LiteralFunction;
 
 public class GenericStructureSignature {
 	public final GenericStructureType type;
@@ -38,5 +47,18 @@ public class GenericStructureSignature {
 	@Override
 	public String toString() {
 		return "GenericStructure [type=" + type + ", fields=" + fields + "]";
+	}
+	public Map<VariableIdentifier, LiteralFunction> fieldFunctions() {
+		Map<VariableIdentifier, LiteralFunction> fieldFuncs = new HashMap<>();
+		for (GenericField field : fields) {
+			FunctionName name = FunctionName.getInstance("the",
+					field.name.toSourceCode(), "of", "");
+			FunctionType type = new FunctionType(Arrays.asList(this.type),
+					field.type);
+			fieldFuncs.put(new FunctionSignature(name, type).identifier(),
+					new FunctionSynthetic(type,
+							StdLibImplementations.fieldAccess(field.name)));
+		}
+		return fieldFuncs;
 	}
 }
