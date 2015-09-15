@@ -8,8 +8,8 @@ import fortytwo.language.SourceCode;
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -23,7 +23,7 @@ public class ParsedRedefinition extends ParsedAssignment {
 		this.value = expr;
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment env) {
+	public boolean typeCheck(TypeEnvironment env) {
 		if (name.type(env).equals(value.type(env))) return true;
 		TypingErrors.redefinitionTypeMismatch(
 				new TypedVariable(name, name.type(env)), value, env);
@@ -31,16 +31,16 @@ public class ParsedRedefinition extends ParsedAssignment {
 		return false;
 	}
 	@Override
-	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
 		environment.vars.redefine(name, value.literalValue(environment));
 		return Optional.empty();
 	}
 	@Override
-	public Optional<GenericType> returnType(StaticEnvironment env) {
+	public Optional<GenericType> returnType(TypeEnvironment env) {
 		return Optional.empty();
 	}
 	@Override
-	public void clean(LocalEnvironment environment) {
+	public void clean(OrderedEnvironment environment) {
 		// no variables created
 	}
 	@Override

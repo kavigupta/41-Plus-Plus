@@ -6,8 +6,8 @@ import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class TypedVariable extends Expression {
@@ -19,11 +19,11 @@ public class TypedVariable extends Expression {
 		this.type = type;
 	}
 	@Override
-	public LiteralExpression literalValue(LocalEnvironment env) {
+	public LiteralExpression literalValue(OrderedEnvironment env) {
 		return env.referenceTo(this.name);
 	}
 	@Override
-	public ConcreteType findType(StaticEnvironment env) {
+	public ConcreteType findType(TypeEnvironment env) {
 		return type;
 	}
 	@Override

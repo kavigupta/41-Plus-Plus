@@ -17,17 +17,17 @@ import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.GlobalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.expressions.LiteralArray;
 import fortytwo.vm.expressions.LiteralString;
 
 public class GlobalEnvTest {
-	GlobalEnvironment env;
+	UnorderedEnvironment env;
 	@Before
 	public void init() {
-		env = GlobalEnvironment
-				.getDefaultEnvironment(StaticEnvironment.getDefault());
+		env = UnorderedEnvironment
+				.getDefaultEnvironment(TypeEnvironment.getDefault());
 	}
 	@Test
 	public void printTest() {

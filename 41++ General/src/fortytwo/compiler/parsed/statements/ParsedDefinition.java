@@ -7,8 +7,8 @@ import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.type.GenericType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.environment.VariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -40,20 +40,20 @@ public class ParsedDefinition extends ParsedStatement {
 		this.fields = fields;
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment environment) {
+	public boolean typeCheck(TypeEnvironment environment) {
 		environment.addType(toCreate.name, toCreate.type);
 		return environment.structs.typeCheckConstructor(environment, toCreate,
 				fields, context());
 	}
 	@Override
-	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
 		final StructureRoster struct = environment.global.staticEnv.structs;
 		environment.vars.assign(toCreate.name, struct.instance(toCreate,
 				fields.literalValue(environment), toCreate.name.context()));
 		return Optional.empty();
 	}
 	@Override
-	public void clean(LocalEnvironment environment) {
+	public void clean(OrderedEnvironment environment) {
 		environment.vars.deregister(toCreate.name);
 	}
 	@Override
@@ -69,7 +69,7 @@ public class ParsedDefinition extends ParsedStatement {
 		return true;
 	}
 	@Override
-	public Optional<GenericType> returnType(StaticEnvironment env) {
+	public Optional<GenericType> returnType(TypeEnvironment env) {
 		return Optional.empty();
 	}
 	@Override

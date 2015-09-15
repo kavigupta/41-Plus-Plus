@@ -17,12 +17,12 @@ import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.environment.VariableRoster;
 
 public class TypingErrors {
 	public static void typeError(String expressionDescription,
-			String expectedType, Expression expression, StaticEnvironment env) {
+			String expectedType, Expression expression, TypeEnvironment env) {
 		/*
 		 * <Expression description> must be <expected type>, but is actually
 		 * ~<expression>~, which is <actual type>.
@@ -39,7 +39,7 @@ public class TypingErrors {
 	}
 	public static void expectedNumberInArithmeticOperator(
 			BinaryOperation operation, boolean firstArgument,
-			StaticEnvironment env) {
+			TypeEnvironment env) {
 		typeError(
 				"The " + (firstArgument ? "first" : "second") + " argument in "
 						+ operation.operation.noun.toLowerCase(),
@@ -47,17 +47,17 @@ public class TypingErrors {
 				firstArgument ? operation.first : operation.second, env);
 	}
 	public static void expectedBoolInCondition(boolean ifIf,
-			Expression condition, StaticEnvironment env) {
+			Expression condition, TypeEnvironment env) {
 		typeError("The condition of " + (ifIf ? "an if" : "a while") + " loop",
 				PrimitiveTypeWOC.BOOL.toSourceCode(), condition, env);
 	}
 	public static void redefinitionTypeMismatch(TypedVariable name,
-			Expression parsedExpression, StaticEnvironment env) {
+			Expression parsedExpression, TypeEnvironment env) {
 		typeError("The value of " + name.name.toSourceCode(),
 				name.type.toSourceCode(), parsedExpression, env);
 	}
 	public static void fieldAssignmentTypeMismatch(Structure struct,
-			TypedVariable field, Expression value, StaticEnvironment env) {
+			TypedVariable field, Expression value, TypeEnvironment env) {
 		typeError(
 				"The " + field.name.toSourceCode() + " of "
 						+ struct.type.toSourceCode(),

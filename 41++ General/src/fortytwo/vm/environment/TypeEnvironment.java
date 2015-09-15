@@ -11,31 +11,31 @@ import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class StaticEnvironment {
-	private final StaticEnvironment container;
+public class TypeEnvironment {
+	private final Optional<TypeEnvironment> container;
 	public final StructureRoster structs;
 	public final FunctionSignatureRoster funcs;
 	private final VariableRoster<LiteralExpression> globalVariables;
 	private final VariableTypeRoster types;
-	public static StaticEnvironment getDefault() {
+	public static TypeEnvironment getDefault() {
 		final StructureRoster structs = StdLib42.DEF_STRUCT;
 		final FunctionSignatureRoster funcs = new FunctionSignatureRoster();
 		StdLib42.defaultSignatures(funcs);
 		final VariableRoster<LiteralExpression> globalVariables = new VariableRoster<>();
 		final VariableTypeRoster types = new VariableTypeRoster();
-		return new StaticEnvironment(structs, funcs, globalVariables, types);
+		return new TypeEnvironment(structs, funcs, globalVariables, types);
 	}
-	public static StaticEnvironment getChild(StaticEnvironment environment) {
-		return new StaticEnvironment(environment);
+	public static TypeEnvironment getChild(TypeEnvironment environment) {
+		return new TypeEnvironment(environment);
 	}
-	private StaticEnvironment(StaticEnvironment env) {
+	private TypeEnvironment(TypeEnvironment env) {
 		this.structs = env.structs;
 		this.funcs = new FunctionSignatureRoster();
 		this.globalVariables = new VariableRoster<>();
 		this.types = new VariableTypeRoster();
-		this.container = env;
+		this.container = Optional.of(env);
 	}
-	private StaticEnvironment(StructureRoster structureRoster,
+	private TypeEnvironment(StructureRoster structureRoster,
 			FunctionSignatureRoster sigRost,
 			VariableRoster<LiteralExpression> global,
 			VariableTypeRoster types) {
@@ -43,7 +43,7 @@ public class StaticEnvironment {
 		this.funcs = sigRost;
 		this.globalVariables = global;
 		this.types = types;
-		this.container = null;
+		this.container = Optional.empty();
 	}
 	public void addGlobalVariable(VariableIdentifier name,
 			LiteralExpression express) {
@@ -57,17 +57,15 @@ public class StaticEnvironment {
 	public ConcreteType typeOf(VariableIdentifier name) {
 		final ConcreteType type = types.typeOf(name);
 		if (type != null) return type;
-		if (container == null) DNEErrors.variableDNE(name);
-		return container.typeOf(name);
+		if (!container.isPresent()) DNEErrors.variableDNE(name);
+		return container.get().typeOf(name);
 	}
 	public Optional<FunctionType> referenceTo(FunctionName name,
 			List<ConcreteType> types) {
 		final Optional<FunctionType> sig = funcs.typeof(name, types);
 		if (sig.isPresent()) return sig;
-		System.out.println(name);
-		System.out.println(funcs);
-		if (container == null) DNEErrors.functionSignatureDNE(name, types);
-		return container.referenceTo(name, types);
+		if (!container.isPresent()) DNEErrors.functionSignatureDNE(name, types);
+		return container.get().referenceTo(name, types);
 	}
 	public void putReference(VariableIdentifier id, FunctionType type) {
 		funcs.putReference(id, type);
@@ -75,8 +73,8 @@ public class StaticEnvironment {
 	public LiteralExpression referenceTo(VariableIdentifier name) {
 		final LiteralExpression expr = globalVariables.referenceTo(name);
 		if (expr != null) return expr;
-		if (container == null) DNEErrors.variableDNE(name);
-		return container.referenceTo(name);
+		if (!container.isPresent()) DNEErrors.variableDNE(name);
+		return container.get().referenceTo(name);
 	}
 	@Override
 	public int hashCode() {
@@ -94,7 +92,7 @@ public class StaticEnvironment {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final StaticEnvironment other = (StaticEnvironment) obj;
+		final TypeEnvironment other = (TypeEnvironment) obj;
 		if (funcs == null) {
 			if (other.funcs != null) return false;
 		} else if (!funcs.equals(other.funcs)) return false;

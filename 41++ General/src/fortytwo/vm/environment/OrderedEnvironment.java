@@ -4,15 +4,15 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class LocalEnvironment {
-	public final GlobalEnvironment global;
+public class OrderedEnvironment {
+	public final UnorderedEnvironment global;
 	public final VariableRoster<LiteralExpression> vars;
-	public LocalEnvironment(GlobalEnvironment global) {
+	public OrderedEnvironment(UnorderedEnvironment global) {
 		this.global = global;
 		vars = new VariableRoster<>();
 	}
-	public LocalEnvironment reinitialize(GlobalEnvironment newEnvironment) {
-		final LocalEnvironment newlocal = new LocalEnvironment(newEnvironment);
+	public OrderedEnvironment reinitialize(UnorderedEnvironment newEnvironment) {
+		final OrderedEnvironment newlocal = new OrderedEnvironment(newEnvironment);
 		vars.pairs.forEach((k, v) -> newlocal.vars.assign(k, v));
 		return newlocal;
 	}
@@ -27,8 +27,8 @@ public class LocalEnvironment {
 		if (type != null) return type;
 		return global.staticEnv.typeOf(name);
 	}
-	public StaticEnvironment staticEnvironment() {
-		final StaticEnvironment env = StaticEnvironment
+	public TypeEnvironment staticEnvironment() {
+		final TypeEnvironment env = TypeEnvironment
 				.getChild(global.staticEnv);
 		vars.pairs
 				.forEach((name, expr) -> env.addType(name, expr.resolveType()));
@@ -47,7 +47,7 @@ public class LocalEnvironment {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final LocalEnvironment other = (LocalEnvironment) obj;
+		final OrderedEnvironment other = (OrderedEnvironment) obj;
 		if (global == null) {
 			if (other.global != null) return false;
 		} else if (!global.equals(other.global)) return false;

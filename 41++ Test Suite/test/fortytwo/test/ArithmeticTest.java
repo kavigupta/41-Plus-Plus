@@ -5,15 +5,15 @@ import static fortytwo.test.Utilities.assertEquivalence;
 import org.junit.Before;
 import org.junit.Test;
 
-import fortytwo.vm.environment.GlobalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 
 public class ArithmeticTest {
-	GlobalEnvironment env;
+	UnorderedEnvironment env;
 	@Before
 	public void init() {
-		env = GlobalEnvironment
-				.getDefaultEnvironment(StaticEnvironment.getDefault());
+		env = UnorderedEnvironment
+				.getDefaultEnvironment(TypeEnvironment.getDefault());
 	}
 	@Test
 	public void basicsTest() {

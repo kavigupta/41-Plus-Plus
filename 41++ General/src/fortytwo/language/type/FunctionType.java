@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.language.Language;
+import fortytwo.language.SourceCode;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -45,10 +48,18 @@ public class FunctionType implements ConcreteType {
 	}
 	@Override
 	public String toSourceCode() {
-		Optional<String> inputs = inputTypes.stream()
-				.map(GenericType::toSourceCode).reduce((a, b) -> a + "," + b);
-		String renderedInputs = inputs.isPresent() ? inputs.get() : "";
-		return "(" + renderedInputs + ") -> " + outputType.toSourceCode();
+		if (this.inputTypes.size() == 0 && this.outputType.isVoid())
+			return "procedure";
+		List<String> inputs = inputTypes.stream().map(GenericType::toSourceCode)
+				.map(Language::articleized).collect(Collectors.toList());
+		StringBuilder sb = new StringBuilder();
+		sb.append("(function that ");
+		if (inputs.size() != 0)
+			sb.append("takes ").append(SourceCode.displayList(inputs));
+		if (inputs.size() != 0 && !outputType.isVoid()) sb.append(" and ");
+		if (!outputType.isVoid()) sb.append("outputs ")
+				.append(Language.articleized(outputType.toSourceCode()));
+		return sb.append(')').toString();
 	}
 	@Override
 	public LiteralExpression defaultValue() {
@@ -63,7 +74,7 @@ public class FunctionType implements ConcreteType {
 		return true;
 	}
 	public final TypeVariableRoster typeVariables(
-			List<? extends Expression> arguments, StaticEnvironment env) {
+			List<? extends Expression> arguments, TypeEnvironment env) {
 		final TypeVariableRoster roster = new TypeVariableRoster();
 		for (int i = 0; i < this.inputTypes.size(); i++) {
 			final ConcreteType arg = arguments.get(i).type(env);

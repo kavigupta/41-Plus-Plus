@@ -11,8 +11,8 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
 import fortytwo.language.type.GenericType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
@@ -48,12 +48,12 @@ public class FunctionImplemented extends LiteralFunction {
 	 * @return an implemented function representing this function
 	 */
 	@Override
-	public FunctionImplemented contextualize(StaticEnvironment environment) {
+	public FunctionImplemented contextualize(TypeEnvironment environment) {
 		return this;
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment env) {
-		final StaticEnvironment local = StaticEnvironment.getChild(env);
+	public boolean typeCheck(TypeEnvironment env) {
+		final TypeEnvironment local = TypeEnvironment.getChild(env);
 		registerParameters(local);
 		for (final ParsedStatement s : body) {
 			final Optional<GenericType> actual = s.returnType(local);
@@ -67,7 +67,7 @@ public class FunctionImplemented extends LiteralFunction {
 	public static FunctionImplementation getImplementedFunction(
 			List<VariableIdentifier> variables, List<ParsedStatement> body) {
 		return (env, inputs, roster) -> {
-			final LocalEnvironment local = env.minimalLocalEnvironment();
+			final OrderedEnvironment local = env.minimalLocalEnvironment();
 			for (int i = 0; i < variables.size(); i++)
 				local.vars.assign(variables.get(i), inputs.get(i));
 			for (final ParsedStatement s : body) {
@@ -84,7 +84,7 @@ public class FunctionImplemented extends LiteralFunction {
 	 * Registers the function's parameters' types on the given static
 	 * environment (which incidentally should be newly minted)
 	 */
-	public void registerParameters(StaticEnvironment environment) {
+	public void registerParameters(TypeEnvironment environment) {
 		for (int i = 0; i < type.inputTypes.size(); i++)
 			environment.addType(variables.get(i), (ConcreteType)
 			// LOWPRI remove cast once generic typing is allowed

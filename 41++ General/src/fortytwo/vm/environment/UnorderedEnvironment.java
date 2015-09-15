@@ -17,21 +17,20 @@ import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
 
-public class GlobalEnvironment {
-	public final StaticEnvironment staticEnv;
+public class UnorderedEnvironment {
+	public final TypeEnvironment staticEnv;
 	public final FunctionRoster funcs;
-	public GlobalEnvironment(StaticEnvironment staticEnv,
-			FunctionRoster funcs) {
+	public UnorderedEnvironment(TypeEnvironment staticEnv, FunctionRoster funcs) {
 		this.staticEnv = staticEnv;
 		this.funcs = funcs;
 	}
-	public static GlobalEnvironment getDefaultEnvironment(
-			StaticEnvironment staticEnv) {
-		return new GlobalEnvironment(staticEnv, FunctionRoster.getDefault());
+	public static UnorderedEnvironment getDefaultEnvironment(
+			TypeEnvironment staticEnv) {
+		return new UnorderedEnvironment(staticEnv, FunctionRoster.getDefault());
 	}
-	public static GlobalEnvironment interpret(List<Sentence> sentences) {
-		final StaticEnvironment environment = StaticEnvironment.getDefault();
-		final GlobalEnvironment global = GlobalEnvironment
+	public static UnorderedEnvironment interpret(List<Sentence> sentences) {
+		final TypeEnvironment environment = TypeEnvironment.getDefault();
+		final UnorderedEnvironment global = UnorderedEnvironment
 				.getDefaultEnvironment(environment);
 		final HashMap<VariableIdentifier, LiteralFunction> functions = new HashMap<>();
 		for (int i = 0; i < sentences.size(); i++) {
@@ -51,7 +50,6 @@ public class GlobalEnvironment {
 					GenericStructureSignature struct = ((StructureDefinition) s).structure;
 					environment.structs.addStructure(struct);
 					functions.putAll(struct.fieldFunctions());
-					System.out.println("Func" + functions);
 					break;
 				case DEFINITION:
 					final ParsedDefinition def = (ParsedDefinition) s;
@@ -59,7 +57,7 @@ public class GlobalEnvironment {
 					for (final Entry<VariableIdentifier, ? extends Expression> pair : def.fields.pairs
 							.entrySet()) {
 						final LiteralExpression applied = pair.getValue()
-								.literalValue(new LocalEnvironment(global));
+								.literalValue(new OrderedEnvironment(global));
 						fieldValues.assign(pair.getKey(), applied);
 					}
 					environment.addGlobalVariable(def.toCreate.name,
@@ -75,7 +73,6 @@ public class GlobalEnvironment {
 		final HashMap<VariableIdentifier, LiteralFunction> implFunctions = new HashMap<>();
 		for (final Entry<VariableIdentifier, LiteralFunction> func : functions
 				.entrySet()) {
-			System.out.println("F111" + func.getKey());
 			func.getValue().isTypeChecked(environment);
 			final LiteralFunction impl = func.getValue()
 					.contextualize(environment);
@@ -86,8 +83,8 @@ public class GlobalEnvironment {
 		global.funcs.functions.putAll(implFunctions);
 		return global;
 	}
-	public LocalEnvironment minimalLocalEnvironment() {
-		return new LocalEnvironment(this);
+	public OrderedEnvironment minimalLocalEnvironment() {
+		return new OrderedEnvironment(this);
 	}
 	@Override
 	public int hashCode() {
@@ -103,7 +100,7 @@ public class GlobalEnvironment {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final GlobalEnvironment other = (GlobalEnvironment) obj;
+		final UnorderedEnvironment other = (UnorderedEnvironment) obj;
 		if (funcs == null) {
 			if (other.funcs != null) return false;
 		} else if (!funcs.equals(other.funcs)) return false;

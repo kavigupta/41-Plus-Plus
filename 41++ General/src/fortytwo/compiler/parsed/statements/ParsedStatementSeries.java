@@ -8,8 +8,8 @@ import fortytwo.compiler.Context;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.GenericType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -26,12 +26,12 @@ public class ParsedStatementSeries extends ParsedStatement {
 		this.statements = statements;
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment env) {
+	public boolean typeCheck(TypeEnvironment env) {
 		statements.forEach(s -> s.isTypeChecked(env));
 		return true;
 	}
 	@Override
-	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
 		for (final ParsedStatement s : statements) {
 			final Optional<LiteralExpression> expr = s.execute(environment);
 			if (expr.isPresent()) return expr;
@@ -39,7 +39,7 @@ public class ParsedStatementSeries extends ParsedStatement {
 		return Optional.empty();
 	}
 	@Override
-	public Optional<GenericType> returnType(StaticEnvironment env) {
+	public Optional<GenericType> returnType(TypeEnvironment env) {
 		Optional<GenericType> type = Optional.empty();
 		for (final ParsedStatement s : statements) {
 			final Optional<GenericType> state = s.returnType(env);
@@ -55,7 +55,7 @@ public class ParsedStatementSeries extends ParsedStatement {
 		return type;
 	}
 	@Override
-	public void clean(LocalEnvironment environment) {
+	public void clean(OrderedEnvironment environment) {
 		statements.forEach(s -> s.clean(environment));
 	}
 	@Override

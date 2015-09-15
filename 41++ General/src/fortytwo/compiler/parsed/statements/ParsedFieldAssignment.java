@@ -11,8 +11,8 @@ import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.StructureType;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -42,7 +42,7 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		this.value = parseExpression;
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment env) {
+	public boolean typeCheck(TypeEnvironment env) {
 		if (!(toModify.type(env) instanceof StructureType)) {
 			// TODO handle when not fed a structure...
 		}
@@ -57,13 +57,13 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		return true;
 	}
 	@Override
-	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
 		((LiteralObject) toModify.literalValue(environment)).redefine(field,
 				value.literalValue(environment));
 		return Optional.empty();
 	}
 	@Override
-	public void clean(LocalEnvironment environment) {
+	public void clean(OrderedEnvironment environment) {
 		// nothing to clean.
 	}
 	@Override
@@ -75,7 +75,7 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		return true;
 	}
 	@Override
-	public Optional<GenericType> returnType(StaticEnvironment env) {
+	public Optional<GenericType> returnType(TypeEnvironment env) {
 		return Optional.empty();
 	}
 	@Override

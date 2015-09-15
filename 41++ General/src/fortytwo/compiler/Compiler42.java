@@ -6,7 +6,7 @@ import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.GlobalEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.errors.ErrorType;
 
 /**
@@ -21,15 +21,15 @@ public class Compiler42 {
 	 *        41++ source code to be compiled
 	 * @return a global environment representing the source code given
 	 */
-	public static GlobalEnvironment compile(String text) {
-		return GlobalEnvironment.interpret(Parser.parse(text));
+	public static UnorderedEnvironment compile(String text) {
+		return UnorderedEnvironment.interpret(Parser.parse(text));
 	}
 	/**
 	 * @param text
 	 *        41++ code to execute
 	 */
 	public static void execute(String text) {
-		final GlobalEnvironment env = GlobalEnvironment
+		final UnorderedEnvironment env = UnorderedEnvironment
 				.interpret(Parser.parse(text));
 		try {
 			final ParsedFunctionCall pfc = ParsedFunctionCall.getInstance(

@@ -17,13 +17,10 @@ public class FunctionSignatureRoster {
 	}
 	public Optional<FunctionType> typeof(FunctionName name,
 			List<ConcreteType> inputs) {
-		System.out.println("Finding " + name.toSourceCode());
 		for (final Entry<VariableIdentifier, ConcreteType> f : typeMap
 				.entrySet()) {
 			String unmangled = f.getKey().unmangledName();
-			System.out.println("\t" + unmangled);
 			if (!unmangled.equals(name.identifier().name.token)) continue;
-			System.out.println("\t" + unmangled);
 			if (!(f.getValue() instanceof FunctionType)) continue;
 			if (((FunctionType) f.getValue()).accepts(inputs))
 				return Optional.of((FunctionType) f.getValue());

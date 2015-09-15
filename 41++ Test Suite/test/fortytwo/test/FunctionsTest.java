@@ -10,7 +10,7 @@ import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.GlobalEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
 
 public class FunctionsTest {
 	public static final String TEST_FUNCTIONS = ""
@@ -37,7 +37,7 @@ public class FunctionsTest {
 			+ "Define a function called multiple return on \"branch\" that takes a bool called \"branch\" and outputs a number.\n"
 			+ "	If \"branch\":\n" + "\t\tExit the function and output 1.\n"
 			+ "	Otherwise:\n" + "		Exit the function and output 0.";
-	GlobalEnvironment env;
+	UnorderedEnvironment env;
 	@Before
 	public void init() {
 		env = Compiler42.compile(TEST_FUNCTIONS);

@@ -10,25 +10,25 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.GlobalEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.expressions.*;
 import fortytwo.vm.expressions.LiteralFunction.FunctionImplementation;
 
 public class StdLibImplementations {
-	public static LiteralExpression arrayAccess(GlobalEnvironment env,
+	public static LiteralExpression arrayAccess(UnorderedEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralArray array = (LiteralArray) arguments.get(1);
 		final LiteralNumber index = (LiteralNumber) arguments.get(0);
 		return array.get(index.contents.intValue(), Context.sum(arguments));
 	}
-	public static LiteralExpression arrayLength(GlobalEnvironment env,
+	public static LiteralExpression arrayLength(UnorderedEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		return new LiteralNumber(
 				BigDecimal.valueOf(((LiteralArray) arguments.get(0)).length()),
 				Context.SYNTHETIC);
 	}
-	public static LiteralExpression arrayModification(GlobalEnvironment env,
+	public static LiteralExpression arrayModification(UnorderedEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralArray array = (LiteralArray) arguments.get(1);
 		final LiteralNumber index = (LiteralNumber) arguments.get(0);
@@ -40,7 +40,7 @@ public class StdLibImplementations {
 		return (env, arguments, roster) -> ((LiteralObject) arguments.get(0))
 				.valueOf(field);
 	}
-	public static LiteralExpression letterCombine(GlobalEnvironment env,
+	public static LiteralExpression letterCombine(UnorderedEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralArray array = (LiteralArray) arguments.get(0);
 		final char[] c = new char[array.length()];
@@ -51,18 +51,18 @@ public class StdLibImplementations {
 					Context.SYNTHETIC)).contents.token.charAt(0);
 		return new LiteralString(LiteralToken.synthetic(new String(c)));
 	}
-	public static LiteralExpression print(GlobalEnvironment env,
+	public static LiteralExpression print(UnorderedEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		VirtualMachine.displayLine(arguments.get(0).toSourceCode());
 		return LiteralVoid.INSTANCE;
 	}
-	public static LiteralString stringAppend(GlobalEnvironment env,
+	public static LiteralString stringAppend(UnorderedEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralToken a = ((LiteralString) arguments.get(0)).contents;
 		final LiteralToken b = ((LiteralString) arguments.get(1)).contents;
 		return new LiteralString(LiteralToken.append(a, b));
 	}
-	public static LiteralExpression stringSplit(GlobalEnvironment env,
+	public static LiteralExpression stringSplit(UnorderedEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralToken token = ((LiteralString) arguments.get(0)).contents;
 		final LiteralArray array = new LiteralArray(
@@ -73,7 +73,7 @@ public class StdLibImplementations {
 					Context.sum(arguments));
 		return array;
 	}
-	public static LiteralExpression stringLength(GlobalEnvironment env,
+	public static LiteralExpression stringLength(UnorderedEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		return new LiteralNumber(BigDecimal.valueOf(
 				((LiteralString) arguments.get(0)).contents.token.length()),

@@ -8,8 +8,8 @@ import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.GenericType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 /**
@@ -32,15 +32,15 @@ public class FunctionOutput extends ParsedStatement {
 		this.output = output;
 	}
 	@Override
-	protected boolean typeCheck(StaticEnvironment environment) {
+	protected boolean typeCheck(TypeEnvironment environment) {
 		return output.isTypeChecked(environment);
 	}
 	@Override
-	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
 		return Optional.of(output.literalValue(environment));
 	}
 	@Override
-	public void clean(LocalEnvironment environment) {
+	public void clean(OrderedEnvironment environment) {
 		// no-op
 	}
 	@Override
@@ -56,7 +56,7 @@ public class FunctionOutput extends ParsedStatement {
 		return SourceCode.display(this);
 	}
 	@Override
-	public Optional<GenericType> returnType(StaticEnvironment env) {
+	public Optional<GenericType> returnType(TypeEnvironment env) {
 		return Optional.of(output.type(env));
 	}
 	@Override

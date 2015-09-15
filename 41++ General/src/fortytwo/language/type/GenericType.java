@@ -18,4 +18,7 @@ public interface GenericType extends ParsedConstruct {
 	public default boolean isSimple() {
 		return true;
 	}
+	public default boolean isVoid() {
+		return false;
+	}
 }

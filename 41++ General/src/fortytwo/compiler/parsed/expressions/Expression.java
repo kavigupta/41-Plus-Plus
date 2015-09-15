@@ -7,8 +7,8 @@ import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 /**
@@ -27,16 +27,16 @@ public abstract class Expression extends ParsedStatement {
 	 *        the static environment
 	 * @return the type of this expression
 	 */
-	public final ConcreteType type(StaticEnvironment env) {
+	public final ConcreteType type(TypeEnvironment env) {
 		if (type == null) type = findType(env);
 		return type;
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment environment) {
+	public boolean typeCheck(TypeEnvironment environment) {
 		type(environment);
 		return true;
 	}
-	protected abstract ConcreteType findType(StaticEnvironment env);
+	protected abstract ConcreteType findType(TypeEnvironment env);
 	/**
 	 * @return the name of this expression, if it is a variable identifier
 	 */
@@ -49,15 +49,15 @@ public abstract class Expression extends ParsedStatement {
 	 * @return the literal value of the expression
 	 */
 	public abstract LiteralExpression literalValue(
-			LocalEnvironment environment);
+			OrderedEnvironment environment);
 	@Override
 	public final Optional<LiteralExpression> execute(
-			LocalEnvironment environment) {
+			OrderedEnvironment environment) {
 		literalValue(environment);
 		return Optional.empty();
 	}
 	@Override
-	public final void clean(LocalEnvironment environment) {
+	public final void clean(OrderedEnvironment environment) {
 		// no op deliberately
 	}
 	@Override
@@ -65,7 +65,7 @@ public abstract class Expression extends ParsedStatement {
 		return true;
 	}
 	@Override
-	public Optional<GenericType> returnType(StaticEnvironment env) {
+	public Optional<GenericType> returnType(TypeEnvironment env) {
 		return Optional.empty();
 	}
 }

@@ -10,8 +10,8 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -32,7 +32,7 @@ public class ParsedIfElse extends ParsedStatement {
 		this.ifelse = ifelse;
 	}
 	@Override
-	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
 		if (((LiteralBool) condition.literalValue(environment)).contents) {
 			final Optional<LiteralExpression> ret = ifso.execute(environment);
 			if (ret.isPresent()) return ret;
@@ -45,7 +45,7 @@ public class ParsedIfElse extends ParsedStatement {
 		return Optional.empty();
 	}
 	@Override
-	public Optional<GenericType> returnType(StaticEnvironment env) {
+	public Optional<GenericType> returnType(TypeEnvironment env) {
 		final Optional<GenericType> a = ifso.returnType(env),
 				b = ifelse.returnType(env);
 		if (!a.isPresent() && !b.isPresent()) return Optional.empty();
@@ -57,11 +57,11 @@ public class ParsedIfElse extends ParsedStatement {
 		return a.isPresent() ? a : b;
 	}
 	@Override
-	public void clean(LocalEnvironment environment) {
+	public void clean(OrderedEnvironment environment) {
 		// Forms a closure, no need to clean once done
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment env) {
+	public boolean typeCheck(TypeEnvironment env) {
 		if (condition.type(env).equals(
 				new PrimitiveType(PrimitiveTypeWOC.BOOL, Context.SYNTHETIC)))
 			return true;

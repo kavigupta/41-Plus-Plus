@@ -12,21 +12,21 @@ import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.ide.gui.LineHistory;
 import fortytwo.language.classification.SentenceKind;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.GlobalEnvironment;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.ParserErrors;
 
 public class GUILinkedEnvironment {
 	public LineHistory history;
-	private LocalEnvironment console;
+	private OrderedEnvironment console;
 	private String last = "";
 	private Supplier<String> editor;
 	public GUILinkedEnvironment(LineHistory history, Supplier<String> editor) {
 		super();
 		this.history = history;
-		this.console = new LocalEnvironment(GlobalEnvironment
-				.getDefaultEnvironment(StaticEnvironment.getDefault()));
+		this.console = new OrderedEnvironment(UnorderedEnvironment
+				.getDefaultEnvironment(TypeEnvironment.getDefault()));
 		VirtualMachine.displayln = history::displayln;
 		VirtualMachine.displayerr = error -> {
 			history.displayerr(error);
@@ -53,7 +53,7 @@ public class GUILinkedEnvironment {
 	public void refresh() {
 		String newSource = editor.get();
 		if (newSource.equals(last)) return;
-		GlobalEnvironment newEnvironment = Compiler42.compile(newSource);
+		UnorderedEnvironment newEnvironment = Compiler42.compile(newSource);
 		console = console.reinitialize(newEnvironment);
 	}
 }

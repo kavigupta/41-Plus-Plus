@@ -14,20 +14,20 @@ import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.StatementParser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.GlobalEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.errors.Error42;
 import fortytwo.vm.errors.ErrorType;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
 
 public class Utilities {
-	public static void execute(String statement, GlobalEnvironment env) {
+	public static void execute(String statement, UnorderedEnvironment env) {
 		((ParsedStatement) StatementParser.parseStatement(
 				Tokenizer.tokenize(LiteralToken.entire(statement))))
 						.execute(env.minimalLocalEnvironment());
 	}
 	public static LiteralExpression evaluate(String toEvaluate,
-			GlobalEnvironment env) {
+			UnorderedEnvironment env) {
 		return ExpressionParser
 				.parseExpression(
 						Tokenizer.tokenize(LiteralToken.entire(toEvaluate)))
@@ -46,7 +46,7 @@ public class Utilities {
 						.map(x -> x.token).collect(Collectors.toList()));
 	}
 	public static void assertEquivalence(double result, String toEvaluate,
-			GlobalEnvironment env) {
+			UnorderedEnvironment env) {
 		assertEquals(result,
 				((LiteralNumber) Utilities.evaluate(toEvaluate, env)).contents
 						.doubleValue(),

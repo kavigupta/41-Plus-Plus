@@ -36,6 +36,10 @@ public class PrimitiveType implements ConcreteType {
 		return type.def;
 	}
 	@Override
+	public boolean isVoid() {
+		return this.type == PrimitiveTypeWOC.VOID;
+	}
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

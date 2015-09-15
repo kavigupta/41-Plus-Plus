@@ -12,8 +12,8 @@ import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
@@ -32,8 +32,8 @@ public class ParsedFunctionCall extends Expression {
 		this.arguments = arguments;
 	}
 	@Override
-	public LiteralExpression literalValue(LocalEnvironment env) {
-		final StaticEnvironment se = env.staticEnvironment();
+	public LiteralExpression literalValue(OrderedEnvironment env) {
+		final TypeEnvironment se = env.staticEnvironment();
 		final List<ConcreteType> types = arguments.stream()
 				.map(x -> x.type(env.staticEnvironment()))
 				.collect(Collectors.toList());
@@ -41,7 +41,6 @@ public class ParsedFunctionCall extends Expression {
 		final FunctionType sig = se.referenceTo(name, types).get();
 		final Optional<LiteralFunction> f = env.global.funcs
 				.get(new FunctionSignature(name, sig), types);
-		System.out.println(env.global.funcs.functions);
 		if (!f.isPresent()) {
 			System.out.println(name.identifier().unmangledName());
 			env.global.funcs.functions.entrySet().stream().forEach(
@@ -53,7 +52,7 @@ public class ParsedFunctionCall extends Expression {
 				.map(x -> x.literalValue(env)).collect(Collectors.toList()));
 	}
 	@Override
-	public ConcreteType findType(StaticEnvironment env) {
+	public ConcreteType findType(TypeEnvironment env) {
 		final List<ConcreteType> types = arguments.stream()
 				.map(x -> x.type(env)).collect(Collectors.toList());
 		final Optional<FunctionType> sigOpt = env.referenceTo(name, types);
@@ -62,7 +61,7 @@ public class ParsedFunctionCall extends Expression {
 				.resolve(sigOpt.get().typeVariables(arguments, env));
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment environment) {
+	public boolean typeCheck(TypeEnvironment environment) {
 		findType(environment);
 		return true;
 	}

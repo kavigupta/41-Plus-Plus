@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.statements.ParsedWhileLoop;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.Tokenizer;
@@ -24,6 +23,22 @@ public class ParserTest {
 		validateExprParse(
 				"((the \"n\" th element of (the 3 rd element of \"matrix\"))*23)");
 		assertEquals("", cdLoopExpr("[2345.345]"));
+	}
+	@Test
+	public void typeParserTest() {
+		validateTypeParse("number");
+		validateTypeParse("(array of number)");
+		validateTypeParse("(array of (array of number))");
+		validateTypeParse(
+				"(function that takes a number and outputs a number)");
+		validateTypeParse(
+				"(function that takes a number and a (function that takes a number) and outputs a number)");
+		validateTypeParse(
+				"(function that takes a number, a string, and an element_of_type_3 and outputs a number)");
+		validateTypeParse("(function that takes a number)");
+		assertEquals("procedure", cdLoopType("function"));
+		validateTypeParse("(function that outputs a number)");
+		validateTypeParse("procedure");
 	}
 	@Test
 	public void definitionParserTest() {
@@ -143,11 +158,16 @@ public class ParserTest {
 	public static void validateExprParse(String expr) {
 		assertEquals(expr, cdLoopExpr(expr));
 	}
+	public static void validateTypeParse(String expr) {
+		assertEquals(expr, cdLoopType(expr));
+	}
 	private static String cdLoopLine(String line) {
 		Sentence s = Parser.parse(line).get(0);
-		if (s instanceof ParsedWhileLoop)
-			System.out.println(((ParsedWhileLoop) s).condition.toSourceCode());
 		return s.toSourceCode() + ".";
+	}
+	private static String cdLoopType(String line) {
+		return ExpressionParser.parseType(LiteralToken.entire(line))
+				.toSourceCode();
 	}
 	private static String cdLoopExpr(String line) {
 		return ExpressionParser

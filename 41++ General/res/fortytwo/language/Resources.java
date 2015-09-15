@@ -60,5 +60,7 @@ public final class Resources {
 	public static final String PAD_REPLACE = SPACE + UNPAD_REPLACE + SPACE;
 	public static final String WHITESPACE = "\\s+";
 	public static final String UNPAD_FIND = SPACE + PAD_FIND + SPACE;
+	public static final Object FUNCTION_TYPE_NAME = "function";
+	public static final Object FUNCTION_PROCEDURE_TYPE_NAME = "procedure";
 	private Resources() {}
 }

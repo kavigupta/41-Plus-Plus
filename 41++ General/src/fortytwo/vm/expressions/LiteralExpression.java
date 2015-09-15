@@ -7,19 +7,19 @@ import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 
 public abstract class LiteralExpression extends Expression {
 	public LiteralExpression(Context context) {
 		super(context);
 	}
 	@Override
-	public ConcreteType findType(StaticEnvironment env) {
+	public ConcreteType findType(TypeEnvironment env) {
 		return resolveType();
 	}
 	@Override
-	public final LiteralExpression literalValue(LocalEnvironment env) {
+	public final LiteralExpression literalValue(OrderedEnvironment env) {
 		return this;
 	}
 	@Override

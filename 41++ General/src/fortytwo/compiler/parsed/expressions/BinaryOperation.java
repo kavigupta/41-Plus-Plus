@@ -10,8 +10,8 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.PrimitiveType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralNumber;
@@ -52,13 +52,13 @@ public class BinaryOperation extends Expression {
 				x, Operation.SUBTRACT, x.context().withUnaryApplied());
 	}
 	@Override
-	public LiteralExpression literalValue(LocalEnvironment environment) {
+	public LiteralExpression literalValue(OrderedEnvironment environment) {
 		isTypeChecked(environment.staticEnvironment());
 		return operation.operate(first.literalValue(environment),
 				second.literalValue(environment));
 	}
 	@Override
-	public ConcreteType findType(StaticEnvironment env) {
+	public ConcreteType findType(TypeEnvironment env) {
 		final PrimitiveType number = PrimitiveType.SYNTH_NUMBER;
 		if (!first.type(env).equals(number))
 			TypingErrors.expectedNumberInArithmeticOperator(this, true, env);

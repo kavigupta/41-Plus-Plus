@@ -10,8 +10,8 @@ import fortytwo.language.Resources;
 import fortytwo.language.classification.ExpressionType;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.ConcreteType;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -33,11 +33,11 @@ public class VariableIdentifier extends Expression
 		this.name = name;
 	}
 	@Override
-	public ConcreteType findType(StaticEnvironment env) {
+	public ConcreteType findType(TypeEnvironment env) {
 		return env.typeOf(this);
 	}
 	@Override
-	public LiteralExpression literalValue(LocalEnvironment env) {
+	public LiteralExpression literalValue(OrderedEnvironment env) {
 		return env.referenceTo(this);
 	}
 	@Override

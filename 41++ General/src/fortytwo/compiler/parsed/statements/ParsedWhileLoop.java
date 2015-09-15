@@ -9,8 +9,8 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -25,7 +25,7 @@ public class ParsedWhileLoop extends ParsedStatement {
 		this.statement = ParsedStatement;
 	}
 	@Override
-	public boolean typeCheck(StaticEnvironment env) {
+	public boolean typeCheck(TypeEnvironment env) {
 		if (!condition.type(env)
 				.equals(new PrimitiveType(PrimitiveTypeWOC.BOOL,
 						Context.SYNTHETIC)))
@@ -33,7 +33,7 @@ public class ParsedWhileLoop extends ParsedStatement {
 		return statement.isTypeChecked(env);
 	}
 	@Override
-	public Optional<LiteralExpression> execute(LocalEnvironment environment) {
+	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
 		while (((LiteralBool) condition.literalValue(environment)).contents) {
 			final Optional<LiteralExpression> expr = statement
 					.execute(environment);
@@ -43,11 +43,11 @@ public class ParsedWhileLoop extends ParsedStatement {
 		return Optional.empty();
 	}
 	@Override
-	public Optional<GenericType> returnType(StaticEnvironment env) {
+	public Optional<GenericType> returnType(TypeEnvironment env) {
 		return statement.returnType(env);
 	}
 	@Override
-	public void clean(LocalEnvironment environment) {
+	public void clean(OrderedEnvironment environment) {
 		// forms a closure, no need to clean
 	}
 	@Override

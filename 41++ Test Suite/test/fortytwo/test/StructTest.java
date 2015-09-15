@@ -12,15 +12,15 @@ import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.GlobalEnvironment;
-import fortytwo.vm.environment.LocalEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
 
 public class StructTest {
 	public static final String TEST_STRUCTS = "Define a type called singleton."
 			+ "Define a type called record that contains a string called \"name\" and a number called \"dateOfBirth\"."
 			+ "Define a type called triple of \"Tx\", \"Ty\", and \"Tz\" that contains a \"Tx\" called \"x\", a \"Ty\" called \"y\", and a \"Tz\" called \"z\"."
 			+ "Define a type called pair of \"k\" and \"v\" that contains a \"k\" called \"key\" and a \"v\" called \"value\".";
-	GlobalEnvironment env;
+	UnorderedEnvironment env;
 	@Before
 	public void init() {
 		env = Compiler42.compile(TEST_STRUCTS);
@@ -105,13 +105,13 @@ public class StructTest {
 						+ "Tell me what (the \"key\" of (the \"key\" of \"trip\")) is.");
 	}
 	public void assertPrint(String result, String statement) {
-		LocalEnvironment loc = env.minimalLocalEnvironment();
+		OrderedEnvironment loc = env.minimalLocalEnvironment();
 		Parser.parse(statement).stream()
 				.forEach(x -> ((ParsedStatement) x).execute(loc));
 		assertEquals(result, VirtualMachine.popMessage());
 	}
 	public void assertEquivalence(String result, String toEvaluate) {
-		LocalEnvironment loc = env.minimalLocalEnvironment();
+		OrderedEnvironment loc = env.minimalLocalEnvironment();
 		assertEquals(result,
 				ExpressionParser
 						.parseExpression(Tokenizer

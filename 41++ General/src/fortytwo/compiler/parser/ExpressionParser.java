@@ -17,8 +17,8 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.*;
 import fortytwo.library.standard.StdLib42;
-import fortytwo.vm.environment.LocalEnvironment;
-import fortytwo.vm.environment.StaticEnvironment;
+import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.errors.TypingErrors;
@@ -172,7 +172,48 @@ public class ExpressionParser {
 		for (final PrimitiveTypeWOC type : PrimitiveTypeWOC.values())
 			if (type.typeID().equals(token.token))
 				return new PrimitiveType(type, token.context);
-		return parseStructType(Tokenizer.tokenize(token));
+		List<LiteralToken> type = Tokenizer.tokenize(token);
+		Optional<FunctionType> funcType = parseFuncType(type);
+		if (funcType.isPresent()) return funcType.get();
+		return parseStructType(type);
+	}
+	private static Optional<FunctionType> parseFuncType(
+			List<LiteralToken> type) {
+		if (type.size() == 1
+				&& type.get(0).equals(Resources.FUNCTION_PROCEDURE_TYPE_NAME))
+			return Optional.of(new FunctionType(Arrays.asList(),
+					PrimitiveType.SYNTH_VOID));
+		if (!type.get(0).equals(Resources.FUNCTION_TYPE_NAME))
+			return Optional.empty();
+		Optional<Integer> startInputs = LiteralToken.indexOf(type,
+				Resources.TAKES);
+		Optional<Integer> startOutputs = LiteralToken.indexOf(type,
+				Resources.OUTPUTS);
+		List<GenericType> inputs = new ArrayList<>();
+		if (startInputs.isPresent()) {
+			if (startInputs.get() + 1 >= type.size())
+				throw new RuntimeException(/* TODO */);
+			int end = startOutputs.isPresent() ? startOutputs.get()
+					: type.size();
+			inputs = type.subList(startInputs.get() + 1, end).stream()
+					.filter(x -> !Language.isArticle(x.token)
+							&& !x.token.equals(Resources.COMMA)
+							&& !x.token.equals(Resources.AND))
+					.map(x -> parseType(x)).collect(Collectors.toList());
+		}
+		GenericType output = PrimitiveType.SYNTH_VOID;
+		if (startOutputs.isPresent()) {
+			if (startOutputs.get() + 1 < inputs.size())
+				throw new RuntimeException(/* TODO */);
+			startOutputs = Optional.of(startOutputs.get() + 1);
+			if (Language.isArticle(type.get(startOutputs.get()).token)) {
+				startOutputs = Optional.of(startOutputs.get() + 1);
+				if (startOutputs.get() + 1 < inputs.size())
+					throw new RuntimeException(/* TODO */);
+			}
+			output = parseType(type.get(startOutputs.get()));
+		}
+		return Optional.of(new FunctionType(inputs, output));
 	}
 	private static GenericType parseStructType(List<LiteralToken> tokens) {
 		final Context context = Context.sum(tokens);
@@ -228,7 +269,7 @@ public class ExpressionParser {
 			this.operator = operator;
 		}
 		@Override
-		public ConcreteType findType(StaticEnvironment env) {
+		public ConcreteType findType(TypeEnvironment env) {
 			// should never be called
 			return null;
 		}
@@ -247,7 +288,7 @@ public class ExpressionParser {
 			return toSourceCode();
 		}
 		@Override
-		public LiteralExpression literalValue(LocalEnvironment environment) {
+		public LiteralExpression literalValue(OrderedEnvironment environment) {
 			// should never be called
 			return null;
 		}

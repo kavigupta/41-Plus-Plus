@@ -59,7 +59,7 @@ public class VariableRoster<T extends Expression> {
 		this.assign(name, express);
 	}
 	public VariableRoster<LiteralExpression> literalValue(
-			LocalEnvironment env) {
+			OrderedEnvironment env) {
 		final VariableRoster<LiteralExpression> roster = new VariableRoster<LiteralExpression>();
 		this.pairs.forEach((k, v) -> roster.assign(k, v.literalValue(env)));
 		return roster;

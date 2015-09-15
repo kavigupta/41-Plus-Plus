@@ -6,6 +6,7 @@ import static fortytwo.language.Resources.SPACE;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import fortytwo.compiler.parsed.GenericToken;
 import fortytwo.compiler.parser.Tokenizer;
@@ -107,6 +108,13 @@ public class LiteralToken implements GenericToken {
 	public LiteralToken subToken(int i, int j) {
 		return new LiteralToken(token.substring(i, j),
 				context.subContext(i, j));
+	}
+	public static Optional<Integer> indexOf(List<LiteralToken> lis,
+			String s) {
+		for (int i = 0; i < lis.size(); i++) {
+			if (lis.get(i).token.equals(s)) return Optional.of(i);
+		}
+		return Optional.empty();
 	}
 	/**
 	 * @return {@code true} if the token is meaningful syntactically
