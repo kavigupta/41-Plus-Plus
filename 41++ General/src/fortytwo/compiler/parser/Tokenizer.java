@@ -92,6 +92,7 @@ public class Tokenizer {
 						len = 2;
 					else len = 1;
 					tokens.add(parentToken.subToken(i, i + len));
+					i += len - 1;
 					continue loop;
 				case '\'':
 				case '\"':

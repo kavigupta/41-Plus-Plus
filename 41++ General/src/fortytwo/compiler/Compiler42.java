@@ -19,7 +19,7 @@ public class Compiler42 {
 	 * 
 	 * @param text
 	 *        41++ source code to be compiled
-	 * @return a global environment representing the source code given
+	 * @return an environment representing the source code given
 	 */
 	public static UnorderedEnvironment compile(String text) {
 		return UnorderedEnvironment.interpret(Parser.parse(text));

@@ -4,5 +4,8 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/41++ Interpreter"/>
 	<classpathentry kind="lib" path="/Differential Equations/jfreechart-1.0.19/junit-4.11.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/41++ Extern"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/41++ Editor"/>
+	<classpathentry kind="lib" path="/41++ Extern/commons-lang3-3.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

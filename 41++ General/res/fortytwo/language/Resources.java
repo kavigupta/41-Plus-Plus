@@ -9,13 +9,11 @@ public final class Resources {
 	public static final String CALLED = "called";
 	public static final String OF = "of";
 	public static final String TO = "to";
-	public static final String ALL = "all";
 	public static final String AND = "and";
 	public static final String THAT = "that";
 	public static final String TAKES = "takes";
 	public static final String OUTPUT = "output";
 	public static final String OUTPUTS = "outputs";
-	public static final String FOLLOWING = "following";
 	public static final String PERIOD = ".";
 	public static final String COLON = ":";
 	public static final String COMMA = ",";
@@ -51,8 +49,6 @@ public final class Resources {
 	public static final String IF = "If";
 	public static final String OTHERWISE = "Otherwise";
 	public static final String WHILE = "While";
-	public static final String DO = "Do";
-	public static final String THATS = "That's";
 	/* Regex */
 	public static final String SPACE = " ";
 	public static final String PAD_FIND = "(?<toreplace>(//)|\\+|-|\\*|/|%|((\\.|:|,)(?!\\d)))";

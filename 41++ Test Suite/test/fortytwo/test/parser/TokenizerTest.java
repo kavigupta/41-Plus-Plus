@@ -10,6 +10,7 @@ public class TokenizerTest {
 	public void statementTests() {
 		assertCorrectTokenization("Define a number called _x.", "Define", "a",
 				"number", "called", "_x", ".");
+		assertCorrectTokenization("1 // 2", "1", "//", "2");
 		assertCorrectTokenization(
 				"If 4.0 + 4.0 = 2: Dothis. Otherwise: Dothat.", "If", "4.0",
 				"+", "4.0", "=", "2", ":", "Dothis", ".", "Otherwise", ":",

@@ -72,13 +72,6 @@ public class Language {
 	public static boolean isListElement(String token) {
 		return token.equals(COMMA) || token.equals(AND);
 	}
-	public static boolean isOpeningBrace(List<String> list) {
-		return list.get(0).equals(DO) && list.get(1).equals(THE)
-				&& list.get(2).equals(FOLLOWING);
-	}
-	public static boolean isClosingBrace(List<String> list) {
-		return list.get(0).equals(THATS) && list.get(1).equals(ALL);
-	}
 	public static char matchingSymbol(char start) {
 		switch (start) {
 			case '[':

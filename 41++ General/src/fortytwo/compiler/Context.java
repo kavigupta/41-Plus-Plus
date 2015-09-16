@@ -17,11 +17,29 @@ public class Context implements Contextualized {
 	/**
 	 * The starting position within the string.
 	 */
-	public final int start;
+	private final int start;
 	/**
 	 * The ending position within the string
 	 */
-	public final int end;
+	private final int end;
+	/**
+	 * 
+	 * @param offset
+	 *        the offset of the internal string in the original text
+	 * @return the starting position in the original text
+	 */
+	public int getStartPosition(int offset) {
+		return this.start + offset;
+	}
+	/**
+	 * 
+	 * @param offset
+	 *        the offset of the internal string in the original text
+	 * @return the ending position in the original text
+	 */
+	public int getEndPosition(int offset) {
+		return this.end + offset;
+	}
 	private boolean isSynthetic() {
 		return this == SYNTHETIC;
 	}
@@ -57,6 +75,9 @@ public class Context implements Contextualized {
 		assert end >= 0;
 		assert this.start + end < this.end;
 		return new Context(this.in, this.start + start, this.start + end);
+	}
+	public Context removeLast() {
+		return in.length() == 0 ? this : subContext(0, in.length() - 1);
 	}
 	/**
 	 * @param text
