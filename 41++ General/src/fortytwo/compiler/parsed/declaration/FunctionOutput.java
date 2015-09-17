@@ -5,7 +5,6 @@ import java.util.Optional;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
-import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
@@ -20,7 +19,7 @@ public class FunctionOutput extends ParsedStatement {
 	/**
 	 * The output, in the form of an Expression
 	 */
-	public final Expression output;
+	private final Expression output;
 	/**
 	 * @param output
 	 *        the output of the function
@@ -53,7 +52,9 @@ public class FunctionOutput extends ParsedStatement {
 	}
 	@Override
 	public String toSourceCode() {
-		return SourceCode.display(this);
+		String retVal = output.toSourceCode();
+		if (retVal.length() != 0) retVal = " and output " + retVal;
+		return "Exit the function" + retVal;
 	}
 	@Override
 	public Optional<GenericType> returnType(TypeEnvironment env) {

@@ -18,6 +18,9 @@ public class FunctionDefinition implements Sentence {
 	 * The signature of this function
 	 */
 	public final FunctionSignature sig;
+	/**
+	 * The variable names of the input variables.
+	 */
 	public final List<VariableIdentifier> inputVariables;
 	private final Context context;
 	/**

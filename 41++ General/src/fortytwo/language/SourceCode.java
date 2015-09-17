@@ -10,8 +10,6 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.ParsedConstruct;
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.declaration.FunctionOutput;
-import fortytwo.compiler.parsed.declaration.StructureDefinition;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedDefinition;
 import fortytwo.compiler.parsed.statements.ParsedIfElse;
@@ -37,15 +35,6 @@ public class SourceCode {
 				+ (fieldList.length() == 0 ? "" : " that takes " + fieldList)
 				+ displayOutputType(sig.type.outputType,
 						fieldList.length() != 0);
-	}
-	public static String display(FunctionOutput functionReturn) {
-		return "Exit the function" + displayReturn(functionReturn.output);
-	}
-	public static String display(StructureDefinition structureDeclaration) {
-		String fields = displayFieldList(structureDeclaration.structure.fields);
-		if (fields.length() != 0) fields = " that contains " + fields;
-		return "Define a type called "
-				+ structureDeclaration.structure.type.toSourceCode() + fields;
 	}
 	public static String display(ParsedDefinition parsedDefinition) {
 		return "Define "
@@ -167,11 +156,6 @@ public class SourceCode {
 					+ e.getValue().toSourceCode()));
 		return displayList(items);
 	}
-	private static String displayReturn(Expression output) {
-		final String ret = output.toSourceCode();
-		if (ret.length() == 0) return "";
-		return " and output " + ret;
-	}
 	private static String displayOutputType(GenericType outputType,
 			boolean hasFields) {
 		if (outputType instanceof PrimitiveType
@@ -215,15 +199,22 @@ public class SourceCode {
 		String s = "";
 		int i = 0;
 		for (final FunctionComponent tok : name.function)
-			if (tok instanceof FunctionToken)
-				s += ((FunctionToken) tok).token + " ";
-			else {
-				s += parameterVariables.get(i).toSourceCode() + " ";
+			if (tok instanceof FunctionToken) {
+				String src = ((FunctionToken) tok).token.toSourceCode();
+				// do not pad operators
+				if (!Language.isOperator(src.charAt(0))) {
+					// do not allow consecutive spaces
+					if (!s.endsWith(" ")) src = " " + src;
+					src += " ";
+				}
+				s += src;
+			} else {
+				s += parameterVariables.get(i).toSourceCode();
 				i++;
 			}
 		return s.trim();
 	}
-	private static String displayFieldList(List<GenericField> fields) {
+	public static String displayFieldList(List<GenericField> fields) {
 		return displayList(fields.stream().map(f -> displayField(f))
 				.collect(Collectors.toList()));
 	}

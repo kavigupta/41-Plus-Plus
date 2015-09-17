@@ -12,7 +12,8 @@ import fortytwo.vm.expressions.LiteralFunction;
 
 class StdLibFunctions {
 	private static final TypeVariable TYPE_PARAM = new TypeVariable(
-			VariableIdentifier.getInstance(LiteralToken.synthetic("\"T\""),false));
+			VariableIdentifier.getInstance(LiteralToken.synthetic("\"T\""),
+					false));
 	public static final LiteralFunction ARRAY_ACCESS = FunctionSynthetic
 			.getInstance(StdLibImplementations::arrayAccess,
 					PrimitiveType.SYNTH_NUMBER,

@@ -5,7 +5,7 @@ package fortytwo.compiler.parsed;
  */
 public interface ParsedConstruct extends GenericToken {
 	/**
-	 * @return whether this element needs to be wrapped in verbal braces.
+	 * @return whether this element needs to be indented to be part of a block.
 	 */
 	public boolean isSimple();
 }

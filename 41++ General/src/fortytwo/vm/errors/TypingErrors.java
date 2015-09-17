@@ -7,7 +7,6 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.ParsedConstruct;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
-import fortytwo.compiler.parsed.expressions.BinaryOperation;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Language;
 import fortytwo.language.SourceCode;
@@ -36,15 +35,6 @@ public class TypingErrors {
 						Language.articleized(
 								expression.type(env).toSourceCode())),
 				expression.context());
-	}
-	public static void expectedNumberInArithmeticOperator(
-			BinaryOperation operation, boolean firstArgument,
-			TypeEnvironment env) {
-		typeError(
-				"The " + (firstArgument ? "first" : "second") + " argument in "
-						+ operation.operation.noun.toLowerCase(),
-				PrimitiveTypeWOC.NUMBER.toSourceCode(),
-				firstArgument ? operation.first : operation.second, env);
 	}
 	public static void expectedBoolInCondition(boolean ifIf,
 			Expression condition, TypeEnvironment env) {
@@ -130,10 +120,9 @@ public class TypingErrors {
 			GenericType actual, FunctionOutput s) {
 		VirtualMachine.error(ErrorType.TYPING,
 				String.format(
-						"The function ~%s~ should output ~%s~, but the sentence ~%s~ outputs ~%s~, which is of type ~%s~",
+						"The function ~%s~ should output ~%s~, but the sentence ~%s~'s output is of type ~%s~",
 						debugName, Language.articleized(output.toSourceCode()),
-						s.toSourceCode(), s.output.toSourceCode(),
-						actual.toSourceCode()),
+						s.toSourceCode(), actual.toSourceCode()),
 				s.context());
 	}
 	public static void inconsistentBranchTyping(String inWhat,

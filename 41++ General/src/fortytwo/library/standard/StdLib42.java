@@ -8,19 +8,23 @@ import org.apache.commons.lang3.tuple.Pair;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.expressions.Expression;
+import fortytwo.language.Resources;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.identifier.functioncomponent.FunctionComponent;
 import fortytwo.language.type.GenericStructureType;
+import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.TypeVariable;
+import fortytwo.vm.constructions.FunctionSynthetic;
 import fortytwo.vm.constructions.GenericStructureSignature;
 import fortytwo.vm.environment.FunctionRoster;
 import fortytwo.vm.environment.FunctionSignatureRoster;
 import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.LiteralFunction;
+import fortytwo.vm.expressions.LiteralFunction.FunctionImplementation;
 
 public class StdLib42 {
 	public static final StructureRoster DEF_STRUCT = new StructureRoster();
@@ -65,8 +69,22 @@ public class StdLib42 {
 		addFunction(StdLibFunctions.NOT, "not", "");
 		addFunction(StdLibFunctions.ARRAY_LENGTH, "the", "\"length\"", "of",
 				"");
-		// Arrays.asList(FunctionCompare.Comparator.values()).stream()
-		// .forEach(x -> DEFAULT_FUNCTIONS.add(new FunctionCompare(x)));
+		addOperation(StdLibImplementations.PLUS, Resources.ADDITION_SIGN);
+		addOperation(StdLibImplementations.MINUS, Resources.SUBTRACTION_SIGN);
+		addOperation(StdLibImplementations.TIMES,
+				Resources.MULTIPLICATION_SIGN);
+		addOperation(StdLibImplementations.DIV, Resources.DIV_SIGN);
+		addOperation(StdLibImplementations.FLOOR_DIV, Resources.FLOORDIV_SIGN);
+		addOperation(StdLibImplementations.MOD, Resources.MOD_SIGN);
+	}
+	private static void addOperation(FunctionImplementation impl, String op) {
+		addFunction(
+				FunctionSynthetic.getInstance(impl, PrimitiveType.SYNTH_NUMBER,
+						PrimitiveType.SYNTH_NUMBER, PrimitiveType.SYNTH_NUMBER),
+				opName(op));
+	}
+	public static String[] opName(String op) {
+		return new String[] { "", op, "", };
 	}
 	private static void addFunction(LiteralFunction func, String... name) {
 		DEFAULT_FUNCTIONS.put(

@@ -1,7 +1,9 @@
 package fortytwo.library.standard;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import fortytwo.compiler.Context;
@@ -10,12 +12,38 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
+import fortytwo.vm.environment.UnorderedEnvironment;
+import fortytwo.vm.errors.RuntimeErrors;
 import fortytwo.vm.expressions.*;
 import fortytwo.vm.expressions.LiteralFunction.FunctionImplementation;
 
 public class StdLibImplementations {
+	public static BigDecimal REAL_DIV_PRECISION = BigDecimal.TEN.pow(100);
+	public static FunctionImplementation binaryOperation(
+			BiFunction<BigDecimal, BigDecimal, BigDecimal> op) {
+		return (env, args, roster) -> {
+			BigDecimal a = ((LiteralNumber) args.get(0)).contents;
+			BigDecimal b = ((LiteralNumber) args.get(1)).contents;
+			return new LiteralNumber(op.apply(a, b), Context.SYNTHETIC);
+		};
+	}
+	public static final FunctionImplementation PLUS = binaryOperation(
+			(x, y) -> x.add(y));
+	public static final FunctionImplementation MINUS = binaryOperation(
+			(x, y) -> x.subtract(y));
+	public static final FunctionImplementation TIMES = binaryOperation(
+			(x, y) -> x.multiply(y));
+	public static final FunctionImplementation DIV = binaryOperation((x, y) -> {
+		if (y.equals(BigDecimal.ZERO)) RuntimeErrors.divideByZero();
+		return x.multiply(REAL_DIV_PRECISION)
+				.divideToIntegralValue(y, MathContext.UNLIMITED)
+				.divide(REAL_DIV_PRECISION);
+	});
+	public static final FunctionImplementation FLOOR_DIV = binaryOperation(
+			(x, y) -> x.divideAndRemainder(y)[0]);
+	public static final FunctionImplementation MOD = binaryOperation(
+			(x, y) -> x.divideAndRemainder(y)[1]);
 	public static LiteralExpression arrayAccess(UnorderedEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralArray array = (LiteralArray) arguments.get(1);

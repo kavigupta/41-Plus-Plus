@@ -17,7 +17,7 @@ public class ParserTest {
 		validateExprParse("'2345'");
 		validateExprParse("2345.345");
 		validateExprParse("(40+3)");
-		validateExprParse("(40+-3)");
+		assertEquals("(40+(0-3))", cdLoopExpr("(40+-3)"));
 		validateExprParse("(40%3)");
 		validateExprParse("(true and false)");
 		validateExprParse(

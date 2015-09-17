@@ -9,10 +9,7 @@ import fortytwo.compiler.parsed.declaration.FunctionConstruct;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedDefinition;
-import fortytwo.compiler.parser.Parser;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.vm.constructions.FunctionImplemented;
-import fortytwo.vm.constructions.GenericStructureSignature;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
@@ -20,7 +17,8 @@ import fortytwo.vm.expressions.LiteralFunction;
 public class UnorderedEnvironment {
 	public final TypeEnvironment staticEnv;
 	public final FunctionRoster funcs;
-	public UnorderedEnvironment(TypeEnvironment staticEnv, FunctionRoster funcs) {
+	public UnorderedEnvironment(TypeEnvironment staticEnv,
+			FunctionRoster funcs) {
 		this.staticEnv = staticEnv;
 		this.funcs = funcs;
 	}
@@ -37,19 +35,10 @@ public class UnorderedEnvironment {
 			final Sentence s = sentences.get(i);
 			switch (s.kind()) {
 				case FUNCTION:
-					final FunctionConstruct f = (FunctionConstruct) s;
-					environment.putReference(f.declaration.sig.identifier(),
-							f.declaration.sig.type);
-					functions.put(f.declaration.sig.identifier(),
-							new FunctionImplemented(f.declaration.sig.type,
-									f.declaration.inputVariables,
-									Parser.temporaryHack(f.suite).statements,
-									f.declaration.sig.toSourceCode()));
+					((FunctionConstruct) s).register(environment, functions);
 					break;
 				case DECLARATION_STRUCT:
-					GenericStructureSignature struct = ((StructureDefinition) s).structure;
-					environment.structs.addStructure(struct);
-					functions.putAll(struct.fieldFunctions());
+					((StructureDefinition) s).register(environment, functions);
 					break;
 				case DEFINITION:
 					final ParsedDefinition def = (ParsedDefinition) s;

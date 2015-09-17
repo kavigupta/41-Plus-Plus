@@ -1,10 +1,15 @@
 package fortytwo.compiler.parsed.declaration;
 
+import java.util.HashMap;
+
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
+import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.constructions.GenericStructureSignature;
+import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.expressions.LiteralFunction;
 
 /**
  * A class representing structure definition.
@@ -13,7 +18,7 @@ public class StructureDefinition implements Sentence {
 	/**
 	 * The structure declared here
 	 */
-	public final GenericStructureSignature structure;
+	private final GenericStructureSignature structure;
 	private final Context context;
 	/**
 	 * @param structure
@@ -29,13 +34,29 @@ public class StructureDefinition implements Sentence {
 		this.structure = structure;
 		this.context = context;
 	}
+	/**
+	 * Registers this structure on the given type environment and registers the
+	 * accessor functions on the given function roster.
+	 * 
+	 * @param environment
+	 *        the type environment to register this structure on
+	 * @param functions
+	 *        the function roster to register this function's accessors on
+	 */
+	public void register(TypeEnvironment environment,
+			HashMap<VariableIdentifier, LiteralFunction> functions) {
+		environment.structs.addStructure(structure);
+		functions.putAll(structure.fieldFunctions());
+	}
 	@Override
 	public SentenceType kind() {
 		return SentenceType.DECLARATION_STRUCT;
 	}
 	@Override
 	public String toSourceCode() {
-		return SourceCode.display(this);
+		String fields = SourceCode.displayFieldList(structure.fields);
+		if (fields.length() != 0) fields = " that contains " + fields;
+		return "Define a type called " + structure.type.toSourceCode() + fields;
 	}
 	@Override
 	public boolean isSimple() {

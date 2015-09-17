@@ -1,10 +1,14 @@
 package fortytwo.compiler.parsed.statements;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
+import fortytwo.language.Operation;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionName;
@@ -12,11 +16,13 @@ import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
+import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
+import fortytwo.vm.expressions.LiteralNumber;
 
 public class ParsedFunctionCall extends Expression {
 	public final FunctionName name;
@@ -24,6 +30,17 @@ public class ParsedFunctionCall extends Expression {
 	public static ParsedFunctionCall getInstance(FunctionName signature,
 			List<Expression> value) {
 		return new ParsedFunctionCall(signature, value);
+	}
+	public static ParsedFunctionCall getOperation(Expression first,
+			Operation op, Expression second) {
+		return getInstance(
+				FunctionName.getInstance(StdLib42.opName(op.display)),
+				Arrays.asList(first, second));
+	}
+	public static Expression getNegation(Expression next) {
+		return getOperation(
+				new LiteralNumber(BigDecimal.ZERO, Context.SYNTHETIC),
+				Operation.SUBTRACT, next);
 	}
 	private ParsedFunctionCall(FunctionName signature,
 			List<Expression> arguments) {

@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
-import fortytwo.compiler.parsed.expressions.BinaryOperation;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
 import fortytwo.language.Language;
@@ -63,9 +62,8 @@ public class ExpressionParser {
 				i++;
 				final Expression second = expressions.get(i);
 				final UnevaluatedOperator op = (UnevaluatedOperator) token;
-				exp.push(new BinaryOperation(first, second, op.operator,
-						Context.sum(Arrays.asList(first.context(), op.context(),
-								second.context()))));
+				exp.push(ParsedFunctionCall.getOperation(first, op.operator,
+						second));
 			} else exp.push(token);
 		}
 		return new ArrayList<>(exp);
@@ -84,7 +82,8 @@ public class ExpressionParser {
 					else if (uneop.operator.equals(Operation.SUBTRACT)) {
 						i++;
 						final Expression next = expressions.get(i);
-						expressionsWoUO.add(BinaryOperation.getNegation(next));
+						expressionsWoUO
+								.add(ParsedFunctionCall.getNegation(next));
 					}
 				} else expressionsWoUO.add(expressions.get(i));
 			} else expressionsWoUO.add(expressions.get(i));
