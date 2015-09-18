@@ -24,19 +24,21 @@ public class ParserTest {
 	}
 	@Test
 	public void typeParserTest() {
-		validateTypeParse("number");
-		validateTypeParse("(array of number)");
-		validateTypeParse("(array of (array of number))");
+		// validateTypeParse("number");
+		// validateTypeParse("(array of number)");
+		// validateTypeParse("(array of (array of number))");
 		validateTypeParse(
 				"(function that takes a number and outputs a number)");
-		validateTypeParse(
-				"(function that takes a number and a (function that takes a number) and outputs a number)");
-		validateTypeParse(
-				"(function that takes a number, a string, and an element_of_type_3 and outputs a number)");
-		validateTypeParse("(function that takes a number)");
-		assertEquals("procedure", cdLoopType("function"));
-		validateTypeParse("(function that outputs a number)");
-		validateTypeParse("procedure");
+		// validateTypeParse(
+		// "(function that takes a number and a (function that takes a number)
+		// and outputs a number)");
+		// validateTypeParse(
+		// "(function that takes a number, a string, and an element_of_type_3
+		// and outputs a number)");
+		// validateTypeParse("(function that takes a number)");
+		// assertEquals("procedure", cdLoopType("function"));
+		// validateTypeParse("(function that outputs a number)");
+		// validateTypeParse("procedure");
 	}
 	@Test
 	public void invalidExpressionParserTest() {

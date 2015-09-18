@@ -204,11 +204,11 @@ public class ExpressionParser {
 	@SuppressWarnings("boxing")
 	private static Optional<FunctionType> parseFuncType(
 			List<LiteralToken> type) {
-		if (type.size() == 1
-				&& type.get(0).equals(Resources.FUNCTION_PROCEDURE_TYPE_NAME))
+		if (type.size() == 1 && type.get(0).token
+				.equals(Resources.FUNCTION_PROCEDURE_TYPE_NAME))
 			return Optional.of(new FunctionType(Arrays.asList(),
 					PrimitiveType.SYNTH_VOID));
-		if (!type.get(0).equals(Resources.FUNCTION_TYPE_NAME))
+		if (!type.get(0).token.equals(Resources.FUNCTION_TYPE_NAME))
 			return Optional.empty();
 		Optional<Integer> startInputs = LiteralToken.indexOf(type,
 				Resources.TAKES);
