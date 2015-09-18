@@ -3,6 +3,7 @@ package fortytwo.vm.environment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
@@ -47,8 +48,8 @@ public class StructureRoster {
 	}
 	public LiteralExpression instance(TypedVariable name,
 			VariableRoster<LiteralExpression> fieldValues, Context context) {
-		final LiteralExpression value = fieldValues.value();
-		if (value != null) return value;
+		final Optional<LiteralExpression> value = fieldValues.value();
+		if (value.isPresent()) return value.get();
 		typeCheckConstructor(null, name, fieldValues, context);
 		if (name.type instanceof StructureType)
 			return new LiteralObject(getStructure((StructureType) name.type),
@@ -89,10 +90,10 @@ public class StructureRoster {
 	}
 	public boolean typeCheckConstructor(TypeEnvironment env, TypedVariable name,
 			VariableRoster<? extends Expression> fieldValues, Context context) {
-		if (fieldValues.value() != null) {
-			if (fieldValues.value().type(env).equals(name.type)) return true;
-			TypingErrors.redefinitionTypeMismatch(name, fieldValues.value(),
-					env);
+		Optional<? extends Expression> value = fieldValues.value();
+		if (value.isPresent()) {
+			if (value.get().type(env).equals(name.type)) return true;
+			TypingErrors.redefinitionTypeMismatch(name, value.get(), env);
 		}
 		if (name.type instanceof ArrayType) {
 			final Expression length = fieldValues.referenceTo(VariableIdentifier

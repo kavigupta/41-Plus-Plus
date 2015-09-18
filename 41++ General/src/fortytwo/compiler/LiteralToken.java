@@ -157,16 +157,19 @@ public class LiteralToken implements GenericToken {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (token == null ? 0 : token.hashCode());
+		result = prime * result + ((context == null) ? 0 : context.hashCode());
+		result = prime * result + ((token == null) ? 0 : token.hashCode());
 		return result;
 	}
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
 		if (obj == null) return false;
-		if (obj instanceof String) return ((String) obj).equals(token);
 		if (getClass() != obj.getClass()) return false;
-		final LiteralToken other = (LiteralToken) obj;
+		LiteralToken other = (LiteralToken) obj;
+		if (context == null) {
+			if (other.context != null) return false;
+		} else if (!context.equals(other.context)) return false;
 		if (token == null) {
 			if (other.token != null) return false;
 		} else if (!token.equals(other.token)) return false;

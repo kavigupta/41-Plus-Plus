@@ -125,7 +125,6 @@ public class Context implements Contextualized {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + end;
-		result = prime * result + (in == null ? 0 : in.hashCode());
 		result = prime * result + start;
 		return result;
 	}
@@ -136,9 +135,6 @@ public class Context implements Contextualized {
 		if (getClass() != obj.getClass()) return false;
 		final Context other = (Context) obj;
 		if (end != other.end) return false;
-		if (in == null) {
-			if (other.in != null) return false;
-		} else if (!in.equals(other.in)) return false;
 		if (start != other.start) return false;
 		return true;
 	}

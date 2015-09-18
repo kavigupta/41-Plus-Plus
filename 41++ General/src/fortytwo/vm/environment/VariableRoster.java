@@ -2,6 +2,7 @@ package fortytwo.vm.environment;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import fortytwo.compiler.parsed.expressions.Expression;
@@ -44,11 +45,11 @@ public class VariableRoster<T extends Expression> {
 	public void deregister(VariableIdentifier name) {
 		pairs.remove(name);
 	}
-	public T value() {
+	public Optional<T> value() {
 		try {
-			return referenceTo(VariableIdentifier.VALUE);
+			return Optional.of(referenceTo(VariableIdentifier.VALUE));
 		} catch (final Throwable t) {
-			return null;
+			return Optional.empty();
 		}
 	}
 	public T referenceTo(VariableIdentifier id) {
