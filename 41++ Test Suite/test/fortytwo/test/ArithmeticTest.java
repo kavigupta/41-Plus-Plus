@@ -5,8 +5,8 @@ import static fortytwo.test.Utilities.assertEquivalence;
 import org.junit.Before;
 import org.junit.Test;
 
-import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
 
 public class ArithmeticTest {
 	UnorderedEnvironment env;

@@ -17,8 +17,8 @@ import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.expressions.LiteralArray;
 import fortytwo.vm.expressions.LiteralString;
 

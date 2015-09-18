@@ -46,11 +46,11 @@ public class ParsedFieldAssignment extends ParsedAssignment {
 		if (!(toModify.type(env) instanceof StructureType)) {
 			// TODO handle when not fed a structure...
 		}
-		StructureType type = (StructureType) toModify.type(env);
-		Structure struct = env.structs.getStructure(type);
-		Optional<ConcreteType> potentialFieldType = struct.typeof(field);
+		final StructureType type = (StructureType) toModify.type(env);
+		final Structure struct = env.structs.getStructure(type);
+		final Optional<ConcreteType> potentialFieldType = struct.typeof(field);
 		if (!potentialFieldType.isPresent()) DNEErrors.fieldDNE(struct, field);
-		ConcreteType fieldType = potentialFieldType.get();
+		final ConcreteType fieldType = potentialFieldType.get();
 		if (!fieldType.equals(value.type(env)))
 			TypingErrors.fieldAssignmentTypeMismatch(struct,
 					new TypedVariable(field, fieldType), value, env);

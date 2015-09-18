@@ -25,9 +25,9 @@ public class LineHistory extends JScrollPane {
 	public static final String ERROR_NAME_COLOR = "green";
 	public static final String ERROR_HIGHLIGHT_COLOR = "#8888FF";
 	public static final String RESULT_COLOR = "yellow";
-	private JPanel entry;
+	private final JPanel entry;
 	private int index = 0;
-	private ArrayList<String> history = new ArrayList<>();
+	private final ArrayList<String> history = new ArrayList<>();
 	public LineHistory() {
 		super();
 		entry = new JPanel();
@@ -36,7 +36,7 @@ public class LineHistory extends JScrollPane {
 		entry.setLayout(new GridBagLayout());
 		setBackground(Color.BLACK);
 		setOpaque(true);
-		this.setViewportView(entry);
+		setViewportView(entry);
 	}
 	public void put(JTextPane textBox, String color) {
 		String text = textBox.getText();
@@ -50,7 +50,7 @@ public class LineHistory extends JScrollPane {
 		textBox.setOpaque(true);
 		textBox.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		textBox.setEditable(false);
-		GridBagConstraints gbc = new GridBagConstraints();
+		final GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.weightx = 1.0;
 		gbc.gridwidth = 10;
@@ -61,7 +61,7 @@ public class LineHistory extends JScrollPane {
 		entry.add(textBox, gbc);
 	}
 	public void displayCommand(String cmd) {
-		JTextPane command = new JTextPane();
+		final JTextPane command = new JTextPane();
 		command.setText(">> " + process(cmd));
 		put(command, PROMPT_COLOR);
 	}
@@ -73,30 +73,28 @@ public class LineHistory extends JScrollPane {
 				.replaceAll("\n", "<br>&nbsp;&nbsp;&nbsp;");
 	}
 	public void displayOutput(LiteralExpression literalValue) {
-		String output = process(literalValue.toSourceCode());
+		final String output = process(literalValue.toSourceCode());
 		String store = literalValue.toSourceCode();
-		if (literalValue instanceof LiteralString) {
-			store = "'"
-					+ Tokenizer.escape(store.substring(1, store.length() - 1))
-					+ "'";
-		}
+		if (literalValue instanceof LiteralString) store = "'"
+				+ Tokenizer.escape(store.substring(1, store.length() - 1))
+				+ "'";
 		history.add(store);
-		JTextPane result = new JTextPane();
+		final JTextPane result = new JTextPane();
 		result.setText("&nbsp;= " + output);
 		put(result, RESULT_COLOR);
 	}
 	public void displayln(String line) {
-		JTextPane result = new JTextPane();
+		final JTextPane result = new JTextPane();
 		result.setText("   " + line);
 		put(result, PRINT_COLOR);
 	}
 	public void displayerr(Error42 err) {
-		StringBuffer error = new StringBuffer();
+		final StringBuffer error = new StringBuffer();
 		error.append(
 				"<html><font face = \"monospace\">&nbsp;&nbsp;&nbsp;<font color=#ff0000>");
 		boolean openTilde = true;
-		String msg = process(err.msg);
-		for (int i = 0; i < msg.length(); i++) {
+		final String msg = process(err.msg);
+		for (int i = 0; i < msg.length(); i++)
 			if (msg.charAt(i) == '~') {
 				if (openTilde)
 					error.append(String.format("</font><font color=\"%s\">",
@@ -104,18 +102,15 @@ public class LineHistory extends JScrollPane {
 				else error.append(String.format("</font><font color=\"%s\">",
 						ERROR_COLOR));
 				openTilde = !openTilde;
-			} else if (msg.charAt(i) == '{') {
+			} else if (msg.charAt(i) == '{')
 				error.append(String.format("</font><font color=\"%s\">",
 						ERROR_HIGHLIGHT_COLOR));
-			} else if (msg.charAt(i) == '}') {
+			else if (msg.charAt(i) == '}')
 				error.append(String.format("</font><font color=\"%s\">",
 						ERROR_NAME_COLOR));
-			} else {
-				error.append(msg.charAt(i));
-			}
-		}
+			else error.append(msg.charAt(i));
 		error.append("</font></font></html>");
-		JTextPane pane = new JTextPane();
+		final JTextPane pane = new JTextPane();
 		pane.setText(error.toString());
 		put(pane, "");
 	}

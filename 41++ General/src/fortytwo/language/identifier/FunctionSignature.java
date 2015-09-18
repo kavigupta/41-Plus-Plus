@@ -19,11 +19,11 @@ public class FunctionSignature implements GenericToken {
 		return type.accepts(inputs);
 	}
 	public VariableIdentifier identifier() {
-		return VariableIdentifier.getInstance(this.toToken(), true);
+		return VariableIdentifier.getInstance(toToken(), true);
 	}
 	@Override
 	public String toSourceCode() {
-		String name = this.name.identifier().toSourceCode();
+		final String name = this.name.identifier().toSourceCode();
 		return '"' + name.substring(1, name.length() - 1) + ":"
 				+ type.toSourceCode() + '"';
 	}
@@ -35,8 +35,8 @@ public class FunctionSignature implements GenericToken {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		result = prime * result + (type == null ? 0 : type.hashCode());
 		return result;
 	}
 	@Override
@@ -44,7 +44,7 @@ public class FunctionSignature implements GenericToken {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		FunctionSignature other = (FunctionSignature) obj;
+		final FunctionSignature other = (FunctionSignature) obj;
 		if (name == null) {
 			if (other.name != null) return false;
 		} else if (!name.equals(other.name)) return false;

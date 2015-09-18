@@ -19,12 +19,12 @@ public class FunctionRoster {
 		// final Optional<LiteralFunction> func = StdLib42
 		// .matchCompiledFieldAccess(env, signature.name, types);
 		// if (func.isPresent()) return func;
-		for (Entry<VariableIdentifier, LiteralFunction> x : functions
+		for (final Entry<VariableIdentifier, LiteralFunction> x : functions
 				.entrySet()) {
 			if (!x.getKey().unmangledName()
 					.equals(signature.name.identifier().unmangledName()))
 				continue;
-			if (!(x.getValue().type.accepts(types))) continue;
+			if (!x.getValue().type.accepts(types)) continue;
 			return Optional.of(x.getValue());
 		}
 		return Optional.empty();

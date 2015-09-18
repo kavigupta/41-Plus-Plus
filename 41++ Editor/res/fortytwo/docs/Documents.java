@@ -15,7 +15,7 @@ public class Documents {
 			aboutLocal = Metadata.applyMacroes(IOUtils.read(
 					new BufferedReader(new InputStreamReader(Documents.class
 							.getResourceAsStream("about.html")))));
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			aboutLocal = "About documentation not found.\n" + t.toString()
 					+ "\n" + Arrays.asList(t.getStackTrace());
 		}

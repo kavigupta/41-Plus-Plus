@@ -5,17 +5,17 @@ import java.util.ArrayList;
 
 public class IOUtils {
 	public static String readLine(RandomAccessFile wiki) throws IOException {
-		long start = wiki.getFilePointer();
+		final long start = wiki.getFilePointer();
 		wiki.readLine();
-		long end = wiki.getFilePointer();
+		final long end = wiki.getFilePointer();
 		wiki.seek(start);
-		byte[] b = new byte[(int) (end - start)];
+		final byte[] b = new byte[(int) (end - start)];
 		wiki.read(b);
 		return new String(b).replace(System.lineSeparator(), "");
 	}
 	public static ArrayList<String> readLines(File file)
 			throws FileNotFoundException, IOException {
-		ArrayList<String> lines = new ArrayList<>();
+		final ArrayList<String> lines = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			String ln;
 			while ((ln = br.readLine()) != null)
@@ -30,7 +30,7 @@ public class IOUtils {
 		}
 	}
 	public static String read(BufferedReader br) throws IOException {
-		StringBuffer sbuff = new StringBuffer();
+		final StringBuffer sbuff = new StringBuffer();
 		String ln;
 		while ((ln = br.readLine()) != null)
 			sbuff.append(ln).append(NEWLINE);
@@ -40,7 +40,7 @@ public class IOUtils {
 	public static void writeLines(File file, Iterable<String> output)
 			throws IOException {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-			for (String ln : output)
+			for (final String ln : output)
 				bw.append(ln).append(NEWLINE);
 		}
 	}
@@ -50,8 +50,8 @@ public class IOUtils {
 		}
 	}
 	public static String nameOf(String path) {
-		File f = new File(path);
-		String name = f.getName();
+		final File f = new File(path);
+		final String name = f.getName();
 		if (!name.contains(".")) return name;
 		return name.substring(0, name.lastIndexOf("."));
 	}

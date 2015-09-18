@@ -87,8 +87,7 @@ public class StructureRoster {
 		// should never happen
 		return null;
 	}
-	public boolean typeCheckConstructor(TypeEnvironment env,
-			TypedVariable name,
+	public boolean typeCheckConstructor(TypeEnvironment env, TypedVariable name,
 			VariableRoster<? extends Expression> fieldValues, Context context) {
 		if (fieldValues.value() != null) {
 			if (fieldValues.value().type(env).equals(name.type)) return true;

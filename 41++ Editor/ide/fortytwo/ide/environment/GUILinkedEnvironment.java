@@ -12,16 +12,16 @@ import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.ide.gui.LineHistory;
 import fortytwo.language.classification.SentenceKind;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.errors.ParserErrors;
 
 public class GUILinkedEnvironment {
 	public LineHistory history;
 	private OrderedEnvironment console;
-	private String last = "";
-	private Supplier<String> editor;
+	private final String last = "";
+	private final Supplier<String> editor;
 	public GUILinkedEnvironment(LineHistory history, Supplier<String> editor) {
 		super();
 		this.history = history;
@@ -36,24 +36,21 @@ public class GUILinkedEnvironment {
 	}
 	public void execute(String cmd) {
 		if (cmd.trim().endsWith(".")) {
-			for (Sentence x : Parser.parse(cmd)) {
-				if (x.kind().kind == SentenceKind.STATEMENT) {
+			for (final Sentence x : Parser.parse(cmd))
+				if (x.kind().kind == SentenceKind.STATEMENT)
 					((ParsedStatement) x).execute(console);
-				} else {
-					ParserErrors.expectedStatement(x);
-				}
-			}
-		} else {
+				else ParserErrors.expectedStatement(x);
+		} else
 			history.displayOutput(ExpressionParser
 					.parseExpression(
 							Tokenizer.tokenize(LiteralToken.entire(cmd)))
 					.literalValue(console));
-		}
 	}
 	public void refresh() {
-		String newSource = editor.get();
+		final String newSource = editor.get();
 		if (newSource.equals(last)) return;
-		UnorderedEnvironment newEnvironment = Compiler42.compile(newSource);
+		final UnorderedEnvironment newEnvironment = Compiler42
+				.compile(newSource);
 		console = console.reinitialize(newEnvironment);
 	}
 }

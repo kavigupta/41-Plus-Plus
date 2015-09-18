@@ -110,10 +110,9 @@ public class LiteralToken implements GenericToken {
 				context.subContext(i, j));
 	}
 	public static Optional<Integer> indexOf(List<LiteralToken> lis, String s) {
-		for (int i = 0; i < lis.size(); i++) {
+		for (int i = 0; i < lis.size(); i++)
 			if (lis.get(i).token.equals(s))
 				return Optional.of(Integer.valueOf(i));
-		}
 		return Optional.empty();
 	}
 	/**

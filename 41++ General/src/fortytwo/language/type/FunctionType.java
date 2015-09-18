@@ -18,10 +18,9 @@ public class FunctionType implements ConcreteType {
 	public final List<GenericType> inputTypes;
 	public final GenericType outputType;
 	public static FunctionType getInstance(GenericType... types) {
-		List<GenericType> inputs = new ArrayList<>();
-		for (int i = 0; i < types.length - 1; i++) {
+		final List<GenericType> inputs = new ArrayList<>();
+		for (int i = 0; i < types.length - 1; i++)
 			inputs.add(types[i]);
-		}
 		return new FunctionType(inputs, types[types.length - 1]);
 	}
 	public FunctionType(List<GenericType> inputTypes, GenericType outputType) {
@@ -35,7 +34,7 @@ public class FunctionType implements ConcreteType {
 	}
 	@Override
 	public Optional<TypeVariableRoster> match(ConcreteType toMatch) {
-		if (this.equals(toMatch)) return Optional.of(new TypeVariableRoster());
+		if (equals(toMatch)) return Optional.of(new TypeVariableRoster());
 		return Optional.empty();
 	}
 	@Override
@@ -50,9 +49,10 @@ public class FunctionType implements ConcreteType {
 	public String toSourceCode() {
 		if (this.inputTypes.size() == 0 && this.outputType.isVoid())
 			return "procedure";
-		List<String> inputs = inputTypes.stream().map(GenericType::toSourceCode)
-				.map(Language::articleized).collect(Collectors.toList());
-		StringBuilder sb = new StringBuilder();
+		final List<String> inputs = inputTypes.stream()
+				.map(GenericType::toSourceCode).map(Language::articleized)
+				.collect(Collectors.toList());
+		final StringBuilder sb = new StringBuilder();
 		sb.append("(function that ");
 		if (inputs.size() != 0)
 			sb.append("takes ").append(SourceCode.displayList(inputs));
@@ -98,9 +98,9 @@ public class FunctionType implements ConcreteType {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((inputTypes == null) ? 0 : inputTypes.hashCode());
+				+ (inputTypes == null ? 0 : inputTypes.hashCode());
 		result = prime * result
-				+ ((outputType == null) ? 0 : outputType.hashCode());
+				+ (outputType == null ? 0 : outputType.hashCode());
 		return result;
 	}
 	@Override
@@ -108,7 +108,7 @@ public class FunctionType implements ConcreteType {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		FunctionType other = (FunctionType) obj;
+		final FunctionType other = (FunctionType) obj;
 		if (inputTypes == null) {
 			if (other.inputTypes != null) return false;
 		} else if (!inputTypes.equals(other.inputTypes)) return false;

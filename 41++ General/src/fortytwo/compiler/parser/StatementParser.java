@@ -67,7 +67,7 @@ public class StatementParser {
 		final ParsedFunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() != 1
-				|| !(function.name.function.get(0).isArgument()))
+				|| !function.name.function.get(0).isArgument())
 			return function;
 		ParserErrors.expectedFunctionCall(function);
 		// should never get here
@@ -91,7 +91,7 @@ public class StatementParser {
 			return new ParsedFieldAssignment(toModify,
 					VariableIdentifier.getInstance(fieldT, false), expr,
 					fullContext);
-		Optional<VariableIdentifier> name = toModify.identifier();
+		final Optional<VariableIdentifier> name = toModify.identifier();
 		if (!name.isPresent()) {
 			// TODO handle redefinition of a non-variable
 		}

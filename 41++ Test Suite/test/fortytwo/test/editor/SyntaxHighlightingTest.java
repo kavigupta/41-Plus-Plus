@@ -87,7 +87,7 @@ public class SyntaxHighlightingTest {
 				of("value", VARIABLE), of(" ", WHITESPACE),
 				of("of", RESERVED_WORD_2), of(" ", WHITESPACE),
 				of("true", LITERAL_BOOLEAN), of(".", SEPARATOR));
-		for (String starter : new String[] { "If", "While" })
+		for (final String starter : new String[] { "If", "While" })
 			testHighlight(starter + " \"x\" is less than 2:", //
 					of(starter, RESERVED_WORD), of(" ", WHITESPACE),
 					of("\"x\"", VARIABLE), of(" ", WHITESPACE),
@@ -114,7 +114,7 @@ public class SyntaxHighlightingTest {
 				of("-", OPERATOR), of(")", SEPARATOR), of(")", ERROR_CHAR));
 	}
 	public void testMultiple(int type, String... identifiers) {
-		for (String ident : identifiers)
+		for (final String ident : identifiers)
 			testSTHighlight(ident, type);
 	}
 	public void testSTHighlight(String toTest, int expected) {
@@ -126,7 +126,7 @@ public class SyntaxHighlightingTest {
 		Token t = h.getTokenList(
 				new Segment(toTest.toCharArray(), 0, toTest.length()),
 				TokenTypes.IDENTIFIER, 0);
-		List<Pair<String, Integer>> actual = new ArrayList<>();
+		final List<Pair<String, Integer>> actual = new ArrayList<>();
 		for (; t.getType() != NULL; t = t.getNextToken()) {
 			if (t.getEndOffset() - t.getOffset() == 0) continue;
 			System.out.println(t.getOffset() + "\t" + t.getEndOffset());

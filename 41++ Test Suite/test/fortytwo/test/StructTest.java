@@ -12,8 +12,8 @@ import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
 
 public class StructTest {
 	public static final String TEST_STRUCTS = "Define a type called singleton."
@@ -105,13 +105,13 @@ public class StructTest {
 						+ "Tell me what (the \"key\" of (the \"key\" of \"trip\")) is.");
 	}
 	public void assertPrint(String result, String statement) {
-		OrderedEnvironment loc = env.minimalLocalEnvironment();
+		final OrderedEnvironment loc = env.minimalLocalEnvironment();
 		Parser.parse(statement).stream()
 				.forEach(x -> ((ParsedStatement) x).execute(loc));
 		assertEquals(result, VirtualMachine.popMessage());
 	}
 	public void assertEquivalence(String result, String toEvaluate) {
-		OrderedEnvironment loc = env.minimalLocalEnvironment();
+		final OrderedEnvironment loc = env.minimalLocalEnvironment();
 		assertEquals(result,
 				ExpressionParser
 						.parseExpression(Tokenizer

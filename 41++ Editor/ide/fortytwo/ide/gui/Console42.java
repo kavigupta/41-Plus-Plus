@@ -17,10 +17,10 @@ import fortytwo.ide.environment.GUILinkedEnvironment;
 
 public class Console42 extends JDialog {
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private RSyntaxTextArea line;
-	private LineHistory history;
-	private GUILinkedEnvironment environ;
+	private final JPanel contentPane;
+	private final RSyntaxTextArea line;
+	private final LineHistory history;
+	private final GUILinkedEnvironment environ;
 	private int pointer = 0;
 	public Console42(JFrame owner, GUILinkedEnvironment environ) {
 		super(owner, "41++ Console");
@@ -60,7 +60,7 @@ public class Console42 extends JDialog {
 		});
 	}
 	public void movePointer(int direction) {
-		int size = history.nCommands();
+		final int size = history.nCommands();
 		if (size == 0) return;
 		if (pointer != history.nCommands())
 			history.set(pointer, line.getText());
@@ -77,13 +77,13 @@ public class Console42 extends JDialog {
 		line.setText(history.get(pointer).replaceAll("[\r\n]", ""));
 	}
 	public void exec() {
-		String cmd = line.getText();
+		final String cmd = line.getText();
 		history.displayCommand(cmd);
 		line.setText("");
 		try {
 			environ.refresh();
 			environ.execute(cmd);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			if (!e.getMessage().startsWith("~")) e.printStackTrace();
 		}
 		pointer = history.nCommands();

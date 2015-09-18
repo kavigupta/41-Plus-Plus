@@ -11,8 +11,10 @@ public class OrderedEnvironment {
 		this.global = global;
 		vars = new VariableRoster<>();
 	}
-	public OrderedEnvironment reinitialize(UnorderedEnvironment newEnvironment) {
-		final OrderedEnvironment newlocal = new OrderedEnvironment(newEnvironment);
+	public OrderedEnvironment reinitialize(
+			UnorderedEnvironment newEnvironment) {
+		final OrderedEnvironment newlocal = new OrderedEnvironment(
+				newEnvironment);
 		vars.pairs.forEach((k, v) -> newlocal.vars.assign(k, v));
 		return newlocal;
 	}
@@ -28,8 +30,7 @@ public class OrderedEnvironment {
 		return global.staticEnv.typeOf(name);
 	}
 	public TypeEnvironment staticEnvironment() {
-		final TypeEnvironment env = TypeEnvironment
-				.getChild(global.staticEnv);
+		final TypeEnvironment env = TypeEnvironment.getChild(global.staticEnv);
 		vars.pairs
 				.forEach((name, expr) -> env.addType(name, expr.resolveType()));
 		return env;
