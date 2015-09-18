@@ -21,8 +21,8 @@ public class SyntaxErrors {
 			List<LiteralToken> currentExpression) {
 		VirtualMachine.error(ErrorType.SYNTAX,
 				String.format("~%s~ is not a valid %s",
-						currentExpression.stream().map(x -> x.token).reduce(
-								(x, y) -> x + " " + y),
+						currentExpression.stream().map(x -> x.token)
+								.reduce((x, y) -> x + " " + y).get(),
 						type.description()),
 				Context.sum(currentExpression));
 	}

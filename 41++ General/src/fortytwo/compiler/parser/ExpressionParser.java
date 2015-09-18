@@ -60,6 +60,10 @@ public class ExpressionParser {
 									.collect(Collectors.toList()));
 				final Expression first = exp.pop();
 				i++;
+				if (i >= expressions.size())
+					SyntaxErrors.invalidExpression(ExpressionType.ARITHMETIC,
+							expressions.stream().map(Expression::toToken)
+									.collect(Collectors.toList()));
 				final Expression second = expressions.get(i);
 				final UnevaluatedOperator op = (UnevaluatedOperator) token;
 				exp.push(ParsedFunctionCall.getOperation(first, op.operator,
@@ -70,6 +74,7 @@ public class ExpressionParser {
 	}
 	private static ArrayList<Expression> removeUnary(
 			ArrayList<Expression> expressions) {
+		System.out.println(expressions);
 		final ArrayList<Expression> expressionsWoUO = new ArrayList<>();
 		for (int i = 0; i < expressions.size(); i++)
 			if (expressions.get(i) instanceof UnevaluatedOperator) {
@@ -84,6 +89,12 @@ public class ExpressionParser {
 						final Expression next = expressions.get(i);
 						expressionsWoUO
 								.add(ParsedFunctionCall.getNegation(next));
+					} else {
+						SyntaxErrors
+								.invalidExpression(ExpressionType.ARITHMETIC,
+										expressions.stream()
+												.map(Expression::toToken)
+												.collect(Collectors.toList()));
 					}
 				} else expressionsWoUO.add(expressions.get(i));
 			} else expressionsWoUO.add(expressions.get(i));
@@ -91,7 +102,7 @@ public class ExpressionParser {
 	}
 	private static ArrayList<Expression> tokenize(List<LiteralToken> exp) {
 		final ArrayList<Expression> expressions = new ArrayList<>();
-		for (final LiteralToken token : exp)
+		for (final LiteralToken token : exp) {
 			switch (token.token.charAt(0)) {
 				case '0':
 				case '1':
@@ -125,30 +136,39 @@ public class ExpressionParser {
 							LiteralBool.getInstance(false, Context.SYNTHETIC));
 					break;
 				case '+':
-					expressions.add(new UnevaluatedOperator(Operation.ADD,
-							token.context));
-					break;
+					if (token.token.length() == 1) {
+						expressions.add(new UnevaluatedOperator(Operation.ADD,
+								token.context));
+						break;
+					}
 				case '-':
-					expressions.add(new UnevaluatedOperator(Operation.SUBTRACT,
-							token.context));
-					break;
+					if (token.token.length() == 1) {
+						expressions.add(new UnevaluatedOperator(
+								Operation.SUBTRACT, token.context));
+						break;
+					}
 				case '*':
-					expressions.add(new UnevaluatedOperator(Operation.MULTIPLY,
-							token.context));
-					break;
+					if (token.token.length() == 1) {
+						expressions.add(new UnevaluatedOperator(
+								Operation.MULTIPLY, token.context));
+						break;
+					}
 				case '%':
-					expressions.add(new UnevaluatedOperator(Operation.MOD,
-							token.context));
-					break;
+					if (token.token.length() == 1) {
+						expressions.add(new UnevaluatedOperator(Operation.MOD,
+								token.context));
+						break;
+					}
 				case '/':
-					if (token.token.equals(Resources.FLOORDIV_SIGN))
+					if (token.token.equals(Resources.FLOORDIV_SIGN)) {
 						expressions.add(new UnevaluatedOperator(
 								Operation.DIVIDE_FLOOR, token.context));
-					else if (token.token.equals(Resources.DIV_SIGN))
+						break;
+					} else if (token.token.equals(Resources.DIV_SIGN)) {
 						expressions.add(new UnevaluatedOperator(
 								Operation.DIVIDE, token.context));
-					// should not happen.
-					break;
+						break;
+					}
 				case '\"':
 					expressions
 							.add(VariableIdentifier.getInstance(token, false));
@@ -160,6 +180,7 @@ public class ExpressionParser {
 				case '[':
 					break;
 			}
+		}
 		return expressions;
 	}
 	public static GenericType parseType(LiteralToken token) {

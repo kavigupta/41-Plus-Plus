@@ -95,6 +95,23 @@ public class SyntaxHighlightingTest {
 					of("than", IDENTIFIER), of(" ", WHITESPACE),
 					of("2", LITERAL_NUMBER_DECIMAL_INT), of(":", SEPARATOR));
 	}
+	@Test
+	public void compoundTest() {
+		testHighlight("2 + ())", //
+				of("2", LITERAL_NUMBER_DECIMAL_INT), of(" ", WHITESPACE),
+				of("+", OPERATOR), of(" ", WHITESPACE), of("(", SEPARATOR),
+				of(")", SEPARATOR), of(")", ERROR_CHAR));
+		testHighlight("(4 + 5 -)", //
+				of("(", SEPARATOR), of("4", LITERAL_NUMBER_DECIMAL_INT),
+				of(" ", WHITESPACE), of("+", OPERATOR), of(" ", WHITESPACE),
+				of("5", LITERAL_NUMBER_DECIMAL_INT), of(" ", WHITESPACE),
+				of("-", OPERATOR), of(")", SEPARATOR));
+		testHighlight("(4 + 5 -))", //
+				of("(", SEPARATOR), of("4", LITERAL_NUMBER_DECIMAL_INT),
+				of(" ", WHITESPACE), of("+", OPERATOR), of(" ", WHITESPACE),
+				of("5", LITERAL_NUMBER_DECIMAL_INT), of(" ", WHITESPACE),
+				of("-", OPERATOR), of(")", SEPARATOR), of(")", ERROR_CHAR));
+	}
 	public void testMultiple(int type, String... identifiers) {
 		for (String ident : identifiers)
 			testSTHighlight(ident, type);
@@ -110,6 +127,8 @@ public class SyntaxHighlightingTest {
 				Token.IDENTIFIER, 0);
 		List<Pair<String, Integer>> actual = new ArrayList<>();
 		for (; t.getType() != NULL; t = t.getNextToken()) {
+			if (t.getEndOffset() - t.getOffset() == 0) continue;
+			System.out.println(t.getOffset() + "\t" + t.getEndOffset());
 			actual.add(of(new String(t.getTextArray(), t.getOffset(),
 					t.getEndOffset() - t.getOffset()), t.getType()));
 		}

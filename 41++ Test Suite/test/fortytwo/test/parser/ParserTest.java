@@ -1,14 +1,11 @@
 package fortytwo.test.parser;
 
+import static fortytwo.test.Utilities.*;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import fortytwo.compiler.LiteralToken;
-import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parser.ExpressionParser;
-import fortytwo.compiler.parser.Parser;
-import fortytwo.compiler.parser.Tokenizer;
+import fortytwo.vm.errors.ErrorType;
 
 public class ParserTest {
 	@Test
@@ -39,6 +36,23 @@ public class ParserTest {
 		assertEquals("procedure", cdLoopType("function"));
 		validateTypeParse("(function that outputs a number)");
 		validateTypeParse("procedure");
+	}
+	@Test
+	public void invalidExpressionParserTest() {
+		assertParseError(ErrorType.SYNTAX,
+				"~2 +~ is not a valid arithmetic expression", 0, 3, "2 +");
+		assertParseError(ErrorType.SYNTAX,
+				"~* 2~ is not a valid arithmetic expression", 0, 3, "* 2");
+		assertParseError(ErrorType.SYNTAX,
+				"~/ 2~ is not a valid arithmetic expression", 0, 3, "/ 2");
+		assertParseError(ErrorType.SYNTAX,
+				"~% 2~ is not a valid arithmetic expression", 0, 3, "% 2");
+		assertParseError(ErrorType.SYNTAX,
+				"~2 * * 3~ is not a valid arithmetic expression", 0, 7,
+				"2 * * 3");
+		assertParseError(ErrorType.SYNTAX,
+				"~2 * * 3~ is not a valid arithmetic expression", 0, 6,
+				"2 ** 3");
 	}
 	@Test
 	public void definitionParserTest() {
@@ -151,27 +165,5 @@ public class ParserTest {
 				cdLoopLine("While (\"i\" is at most 10):\n"
 						+ "\tIf (i is greater than 2):\n"
 						+ "\t\tPerform some function on \"i\".\n\t\tSet the value of \"i\" to (\"i\"+1)."));
-	}
-	public static void validateLineParse(String line) {
-		assertEquals(line, cdLoopLine(line));
-	}
-	public static void validateExprParse(String expr) {
-		assertEquals(expr, cdLoopExpr(expr));
-	}
-	public static void validateTypeParse(String expr) {
-		assertEquals(expr, cdLoopType(expr));
-	}
-	private static String cdLoopLine(String line) {
-		Sentence s = Parser.parse(line).get(0);
-		return s.toSourceCode() + ".";
-	}
-	private static String cdLoopType(String line) {
-		return ExpressionParser.parseType(LiteralToken.entire(line))
-				.toSourceCode();
-	}
-	private static String cdLoopExpr(String line) {
-		return ExpressionParser
-				.parseExpression(Tokenizer.tokenize(LiteralToken.entire(line)))
-				.toSourceCode();
 	}
 }

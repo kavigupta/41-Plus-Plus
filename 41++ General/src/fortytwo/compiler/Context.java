@@ -77,7 +77,7 @@ public class Context implements Contextualized {
 		return new Context(this.in, this.start + start, this.start + end);
 	}
 	public Context removeLast() {
-		return in.length() == 0 ? this : subContext(0, in.length() - 1);
+		return end == start ? this : subContext(0, end - start - 1);
 	}
 	/**
 	 * @param text
