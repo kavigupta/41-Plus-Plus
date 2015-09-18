@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
+import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.compiler.parser.ExpressionParser;
+import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.StatementParser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.VirtualMachine;
@@ -54,23 +56,58 @@ public class Utilities {
 	}
 	public static void assertError(ErrorType type, String msg, int start,
 			int end, Runnable run, Context parent) {
+		class CustomException extends RuntimeException {};
 		Consumer<Error42> old = VirtualMachine.displayerr;
 		VirtualMachine.displayerr = x -> {
-			throw new RuntimeException("~Temporary.");
+			throw new CustomException();
 		};
 		try {
 			run.run();
-		} catch (RuntimeException re) {
-			if (!re.getMessage().equals("~Temporary.")) throw re;
-		}
+		} catch (CustomException re) {}
 		if (!VirtualMachine.errorState()) throw new AssertionError(
 				"An error was expected, but none was found.");
-		assertEquals(new Error42(type, msg, parent.subContext(start, end)),
-				VirtualMachine.popError());
+		assertEquals(new Error42(type, msg, parent.subContext(start, end))
+				.toString(), VirtualMachine.popError().toString());
 		VirtualMachine.displayerr = old;
+	}
+	public static void assertParseError(ErrorType type, String msg, int start,
+			int end, String toParse) {
+		Runnable go;
+		if (toParse.charAt(toParse.length() - 1) == '.')
+			go = () -> parseStatement(toParse);
+		else go = () -> parseExpr(toParse);
+		assertError(type, msg, start, end, go, Context.entire(toParse));
 	}
 	public static void assertParse(Expression value, String toParse) {
 		assertEquals(value, ExpressionParser.parseExpression(
 				Tokenizer.tokenize(LiteralToken.entire(toParse))));
+	}
+	public static void validateLineParse(String line) {
+		assertEquals(line, cdLoopLine(line));
+	}
+	public static void validateExprParse(String expr) {
+		assertEquals(expr, cdLoopExpr(expr));
+	}
+	public static void validateTypeParse(String expr) {
+		assertEquals(expr, cdLoopType(expr));
+	}
+	public static String cdLoopLine(String line) {
+		Sentence s = Parser.parse(line).get(0);
+		return s.toSourceCode() + ".";
+	}
+	public static String cdLoopType(String line) {
+		return ExpressionParser.parseType(LiteralToken.entire(line))
+				.toSourceCode();
+	}
+	public static String cdLoopExpr(String line) {
+		return parseExpr(line).toSourceCode();
+	}
+	public static Expression parseExpr(String line) {
+		return ExpressionParser
+				.parseExpression(Tokenizer.tokenize(LiteralToken.entire(line)));
+	}
+	private static Sentence parseStatement(String line) {
+		return StatementParser
+				.parseStatement(Tokenizer.tokenize(LiteralToken.entire(line)));
 	}
 }

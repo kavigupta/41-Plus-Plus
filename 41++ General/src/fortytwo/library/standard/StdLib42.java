@@ -35,7 +35,6 @@ public class StdLib42 {
 	public static final List<String> STRUCT_ARRAY = Arrays.asList("array");
 	public static final Map<VariableIdentifier, LiteralFunction> DEFAULT_FUNCTIONS = new HashMap<>();
 	static {
-		// TODO for each in {st, nd, rd, th}
 		for (String suffix : new String[] { "st", "nd", "rd", "th" }) {
 			addFunction(StdLibFunctions.ARRAY_ACCESS, "the", "", suffix,
 					"element", "of", "");

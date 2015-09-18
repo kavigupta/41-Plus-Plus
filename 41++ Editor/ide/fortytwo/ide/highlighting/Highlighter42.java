@@ -72,13 +72,26 @@ public class Highlighter42 extends AbstractTokenMaker {
 				addParenToken(tok.context.getStartPosition(text.offset), text,
 						startOffset);
 				addAllTokens(Tokenizer.tokenizeFully(depar), text, startOffset);
-				addParenToken(tok.context.removeLast().getEndPosition(0), text,
-						startOffset);
+				System.out.println(tok.context.getStartPosition(0) + "\t"
+						+ tok.context.removeLast().getEndPosition(0));
+				System.out.println(text.offset);
+				addParenToken(
+						tok.context.removeLast().getEndPosition(text.offset),
+						text, startOffset);
 			} else {
 				addToken(tokens, i, text, startOffset);
 			}
+			System.out.println("adding " + tok);
+			Token t = firstToken;
+			for (; t != null; t = t.getNextToken()) {
+				if (t.getEndOffset() - t.getOffset() == 0) continue;
+				System.out.println(t.getOffset() + "\t" + t.getEndOffset());
+			}
+			System.out.println("Mapping ^^^");
 		}
+		System.out.println("Basically done");
 		if (error != null) addErrorToken(error, text, startOffset, errorStart);
+		System.out.println("Done");
 	}
 	public void addToken(List<LiteralToken> tokens, int index, Segment text,
 			int startOffset) {
@@ -91,15 +104,18 @@ public class Highlighter42 extends AbstractTokenMaker {
 				startOffset + (currentTokenStart - text.offset));
 	}
 	public void addParenToken(int location, Segment text, int startOffset) {
-		int currentTokenStart = location;
-		int currentTokenEnd = location;
-		addToken(text.array, currentTokenStart, currentTokenEnd, SEPARATOR,
-				startOffset + (currentTokenStart - text.offset));
+		System.out.println("Adding paren token at location " + location
+				+ " with start offset " + startOffset + " and offset "
+				+ text.offset);
+		addToken(text.array, location, location, SEPARATOR,
+				startOffset + (location - text.offset));
 	}
 	public void addErrorToken(LiteralToken error, Segment text, int startOffset,
 			int tokenStart) {
 		int currentTokenStart = tokenStart + text.offset;
 		int currentTokenEnd = currentTokenStart + error.token.length();
+		System.out
+				.println("Error " + currentTokenStart + "\t" + currentTokenEnd);
 		addToken(text.array, currentTokenStart, currentTokenEnd - 2, ERROR_CHAR,
 				startOffset + (currentTokenStart - text.offset));
 	}
