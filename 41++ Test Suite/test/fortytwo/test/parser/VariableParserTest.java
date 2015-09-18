@@ -6,6 +6,7 @@ import fortytwo.compiler.LiteralToken;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.test.Utilities;
 
+@SuppressWarnings("static-method")
 public class VariableParserTest {
 	@Test
 	public void simpleTest() {

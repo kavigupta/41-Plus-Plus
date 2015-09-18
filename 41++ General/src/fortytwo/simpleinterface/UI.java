@@ -41,9 +41,8 @@ public class UI {
 		}
 		final StringBuffer text = new StringBuffer();
 		str.forEach(s -> text.append(s).append(System.lineSeparator()));
-		try {
-			final BufferedWriter bw = new BufferedWriter(
-					new FileWriter(path + "-output.txt"));
+		try (BufferedWriter bw = new BufferedWriter(
+				new FileWriter(path + "-output.txt"))) {
 			VirtualMachine.displayln = s -> {
 				try {
 					bw.write(s);
@@ -54,8 +53,6 @@ public class UI {
 				}
 			};
 			Compiler42.execute(text.toString());
-			bw.close();
-			bw.close();
 		} catch (final IOException e) {
 			errorInWritingTo(parent, path + "-output.txt");
 			return;

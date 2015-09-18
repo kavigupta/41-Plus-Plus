@@ -20,6 +20,7 @@ import fortytwo.ide.environment.GUILinkedEnvironment;
 import fortytwo.metadata.Metadata;
 
 public class Editor42 extends TextEditor {
+	private static final long serialVersionUID = 1L;
 	public static final double CONSOLE_START = .7, CONSOLE_END = .97;
 	public RSyntaxTextArea textArea;
 	public Console42 console;
@@ -58,7 +59,9 @@ public class Editor42 extends TextEditor {
 						try {
 							Desktop.getDesktop().browse(e.getURL().toURI());
 							return;
-						} catch (IOException | URISyntaxException e1) {}
+						} catch (IOException | URISyntaxException e1) {
+							// simply do not return
+						}
 					}
 					JOptionPane.showMessageDialog(Editor42.this,
 							String.format(
@@ -78,27 +81,27 @@ public class Editor42 extends TextEditor {
 	}
 	@Override
 	protected Action getCutAction() {
-		return RSyntaxTextArea.getAction(RTextArea.CUT_ACTION);
+		return RTextArea.getAction(RTextArea.CUT_ACTION);
 	}
 	@Override
 	protected Action getCopyAction() {
-		return RSyntaxTextArea.getAction(RTextArea.COPY_ACTION);
+		return RTextArea.getAction(RTextArea.COPY_ACTION);
 	}
 	@Override
 	protected Action getUndoAction() {
-		return RSyntaxTextArea.getAction(RTextArea.UNDO_ACTION);
+		return RTextArea.getAction(RTextArea.UNDO_ACTION);
 	}
 	@Override
 	protected Action getRedoAction() {
-		return RSyntaxTextArea.getAction(RTextArea.REDO_ACTION);
+		return RTextArea.getAction(RTextArea.REDO_ACTION);
 	}
 	@Override
 	protected Action getPasteAction() {
-		return RSyntaxTextArea.getAction(RTextArea.PASTE_ACTION);
+		return RTextArea.getAction(RTextArea.PASTE_ACTION);
 	}
 	@Override
 	protected Action getSelectAllAction() {
-		return RSyntaxTextArea.getAction(RTextArea.SELECT_ALL_ACTION);
+		return RTextArea.getAction(RTextArea.SELECT_ALL_ACTION);
 	}
 	@Override
 	protected void setText(String text) {

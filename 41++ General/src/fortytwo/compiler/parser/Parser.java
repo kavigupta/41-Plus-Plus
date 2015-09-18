@@ -38,7 +38,7 @@ public class Parser {
 			int extraTabs = 0;
 			for (int i = 0; i < unparsedSentences.size(); i++) {
 				if (unparsedSentences.get(i).isEmpty()) continue;
-				tabbedLines.add(Pair.of(initTabs + extraTabs,
+				tabbedLines.add(Pair.of(Integer.valueOf(initTabs + extraTabs),
 						unparsedSentences.get(i)));
 				switch (unparsedSentences.get(i).get(0).token) {
 					case Resources.IF:
@@ -95,6 +95,7 @@ public class Parser {
 				if (phrases.get(0).getValue().get(2).token
 						.equals(Resources.DECL_FUNCTION))
 					return popFunctionDecl(phrases);
+				//$FALL-THROUGH$
 			default:
 				return popSentence(phrases);
 		}
@@ -145,6 +146,7 @@ public class Parser {
 			statement.add((ParsedStatement) s);
 		return new ParsedStatementSeries(statement, Context.sum(popSeries));
 	}
+	@SuppressWarnings("boxing")
 	private static List<Sentence> popSeries(
 			List<Pair<Integer, List<LiteralToken>>> phrases) {
 		if (phrases.size() == 0) return new ArrayList<>();

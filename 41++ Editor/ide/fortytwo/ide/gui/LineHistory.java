@@ -18,6 +18,7 @@ import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralString;
 
 public class LineHistory extends JScrollPane {
+	private static final long serialVersionUID = 1L;
 	public static final String PROMPT_COLOR = "white";
 	public static final String PRINT_COLOR = "white";
 	public static final String ERROR_COLOR = "red";
@@ -26,7 +27,7 @@ public class LineHistory extends JScrollPane {
 	public static final String RESULT_COLOR = "yellow";
 	private JPanel entry;
 	private int index = 0;
-	private ArrayList<String> history = new ArrayList<String>();
+	private ArrayList<String> history = new ArrayList<>();
 	public LineHistory() {
 		super();
 		entry = new JPanel();
@@ -60,9 +61,8 @@ public class LineHistory extends JScrollPane {
 		entry.add(textBox, gbc);
 	}
 	public void displayCommand(String cmd) {
-		cmd = process(cmd);
 		JTextPane command = new JTextPane();
-		command.setText(">> " + cmd);
+		command.setText(">> " + process(cmd));
 		put(command, PROMPT_COLOR);
 	}
 	public static String process(String cmd) {

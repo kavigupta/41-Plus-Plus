@@ -43,6 +43,7 @@ public class Structure {
 		} else if (!type.equals(other.type)) return false;
 		return true;
 	}
+	@SuppressWarnings("boxing")
 	public boolean containsField(VariableIdentifier k) {
 		return fields.stream().map(x -> x.name.equals(k)).reduce(false,
 				(a, b) -> a || b);

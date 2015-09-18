@@ -56,14 +56,18 @@ public class Utilities {
 	}
 	public static void assertError(ErrorType type, String msg, int start,
 			int end, Runnable run, Context parent) {
-		class CustomException extends RuntimeException {};
+		class CustomException extends RuntimeException {
+			private static final long serialVersionUID = 1L;
+		}
 		Consumer<Error42> old = VirtualMachine.displayerr;
 		VirtualMachine.displayerr = x -> {
 			throw new CustomException();
 		};
 		try {
 			run.run();
-		} catch (CustomException re) {}
+		} catch (CustomException re) {
+			// expected.
+		}
 		if (!VirtualMachine.errorState()) throw new AssertionError(
 				"An error was expected, but none was found.");
 		assertEquals(new Error42(type, msg, parent.subContext(start, end))

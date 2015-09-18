@@ -117,12 +117,12 @@ public class ExpressionParser {
 					try {
 						expressions.add(LiteralNumber.getInstance(
 								new BigDecimal(token.token), token.context));
-						break;
 					} catch (final NumberFormatException e) {
 						SyntaxErrors.invalidExpression(
 								ExpressionType.LITERAL_NUMBER,
 								Arrays.asList(token));
 					}
+					break;
 				case '\'':
 					expressions.add(LiteralString.getInstance(
 							token.subToken(1, token.token.length() - 1)));
@@ -141,34 +141,38 @@ public class ExpressionParser {
 								token.context));
 						break;
 					}
+					//$FALL-THROUGH$
 				case '-':
 					if (token.token.length() == 1) {
 						expressions.add(new UnevaluatedOperator(
 								Operation.SUBTRACT, token.context));
 						break;
 					}
+					//$FALL-THROUGH$
 				case '*':
 					if (token.token.length() == 1) {
 						expressions.add(new UnevaluatedOperator(
 								Operation.MULTIPLY, token.context));
 						break;
-					}
+					} //$FALL-THROUGH$
 				case '%':
 					if (token.token.length() == 1) {
 						expressions.add(new UnevaluatedOperator(Operation.MOD,
 								token.context));
 						break;
-					}
+					} //$FALL-THROUGH$
 				case '/':
 					if (token.token.equals(Resources.FLOORDIV_SIGN)) {
 						expressions.add(new UnevaluatedOperator(
 								Operation.DIVIDE_FLOOR, token.context));
 						break;
-					} else if (token.token.equals(Resources.DIV_SIGN)) {
+					}
+					if (token.token.equals(Resources.DIV_SIGN)) {
 						expressions.add(new UnevaluatedOperator(
 								Operation.DIVIDE, token.context));
 						break;
 					}
+					throw new RuntimeException(/* TODO error here */);
 				case '\"':
 					expressions
 							.add(VariableIdentifier.getInstance(token, false));
@@ -197,6 +201,7 @@ public class ExpressionParser {
 		if (funcType.isPresent()) return funcType.get();
 		return parseStructType(type);
 	}
+	@SuppressWarnings("boxing")
 	private static Optional<FunctionType> parseFuncType(
 			List<LiteralToken> type) {
 		if (type.size() == 1

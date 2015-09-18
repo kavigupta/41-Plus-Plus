@@ -70,7 +70,7 @@ public class FunctionType implements ConcreteType {
 		if (inputs.size() != inputTypes.size()) return false;
 		for (int i = 0; i < inputs.size(); i++)
 			if (!inputTypes.get(i).match(inputs.get(i)).isPresent())
-				return false;;
+				return false;
 		return true;
 	}
 	public final TypeVariableRoster typeVariables(

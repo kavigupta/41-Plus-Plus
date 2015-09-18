@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import fortytwo.vm.errors.ErrorType;
 
+@SuppressWarnings("static-method")
 public class ParserTest {
 	@Test
 	public void expressionParserTest() {

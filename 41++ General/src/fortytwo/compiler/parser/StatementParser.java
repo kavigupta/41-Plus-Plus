@@ -41,7 +41,7 @@ public class StatementParser {
 						&& line.get(3).token.equals(Resources.OF)
 						&& line.get(5).token.equals(Resources.TO))
 					return parseAssignment(line);
-				else break;
+				break;
 			case Resources.EXIT:
 				return parseReturn(line);
 		}

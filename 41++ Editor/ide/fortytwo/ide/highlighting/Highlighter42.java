@@ -198,11 +198,11 @@ public class Highlighter42 extends AbstractTokenMaker {
 				if (Language.isValidVariableIdentifier(next, true)
 						|| Resources.DECL_FUNCTION.equals(prev))
 					return RESERVED_WORD_2;
-				else break;
+				break;
 			case "of":
 				if (Language.isValidVariableIdentifier(prev, true))
 					return RESERVED_WORD_2;
-				else break;
+				break;
 		}
 		return IDENTIFIER;
 	}
@@ -227,13 +227,14 @@ public class Highlighter42 extends AbstractTokenMaker {
 	@Override
 	public void addToken(char[] segment, int start, int end, int tokenType,
 			int startOffset) {
+		int newType = tokenType;
 		// This assumes all keywords, etc. were parsed as "identifiers."
-		if (tokenType == IDENTIFIER) {
+		if (newType == IDENTIFIER) {
 			int value = wordsToHighlight.get(segment, start, end);
 			if (value != -1) {
-				tokenType = value;
+				newType = value;
 			}
 		}
-		super.addToken(segment, start, end, tokenType, startOffset);
+		super.addToken(segment, start, end, newType, startOffset);
 	}
 }

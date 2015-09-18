@@ -105,7 +105,7 @@ public class ConstructionParser {
 				vars.put(VariableIdentifier.getInstance(line.get(i + 1), false),
 						type);
 			}
-		else if (line.get(i).doesEqual(Resources.OUTPUTS)) {} else
+		else if (!line.get(i).doesEqual(Resources.OUTPUTS))
 			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_FUNCT, line);
 		int outputloc = Language.indexOf(line, Resources.OUTPUTS);
 		final Pair<FunctionName, List<Expression>> sig = parseFunctionSignature(

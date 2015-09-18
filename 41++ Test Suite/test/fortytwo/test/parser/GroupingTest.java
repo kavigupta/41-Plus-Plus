@@ -11,6 +11,7 @@ import fortytwo.vm.errors.ErrorType;
  * A complete test of the grouping parser. This should be viewed as a
  * specification.
  */
+@SuppressWarnings("static-method")
 public class GroupingTest {
 	@Test
 	public void parenthesisTest() {

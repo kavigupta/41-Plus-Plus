@@ -18,12 +18,13 @@ import javax.swing.border.EmptyBorder;
 import fortytwo.utils.IOUtils;
 
 public abstract class TextEditor extends JFrame {
+	private static final long serialVersionUID = 1L;
 	private final JScrollPane contentPane;
 	protected final JMenu fileMenu, editMenu;
 	private String path = null;
 	private String lastSaved = "";
 	public TextEditor() {
-		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -61,7 +62,7 @@ public abstract class TextEditor extends JFrame {
 		bar.add(editMenu);
 		setJMenuBar(bar);
 	}
-	protected JMenuItem getMenuItem(String name, int key, boolean shift,
+	protected static JMenuItem getMenuItem(String name, int key, boolean shift,
 			ActionListener listener) {
 		JMenuItem item = new JMenuItem(name);
 		if (key != -1) {

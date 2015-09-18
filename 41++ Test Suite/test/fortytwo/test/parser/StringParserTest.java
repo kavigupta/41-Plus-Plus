@@ -8,6 +8,7 @@ import org.junit.Test;
  * While short, this should be viewed as a complete test of the string parser
  * and therefore a specification.
  */
+@SuppressWarnings("static-method")
 public class StringParserTest {
 	@Test
 	public void includeSpaces() {

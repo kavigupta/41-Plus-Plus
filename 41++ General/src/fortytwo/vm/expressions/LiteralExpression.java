@@ -37,5 +37,7 @@ public abstract class LiteralExpression extends Expression {
 		if (obj.getClass() != this.getClass()) return false;
 		return typedEquals((LiteralExpression) obj);
 	}
+	@Override
+	public abstract int hashCode();
 	public abstract boolean typedEquals(LiteralExpression other);
 }

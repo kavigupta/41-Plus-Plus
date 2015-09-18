@@ -5,6 +5,7 @@ import static fortytwo.test.Utilities.assertCorrectTokenization;
 import org.junit.Test;
 
 /* TODO complete all test cases properly */
+@SuppressWarnings("static-method")
 public class TokenizerTest {
 	@Test
 	public void statementTests() {

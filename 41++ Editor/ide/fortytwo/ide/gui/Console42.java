@@ -16,6 +16,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import fortytwo.ide.environment.GUILinkedEnvironment;
 
 public class Console42 extends JDialog {
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private RSyntaxTextArea line;
 	private LineHistory history;
@@ -32,9 +33,13 @@ public class Console42 extends JDialog {
 		line = ComponentFactory.getLine42(true, this::exec);
 		line.addKeyListener(new KeyListener() {
 			@Override
-			public void keyTyped(KeyEvent e) {}
+			public void keyTyped(KeyEvent e) {
+				// no-op deliberately
+			}
 			@Override
-			public void keyPressed(KeyEvent e) {}
+			public void keyPressed(KeyEvent e) {
+				// no-op deliberately
+			}
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_UP

@@ -23,4 +23,8 @@ public class LiteralVoid extends LiteralExpression {
 	public boolean typedEquals(LiteralExpression other) {
 		return other instanceof LiteralVoid;
 	}
+	@Override
+	public int hashCode() {
+		return 0;
+	}
 }

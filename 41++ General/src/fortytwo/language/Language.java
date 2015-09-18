@@ -10,9 +10,8 @@ import fortytwo.vm.errors.SyntaxErrors;
 
 public class Language {
 	public static String articleized(String word) {
-		if (startsWithVowel(word))
-			return AN + SPACE + word;
-		else return A + SPACE + word;
+		if (startsWithVowel(word)) return AN + SPACE + word;
+		return A + SPACE + word;
 	}
 	private static boolean startsWithVowel(String word) {
 		for (int i = 0; i < word.length(); i++)

@@ -9,6 +9,7 @@ import fortytwo.compiler.parser.Tokenizer;
 /**
  * Complete test of the unescaper. This should be viewed as a specification.
  */
+@SuppressWarnings("static-method")
 public class UnescapeTest {
 	@Test
 	public void standard() {

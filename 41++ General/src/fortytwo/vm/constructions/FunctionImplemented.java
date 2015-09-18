@@ -95,22 +95,7 @@ public class FunctionImplemented extends LiteralFunction {
 		return body.size() == 0 ? "" : SourceCode.displaySeries(body);
 	}
 	@Override
-	public boolean typedEquals(LiteralExpression other) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((body == null) ? 0 : body.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
-		if (getClass() != obj.getClass()) return false;
+	public boolean typedEquals(LiteralExpression obj) {
 		FunctionImplemented other = (FunctionImplemented) obj;
 		if (body == null) {
 			if (other.body != null) return false;

@@ -1,5 +1,6 @@
 package fortytwo.metadata;
 
+import java.util.Arrays;
 import java.util.function.Function;
 
 import fortytwo.icon.IconManager;
@@ -23,9 +24,8 @@ public class Metadata {
 		}
 	}
 	public static String applyMacroes(String aboutLocal) {
-		for (Macro m : Macro.values()) {
-			aboutLocal = m.apply(aboutLocal);
-		}
-		return aboutLocal;
+		return Arrays.asList(Macro.values()).stream()
+				.map(x -> (Function<String, String>) x)
+				.reduce(x -> x, (x, y) -> x.compose(y)).apply(aboutLocal);
 	}
 }

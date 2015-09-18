@@ -59,4 +59,13 @@ public class LiteralArray extends LiteralExpression {
 		return Arrays.deepEquals(this.elements,
 				((LiteralArray) other).elements);
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((contents == null) ? 0 : contents.hashCode());
+		result = prime * result + Arrays.hashCode(elements);
+		return result;
+	}
 }

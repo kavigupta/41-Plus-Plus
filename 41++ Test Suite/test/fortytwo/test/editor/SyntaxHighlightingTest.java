@@ -13,6 +13,7 @@ import javax.swing.text.Segment;
 import org.apache.commons.lang3.tuple.Pair;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -124,7 +125,7 @@ public class SyntaxHighlightingTest {
 			Pair<String, Integer>... expected) {
 		Token t = h.getTokenList(
 				new Segment(toTest.toCharArray(), 0, toTest.length()),
-				Token.IDENTIFIER, 0);
+				TokenTypes.IDENTIFIER, 0);
 		List<Pair<String, Integer>> actual = new ArrayList<>();
 		for (; t.getType() != NULL; t = t.getNextToken()) {
 			if (t.getEndOffset() - t.getOffset() == 0) continue;

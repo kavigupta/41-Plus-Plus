@@ -5,9 +5,9 @@ import java.util.List;
 import fortytwo.compiler.Context;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
-import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
+import fortytwo.vm.environment.UnorderedEnvironment;
 
 public abstract class LiteralFunction extends LiteralExpression {
 	public final FunctionType type;
@@ -33,5 +33,14 @@ public abstract class LiteralFunction extends LiteralExpression {
 	}
 	public LiteralFunction contextualize(TypeEnvironment environment) {
 		return this;
+	}
+	@Override
+	public final int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((implementation == null) ? 0 : implementation.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
 	}
 }
