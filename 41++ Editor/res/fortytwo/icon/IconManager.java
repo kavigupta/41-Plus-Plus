@@ -15,7 +15,7 @@ public class IconManager {
 		try {
 			iconProgram = ImageIO
 					.read(IconManager.class.getResourceAsStream("icon.png"));
-		} catch (final Throwable t) {
+		} catch (Throwable t) {
 			iconProgram = null;
 		}
 		ICON_PROGRAM = iconProgram;

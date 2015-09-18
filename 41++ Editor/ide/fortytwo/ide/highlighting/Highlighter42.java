@@ -42,9 +42,9 @@ public class Highlighter42 extends AbstractTokenMaker {
 		// offset are constant, tokens' starting positions become:
 		// 'newStartOffset+currentTokenStart'.
 		// disable the error handler
-		final Consumer<Error42> errorHandler = VirtualMachine.displayerr;
+		Consumer<Error42> errorHandler = VirtualMachine.displayerr;
 		VirtualMachine.displayerr = System.err::println;
-		final String code = new String(text.array, text.offset, text.count);
+		String code = new String(text.array, text.offset, text.count);
 		addAllTokens(Tokenizer.tokenizeFully(LiteralToken.entire(code)).stream()
 				.filter(x -> x.token.length() != 0)
 				.collect(Collectors.toList()), text, startOffset);
@@ -66,9 +66,9 @@ public class Highlighter42 extends AbstractTokenMaker {
 						.getEndPosition(text.offset);
 		}
 		for (int i = 0; i < tokens.size(); i++) {
-			final LiteralToken tok = tokens.get(i);
+			LiteralToken tok = tokens.get(i);
 			if (tok.token.startsWith("(")) {
-				final LiteralToken depar = Language.deparenthesize(tok);
+				LiteralToken depar = Language.deparenthesize(tok);
 				addParenToken(tok.context.getStartPosition(text.offset), text,
 						startOffset);
 				addAllTokens(Tokenizer.tokenizeFully(depar), text, startOffset);
@@ -78,7 +78,9 @@ public class Highlighter42 extends AbstractTokenMaker {
 				addParenToken(
 						tok.context.removeLast().getEndPosition(text.offset),
 						text, startOffset);
-			} else addToken(tokens, i, text, startOffset);
+			} else {
+				addToken(tokens, i, text, startOffset);
+			}
 			System.out.println("adding " + tok);
 			Token t = firstToken;
 			for (; t != null; t = t.getNextToken()) {
@@ -93,29 +95,29 @@ public class Highlighter42 extends AbstractTokenMaker {
 	}
 	public void addToken(List<LiteralToken> tokens, int index, Segment text,
 			int startOffset) {
-		final int currentTokenStart = tokens.get(index).context
+		int currentTokenStart = tokens.get(index).context
 				.getStartPosition(text.offset);
-		final int currentTokenEnd = tokens.get(index).context
+		int currentTokenEnd = tokens.get(index).context
 				.getEndPosition(text.offset);
 		addToken(text.array, currentTokenStart, currentTokenEnd - 1,
 				classify(tokens, index),
-				startOffset + currentTokenStart - text.offset);
+				startOffset + (currentTokenStart - text.offset));
 	}
 	public void addParenToken(int location, Segment text, int startOffset) {
 		System.out.println("Adding paren token at location " + location
 				+ " with start offset " + startOffset + " and offset "
 				+ text.offset);
 		addToken(text.array, location, location, SEPARATOR,
-				startOffset + location - text.offset);
+				startOffset + (location - text.offset));
 	}
 	public void addErrorToken(LiteralToken error, Segment text, int startOffset,
 			int tokenStart) {
-		final int currentTokenStart = tokenStart + text.offset;
-		final int currentTokenEnd = currentTokenStart + error.token.length();
+		int currentTokenStart = tokenStart + text.offset;
+		int currentTokenEnd = currentTokenStart + error.token.length();
 		System.out
 				.println("Error " + currentTokenStart + "\t" + currentTokenEnd);
 		addToken(text.array, currentTokenStart, currentTokenEnd - 2, ERROR_CHAR,
-				startOffset + currentTokenStart - text.offset);
+				startOffset + (currentTokenStart - text.offset));
 	}
 	private static int classify(List<LiteralToken> tokens, int index) {
 		if (tokens.get(index).token.length() == 0) return IDENTIFIER;
@@ -188,8 +190,8 @@ public class Highlighter42 extends AbstractTokenMaker {
 			case "value":
 				return VARIABLE;
 		}
-		final String prev = previousWord(tokens, index);
-		final String next = nextWord(tokens, index);
+		String prev = previousWord(tokens, index);
+		String next = nextWord(tokens, index);
 		switch (tokens.get(index).token) {
 			case "called":
 			case "the":
@@ -228,8 +230,10 @@ public class Highlighter42 extends AbstractTokenMaker {
 		int newType = tokenType;
 		// This assumes all keywords, etc. were parsed as "identifiers."
 		if (newType == IDENTIFIER) {
-			final int value = wordsToHighlight.get(segment, start, end);
-			if (value != -1) newType = value;
+			int value = wordsToHighlight.get(segment, start, end);
+			if (value != -1) {
+				newType = value;
+			}
 		}
 		super.addToken(segment, start, end, newType, startOffset);
 	}

@@ -35,7 +35,7 @@ public class StdLib42 {
 	public static final List<String> STRUCT_ARRAY = Arrays.asList("array");
 	public static final Map<VariableIdentifier, LiteralFunction> DEFAULT_FUNCTIONS = new HashMap<>();
 	static {
-		for (final String suffix : new String[] { "st", "nd", "rd", "th" }) {
+		for (String suffix : new String[] { "st", "nd", "rd", "th" }) {
 			addFunction(StdLibFunctions.ARRAY_ACCESS, "the", "", suffix,
 					"element", "of", "");
 			addFunction(StdLibFunctions.ARRAY_MOD, "Set", "the", "", suffix,
@@ -123,15 +123,15 @@ public class StdLib42 {
 																.entire("\"value\""),
 														false),
 												_v))));
-		for (final GenericStructureSignature sig : DEF_STRUCT.structs)
+		for (GenericStructureSignature sig : DEF_STRUCT.structs) {
 			DEFAULT_FUNCTIONS.putAll(sig.fieldFunctions());
+		}
 	}
 	public static Pair<FunctionName, List<Expression>> parseFunction(
 			List<FunctionComponent> name, List<Expression> arguments) {
 		if (FunctionName.getInstance(name)
 				.equals(StdLib42.FUNC_FIELD_ACCESS_NAME_APPARENT)) {
-			final Optional<VariableIdentifier> field = arguments.get(0)
-					.identifier();
+			Optional<VariableIdentifier> field = arguments.get(0).identifier();
 			if (!field.isPresent())
 				ParserErrors.expectedVariableInFieldAccess(arguments.get(0));
 			return Pair.of(getFieldAccess(field.get().name.token),

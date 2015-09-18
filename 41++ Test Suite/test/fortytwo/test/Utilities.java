@@ -37,7 +37,7 @@ public class Utilities {
 	}
 	public static void assertErrorInTokenization(ErrorType type, String msg,
 			int start, int end, String toTokenize) {
-		final LiteralToken token = LiteralToken.entire(toTokenize);
+		LiteralToken token = LiteralToken.entire(toTokenize);
 		assertError(type, msg, start, end, () -> Tokenizer.tokenize(token),
 				token.context);
 	}
@@ -59,13 +59,13 @@ public class Utilities {
 		class CustomException extends RuntimeException {
 			private static final long serialVersionUID = 1L;
 		}
-		final Consumer<Error42> old = VirtualMachine.displayerr;
+		Consumer<Error42> old = VirtualMachine.displayerr;
 		VirtualMachine.displayerr = x -> {
 			throw new CustomException();
 		};
 		try {
 			run.run();
-		} catch (final CustomException re) {
+		} catch (CustomException re) {
 			// expected.
 		}
 		if (!VirtualMachine.errorState()) throw new AssertionError(
@@ -96,7 +96,7 @@ public class Utilities {
 		assertEquals(expr, cdLoopType(expr));
 	}
 	public static String cdLoopLine(String line) {
-		final Sentence s = Parser.parse(line).get(0);
+		Sentence s = Parser.parse(line).get(0);
 		return s.toSourceCode() + ".";
 	}
 	public static String cdLoopType(String line) {

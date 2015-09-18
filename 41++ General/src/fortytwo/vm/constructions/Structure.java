@@ -16,8 +16,9 @@ public class Structure {
 		this.fields = fields;
 	}
 	public Optional<ConcreteType> typeof(VariableIdentifier fieldName) {
-		for (final TypedVariable field : fields)
+		for (TypedVariable field : fields) {
 			if (field.name.equals(fieldName)) return Optional.of(field.type);
+		}
 		return Optional.empty();
 	}
 	@Override

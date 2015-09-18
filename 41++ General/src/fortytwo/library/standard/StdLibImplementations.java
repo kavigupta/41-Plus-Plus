@@ -23,8 +23,8 @@ public class StdLibImplementations {
 	public static FunctionImplementation binaryOperation(
 			BiFunction<BigDecimal, BigDecimal, BigDecimal> op) {
 		return (env, args, roster) -> {
-			final BigDecimal a = ((LiteralNumber) args.get(0)).contents;
-			final BigDecimal b = ((LiteralNumber) args.get(1)).contents;
+			BigDecimal a = ((LiteralNumber) args.get(0)).contents;
+			BigDecimal b = ((LiteralNumber) args.get(1)).contents;
 			return new LiteralNumber(op.apply(a, b), Context.SYNTHETIC);
 		};
 	}

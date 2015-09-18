@@ -20,7 +20,7 @@ public class Metadata {
 		}
 		@Override
 		public String apply(String t) {
-			return t.replace(String.format("~%s~", toString()), value);
+			return t.replace(String.format("~%s~", this.toString()), value);
 		}
 	}
 	public static String applyMacroes(String aboutLocal) {

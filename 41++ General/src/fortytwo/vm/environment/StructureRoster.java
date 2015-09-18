@@ -82,8 +82,11 @@ public class StructureRoster {
 		return null;
 	}
 	private GenericStructureType genericVersionOf(StructureType type) {
-		for (final GenericStructureSignature gs : structs)
+		for (final GenericStructureSignature gs : structs) {
+			System.out.println(type.name + "\t" + gs.type.name);
 			if (gs.type.name.equals(type.name)) return gs.type;
+		}
+		System.out.println(structs);
 		DNEErrors.typeDNE(type);
 		// should never happen
 		return null;

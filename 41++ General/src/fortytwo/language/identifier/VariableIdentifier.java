@@ -57,7 +57,7 @@ public class VariableIdentifier extends Expression
 	 *         represent function name mangling
 	 */
 	public String unmangledName() {
-		final int index = this.name.token.indexOf(':');
+		int index = this.name.token.indexOf(':');
 		if (index < 0) return this.name.token;
 		return this.name.token.substring(0, index) + "\"";
 	}

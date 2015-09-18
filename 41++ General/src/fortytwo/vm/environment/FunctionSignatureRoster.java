@@ -19,7 +19,7 @@ public class FunctionSignatureRoster {
 			List<ConcreteType> inputs) {
 		for (final Entry<VariableIdentifier, ConcreteType> f : typeMap
 				.entrySet()) {
-			final String unmangled = f.getKey().unmangledName();
+			String unmangled = f.getKey().unmangledName();
 			if (!unmangled.equals(name.identifier().name.token)) continue;
 			if (!(f.getValue() instanceof FunctionType)) continue;
 			if (((FunctionType) f.getValue()).accepts(inputs))
@@ -40,7 +40,7 @@ public class FunctionSignatureRoster {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (typeMap == null ? 0 : typeMap.hashCode());
+		result = prime * result + ((typeMap == null) ? 0 : typeMap.hashCode());
 		return result;
 	}
 	@Override
@@ -48,7 +48,7 @@ public class FunctionSignatureRoster {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final FunctionSignatureRoster other = (FunctionSignatureRoster) obj;
+		FunctionSignatureRoster other = (FunctionSignatureRoster) obj;
 		if (typeMap == null) {
 			if (other.typeMap != null) return false;
 		} else if (!typeMap.equals(other.typeMap)) return false;

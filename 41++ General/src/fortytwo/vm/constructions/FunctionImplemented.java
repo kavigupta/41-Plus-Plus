@@ -27,7 +27,7 @@ public class FunctionImplemented extends LiteralFunction {
 	 * The function body, which is composed of statements.
 	 */
 	private final List<ParsedStatement> body;
-	private final String debugName;
+	private String debugName;
 	/**
 	 * Simple struct constructor
 	 */
@@ -96,7 +96,7 @@ public class FunctionImplemented extends LiteralFunction {
 	}
 	@Override
 	public boolean typedEquals(LiteralExpression obj) {
-		final FunctionImplemented other = (FunctionImplemented) obj;
+		FunctionImplemented other = (FunctionImplemented) obj;
 		if (body == null) {
 			if (other.body != null) return false;
 		} else if (!body.equals(other.body)) return false;

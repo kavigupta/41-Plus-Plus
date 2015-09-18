@@ -89,18 +89,20 @@ public class ExpressionParser {
 						final Expression next = expressions.get(i);
 						expressionsWoUO
 								.add(ParsedFunctionCall.getNegation(next));
-					} else SyntaxErrors
-							.invalidExpression(ExpressionType.ARITHMETIC,
-									expressions.stream()
-											.map(Expression::toToken)
-											.collect(Collectors.toList()));
+					} else {
+						SyntaxErrors
+								.invalidExpression(ExpressionType.ARITHMETIC,
+										expressions.stream()
+												.map(Expression::toToken)
+												.collect(Collectors.toList()));
+					}
 				} else expressionsWoUO.add(expressions.get(i));
 			} else expressionsWoUO.add(expressions.get(i));
 		return expressionsWoUO;
 	}
 	private static ArrayList<Expression> tokenize(List<LiteralToken> exp) {
 		final ArrayList<Expression> expressions = new ArrayList<>();
-		for (final LiteralToken token : exp)
+		for (final LiteralToken token : exp) {
 			switch (token.token.charAt(0)) {
 				case '0':
 				case '1':
@@ -182,6 +184,7 @@ public class ExpressionParser {
 				case '[':
 					break;
 			}
+		}
 		return expressions;
 	}
 	public static GenericType parseType(LiteralToken token) {
@@ -193,8 +196,8 @@ public class ExpressionParser {
 		for (final PrimitiveTypeWOC type : PrimitiveTypeWOC.values())
 			if (type.typeID().equals(token.token))
 				return new PrimitiveType(type, token.context);
-		final List<LiteralToken> type = Tokenizer.tokenize(token);
-		final Optional<FunctionType> funcType = parseFuncType(type);
+		List<LiteralToken> type = Tokenizer.tokenize(token);
+		Optional<FunctionType> funcType = parseFuncType(type);
 		if (funcType.isPresent()) return funcType.get();
 		return parseStructType(type);
 	}
@@ -207,7 +210,7 @@ public class ExpressionParser {
 					PrimitiveType.SYNTH_VOID));
 		if (!type.get(0).equals(Resources.FUNCTION_TYPE_NAME))
 			return Optional.empty();
-		final Optional<Integer> startInputs = LiteralToken.indexOf(type,
+		Optional<Integer> startInputs = LiteralToken.indexOf(type,
 				Resources.TAKES);
 		Optional<Integer> startOutputs = LiteralToken.indexOf(type,
 				Resources.OUTPUTS);
@@ -215,7 +218,7 @@ public class ExpressionParser {
 		if (startInputs.isPresent()) {
 			if (startInputs.get() + 1 >= type.size())
 				throw new RuntimeException(/* TODO */);
-			final int end = startOutputs.isPresent() ? startOutputs.get()
+			int end = startOutputs.isPresent() ? startOutputs.get()
 					: type.size();
 			inputs = type.subList(startInputs.get() + 1, end).stream()
 					.filter(x -> !Language.isArticle(x.token)

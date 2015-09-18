@@ -9,15 +9,15 @@ import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 
 public class ComponentFactory {
 	public static RSyntaxTextArea get42() {
-		final RSyntaxTextArea textArea = new RSyntaxTextArea();
-		final AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory) TokenMakerFactory
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory) TokenMakerFactory
 				.getDefaultInstance();
 		atmf.putMapping("text/41++", "fortytwo.ide.highlighting.Highlighter42");
 		textArea.setSyntaxEditingStyle("text/41++");
 		return textArea;
 	}
 	public static RSyntaxTextArea getEditorBox42() {
-		final RSyntaxTextArea textArea = get42();
+		RSyntaxTextArea textArea = get42();
 		textArea.setEditable(true);
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
@@ -25,7 +25,7 @@ public class ComponentFactory {
 	}
 	public static RSyntaxTextArea getLine42(boolean editable,
 			Runnable onEnter) {
-		final RSyntaxTextArea textArea = get42();
+		RSyntaxTextArea textArea = get42();
 		textArea.setEditable(editable);
 		textArea.addKeyListener(new KeyListener() {
 			@Override

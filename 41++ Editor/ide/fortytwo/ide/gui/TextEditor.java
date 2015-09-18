@@ -45,12 +45,12 @@ public abstract class TextEditor extends JFrame {
 		contentPane.setViewportView(main);
 	}
 	private void populateMenuBar() {
-		final JMenuBar bar = new JMenuBar();
+		JMenuBar bar = new JMenuBar();
 		fileMenu.add(getMenuItem("New", VK_N, false, this::cmdNew));
-		fileMenu.add(getMenuItem("Close", VK_W, false, e -> cmdClose()));
-		fileMenu.add(getMenuItem("Open", VK_O, false, e -> cmdOpen()));
-		fileMenu.add(getMenuItem("Save", VK_S, false, e -> cmdSave()));
-		fileMenu.add(getMenuItem("Save As", VK_S, true, e -> cmdSaveAs()));
+		fileMenu.add(getMenuItem("Close", VK_W, false, e -> this.cmdClose()));
+		fileMenu.add(getMenuItem("Open", VK_O, false, e -> this.cmdOpen()));
+		fileMenu.add(getMenuItem("Save", VK_S, false, e -> this.cmdSave()));
+		fileMenu.add(getMenuItem("Save As", VK_S, true, e -> this.cmdSaveAs()));
 		fileMenu.add(
 				getMenuItem("Select All", VK_A, false, getSelectAllAction()));
 		bar.add(fileMenu);
@@ -64,7 +64,7 @@ public abstract class TextEditor extends JFrame {
 	}
 	protected static JMenuItem getMenuItem(String name, int key, boolean shift,
 			ActionListener listener) {
-		final JMenuItem item = new JMenuItem(name);
+		JMenuItem item = new JMenuItem(name);
 		if (key != -1) {
 			int mask = CTRL_DOWN_MASK;
 			if (shift) mask |= SHIFT_DOWN_MASK;
@@ -84,7 +84,9 @@ public abstract class TextEditor extends JFrame {
 	protected abstract void setText(String text);
 	protected abstract String getText();
 	public void cmdNew(ActionEvent e) {
-		if (!saved()) if (!promptSave("create a new file")) return;
+		if (!saved()) {
+			if (!promptSave("create a new file")) return;
+		}
 		path = null;
 		setText("");
 		lastSaved = "";
@@ -100,10 +102,10 @@ public abstract class TextEditor extends JFrame {
 		try {
 			setText(IOUtils.read(path));
 			lastSaved = getText();
-		} catch (final FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			displayError(String.format("The file \"%s\" was not found", path),
 					e);
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			displayError(String.format("Error in reading from \"%s\"", path),
 					e);
 		}
@@ -113,7 +115,7 @@ public abstract class TextEditor extends JFrame {
 		try {
 			IOUtils.write(path, getText());
 			lastSaved = getText();
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			displayError(String.format("Error in writing to \"%s\"", path), e);
 		}
 	}
@@ -127,7 +129,7 @@ public abstract class TextEditor extends JFrame {
 		return lastSaved.equals(getText());
 	}
 	private boolean promptSave(String type) {
-		final int response = JOptionPane.showOptionDialog(this,
+		int response = JOptionPane.showOptionDialog(this,
 				String.format("Do you want to save your changes before you %s?",
 						type),
 				"Save your changes?", JOptionPane.OK_CANCEL_OPTION,
@@ -143,7 +145,7 @@ public abstract class TextEditor extends JFrame {
 				JOptionPane.ERROR_MESSAGE);
 	}
 	private String chooseFile(boolean open) {
-		final JFileChooser choose = new JFileChooser(path);
+		JFileChooser choose = new JFileChooser(path);
 		if (open)
 			choose.showOpenDialog(this);
 		else choose.showSaveDialog(this);

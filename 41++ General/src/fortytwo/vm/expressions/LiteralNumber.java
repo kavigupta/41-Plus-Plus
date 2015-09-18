@@ -37,7 +37,8 @@ public class LiteralNumber extends LiteralExpression {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (contents == null ? 0 : contents.hashCode());
+		result = prime * result
+				+ ((contents == null) ? 0 : contents.hashCode());
 		return result;
 	}
 }

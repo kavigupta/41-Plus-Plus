@@ -39,8 +39,8 @@ public abstract class LiteralFunction extends LiteralExpression {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ (implementation == null ? 0 : implementation.hashCode());
-		result = prime * result + (type == null ? 0 : type.hashCode());
+				+ ((implementation == null) ? 0 : implementation.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 }

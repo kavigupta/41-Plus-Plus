@@ -8,8 +8,8 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.StructureRoster;
 import fortytwo.vm.environment.VariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 

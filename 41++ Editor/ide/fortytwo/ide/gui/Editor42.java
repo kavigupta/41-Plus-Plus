@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextArea;
@@ -23,7 +24,7 @@ public class Editor42 extends TextEditor {
 	public static final double CONSOLE_START = .7, CONSOLE_END = .97;
 	public RSyntaxTextArea textArea;
 	public Console42 console;
-	private final GUILinkedEnvironment environ;
+	private GUILinkedEnvironment environ;
 	public Editor42() {
 		super();
 		setTitle("41++ Editor");
@@ -31,12 +32,12 @@ public class Editor42 extends TextEditor {
 		textArea = ComponentFactory.getEditorBox42();
 		setTextArea(textArea);
 		environ = new GUILinkedEnvironment(new LineHistory(), this::getText);
-		final JMenu help = new JMenu("Help");
-		help.add(getMenuItem("Manual", -1, false, e -> cmdHelpManual()));
-		help.add(getMenuItem("About", -1, false, e -> cmdAbout()));
+		JMenu help = new JMenu("Help");
+		help.add(getMenuItem("Manual", -1, false, e -> this.cmdHelpManual()));
+		help.add(getMenuItem("About", -1, false, e -> this.cmdAbout()));
 		console = new Console42(this, environ);
 		console.setVisible(true);
-		final Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		console.setLocation(0, (int) (dim.height * CONSOLE_START));
 		console.setSize(dim.width,
 				(int) (dim.height * (CONSOLE_END - CONSOLE_START)));
@@ -46,23 +47,29 @@ public class Editor42 extends TextEditor {
 		// TODO Finish manual of help
 	}
 	public void cmdAbout() {
-		final JDialog about = new JDialog(this);
-		final JEditorPane jtp = new JEditorPane();
+		JDialog about = new JDialog(this);
+		JEditorPane jtp = new JEditorPane();
 		jtp.setEditable(false);
 		jtp.setContentType("text/html");
-		jtp.addHyperlinkListener(e -> {
-			if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-				if (Desktop.isDesktopSupported()) try {
-					Desktop.getDesktop().browse(e.getURL().toURI());
-					return;
-				} catch (IOException | URISyntaxException e1) {
-					// simply do not return
+		jtp.addHyperlinkListener(new HyperlinkListener() {
+			@Override
+			public void hyperlinkUpdate(HyperlinkEvent e) {
+				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+					if (Desktop.isDesktopSupported()) {
+						try {
+							Desktop.getDesktop().browse(e.getURL().toURI());
+							return;
+						} catch (IOException | URISyntaxException e1) {
+							// simply do not return
+						}
+					}
+					JOptionPane.showMessageDialog(Editor42.this,
+							String.format(
+									"Hyperlinks do not appear to be supported by your platform, you will have to manually navigate to \"%s\"",
+									e.getURL()),
+							"Manual Hyperlink Required",
+							JOptionPane.ERROR_MESSAGE);
 				}
-				JOptionPane.showMessageDialog(Editor42.this,
-						String.format(
-								"Hyperlinks do not appear to be supported by your platform, you will have to manually navigate to \"%s\"",
-								e.getURL()),
-						"Manual Hyperlink Required", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		jtp.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -111,7 +118,7 @@ public class Editor42 extends TextEditor {
 				| IllegalAccessException | UnsupportedLookAndFeelException e1) {
 			// do nothing here, just use the normal one...
 		}
-		final Editor42 frame = new Editor42();
+		Editor42 frame = new Editor42();
 		frame.setVisible(true);
 	}
 }

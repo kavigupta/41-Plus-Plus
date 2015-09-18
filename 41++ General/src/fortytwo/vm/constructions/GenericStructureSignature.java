@@ -49,11 +49,11 @@ public class GenericStructureSignature {
 		return "GenericStructure [type=" + type + ", fields=" + fields + "]";
 	}
 	public Map<VariableIdentifier, LiteralFunction> fieldFunctions() {
-		final Map<VariableIdentifier, LiteralFunction> fieldFuncs = new HashMap<>();
-		for (final GenericField field : fields) {
-			final FunctionName name = FunctionName.getInstance("the",
+		Map<VariableIdentifier, LiteralFunction> fieldFuncs = new HashMap<>();
+		for (GenericField field : fields) {
+			FunctionName name = FunctionName.getInstance("the",
 					field.name.toSourceCode(), "of", "");
-			final FunctionType type = new FunctionType(Arrays.asList(this.type),
+			FunctionType type = new FunctionType(Arrays.asList(this.type),
 					field.type);
 			fieldFuncs.put(new FunctionSignature(name, type).identifier(),
 					new FunctionSynthetic(type,
