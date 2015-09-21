@@ -66,7 +66,7 @@ public class ParserErrors {
 		expected("statement", x);
 	}
 	public static void expectedDeclarationOrDefinition(Sentence s) {
-		expected("declaration or definition", s);
+		expected("function definition", s);
 	}
 	public static void expectedVariableInFieldAccess(
 			Expression parsedExpression) {

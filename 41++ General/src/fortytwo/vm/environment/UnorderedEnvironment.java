@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.declaration.FunctionConstruct;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
-import fortytwo.compiler.parsed.statements.ParsedDefinition;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.ParserErrors;
@@ -43,16 +42,6 @@ public class UnorderedEnvironment {
 					break;
 				case DECLARATION_STRUCT:
 					((StructureDefinition) s).register(environment, functions);
-					break;
-				case DEFINITION:
-					final ParsedDefinition def = (ParsedDefinition) s;
-					OrderedEnvironment minimal = global
-							.minimalLocalEnvironment();
-					final VariableRoster<LiteralExpression> fieldValues = def.fields
-							.literalValue(minimal);
-					global.addGlobalVariable(def.toCreate.name,
-							environment.structs.instance(def.toCreate,
-									fieldValues, def.toCreate.name.context()));
 					break;
 				default:
 					ParserErrors.expectedDeclarationOrDefinition(s);
