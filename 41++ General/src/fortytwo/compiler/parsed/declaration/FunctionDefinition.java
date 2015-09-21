@@ -1,13 +1,18 @@
 package fortytwo.compiler.parsed.declaration;
 
+import java.util.HashMap;
 import java.util.List;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.Sentence;
+import fortytwo.compiler.parser.Parser;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.vm.constructions.FunctionImplemented;
+import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.expressions.LiteralFunction;
 
 /**
  * A class representing the initial definition of a function, which provides a
@@ -17,11 +22,11 @@ public class FunctionDefinition implements Sentence {
 	/**
 	 * The signature of this function
 	 */
-	public final FunctionSignature sig;
+	private final FunctionSignature sig;
 	/**
 	 * The variable names of the input variables.
 	 */
-	public final List<VariableIdentifier> inputVariables;
+	private final List<VariableIdentifier> inputVariables;
 	private final Context context;
 	/**
 	 * @param signature
@@ -36,6 +41,24 @@ public class FunctionDefinition implements Sentence {
 		this.sig = signature;
 		this.inputVariables = inputVariables;
 		this.context = context;
+	}
+	/**
+	 * Adds a reference to the given type environment of this function
+	 * definition and a reference to the given literal function and name pair.
+	 * 
+	 * 
+	 * @param suite
+	 *        a series of declarations that define the body of the function to
+	 *        place on the given roster.
+	 */
+	public void putReference(TypeEnvironment environment,
+			HashMap<VariableIdentifier, LiteralFunction> functions,
+			List<Sentence> suite) {
+		environment.putReference(sig.identifier(), sig.type);
+		functions.put(sig.identifier(),
+				new FunctionImplemented(sig.type, inputVariables,
+						Parser.temporaryHack(suite).statements,
+						sig.toSourceCode()));
 	}
 	@Override
 	public SentenceType kind() {

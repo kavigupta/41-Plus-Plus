@@ -29,7 +29,7 @@ public abstract class LiteralFunction extends LiteralExpression {
 	public final LiteralExpression apply(UnorderedEnvironment env,
 			List<LiteralExpression> arguments) {
 		return implementation.apply(env, arguments,
-				type.typeVariables(arguments, env.staticEnv));
+				type.typeVariables(arguments, env.typeEnv));
 	}
 	public LiteralFunction contextualize(TypeEnvironment environment) {
 		return this;

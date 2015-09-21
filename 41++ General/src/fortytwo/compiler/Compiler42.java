@@ -34,7 +34,7 @@ public class Compiler42 {
 		try {
 			final ParsedFunctionCall pfc = ParsedFunctionCall.getInstance(
 					FunctionName.getInstance("This", "first"), Arrays.asList());
-			pfc.isTypeChecked(env.staticEnv);
+			pfc.isTypeChecked(env.typeEnv);
 			pfc.execute(env.minimalLocalEnvironment());
 		} catch (final Throwable t) {
 			VirtualMachine.error(ErrorType.PARSING, "Main method not found.",

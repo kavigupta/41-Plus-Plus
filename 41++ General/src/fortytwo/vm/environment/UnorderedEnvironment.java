@@ -7,24 +7,28 @@ import java.util.Map.Entry;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.declaration.FunctionConstruct;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
-import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parsed.statements.ParsedDefinition;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
 
 public class UnorderedEnvironment {
-	public final TypeEnvironment staticEnv;
+	public final TypeEnvironment typeEnv;
+	private final VariableRoster<LiteralExpression> globalVariables;
 	public final FunctionRoster funcs;
 	public UnorderedEnvironment(TypeEnvironment staticEnv,
+			VariableRoster<LiteralExpression> globalVariables,
 			FunctionRoster funcs) {
-		this.staticEnv = staticEnv;
+		this.typeEnv = staticEnv;
+		this.globalVariables = globalVariables;
 		this.funcs = funcs;
 	}
 	public static UnorderedEnvironment getDefaultEnvironment(
 			TypeEnvironment staticEnv) {
-		return new UnorderedEnvironment(staticEnv, FunctionRoster.getDefault());
+		return new UnorderedEnvironment(staticEnv, new VariableRoster<>(),
+				FunctionRoster.getDefault());
 	}
 	public static UnorderedEnvironment interpret(List<Sentence> sentences) {
 		final TypeEnvironment environment = TypeEnvironment.getDefault();
@@ -42,18 +46,13 @@ public class UnorderedEnvironment {
 					break;
 				case DEFINITION:
 					final ParsedDefinition def = (ParsedDefinition) s;
-					final VariableRoster<? extends Expression> fieldValues = new VariableRoster<>();
-					for (final Entry<VariableIdentifier, ? extends Expression> pair : def.fields.pairs
-							.entrySet()) {
-						final LiteralExpression applied = pair.getValue()
-								.literalValue(new OrderedEnvironment(global));
-						fieldValues.assign(pair.getKey(), applied);
-					}
-					environment.addGlobalVariable(def.toCreate.name,
+					OrderedEnvironment minimal = global
+							.minimalLocalEnvironment();
+					final VariableRoster<LiteralExpression> fieldValues = def.fields
+							.literalValue(minimal);
+					global.addGlobalVariable(def.toCreate.name,
 							environment.structs.instance(def.toCreate,
-									fieldValues.literalValue(
-											global.minimalLocalEnvironment()),
-									def.toCreate.name.context()));
+									fieldValues, def.toCreate.name.context()));
 					break;
 				default:
 					ParserErrors.expectedDeclarationOrDefinition(s);
@@ -72,6 +71,20 @@ public class UnorderedEnvironment {
 		global.funcs.functions.putAll(implFunctions);
 		return global;
 	}
+	public LiteralExpression referenceTo(VariableIdentifier name) {
+		final LiteralExpression expr = globalVariables.referenceTo(name);
+		if (expr != null) return expr;
+		// TODO add container logic
+		// if (!container.isPresent())
+		DNEErrors.variableDNE(name);
+		return null;
+		// return container.get().referenceTo(name);
+	}
+	public void addGlobalVariable(VariableIdentifier name,
+			LiteralExpression express) {
+		this.globalVariables.assign(name, express);
+		typeEnv.addType(name, express.resolveType());
+	}
 	public OrderedEnvironment minimalLocalEnvironment() {
 		return new OrderedEnvironment(this);
 	}
@@ -80,8 +93,7 @@ public class UnorderedEnvironment {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (funcs == null ? 0 : funcs.hashCode());
-		result = prime * result
-				+ (staticEnv == null ? 0 : staticEnv.hashCode());
+		result = prime * result + (typeEnv == null ? 0 : typeEnv.hashCode());
 		return result;
 	}
 	@Override
@@ -93,9 +105,9 @@ public class UnorderedEnvironment {
 		if (funcs == null) {
 			if (other.funcs != null) return false;
 		} else if (!funcs.equals(other.funcs)) return false;
-		if (staticEnv == null) {
-			if (other.staticEnv != null) return false;
-		} else if (!staticEnv.equals(other.staticEnv)) return false;
+		if (typeEnv == null) {
+			if (other.typeEnv != null) return false;
+		} else if (!typeEnv.equals(other.typeEnv)) return false;
 		return true;
 	}
 }

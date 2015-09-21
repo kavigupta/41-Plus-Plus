@@ -11,7 +11,6 @@ import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.ParsedConstruct;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.ParsedDefinition;
 import fortytwo.compiler.parsed.statements.ParsedIfElse;
 import fortytwo.compiler.parsed.statements.ParsedStatementSeries;
 import fortytwo.compiler.parsed.statements.ParsedWhileLoop;
@@ -35,14 +34,6 @@ public class SourceCode {
 				+ (fieldList.length() == 0 ? "" : " that takes " + fieldList)
 				+ displayOutputType(sig.type.outputType,
 						fieldList.length() != 0);
-	}
-	public static String display(ParsedDefinition parsedDefinition) {
-		return "Define "
-				+ Language.articleized(
-						parsedDefinition.toCreate.type.toSourceCode())
-				+ " called " + parsedDefinition.toCreate.name.name
-				+ (parsedDefinition.fields.numberOfVariables() == 0 ? ""
-						: " with " + displayFieldList(parsedDefinition.fields));
 	}
 	public static String display(ParsedConstruct obj, VariableIdentifier field,
 			ParsedConstruct value) {
@@ -148,7 +139,7 @@ public class SourceCode {
 		return Arrays.asList(s.split("\r|\n")).stream().map(x -> "\n\t" + x)
 				.reduce("", (a, b) -> a + b);
 	}
-	private static String displayFieldList(VariableRoster<?> fields) {
+	public static String displayFieldList(VariableRoster<?> fields) {
 		final List<String> items = new ArrayList<>();
 		for (final Entry<VariableIdentifier, ? extends Expression> e : fields.pairs
 				.entrySet())

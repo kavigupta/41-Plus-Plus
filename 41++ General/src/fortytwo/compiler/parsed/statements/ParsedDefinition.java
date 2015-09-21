@@ -3,13 +3,14 @@ package fortytwo.compiler.parsed.statements;
 import java.util.Optional;
 
 import fortytwo.compiler.Context;
+import fortytwo.language.Language;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.environment.StructureRoster;
+import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.environment.VariableRoster;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -47,7 +48,7 @@ public class ParsedDefinition extends ParsedStatement {
 	}
 	@Override
 	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
-		final StructureRoster struct = environment.global.staticEnv.structs;
+		final StructureRoster struct = environment.container.typeEnv.structs;
 		environment.vars.assign(toCreate.name, struct.instance(toCreate,
 				fields.literalValue(environment), toCreate.name.context()));
 		return Optional.empty();
@@ -62,7 +63,10 @@ public class ParsedDefinition extends ParsedStatement {
 	}
 	@Override
 	public String toSourceCode() {
-		return SourceCode.display(this);
+		return "Define " + Language.articleized(toCreate.type.toSourceCode())
+				+ " called " + toCreate.name.name
+				+ (fields.numberOfVariables() == 0 ? ""
+						: " with " + SourceCode.displayFieldList(fields));
 	}
 	@Override
 	public boolean isSimple() {

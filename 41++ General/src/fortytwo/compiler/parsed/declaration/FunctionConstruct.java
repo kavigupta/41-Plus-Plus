@@ -6,11 +6,9 @@ import java.util.List;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parser.Parser;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.vm.constructions.FunctionImplemented;
 import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.expressions.LiteralFunction;
 
@@ -46,13 +44,7 @@ public class FunctionConstruct implements Sentence {
 	 */
 	public void register(TypeEnvironment environment,
 			HashMap<VariableIdentifier, LiteralFunction> functions) {
-		environment.putReference(declaration.sig.identifier(),
-				declaration.sig.type);
-		functions.put(declaration.sig.identifier(),
-				new FunctionImplemented(declaration.sig.type,
-						declaration.inputVariables,
-						Parser.temporaryHack(suite).statements,
-						declaration.sig.toSourceCode()));
+		declaration.putReference(environment, functions, suite);
 	}
 	@Override
 	public boolean isSimple() {

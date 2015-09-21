@@ -13,7 +13,9 @@ import fortytwo.vm.expressions.LiteralExpression;
 
 /**
  * A ParsedExpression wrapped up with a context so it can function as a
- * sentence.
+ * sentence representing a return statement. This is the only primitive
+ * statement (i.e., one that does not call other statements) which returns
+ * something other than {@code Optional.empty()} to
  */
 public class FunctionOutput extends ParsedStatement {
 	/**
