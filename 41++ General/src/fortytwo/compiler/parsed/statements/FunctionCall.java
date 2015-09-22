@@ -24,14 +24,14 @@ import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
 import fortytwo.vm.expressions.LiteralNumber;
 
-public class ParsedFunctionCall extends Expression {
+public class FunctionCall extends Expression {
 	public final FunctionName name;
 	public final List<Expression> arguments;
-	public static ParsedFunctionCall getInstance(FunctionName signature,
+	public static FunctionCall getInstance(FunctionName signature,
 			List<Expression> value) {
-		return new ParsedFunctionCall(signature, value);
+		return new FunctionCall(signature, value);
 	}
-	public static ParsedFunctionCall getOperation(Expression first,
+	public static FunctionCall getOperation(Expression first,
 			Operation op, Expression second) {
 		return getInstance(
 				FunctionName.getInstance(StdLib42.opName(op.display)),
@@ -42,7 +42,7 @@ public class ParsedFunctionCall extends Expression {
 				new LiteralNumber(BigDecimal.ZERO, Context.SYNTHETIC),
 				Operation.SUBTRACT, next);
 	}
-	private ParsedFunctionCall(FunctionName signature,
+	private FunctionCall(FunctionName signature,
 			List<Expression> arguments) {
 		super(signature.context());
 		this.name = signature;
@@ -108,7 +108,7 @@ public class ParsedFunctionCall extends Expression {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final ParsedFunctionCall other = (ParsedFunctionCall) obj;
+		final FunctionCall other = (FunctionCall) obj;
 		if (arguments == null) {
 			if (other.arguments != null) return false;
 		} else if (!arguments.equals(other.arguments)) return false;

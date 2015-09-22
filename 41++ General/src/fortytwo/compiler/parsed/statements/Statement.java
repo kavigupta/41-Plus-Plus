@@ -9,10 +9,10 @@ import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public abstract class ParsedStatement implements Sentence {
+public abstract class Statement implements Sentence {
 	private boolean isTypeChecked = false;
 	private final Context context;
-	public ParsedStatement(Context context) {
+	public Statement(Context context) {
 		super();
 		this.context = context;
 	}

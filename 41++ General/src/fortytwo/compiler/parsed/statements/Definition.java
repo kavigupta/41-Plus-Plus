@@ -17,7 +17,7 @@ import fortytwo.vm.expressions.LiteralExpression;
 /**
  * Represents statements that create new variables.
  */
-public class ParsedDefinition extends ParsedStatement {
+public class Definition extends Statement {
 	/**
 	 * The name and type of the variable to create.
 	 */
@@ -34,7 +34,7 @@ public class ParsedDefinition extends ParsedStatement {
 	 * @param context
 	 *        The context of the sentence
 	 */
-	public ParsedDefinition(TypedVariable name, VariableRoster<?> fields,
+	public Definition(TypedVariable name, VariableRoster<?> fields,
 			Context context) {
 		super(context);
 		this.toCreate = name;
@@ -90,7 +90,7 @@ public class ParsedDefinition extends ParsedStatement {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final ParsedDefinition other = (ParsedDefinition) obj;
+		final Definition other = (Definition) obj;
 		if (fields == null) {
 			if (other.fields != null) return false;
 		} else if (!fields.equals(other.fields)) return false;

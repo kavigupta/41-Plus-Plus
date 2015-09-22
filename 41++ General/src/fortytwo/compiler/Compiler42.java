@@ -2,7 +2,7 @@ package fortytwo.compiler;
 
 import java.util.Arrays;
 
-import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
+import fortytwo.compiler.parsed.statements.FunctionCall;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.vm.VirtualMachine;
@@ -32,7 +32,7 @@ public class Compiler42 {
 		final UnorderedEnvironment env = UnorderedEnvironment
 				.interpret(Parser.parse(text));
 		try {
-			final ParsedFunctionCall pfc = ParsedFunctionCall.getInstance(
+			final FunctionCall pfc = FunctionCall.getInstance(
 					FunctionName.getInstance("This", "first"), Arrays.asList());
 			pfc.isTypeChecked(env.typeEnv);
 			pfc.execute(env.minimalLocalEnvironment());

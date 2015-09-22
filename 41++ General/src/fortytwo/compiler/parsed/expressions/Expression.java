@@ -3,7 +3,7 @@ package fortytwo.compiler.parsed.expressions;
 import java.util.Optional;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
@@ -14,7 +14,7 @@ import fortytwo.vm.expressions.LiteralExpression;
 /**
  * A class for representing an expression
  */
-public abstract class Expression extends ParsedStatement {
+public abstract class Expression extends Statement {
 	private ConcreteType type = null;
 	protected Expression(Context context) {
 		super(context);

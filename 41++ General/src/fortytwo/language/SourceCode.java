@@ -11,9 +11,9 @@ import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.ParsedConstruct;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.ParsedIfElse;
-import fortytwo.compiler.parsed.statements.ParsedStatementSeries;
-import fortytwo.compiler.parsed.statements.ParsedWhileLoop;
+import fortytwo.compiler.parsed.statements.IfElse;
+import fortytwo.compiler.parsed.statements.Suite;
+import fortytwo.compiler.parsed.statements.WhileLoop;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.FunctionSignature;
@@ -49,7 +49,7 @@ public class SourceCode {
 			return func;
 		return "(" + func + ")";
 	}
-	public static String display(ParsedIfElse parsedIfElse) {
+	public static String display(IfElse parsedIfElse) {
 		return "If " + parsedIfElse.condition.toSourceCode() + ":"
 				+ wrapInBraces(parsedIfElse.ifso)
 				+ (parsedIfElse.ifelse.statements.size() == 0 ? ""
@@ -61,7 +61,7 @@ public class SourceCode {
 		return "Set the value of " + name.toSourceCode() + " to "
 				+ expr.toSourceCode();
 	}
-	public static String display(ParsedStatementSeries parsedStatementSeries) {
+	public static String display(Suite parsedStatementSeries) {
 		return displaySeries(parsedStatementSeries.statements);
 	}
 	public static String displaySeries(
@@ -72,7 +72,7 @@ public class SourceCode {
 				.reduce("", (a, b) -> a + ".\n" + b);
 		return total.substring(2);
 	}
-	public static String display(ParsedWhileLoop parsedWhileLoop) {
+	public static String display(WhileLoop parsedWhileLoop) {
 		return "While " + parsedWhileLoop.condition.toSourceCode() + ":"
 				+ wrapInBraces(parsedWhileLoop.statement);
 	}

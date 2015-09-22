@@ -13,7 +13,7 @@ import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.declaration.FunctionDefinition;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
+import fortytwo.compiler.parsed.statements.FunctionCall;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.SentenceType;
@@ -32,10 +32,10 @@ import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.errors.TypingErrors;
 
 public class ConstructionParser {
-	public static ParsedFunctionCall composeFunction(List<LiteralToken> list) {
+	public static FunctionCall composeFunction(List<LiteralToken> list) {
 		final Pair<FunctionName, List<Expression>> fsig = parseFunctionSignature(
 				list);
-		return ParsedFunctionCall.getInstance(fsig.getKey(), fsig.getValue());
+		return FunctionCall.getInstance(fsig.getKey(), fsig.getValue());
 	}
 	public static StructureDefinition parseStructDefinition(
 			List<LiteralToken> line) {

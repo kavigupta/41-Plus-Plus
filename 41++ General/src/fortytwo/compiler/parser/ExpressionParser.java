@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
+import fortytwo.compiler.parsed.statements.FunctionCall;
 import fortytwo.language.Language;
 import fortytwo.language.Operation;
 import fortytwo.language.Resources;
@@ -28,7 +28,7 @@ import fortytwo.vm.expressions.LiteralString;
 
 public class ExpressionParser {
 	public static Expression parseExpression(List<LiteralToken> list) {
-		final ParsedFunctionCall function = ConstructionParser
+		final FunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() == 1
 				&& function.name.function.get(0).isArgument())
@@ -66,7 +66,7 @@ public class ExpressionParser {
 									.collect(Collectors.toList()));
 				final Expression second = expressions.get(i);
 				final UnevaluatedOperator op = (UnevaluatedOperator) token;
-				exp.push(ParsedFunctionCall.getOperation(first, op.operator,
+				exp.push(FunctionCall.getOperation(first, op.operator,
 						second));
 			} else exp.push(token);
 		}
@@ -88,7 +88,7 @@ public class ExpressionParser {
 						i++;
 						final Expression next = expressions.get(i);
 						expressionsWoUO
-								.add(ParsedFunctionCall.getNegation(next));
+								.add(FunctionCall.getNegation(next));
 					} else {
 						SyntaxErrors
 								.invalidExpression(ExpressionType.ARITHMETIC,

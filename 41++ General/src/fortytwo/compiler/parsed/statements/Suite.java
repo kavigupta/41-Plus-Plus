@@ -13,14 +13,14 @@ import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class ParsedStatementSeries extends ParsedStatement {
-	public final List<ParsedStatement> statements;
-	public static ParsedStatementSeries getInstance(ParsedStatement s,
+public class Suite extends Statement {
+	public final List<Statement> statements;
+	public static Suite getInstance(Statement s,
 			Context context) {
-		if (s.kind() == SentenceType.COMPOUND) return (ParsedStatementSeries) s;
-		return new ParsedStatementSeries(Arrays.asList(s), context);
+		if (s.kind() == SentenceType.COMPOUND) return (Suite) s;
+		return new Suite(Arrays.asList(s), context);
 	}
-	public ParsedStatementSeries(List<ParsedStatement> statements,
+	public Suite(List<Statement> statements,
 			Context context) {
 		super(context);
 		this.statements = statements;
@@ -32,7 +32,7 @@ public class ParsedStatementSeries extends ParsedStatement {
 	}
 	@Override
 	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
-		for (final ParsedStatement s : statements) {
+		for (final Statement s : statements) {
 			final Optional<LiteralExpression> expr = s.execute(environment);
 			if (expr.isPresent()) return expr;
 		}
@@ -41,7 +41,7 @@ public class ParsedStatementSeries extends ParsedStatement {
 	@Override
 	public Optional<GenericType> returnType(TypeEnvironment env) {
 		Optional<GenericType> type = Optional.empty();
-		for (final ParsedStatement s : statements) {
+		for (final Statement s : statements) {
 			final Optional<GenericType> state = s.returnType(env);
 			if (!state.isPresent()) continue;
 			if (!type.isPresent()) {
@@ -85,7 +85,7 @@ public class ParsedStatementSeries extends ParsedStatement {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final ParsedStatementSeries other = (ParsedStatementSeries) obj;
+		final Suite other = (Suite) obj;
 		if (statements == null) {
 			if (other.statements != null) return false;
 		} else if (!statements.equals(other.statements)) return false;

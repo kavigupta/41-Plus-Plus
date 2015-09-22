@@ -15,11 +15,11 @@ import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class ParsedWhileLoop extends ParsedStatement {
+public class WhileLoop extends Statement {
 	public final Expression condition;
-	public final ParsedStatement statement;
-	public ParsedWhileLoop(Expression condition,
-			ParsedStatement ParsedStatement, Context context) {
+	public final Statement statement;
+	public WhileLoop(Expression condition,
+			Statement ParsedStatement, Context context) {
 		super(context);
 		this.condition = condition;
 		this.statement = ParsedStatement;
@@ -77,7 +77,7 @@ public class ParsedWhileLoop extends ParsedStatement {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final ParsedWhileLoop other = (ParsedWhileLoop) obj;
+		final WhileLoop other = (WhileLoop) obj;
 		if (condition == null) {
 			if (other.condition != null) return false;
 		} else if (!condition.equals(other.condition)) return false;

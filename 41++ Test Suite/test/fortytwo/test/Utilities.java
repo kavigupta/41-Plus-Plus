@@ -10,7 +10,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.StatementParser;
@@ -24,7 +24,7 @@ import fortytwo.vm.expressions.LiteralNumber;
 
 public class Utilities {
 	public static void execute(String statement, UnorderedEnvironment env) {
-		((ParsedStatement) StatementParser.parseStatement(
+		((Statement) StatementParser.parseStatement(
 				Tokenizer.tokenize(LiteralToken.entire(statement))))
 						.execute(env.minimalLocalEnvironment());
 	}

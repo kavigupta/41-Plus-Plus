@@ -14,10 +14,10 @@ import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class ParsedRedefinition extends ParsedStatement {
+public class Redefinition extends Statement {
 	public final VariableIdentifier name;
 	public final Expression value;
-	public ParsedRedefinition(VariableIdentifier name, Expression expr,
+	public Redefinition(VariableIdentifier name, Expression expr,
 			Context context) {
 		super(context);
 		this.name = name;
@@ -69,7 +69,7 @@ public class ParsedRedefinition extends ParsedStatement {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final ParsedRedefinition other = (ParsedRedefinition) obj;
+		final Redefinition other = (Redefinition) obj;
 		if (value == null) {
 			if (other.value != null) return false;
 		} else if (!value.equals(other.value)) return false;

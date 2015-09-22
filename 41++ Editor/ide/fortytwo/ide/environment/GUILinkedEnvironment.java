@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import fortytwo.compiler.Compiler42;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.Tokenizer;
@@ -38,7 +38,7 @@ public class GUILinkedEnvironment {
 		if (cmd.trim().endsWith(".")) {
 			for (Sentence x : Parser.parse(cmd)) {
 				if (x.kind().kind == SentenceKind.STATEMENT) {
-					((ParsedStatement) x).execute(console);
+					((Statement) x).execute(console);
 				} else {
 					ParserErrors.expectedStatement(x);
 				}

@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
-import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
@@ -26,13 +26,13 @@ public class FunctionImplemented extends LiteralFunction {
 	/**
 	 * The function body, which is composed of statements.
 	 */
-	private final List<ParsedStatement> body;
+	private final List<Statement> body;
 	private String debugName;
 	/**
 	 * Simple struct constructor
 	 */
 	public FunctionImplemented(FunctionType type,
-			List<VariableIdentifier> variables, List<ParsedStatement> body,
+			List<VariableIdentifier> variables, List<Statement> body,
 			String debugName) {
 		super(Context.sum(body), type, getImplementedFunction(variables, body));
 		this.variables = variables;
@@ -55,7 +55,7 @@ public class FunctionImplemented extends LiteralFunction {
 	public boolean typeCheck(TypeEnvironment env) {
 		final TypeEnvironment local = TypeEnvironment.getChild(env);
 		registerParameters(local);
-		for (final ParsedStatement s : body) {
+		for (final Statement s : body) {
 			final Optional<GenericType> actual = s.returnType(local);
 			s.isTypeChecked(local);
 			if (actual.isPresent()) if (!actual.get().equals(type.outputType))
@@ -65,12 +65,12 @@ public class FunctionImplemented extends LiteralFunction {
 		return true;
 	}
 	public static FunctionImplementation getImplementedFunction(
-			List<VariableIdentifier> variables, List<ParsedStatement> body) {
+			List<VariableIdentifier> variables, List<Statement> body) {
 		return (env, inputs, roster) -> {
 			final OrderedEnvironment local = env.minimalLocalEnvironment();
 			for (int i = 0; i < variables.size(); i++)
 				local.vars.assign(variables.get(i), inputs.get(i));
-			for (final ParsedStatement s : body) {
+			for (final Statement s : body) {
 				final Optional<LiteralExpression> exp = s.execute(local);
 				if (exp.isPresent()) return exp.get();
 			}

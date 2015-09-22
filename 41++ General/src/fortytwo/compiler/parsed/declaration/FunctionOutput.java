@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
@@ -17,7 +17,7 @@ import fortytwo.vm.expressions.LiteralExpression;
  * statement (i.e., one that does not call other statements) which returns
  * something other than {@code Optional.empty()} to
  */
-public class FunctionOutput extends ParsedStatement {
+public class FunctionOutput extends Statement {
 	/**
 	 * The output, in the form of an Expression
 	 */

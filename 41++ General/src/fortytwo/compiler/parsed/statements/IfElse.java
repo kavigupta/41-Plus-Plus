@@ -16,15 +16,15 @@ import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class ParsedIfElse extends ParsedStatement {
+public class IfElse extends Statement {
 	public final Expression condition;
-	public final ParsedStatementSeries ifso, ifelse;
-	public static ParsedIfElse getInstance(Expression condition,
-			ParsedStatementSeries ifso, ParsedStatementSeries ifelse) {
-		return new ParsedIfElse(condition, ifso, ifelse);
+	public final Suite ifso, ifelse;
+	public static IfElse getInstance(Expression condition,
+			Suite ifso, Suite ifelse) {
+		return new IfElse(condition, ifso, ifelse);
 	}
-	private ParsedIfElse(Expression condition, ParsedStatementSeries ifso,
-			ParsedStatementSeries ifelse) {
+	private IfElse(Expression condition, Suite ifso,
+			Suite ifelse) {
 		super(Context.sum(Arrays.asList(condition.context(), ifso.context(),
 				ifelse.context())));
 		this.condition = condition;
@@ -97,7 +97,7 @@ public class ParsedIfElse extends ParsedStatement {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final ParsedIfElse other = (ParsedIfElse) obj;
+		final IfElse other = (IfElse) obj;
 		if (condition == null) {
 			if (other.condition != null) return false;
 		} else if (!condition.equals(other.condition)) return false;

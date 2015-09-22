@@ -10,10 +10,10 @@ import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.ParsedDefinition;
-import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
-import fortytwo.compiler.parsed.statements.ParsedRedefinition;
-import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.compiler.parsed.statements.Definition;
+import fortytwo.compiler.parsed.statements.FunctionCall;
+import fortytwo.compiler.parsed.statements.Redefinition;
+import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.SentenceType;
@@ -66,9 +66,9 @@ public class StatementParser {
 		return new FunctionOutput(ExpressionParser.parseExpression(line),
 				fullContext);
 	}
-	private static ParsedStatement parseVoidFunctionCall(
+	private static Statement parseVoidFunctionCall(
 			List<LiteralToken> list) {
-		final ParsedFunctionCall function = ConstructionParser
+		final FunctionCall function = ConstructionParser
 				.composeFunction(list);
 		if (function.name.function.size() != 1
 				|| !(function.name.function.get(0).isArgument()))
@@ -77,7 +77,7 @@ public class StatementParser {
 		// should never get here
 		throw new IllegalStateException();
 	}
-	private static ParsedRedefinition parseAssignment(List<LiteralToken> line) {
+	private static Redefinition parseAssignment(List<LiteralToken> line) {
 		final Context fullContext = Context.sum(line);
 		/*
 		 * Set the <field> of <name> to <value>.
@@ -94,7 +94,7 @@ public class StatementParser {
 		if (!name.isPresent()) {
 			// TODO handle redefinition of a non-variable
 		}
-		return new ParsedRedefinition(name.get(), expr, fullContext);
+		return new Redefinition(name.get(), expr, fullContext);
 	}
 	private static Sentence parseDefinition(List<LiteralToken> line) {
 		final Context fullContext = Context.sum(line);
@@ -128,7 +128,7 @@ public class StatementParser {
 		final GenericType genericType = ExpressionParser.parseType(type);
 		if (!genericType.isConcrete())
 			ParserErrors.expectedCTInDefinition(genericType);
-		return new ParsedDefinition(
+		return new Definition(
 				new TypedVariable(VariableIdentifier.getInstance(name, false),
 						(ConcreteType) genericType),
 				fields, fullContext);

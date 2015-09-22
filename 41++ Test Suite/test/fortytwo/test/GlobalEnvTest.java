@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
-import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
+import fortytwo.compiler.parsed.statements.FunctionCall;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.language.identifier.FunctionName;
@@ -67,7 +67,7 @@ public class GlobalEnvTest {
 	public void stringLetterSplitTest() {
 		assertEquivalence("['h', 'e', 'l', 'l', 'o']",
 				"'hello' split into individual letters");
-		assertEquals("'world'", ParsedFunctionCall
+		assertEquals("'world'", FunctionCall
 				.getInstance(
 						FunctionName.getInstance("the", "letters", "",
 								"combined", "to", "form", "a", "string"),

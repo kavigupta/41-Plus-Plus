@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import fortytwo.compiler.Compiler42;
 import fortytwo.compiler.LiteralToken;
-import fortytwo.compiler.parsed.statements.ParsedStatement;
+import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.Tokenizer;
@@ -107,7 +107,7 @@ public class StructTest {
 	public void assertPrint(String result, String statement) {
 		OrderedEnvironment loc = env.minimalLocalEnvironment();
 		Parser.parse(statement).stream()
-				.forEach(x -> ((ParsedStatement) x).execute(loc));
+				.forEach(x -> ((Statement) x).execute(loc));
 		assertEquals(result, VirtualMachine.popMessage());
 	}
 	public void assertEquivalence(String result, String toEvaluate) {
