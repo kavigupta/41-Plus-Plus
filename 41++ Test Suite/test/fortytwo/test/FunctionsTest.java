@@ -5,14 +5,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import fortytwo.compiler.Compiler42;
-import fortytwo.compiler.LiteralToken;
-import fortytwo.compiler.parser.ExpressionParser;
-import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.UnorderedEnvironment;
 
-public class FunctionsTest {
+public class FunctionsTest extends EnvironmentTester {
 	public static final String TEST_FUNCTIONS = ""
 			+ "Define a function called \"x\" doubled that takes a number called \"x\" and outputs a number. Exit the function and output (\"x\"*2).\n"
 			+ "Define a function called \"x\" is prime that takes a number called \"x\" and outputs a bool.\n"
@@ -37,14 +32,13 @@ public class FunctionsTest {
 			+ "Define a function called multiple return on \"branch\" that takes a bool called \"branch\" and outputs a number.\n"
 			+ "	If \"branch\":\n" + "\t\tExit the function and output 1.\n"
 			+ "	Otherwise:\n" + "		Exit the function and output 0.";
-	UnorderedEnvironment env;
 	@Before
 	public void init() {
-		env = Compiler42.compile(TEST_FUNCTIONS);
+		loadEnvironment(TEST_FUNCTIONS);
 	}
 	@Test
 	public void pairTest() {
-		Utilities.execute("Test procedures.", env);
+		exec("Test procedures.");
 		assertEquals(
 				"{(pair of number and number): \"key\" <= 2, \"value\" <= 3}\n",
 				VirtualMachine.popMessage());
@@ -67,12 +61,5 @@ public class FunctionsTest {
 		assertEquivalence("'a b c'", "'abc' with spaces intersperced");
 		assertEquivalence("'H e l l o ,   W o r l d'",
 				"'Hello, World' with spaces intersperced");
-	}
-	public void assertEquivalence(String result, String toEvaluate) {
-		assertEquals(result,
-				ExpressionParser
-						.parseExpression(Tokenizer
-								.tokenize(LiteralToken.entire(toEvaluate)))
-				.literalValue(env.minimalLocalEnvironment()).toSourceCode());
 	}
 }

@@ -16,15 +16,18 @@ import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
 
+/**
+ * @author root
+ *		
+ */
 public class IfElse extends Statement {
 	public final Expression condition;
 	public final Suite ifso, ifelse;
-	public static IfElse getInstance(Expression condition,
-			Suite ifso, Suite ifelse) {
+	public static IfElse getInstance(Expression condition, Suite ifso,
+			Suite ifelse) {
 		return new IfElse(condition, ifso, ifelse);
 	}
-	private IfElse(Expression condition, Suite ifso,
-			Suite ifelse) {
+	private IfElse(Expression condition, Suite ifso, Suite ifelse) {
 		super(Context.sum(Arrays.asList(condition.context(), ifso.context(),
 				ifelse.context())));
 		this.condition = condition;

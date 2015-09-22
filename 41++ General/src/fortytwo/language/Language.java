@@ -101,12 +101,18 @@ public class Language {
 		if (sent.length() == 0) return "";
 		return Character.toUpperCase(sent.charAt(0)) + sent.substring(1);
 	}
-	public static boolean isOperator(char c) {
-		return c == '+' || c == '-' || c == '*' || c == '/' || c == '%';
+	public static boolean isOperator(String c) {
+		if (ADDITION_SIGN.equals(c)) return true;
+		if (SUBTRACTION_SIGN.equals(c)) return true;
+		if (MULTIPLICATION_SIGN.equals(c)) return true;
+		if (DIV_SIGN.equals(c)) return true;
+		if (FLOORDIV_SIGN.equals(c)) return true;
+		if (MOD_SIGN.equals(c)) return true;
+		return false;
 	}
 	public static boolean isTerminator(char c) {
-		return isOperator(c) || Character.isWhitespace(c) || isPunctuation(c)
-				|| c == ']' || c == ')';
+		return isOperator(Character.toString(c)) || Character.isWhitespace(c)
+				|| isPunctuation(c) || c == ']' || c == ')';
 	}
 	private static boolean isPunctuation(char c) {
 		return c == ',' || c == '.';

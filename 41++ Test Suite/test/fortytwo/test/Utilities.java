@@ -10,31 +10,15 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
 import fortytwo.compiler.parser.StatementParser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.errors.Error42;
 import fortytwo.vm.errors.ErrorType;
-import fortytwo.vm.expressions.LiteralExpression;
-import fortytwo.vm.expressions.LiteralNumber;
 
 public class Utilities {
-	public static void execute(String statement, UnorderedEnvironment env) {
-		((Statement) StatementParser.parseStatement(
-				Tokenizer.tokenize(LiteralToken.entire(statement))))
-						.execute(env.minimalLocalEnvironment());
-	}
-	public static LiteralExpression evaluate(String toEvaluate,
-			UnorderedEnvironment env) {
-		return ExpressionParser
-				.parseExpression(
-						Tokenizer.tokenize(LiteralToken.entire(toEvaluate)))
-				.literalValue(env.minimalLocalEnvironment());
-	}
 	public static void assertErrorInTokenization(ErrorType type, String msg,
 			int start, int end, String toTokenize) {
 		LiteralToken token = LiteralToken.entire(toTokenize);
@@ -46,13 +30,6 @@ public class Utilities {
 		assertEquals(Arrays.asList(tokens),
 				Tokenizer.tokenize(LiteralToken.entire(toTokenize)).stream()
 						.map(x -> x.token).collect(Collectors.toList()));
-	}
-	public static void assertEquivalence(double result, String toEvaluate,
-			UnorderedEnvironment env) {
-		assertEquals(result,
-				((LiteralNumber) Utilities.evaluate(toEvaluate, env)).contents
-						.doubleValue(),
-				Math.ulp(result));
 	}
 	public static void assertError(ErrorType type, String msg, int start,
 			int end, Runnable run, Context parent) {

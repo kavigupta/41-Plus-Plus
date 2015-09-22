@@ -70,6 +70,7 @@ public class StdLib42 {
 		addFunction(StdLibFunctions.NOT, "not", "");
 		addFunction(StdLibFunctions.ARRAY_LENGTH, "the", "\"length\"", "of",
 				"");
+		addFunction(StdLibFunctions.NEGATE, Resources.SUBTRACTION_SIGN, "");
 		addOperation(StdLibImplementations.PLUS, Resources.ADDITION_SIGN);
 		addOperation(StdLibImplementations.MINUS, Resources.SUBTRACTION_SIGN);
 		addOperation(StdLibImplementations.TIMES,

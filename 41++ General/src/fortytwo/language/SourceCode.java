@@ -193,7 +193,7 @@ public class SourceCode {
 			if (tok instanceof FunctionToken) {
 				String src = ((FunctionToken) tok).token.toSourceCode();
 				// do not pad operators
-				if (!Language.isOperator(src.charAt(0))) {
+				if (!Language.isOperator(src)) {
 					// do not allow consecutive spaces
 					if (!s.endsWith(" ")) src = " " + src;
 					src += " ";

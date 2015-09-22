@@ -85,4 +85,7 @@ class StdLibFunctions {
 	public static final LiteralFunction NOT = FunctionSynthetic.getInstance(
 			StdLibImplementations.logicalOperator(x -> !x[0]),
 			PrimitiveType.SYNTH_BOOL, PrimitiveType.SYNTH_BOOL);
+	public static final LiteralFunction NEGATE = FunctionSynthetic.getInstance(
+			StdLibImplementations::negate, PrimitiveType.SYNTH_NUMBER,
+			PrimitiveType.SYNTH_NUMBER);
 }

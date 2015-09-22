@@ -44,6 +44,12 @@ public class StdLibImplementations {
 			(x, y) -> x.divideAndRemainder(y)[0]);
 	public static final FunctionImplementation MOD = binaryOperation(
 			(x, y) -> x.divideAndRemainder(y)[1]);
+	public static LiteralExpression negate(UnorderedEnvironment env,
+			List<LiteralExpression> arguments, TypeVariableRoster roster) {
+		return new LiteralNumber(
+				((LiteralNumber) arguments.get(0)).contents.negate(),
+				Context.SYNTHETIC);
+	}
 	public static LiteralExpression arrayAccess(UnorderedEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralArray array = (LiteralArray) arguments.get(1);

@@ -1,14 +1,13 @@
 package fortytwo.compiler.parsed.statements;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Operation;
+import fortytwo.language.Resources;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionName;
@@ -22,29 +21,61 @@ import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
-import fortytwo.vm.expressions.LiteralNumber;
 
 /**
  * Represents a function call expression, which contains a function signature
  * lookup along with the expressions that will be plugged in
  */
 public class FunctionCall extends Expression {
+	/**
+	 * The name of the function to call
+	 */
 	private final FunctionName name;
+	/**
+	 * The inputs into the function
+	 */
 	private final List<Expression> arguments;
-	public static FunctionCall getInstance(FunctionName signature,
-			List<Expression> value) {
-		return new FunctionCall(signature, value);
+	/**
+	 * Gets the function call given the function name and a list of inputs
+	 * 
+	 * @param name
+	 *        the function name
+	 * @param inputs
+	 *        the inputs
+	 * @return a function call object representing {@code name(inputs)}
+	 */
+	public static FunctionCall getInstance(FunctionName name,
+			List<Expression> inputs) {
+		return new FunctionCall(name, inputs);
 	}
+	/**
+	 * Creates a function call representing an operation between two
+	 * expressions.
+	 * 
+	 * @param first
+	 *        the first expression in the operation
+	 * @param op
+	 *        the operation to apply
+	 * @param second
+	 *        the second expression in the operation
+	 * @return
+	 */
 	public static FunctionCall getOperation(Expression first, Operation op,
 			Expression second) {
 		return getInstance(
 				FunctionName.getInstance(StdLib42.opName(op.display)),
 				Arrays.asList(first, second));
 	}
-	public static Expression getNegation(Expression next) {
-		return getOperation(
-				new LiteralNumber(BigDecimal.ZERO, Context.SYNTHETIC),
-				Operation.SUBTRACT, next);
+	/**
+	 * Gets a negation from the AST.
+	 * 
+	 * @param x
+	 * @return {@code -x}
+	 */
+	public static Expression getNegation(Expression x) {
+		return new FunctionCall(
+				FunctionName.getInstance(Resources.SUBTRACTION_SIGN, ""),
+				Arrays.asList(x));
 	}
 	private FunctionCall(FunctionName signature, List<Expression> arguments) {
 		super(signature.context());

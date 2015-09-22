@@ -52,6 +52,7 @@ public class TypeEnvironment {
 			List<ConcreteType> types) {
 		final Optional<FunctionType> sig = funcs.typeof(name, types);
 		if (sig.isPresent()) return sig;
+		System.out.println(this.funcs);
 		if (!container.isPresent()) DNEErrors.functionSignatureDNE(name, types);
 		return container.get().referenceTo(name, types);
 	}

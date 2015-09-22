@@ -2,42 +2,23 @@ package fortytwo.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import fortytwo.compiler.Context;
-import fortytwo.compiler.LiteralToken;
-import fortytwo.compiler.parsed.statements.FunctionCall;
-import fortytwo.compiler.parser.ExpressionParser;
-import fortytwo.compiler.parser.Tokenizer;
-import fortytwo.language.identifier.FunctionName;
-import fortytwo.language.type.PrimitiveType;
-import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.UnorderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
-import fortytwo.vm.expressions.LiteralArray;
-import fortytwo.vm.expressions.LiteralString;
 
-public class GlobalEnvTest {
-	UnorderedEnvironment env;
+public class GlobalEnvTest extends EnvironmentTester {
 	@Before
 	public void init() {
-		env = UnorderedEnvironment
-				.getDefaultEnvironment(TypeEnvironment.getDefault());
+		loadEnvironment("");
 	}
 	@Test
 	public void printTest() {
-		Utilities.execute("Tell me what 'Hello, World' is.", env);
+		exec("Tell me what 'Hello, World' is.");
 		assertEquals("'Hello, World'\n", VirtualMachine.popMessage());
-		Utilities.execute("Tell me what 'Hello. World' is.", env);
+		exec("Tell me what 'Hello. World' is.");
 		assertEquals("'Hello. World'\n", VirtualMachine.popMessage());
-		Utilities.execute(
-				"Tell me what 'a + b = c + d-e+f=g,dsad. asde.3452,2' is.",
-				env);
+		exec("Tell me what 'a + b = c + d-e+f=g,dsad. asde.3452,2' is.");
 		assertEquals("'a + b = c + d-e+f=g,dsad. asde.3452,2'\n",
 				VirtualMachine.popMessage());
 	}
@@ -67,26 +48,7 @@ public class GlobalEnvTest {
 	public void stringLetterSplitTest() {
 		assertEquivalence("['h', 'e', 'l', 'l', 'o']",
 				"'hello' split into individual letters");
-		assertEquals("'world'", FunctionCall
-				.getInstance(
-						FunctionName.getInstance("the", "letters", "",
-								"combined", "to", "form", "a", "string"),
-				Arrays.asList(LiteralArray.getInstance(
-						new PrimitiveType(PrimitiveTypeWOC.STRING,
-								Context.SYNTHETIC),
-						"world".chars()
-								.mapToObj(x -> new LiteralString(
-										LiteralToken.synthetic(
-												Character.toString((char) x))))
-								.collect(Collectors.toList()),
-						Context.SYNTHETIC)))
-				.literalValue(env.minimalLocalEnvironment()).toSourceCode());
-	}
-	public void assertEquivalence(String result, String toEvaluate) {
-		assertEquals(result,
-				ExpressionParser
-						.parseExpression(Tokenizer
-								.tokenize(LiteralToken.entire(toEvaluate)))
-				.literalValue(env.minimalLocalEnvironment()).toSourceCode());
+		assertEquivalence("'world'",
+				"the letters ('world' split into individual letters) combined to form a string");
 	}
 }

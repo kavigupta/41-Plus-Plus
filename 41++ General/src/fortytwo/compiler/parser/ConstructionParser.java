@@ -34,7 +34,7 @@ import fortytwo.vm.errors.TypingErrors;
 public class ConstructionParser {
 	public static FunctionCall composeFunction(List<LiteralToken> list) {
 		final Pair<FunctionName, List<Expression>> fsig = parseFunctionSignature(
-				list);
+				list, false);
 		return FunctionCall.getInstance(fsig.getKey(), fsig.getValue());
 	}
 	public static StructureDefinition parseStructDefinition(
@@ -109,7 +109,7 @@ public class ConstructionParser {
 			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_FUNCT, line);
 		int outputloc = Language.indexOf(line, Resources.OUTPUTS);
 		final Pair<FunctionName, List<Expression>> sig = parseFunctionSignature(
-				funcExpress);
+				funcExpress, true);
 		final List<VariableIdentifier> variables = sig.getValue().stream()
 				.map(x -> {
 					if (!x.identifier().isPresent()) ParserErrors
@@ -144,14 +144,15 @@ public class ConstructionParser {
 				variables, Context.sum(line));
 	}
 	private static Pair<FunctionName, List<Expression>> parseFunctionSignature(
-			List<LiteralToken> list) {
+			List<LiteralToken> list, boolean allowOperators) {
 		final List<FunctionComponent> function = new ArrayList<>();
 		final List<LiteralToken> currentExpression = new ArrayList<>();
 		final List<Expression> arguments = new ArrayList<>();
-		for (final LiteralToken tok : list)
-			if (Language.isExpression(tok.token))
-				currentExpression.add(tok);
-			else if (Language.isFunctionToken(tok.token)) {
+		for (final LiteralToken tok : list) {
+			boolean functionNameToken = allowOperators
+					&& Language.isOperator(tok.token)
+					|| Language.isFunctionToken(tok.token);
+			if (functionNameToken) {
 				if (currentExpression.size() != 0) {
 					final Expression argument = ExpressionParser
 							.parsePureExpression(currentExpression);
@@ -160,7 +161,10 @@ public class ConstructionParser {
 					currentExpression.clear();
 				}
 				function.add(new FunctionToken(tok));
-			} else break;
+			} else if (Language.isExpression(tok.token))
+				currentExpression.add(tok);
+			else break;
+		}
 		if (currentExpression.size() != 0) {
 			final Expression argument = ExpressionParser
 					.parsePureExpression(currentExpression);
