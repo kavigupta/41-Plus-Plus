@@ -68,6 +68,14 @@ public class StdLibImplementations {
 		return (env, arguments, roster) -> ((LiteralObject) arguments.get(0))
 				.valueOf(field);
 	}
+	public static FunctionImplementation fieldModification(
+			VariableIdentifier field) {
+		return (env, arguments, roster) -> {
+			((LiteralObject) arguments.get(0)).redefine(field,
+					arguments.get(1));
+			return LiteralVoid.INSTANCE;
+		};
+	}
 	public static LiteralExpression letterCombine(UnorderedEnvironment env,
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralArray array = (LiteralArray) arguments.get(0);

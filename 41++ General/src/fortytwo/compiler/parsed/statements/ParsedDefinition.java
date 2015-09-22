@@ -21,11 +21,11 @@ public class ParsedDefinition extends ParsedStatement {
 	/**
 	 * The name and type of the variable to create.
 	 */
-	public final TypedVariable toCreate;
+	private final TypedVariable toCreate;
 	/**
 	 * The fields the variable will contain.
 	 */
-	public final VariableRoster<?> fields;
+	private final VariableRoster<?> fields;
 	/**
 	 * @param name
 	 *        The name and type of the variable to create.
@@ -76,6 +76,7 @@ public class ParsedDefinition extends ParsedStatement {
 	public Optional<GenericType> returnType(TypeEnvironment env) {
 		return Optional.empty();
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -30,6 +30,8 @@ public class StdLib42 {
 	public static final StructureRoster DEF_STRUCT = new StructureRoster();
 	public static final FunctionName FUNC_FIELD_ACCESS_NAME_APPARENT = FunctionName
 			.getInstance("the", "", "of", "");
+	public static final FunctionName FUNC_FIELD_MODIFICATION_NAME_APPARENT = FunctionName
+			.getInstance("Set", "the", "", "of", "", "to", "");
 	public static final FunctionName FUNC_ARRAY_LEN = FunctionName
 			.getInstance("the", "\"length\"", "of", "");
 	public static final List<String> STRUCT_ARRAY = Arrays.asList("array");
@@ -136,11 +138,21 @@ public class StdLib42 {
 				ParserErrors.expectedVariableInFieldAccess(arguments.get(0));
 			return Pair.of(getFieldAccess(field.get().name.token),
 					Arrays.asList(arguments.get(1)));
+		} else if (FunctionName.getInstance(name)
+				.equals(StdLib42.FUNC_FIELD_MODIFICATION_NAME_APPARENT)) {
+			Optional<VariableIdentifier> field = arguments.get(0).identifier();
+			if (!field.isPresent())
+				ParserErrors.expectedVariableInFieldAccess(arguments.get(0));
+			return Pair.of(getFieldModification(field.get().name.token),
+					Arrays.asList(arguments.get(1), arguments.get(2)));
 		}
 		return Pair.of(FunctionName.getInstance(name), arguments);
 	}
 	public static FunctionName getFieldAccess(String name) {
 		return FunctionName.getInstance("the", name, "of", "");
+	}
+	public static FunctionName getFieldModification(String name) {
+		return FunctionName.getInstance("Set", "the", name, "of", "", "to", "");
 	}
 	public static FunctionName functArrayModification(String suffix) {
 		return FunctionName.getInstance("Set", "the", "", suffix, "element",

@@ -63,7 +63,7 @@ public class Highlighter42 extends AbstractTokenMaker {
 			error = tokens.remove(tokens.size() - 1);
 			if (tokens.size() != 0)
 				errorStart = tokens.get(tokens.size() - 1).context
-						.getEndPosition(text.offset);
+						.getEndPosition(0);
 		}
 		for (int i = 0; i < tokens.size(); i++) {
 			LiteralToken tok = tokens.get(i);
@@ -81,7 +81,7 @@ public class Highlighter42 extends AbstractTokenMaker {
 			} else {
 				addToken(tokens, i, text, startOffset);
 			}
-			System.out.println("adding " + tok);
+			System.out.println("adding " + tok.token);
 			Token t = firstToken;
 			for (; t != null; t = t.getNextToken()) {
 				if (t.getEndOffset() - t.getOffset() == 0) continue;
@@ -89,9 +89,7 @@ public class Highlighter42 extends AbstractTokenMaker {
 			}
 			System.out.println("Mapping ^^^");
 		}
-		System.out.println("Basically done");
 		if (error != null) addErrorToken(error, text, startOffset, errorStart);
-		System.out.println("Done");
 	}
 	public void addToken(List<LiteralToken> tokens, int index, Segment text,
 			int startOffset) {
@@ -116,6 +114,7 @@ public class Highlighter42 extends AbstractTokenMaker {
 		int currentTokenEnd = currentTokenStart + error.token.length();
 		System.out
 				.println("Error " + currentTokenStart + "\t" + currentTokenEnd);
+		System.out.println(new String(text.array));
 		addToken(text.array, currentTokenStart, currentTokenEnd - 2, ERROR_CHAR,
 				startOffset + (currentTokenStart - text.offset));
 	}

@@ -11,6 +11,7 @@ import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.FunctionType;
 import fortytwo.language.type.GenericStructureType;
+import fortytwo.language.type.PrimitiveType;
 import fortytwo.library.standard.StdLibImplementations;
 import fortytwo.vm.expressions.LiteralFunction;
 
@@ -51,13 +52,25 @@ public class GenericStructureSignature {
 	public Map<VariableIdentifier, LiteralFunction> fieldFunctions() {
 		Map<VariableIdentifier, LiteralFunction> fieldFuncs = new HashMap<>();
 		for (GenericField field : fields) {
-			FunctionName name = FunctionName.getInstance("the",
+			FunctionName accessorName = FunctionName.getInstance("the",
 					field.name.toSourceCode(), "of", "");
-			FunctionType type = new FunctionType(Arrays.asList(this.type),
-					field.type);
-			fieldFuncs.put(new FunctionSignature(name, type).identifier(),
-					new FunctionSynthetic(type,
+			FunctionName modifierName = FunctionName.getInstance("Set", "the",
+					field.name.toSourceCode(), "of", "", "to", "");
+			FunctionType accessorType = new FunctionType(
+					Arrays.asList(this.type), field.type);
+			FunctionType modifierType = new FunctionType(
+					Arrays.asList(this.type, field.type),
+					PrimitiveType.SYNTH_VOID);
+			fieldFuncs.put(
+					new FunctionSignature(accessorName, accessorType)
+							.identifier(),
+					new FunctionSynthetic(accessorType,
 							StdLibImplementations.fieldAccess(field.name)));
+			fieldFuncs.put(
+					new FunctionSignature(modifierName, modifierType)
+							.identifier(),
+					new FunctionSynthetic(modifierType, StdLibImplementations
+							.fieldModification(field.name)));
 		}
 		return fieldFuncs;
 	}

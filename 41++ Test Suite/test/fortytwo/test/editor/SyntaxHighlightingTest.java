@@ -97,6 +97,15 @@ public class SyntaxHighlightingTest {
 					of("2", LITERAL_NUMBER_DECIMAL_INT), of(":", SEPARATOR));
 	}
 	@Test
+	public void errorInExprTest() {
+		// Define a function called "n"! that takes a number called "n" and
+		// outputs a number.
+		//
+		testHighlight("\tIf \"123", //
+				of("\t", WHITESPACE), of("If", RESERVED_WORD),
+				of(" ", WHITESPACE), of("\"123", ERROR_CHAR));
+	}
+	@Test
 	public void compoundTest() {
 		testHighlight("2 + ())", //
 				of("2", LITERAL_NUMBER_DECIMAL_INT), of(" ", WHITESPACE),

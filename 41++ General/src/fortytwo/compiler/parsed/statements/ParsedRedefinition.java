@@ -5,6 +5,7 @@ import java.util.Optional;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.SourceCode;
+import fortytwo.language.classification.SentenceType;
 import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
@@ -13,7 +14,7 @@ import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
-public class ParsedRedefinition extends ParsedAssignment {
+public class ParsedRedefinition extends ParsedStatement {
 	public final VariableIdentifier name;
 	public final Expression value;
 	public ParsedRedefinition(VariableIdentifier name, Expression expr,
@@ -50,6 +51,10 @@ public class ParsedRedefinition extends ParsedAssignment {
 	@Override
 	public boolean isSimple() {
 		return true;
+	}
+	@Override
+	public final SentenceType kind() {
+		return SentenceType.ASSIGNMENT;
 	}
 	@Override
 	public int hashCode() {

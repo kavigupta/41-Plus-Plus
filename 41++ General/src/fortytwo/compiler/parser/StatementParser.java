@@ -10,7 +10,10 @@ import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.*;
+import fortytwo.compiler.parsed.statements.ParsedDefinition;
+import fortytwo.compiler.parsed.statements.ParsedFunctionCall;
+import fortytwo.compiler.parsed.statements.ParsedRedefinition;
+import fortytwo.compiler.parsed.statements.ParsedStatement;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.SentenceType;
@@ -38,6 +41,7 @@ public class StatementParser {
 				return parseDefinition(line);
 			case Resources.SET:
 				if (line.get(1).token.equals(Resources.THE)
+						&& line.get(2).token.equals(Resources.VALUE)
 						&& line.get(3).token.equals(Resources.OF)
 						&& line.get(5).token.equals(Resources.TO))
 					return parseAssignment(line);
@@ -73,7 +77,7 @@ public class StatementParser {
 		// should never get here
 		throw new IllegalStateException();
 	}
-	private static ParsedAssignment parseAssignment(List<LiteralToken> line) {
+	private static ParsedRedefinition parseAssignment(List<LiteralToken> line) {
 		final Context fullContext = Context.sum(line);
 		/*
 		 * Set the <field> of <name> to <value>.
@@ -82,15 +86,10 @@ public class StatementParser {
 				|| !line.get(3).token.equals(Resources.OF)
 				|| !line.get(5).token.equals(Resources.TO))
 			SyntaxErrors.invalidSentence(SentenceType.ASSIGNMENT, line);
-		final LiteralToken fieldT = line.get(2);
 		final Expression toModify = ExpressionParser
 				.parseExpression(Arrays.asList(line.get(4)));
 		line.subList(0, 6).clear();
 		final Expression expr = ExpressionParser.parseExpression(line);
-		if (!fieldT.token.equals(Resources.VALUE))
-			return new ParsedFieldAssignment(toModify,
-					VariableIdentifier.getInstance(fieldT, false), expr,
-					fullContext);
 		Optional<VariableIdentifier> name = toModify.identifier();
 		if (!name.isPresent()) {
 			// TODO handle redefinition of a non-variable
