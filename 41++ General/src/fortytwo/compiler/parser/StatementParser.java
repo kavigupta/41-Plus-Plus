@@ -66,13 +66,9 @@ public class StatementParser {
 		return new FunctionOutput(ExpressionParser.parseExpression(line),
 				fullContext);
 	}
-	private static Statement parseVoidFunctionCall(
-			List<LiteralToken> list) {
-		final FunctionCall function = ConstructionParser
-				.composeFunction(list);
-		if (function.name.function.size() != 1
-				|| !(function.name.function.get(0).isArgument()))
-			return function;
+	private static Statement parseVoidFunctionCall(List<LiteralToken> list) {
+		final FunctionCall function = ConstructionParser.composeFunction(list);
+		if (!function.getSingleExpression().isPresent()) return function;
 		ParserErrors.expectedFunctionCall(function);
 		// should never get here
 		throw new IllegalStateException();
@@ -82,10 +78,6 @@ public class StatementParser {
 		/*
 		 * Set the <field> of <name> to <value>.
 		 */
-		if (!line.get(1).token.equals(Resources.THE)
-				|| !line.get(3).token.equals(Resources.OF)
-				|| !line.get(5).token.equals(Resources.TO))
-			SyntaxErrors.invalidSentence(SentenceType.ASSIGNMENT, line);
 		final Expression toModify = ExpressionParser
 				.parseExpression(Arrays.asList(line.get(4)));
 		line.subList(0, 6).clear();

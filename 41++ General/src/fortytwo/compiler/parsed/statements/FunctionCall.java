@@ -24,15 +24,19 @@ import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
 import fortytwo.vm.expressions.LiteralNumber;
 
+/**
+ * Represents a function call expression, which contains a function signature
+ * lookup along with the expressions that will be plugged in
+ */
 public class FunctionCall extends Expression {
-	public final FunctionName name;
-	public final List<Expression> arguments;
+	private final FunctionName name;
+	private final List<Expression> arguments;
 	public static FunctionCall getInstance(FunctionName signature,
 			List<Expression> value) {
 		return new FunctionCall(signature, value);
 	}
-	public static FunctionCall getOperation(Expression first,
-			Operation op, Expression second) {
+	public static FunctionCall getOperation(Expression first, Operation op,
+			Expression second) {
 		return getInstance(
 				FunctionName.getInstance(StdLib42.opName(op.display)),
 				Arrays.asList(first, second));
@@ -42,8 +46,7 @@ public class FunctionCall extends Expression {
 				new LiteralNumber(BigDecimal.ZERO, Context.SYNTHETIC),
 				Operation.SUBTRACT, next);
 	}
-	private FunctionCall(FunctionName signature,
-			List<Expression> arguments) {
+	private FunctionCall(FunctionName signature, List<Expression> arguments) {
 		super(signature.context());
 		this.name = signature;
 		this.arguments = arguments;
@@ -120,5 +123,10 @@ public class FunctionCall extends Expression {
 	@Override
 	public String toString() {
 		return toSourceCode();
+	}
+	public Optional<Expression> getSingleExpression() {
+		if (name.function.size() == 1 && name.function.get(0).isArgument())
+			return Optional.of(arguments.get(0));
+		return Optional.empty();
 	}
 }

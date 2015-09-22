@@ -1,5 +1,9 @@
 package fortytwo.compiler.parsed.statements;
 
+import static fortytwo.language.Resources.CALLED;
+import static fortytwo.language.Resources.DEFINE;
+import static fortytwo.language.Resources.WITH;
+
 import java.util.Optional;
 
 import fortytwo.compiler.Context;
@@ -63,10 +67,11 @@ public class Definition extends Statement {
 	}
 	@Override
 	public String toSourceCode() {
-		return "Define " + Language.articleized(toCreate.type.toSourceCode())
-				+ " called " + toCreate.name.name
+		return DEFINE + ' ' + Language.articleized(toCreate.type.toSourceCode())
+				+ ' ' + CALLED + ' ' + toCreate.name.name
 				+ (fields.numberOfVariables() == 0 ? ""
-						: " with " + SourceCode.displayFieldList(fields));
+						: ' ' + WITH + ' '
+								+ SourceCode.displayFieldList(fields));
 	}
 	@Override
 	public boolean isSimple() {
@@ -76,7 +81,6 @@ public class Definition extends Statement {
 	public Optional<GenericType> returnType(TypeEnvironment env) {
 		return Optional.empty();
 	}
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

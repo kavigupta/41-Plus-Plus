@@ -28,11 +28,9 @@ import fortytwo.vm.expressions.LiteralString;
 
 public class ExpressionParser {
 	public static Expression parseExpression(List<LiteralToken> list) {
-		final FunctionCall function = ConstructionParser
-				.composeFunction(list);
-		if (function.name.function.size() == 1
-				&& function.name.function.get(0).isArgument())
-			return function.arguments.get(0);
+		final FunctionCall function = ConstructionParser.composeFunction(list);
+		Optional<Expression> singleExpression = function.getSingleExpression();
+		if (singleExpression.isPresent()) return singleExpression.get();
 		return function;
 	}
 	public static Expression parsePureExpression(
@@ -66,8 +64,7 @@ public class ExpressionParser {
 									.collect(Collectors.toList()));
 				final Expression second = expressions.get(i);
 				final UnevaluatedOperator op = (UnevaluatedOperator) token;
-				exp.push(FunctionCall.getOperation(first, op.operator,
-						second));
+				exp.push(FunctionCall.getOperation(first, op.operator, second));
 			} else exp.push(token);
 		}
 		return new ArrayList<>(exp);
@@ -87,8 +84,7 @@ public class ExpressionParser {
 					else if (uneop.operator.equals(Operation.SUBTRACT)) {
 						i++;
 						final Expression next = expressions.get(i);
-						expressionsWoUO
-								.add(FunctionCall.getNegation(next));
+						expressionsWoUO.add(FunctionCall.getNegation(next));
 					} else {
 						SyntaxErrors
 								.invalidExpression(ExpressionType.ARITHMETIC,

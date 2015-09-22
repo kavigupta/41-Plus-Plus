@@ -12,6 +12,7 @@ public final class Resources {
 	public static final String AND = "and";
 	public static final String THAT = "that";
 	public static final String TAKES = "takes";
+	public static final String WITH = "with";
 	public static final String OUTPUT = "output";
 	public static final String OUTPUTS = "outputs";
 	public static final String PERIOD = ".";
