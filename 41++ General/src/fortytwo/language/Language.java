@@ -3,16 +3,31 @@ package fortytwo.language;
 import static fortytwo.language.Resources.*;
 
 import java.util.List;
-import java.util.function.Function;
 
 import fortytwo.compiler.LiteralToken;
-import fortytwo.vm.errors.SyntaxErrors;
 
+/**
+ * Utility class containing methods regarding the 41++ Language.
+ */
 public class Language {
+	/**
+	 * @param word
+	 *        a phrase, as a String.
+	 * @return {@code an <word>} if the first letter in {@code word}} is a
+	 *         vowel.
+	 *         {@code a <word>} if the first letter in {@code word} is a
+	 *         consonant.
+	 */
 	public static String articleized(String word) {
 		if (startsWithVowel(word)) return AN + SPACE + word;
 		return A + SPACE + word;
 	}
+	/**
+	 * Returns {@code true} if the first letter in the given word is a vowel.
+	 * 
+	 * Note that this will return {@code true} for things like
+	 * {@code (array of number)}.
+	 */
 	private static boolean startsWithVowel(String word) {
 		for (int i = 0; i < word.length(); i++)
 			if (isVowel(word.charAt(i)))
@@ -20,57 +35,30 @@ public class Language {
 			else if (Character.isAlphabetic(word.charAt(i))) return false;
 		return false;
 	}
+	/**
+	 * Returns {@code true} if {@code c} is in the set {@code "AEIOUaeiou"}.
+	 */
 	public static boolean isVowel(char c) {
 		c = Character.toLowerCase(c);
 		return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
 	}
-	public static <T> String sayList(List<T> fields,
-			Function<T, String> howToSay) {
-		if (fields.size() == 0) return new String();
-		if (fields.size() == 1) return howToSay.apply(fields.get(0));
-		final StringBuffer sbuff = new StringBuffer();
-		for (int i = 0; i < fields.size() - 1; i++)
-			sbuff.append(howToSay.apply(fields.get(i))).append(COMMA + SPACE);
-		return sbuff.append(AND + SPACE)
-				.append(howToSay.apply(fields.get(fields.size() - 1)))
-				.toString();
-	}
+	/**
+	 * Returns {@code true} if the given word is an indefinete article.
+	 */
 	public static boolean isArticle(String word) {
 		return word.equals(A) || word.equals(AN);
 	}
-	public static LiteralToken deparenthesize(LiteralToken token) {
-		if (token.token.startsWith(OPEN_PAREN)) {
-			if (!token.token.endsWith(CLOSE_PAREN)) {
-				SyntaxErrors.matchingSymbolDNE(token.context, token.token, 0);
-				return token.subToken(1, token.token.length());
-			}
-			return token.subToken(1, token.token.length() - 1);
-		}
-		return token;
-	}
-	public static boolean isExpression(String token) {
-		if (token.equals(TRUE) || token.equals(FALSE)) return true;
-		final char start = token.charAt(0);
-		return start == '(' || start == '+' || start == '-' || start == '*'
-				|| start == '/' || start == '%' || Character.isDigit(start)
-				|| start == '\'' || start == '\"';
-	}
-	public static boolean isValidVariableIdentifier(String token,
-			boolean nativeFunc) {
-		if (token == null) return false;
-		if (!nativeFunc && token.indexOf(':') >= 0) return false;
-		if (token.equals(VALUE)) return true;
-		return token.startsWith(VARIABLE_BEGIN) && token.endsWith(VARIABLE_END);
-	}
-	public static boolean isFunctionToken(String token) {
-		if (isExpression(token)) return false;
-		// just assume anything that isn't an expression is a function
-		// LOWPRI fix this function
-		return true;
-	}
+	/**
+	 * Returns true if {@code token} is equal to either a comma or the word
+	 * {@code and}.
+	 */
 	public static boolean isListElement(String token) {
 		return token.equals(COMMA) || token.equals(AND);
 	}
+	/**
+	 * Returns the matching symbol to a given character that is relevant for the
+	 * 41++ language.
+	 */
 	public static char matchingSymbol(char start) {
 		switch (start) {
 			case '[':
@@ -83,24 +71,42 @@ public class Language {
 				return '(';
 			case '\'':
 				return '\'';
+			case '\"':
+				return '\"';
 		}
 		return 0;
 	}
+	/**
+	 * Returns the ordinal expression for this number, based on it's last digit.
+	 * e.g., {@code 1} should become {@code "1st"}.
+	 */
 	public static String ordinal(int argument) {
-		switch (argument % 10) {
+		String suffix;
+		switch (Math.abs(argument) % 10) {
 			case 1:
-				return argument + "st";
+				suffix = "st";
+				break;
 			case 2:
-				return argument + "nd";
+				suffix = "nd";
+				break;
 			case 3:
-				return argument + "rd";
+				suffix = "rd";
+				break;
+			default:
+				suffix = "th";
 		}
-		return argument + "th";
+		return argument + suffix;
 	}
+	/**
+	 * Makes the first character in the given sentence uppercase.
+	 */
 	public static String uppercase(String sent) {
 		if (sent.length() == 0) return "";
 		return Character.toUpperCase(sent.charAt(0)) + sent.substring(1);
 	}
+	/**
+	 * Returns true if the given string is an operator defined by 41++.
+	 */
 	public static boolean isOperator(String c) {
 		if (ADDITION_SIGN.equals(c)) return true;
 		if (SUBTRACTION_SIGN.equals(c)) return true;
@@ -110,22 +116,32 @@ public class Language {
 		if (MOD_SIGN.equals(c)) return true;
 		return false;
 	}
+	/**
+	 * Returns {@code true} if it leads to the automatic end of a token.
+	 */
 	public static boolean isTerminator(char c) {
 		return isOperator(Character.toString(c)) || Character.isWhitespace(c)
 				|| isPunctuation(c) || c == ']' || c == ')';
 	}
+	/**
+	 * Returns true if it's input is punctuation.
+	 */
 	private static boolean isPunctuation(char c) {
 		return c == ',' || c == '.';
 	}
+	/**
+	 * TODO move to an encapsulated function of the new LiteralTokenList
+	 * function
+	 */
 	public static int indexOf(List<LiteralToken> tokens, String s) {
 		for (int i = 0; i < tokens.size(); i++)
 			if (tokens.get(i).token.equals(s)) return i;
 		return -1;
 	}
+	/**
+	 * Returns whether or not the given character is a quote.
+	 */
 	public static boolean isQuote(char c) {
 		return c == '\'' || c == '"';
-	}
-	public static String sanitizeForUseInVID(String id) {
-		return id.replace("\\", "\\\\").replace("\"", "\\\"");
 	}
 }

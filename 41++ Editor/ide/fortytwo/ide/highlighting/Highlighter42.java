@@ -14,7 +14,6 @@ import org.fife.ui.rsyntaxtextarea.TokenMap;
 
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parser.Tokenizer;
-import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.errors.Error42;
@@ -68,7 +67,7 @@ public class Highlighter42 extends AbstractTokenMaker {
 		for (int i = 0; i < tokens.size(); i++) {
 			LiteralToken tok = tokens.get(i);
 			if (tok.token.startsWith("(")) {
-				LiteralToken depar = Language.deparenthesize(tok);
+				LiteralToken depar = tok.deparenthesize();
 				addParenToken(tok.context.getStartPosition(text.offset), text,
 						startOffset);
 				addAllTokens(Tokenizer.tokenizeFully(depar), text, startOffset);
@@ -194,12 +193,12 @@ public class Highlighter42 extends AbstractTokenMaker {
 		switch (tokens.get(index).token) {
 			case "called":
 			case "the":
-				if (Language.isValidVariableIdentifier(next, true)
+				if (LiteralToken.entire(next).isValidVariableIdentifier(true)
 						|| Resources.DECL_FUNCTION.equals(prev))
 					return RESERVED_WORD_2;
 				break;
 			case "of":
-				if (Language.isValidVariableIdentifier(prev, true))
+				if (LiteralToken.entire(prev).isValidVariableIdentifier(true))
 					return RESERVED_WORD_2;
 				break;
 		}

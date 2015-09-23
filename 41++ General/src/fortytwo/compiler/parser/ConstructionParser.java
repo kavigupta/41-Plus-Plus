@@ -31,8 +31,11 @@ import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.errors.TypingErrors;
 
+/**
+ * Contains utility functions that parse functions and structures.
+ */
 public class ConstructionParser {
-	public static FunctionCall composeFunction(List<LiteralToken> list) {
+	public static FunctionCall parseFunctionCall(List<LiteralToken> list) {
 		final Pair<FunctionName, List<Expression>> fsig = parseFunctionSignature(
 				list, false);
 		return FunctionCall.getInstance(fsig.getKey(), fsig.getValue());
@@ -48,9 +51,8 @@ public class ConstructionParser {
 		if (!line.get(1).doesEqual(Resources.A)
 				|| !line.get(3).doesEqual(Resources.CALLED))
 			SyntaxErrors.invalidSentence(SentenceType.DECLARATION_STRUCT, line);
-		line.subList(0, 4).clear();
 		final ArrayList<LiteralToken> structExpression = new ArrayList<>();
-		int i = 0;
+		int i = 4;
 		for (; i < line.size() && !line.get(i).doesEqual(Resources.THAT)
 				&& !line.get(i).doesEqual(Resources.OF); i++)
 			structExpression.add(line.get(i));
@@ -59,8 +61,7 @@ public class ConstructionParser {
 			i++;
 			for (; i < line.size()
 					&& !line.get(i).doesEqual(Resources.THAT); i++)
-				if (Language.isValidVariableIdentifier(line.get(i).token,
-						false))
+				if (line.get(i).isValidVariableIdentifier(false))
 					typeVariables.add(new TypeVariable(VariableIdentifier
 							.getInstance(line.get(i), false)));
 		}
@@ -150,8 +151,7 @@ public class ConstructionParser {
 		final List<Expression> arguments = new ArrayList<>();
 		for (final LiteralToken tok : list) {
 			boolean functionNameToken = allowOperators
-					&& Language.isOperator(tok.token)
-					|| Language.isFunctionToken(tok.token);
+					&& Language.isOperator(tok.token) || tok.isFunctionToken();
 			if (functionNameToken) {
 				if (currentExpression.size() != 0) {
 					final Expression argument = ExpressionParser
@@ -161,7 +161,7 @@ public class ConstructionParser {
 					currentExpression.clear();
 				}
 				function.add(new FunctionToken(tok));
-			} else if (Language.isExpression(tok.token))
+			} else if (tok.isExpression())
 				currentExpression.add(tok);
 			else break;
 		}

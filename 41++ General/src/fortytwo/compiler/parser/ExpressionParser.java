@@ -28,7 +28,8 @@ import fortytwo.vm.expressions.LiteralString;
 
 public class ExpressionParser {
 	public static Expression parseExpression(List<LiteralToken> list) {
-		final FunctionCall function = ConstructionParser.composeFunction(list);
+		final FunctionCall function = ConstructionParser
+				.parseFunctionCall(list);
 		Optional<Expression> singleExpression = function.getSingleExpression();
 		if (singleExpression.isPresent()) return singleExpression.get();
 		return function;
@@ -174,7 +175,7 @@ public class ExpressionParser {
 							.add(VariableIdentifier.getInstance(token, false));
 					break;
 				case '(':
-					final LiteralToken depar = Language.deparenthesize(token);
+					final LiteralToken depar = token.deparenthesize();
 					expressions.add(parseExpression(Tokenizer.tokenize(depar)));
 					break;
 				case '[':
@@ -188,7 +189,7 @@ public class ExpressionParser {
 			return new TypeVariable(
 					VariableIdentifier.getInstance(token, false));
 		while (token.token.startsWith(Resources.OPEN_PAREN))
-			token = Language.deparenthesize(token);
+			token = token.deparenthesize();
 		for (final PrimitiveTypeWOC type : PrimitiveTypeWOC.values())
 			if (type.typeID().equals(token.token))
 				return new PrimitiveType(type, token.context);
