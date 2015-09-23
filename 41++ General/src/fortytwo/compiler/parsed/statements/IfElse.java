@@ -1,5 +1,7 @@
 package fortytwo.compiler.parsed.statements;
 
+import static fortytwo.language.Resources.*;
+
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -17,12 +19,23 @@ import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
 
 /**
- * @author root
- *		
+ * Represents an if else construct with a condition, and two sets of statments
+ * to execute.
  */
 public class IfElse extends Statement {
-	public final Expression condition;
-	public final Suite ifso, ifelse;
+	/**
+	 * The condition on which to execute either the {@code if so} or
+	 * {@code if else} block.
+	 */
+	private final Expression condition;
+	/**
+	 * Executed if {@code condition} resolves to {@code true}.
+	 */
+	private final Suite ifso;
+	/**
+	 * Executed if {@code condition} resolves to {@code false}.
+	 */
+	private final Suite ifelse;
 	public static IfElse getInstance(Expression condition, Suite ifso,
 			Suite ifelse) {
 		return new IfElse(condition, ifso, ifelse);
@@ -79,7 +92,12 @@ public class IfElse extends Statement {
 	}
 	@Override
 	public String toSourceCode() {
-		return SourceCode.display(this);
+		return IF + " " + condition.toSourceCode() + END_OF_CONTROL_STATEMENT
+				+ SourceCode.wrapInBraces(ifso)
+				+ (ifelse.isNoop() ? ""
+						: END_OF_SENTENCE + NEWLINE + OTHERWISE
+								+ END_OF_CONTROL_STATEMENT + NEWLINE
+								+ INDENTATION_UNIT + ifelse.toSourceCode());
 	}
 	@Override
 	public boolean isSimple() {

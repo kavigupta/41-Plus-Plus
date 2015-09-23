@@ -14,9 +14,20 @@ import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
+/**
+ * Represents a statement of the form
+ * 
+ * {@code Set the value of <variable> to <expression>.}
+ */
 public class Redefinition extends Statement {
-	public final VariableIdentifier name;
-	public final Expression value;
+	/**
+	 * The variable identifier to modify
+	 */
+	private final VariableIdentifier name;
+	/**
+	 * The value to set the name to.
+	 */
+	private final Expression value;
 	public Redefinition(VariableIdentifier name, Expression expr,
 			Context context) {
 		super(context);

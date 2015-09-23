@@ -13,17 +13,40 @@ import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
+/**
+ * Represents a series of sentences.
+ */
 public class Suite extends Statement {
-	public final List<Statement> statements;
-	public static Suite getInstance(Statement s,
-			Context context) {
+	/**
+	 * The sentences to be executed.
+	 */
+	private final List<Statement> statements;
+	/**
+	 * Gets an instance of a {@code Suite} that contains the single statement.
+	 * If the given statement is already a suite, it is returned.
+	 * 
+	 * @param s
+	 *        the statement to wrap
+	 * @param context
+	 *        the context representing the suite
+	 */
+	public static Suite getInstance(Statement s, Context context) {
 		if (s.kind() == SentenceType.COMPOUND) return (Suite) s;
 		return new Suite(Arrays.asList(s), context);
 	}
-	public Suite(List<Statement> statements,
-			Context context) {
+	/**
+	 * Generates a suite with the given list of statements and the given context
+	 */
+	public Suite(List<Statement> statements, Context context) {
 		super(context);
 		this.statements = statements;
+	}
+	/**
+	 * @return whether or not this suite contains no statements, and is
+	 *         therefore a no-op
+	 */
+	public boolean isNoop() {
+		return statements.size() == 0;
 	}
 	@Override
 	public boolean typeCheck(TypeEnvironment env) {
@@ -64,7 +87,7 @@ public class Suite extends Statement {
 	}
 	@Override
 	public String toSourceCode() {
-		return SourceCode.display(this);
+		return SourceCode.displaySeries(statements);
 	}
 	@Override
 	public boolean isSimple() {

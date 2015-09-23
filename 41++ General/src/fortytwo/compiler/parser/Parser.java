@@ -17,6 +17,7 @@ import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.compiler.parsed.statements.Suite;
 import fortytwo.compiler.parsed.statements.WhileLoop;
 import fortytwo.language.Resources;
+import fortytwo.vm.errors.ParserErrors;
 
 public class Parser {
 	private Parser() {}
@@ -65,9 +66,10 @@ public class Parser {
 		List<LiteralToken> current = new ArrayList<>();
 		for (int i = 0; i < tokens.size(); i++) {
 			final LiteralToken token = tokens.get(i);
-			if (!token.token.equals(Resources.COLON)) current.add(token);
-			if (token.token.equals(Resources.PERIOD)
-					|| token.token.equals(Resources.COLON)) {
+			if (!token.token.equals(Resources.END_OF_CONTROL_STATEMENT))
+				current.add(token);
+			if (token.token.equals(Resources.END_OF_SENTENCE)
+					|| token.token.equals(Resources.END_OF_CONTROL_STATEMENT)) {
 				phrases.add(current);
 				current = new ArrayList<>();
 			}
@@ -84,8 +86,7 @@ public class Parser {
 	public static Sentence pop(
 			List<Pair<Integer, List<LiteralToken>>> phrases) {
 		if (phrases.size() == 0)
-			return new Suite(Arrays.asList(),
-					Context.SYNTHETIC);
+			return new Suite(Arrays.asList(), Context.SYNTHETIC);
 		switch (phrases.get(0).getValue().get(0).token) {
 			case Resources.IF:
 				return popIf(phrases);
@@ -107,7 +108,7 @@ public class Parser {
 		final FunctionDefinition declaration = ConstructionParser
 				.parseFunctionDefinition(defn);
 		final List<Sentence> suite = popSeries(phrases);
-		return new FunctionConstruct(declaration, suite);
+		return new FunctionConstruct(declaration, checkStatements(suite));
 	}
 	public static Sentence popSentence(
 			List<Pair<Integer, List<LiteralToken>>> phrases) {
@@ -118,13 +119,15 @@ public class Parser {
 		final List<LiteralToken> IF = phrases.remove(0).getValue();
 		IF.remove(0);
 		final Expression condition = ExpressionParser.parseExpression(IF);
-		final Suite ifso = temporaryHack(popSeries(phrases));
-		Suite ifelse = new Suite(
-				Arrays.asList(), Context.SYNTHETIC);
+		List<Sentence> normal = popSeries(phrases);
+		final Suite ifso = new Suite(checkStatements(normal),
+				Context.sum(normal));
+		Suite ifelse = new Suite(Arrays.asList(), Context.SYNTHETIC);
 		if (phrases.size() > 0 && phrases.get(0).getValue().get(0).token
 				.equals(Resources.OTHERWISE)) {
 			phrases.remove(0); // This should just be "Otherwise:"
-			ifelse = temporaryHack(popSeries(phrases));
+			List<Sentence> other = popSeries(phrases);
+			ifelse = new Suite(checkStatements(other), Context.sum(other));
 		}
 		return IfElse.getInstance(condition, ifso, ifelse);
 	}
@@ -133,18 +136,20 @@ public class Parser {
 		final List<LiteralToken> WHILE = phrases.remove(0).getRight();
 		WHILE.remove(0);
 		final Expression condition = ExpressionParser.parseExpression(WHILE);
-		final Suite whileTrue = temporaryHack(
-				popSeries(phrases));
+		List<Sentence> suite = popSeries(phrases);
+		final Suite whileTrue = new Suite(checkStatements(suite),
+				Context.sum(suite));
 		return new WhileLoop(condition, whileTrue, Context
 				.sum(Arrays.asList(condition.context(), whileTrue.context())));
 	}
-	public static Suite temporaryHack(
-			List<Sentence> popSeries) {
-		// TODO temporary hack
+	private static List<Statement> checkStatements(List<Sentence> popSeries) {
 		final List<Statement> statement = new ArrayList<>();
-		for (final Sentence s : popSeries)
-			statement.add((Statement) s);
-		return new Suite(statement, Context.sum(popSeries));
+		for (final Sentence s : popSeries) {
+			if (s instanceof Statement)
+				statement.add((Statement) s);
+			else ParserErrors.expectedStatement(s);
+		}
+		return statement;
 	}
 	@SuppressWarnings("boxing")
 	private static List<Sentence> popSeries(

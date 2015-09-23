@@ -15,9 +15,11 @@ public final class Resources {
 	public static final String WITH = "with";
 	public static final String OUTPUT = "output";
 	public static final String OUTPUTS = "outputs";
-	public static final String PERIOD = ".";
-	public static final String COLON = ":";
+	public static final String END_OF_SENTENCE = ".";
+	public static final String END_OF_CONTROL_STATEMENT = ":";
 	public static final String COMMA = ",";
+	public static final String NEWLINE = "\n";
+	public static final String INDENTATION_UNIT = "\t";
 	/* Names */
 	public static final String DECL_FUNCTION = "function";
 	public static final String VALUE = "value";

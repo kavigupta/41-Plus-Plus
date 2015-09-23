@@ -1,11 +1,11 @@
 package fortytwo.compiler.parsed.declaration;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.Sentence;
+import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -24,9 +24,9 @@ public class FunctionConstruct implements Sentence {
 	/**
 	 * The body of the function, in the form of a series of sentences
 	 */
-	private final List<Sentence> suite;
+	private final List<Statement> suite;
 	public FunctionConstruct(FunctionDefinition declaration,
-			List<Sentence> suite) {
+			List<Statement> suite) {
 		this.declaration = declaration;
 		this.suite = suite;
 	}
@@ -57,9 +57,7 @@ public class FunctionConstruct implements Sentence {
 	}
 	@Override
 	public Context context() {
-		final ArrayList<Sentence> s = new ArrayList<>(suite);
-		suite.add(declaration);
-		return Context.sum(s);
+		return Context.sum(Context.sum(suite), declaration);
 	}
 	@Override
 	public SentenceType kind() {

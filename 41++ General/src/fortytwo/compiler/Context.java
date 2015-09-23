@@ -1,5 +1,6 @@
 package fortytwo.compiler;
 
+import java.util.Arrays;
 import java.util.List;
 
 import fortytwo.compiler.parsed.Contextualized;
@@ -88,15 +89,24 @@ public class Context implements Contextualized {
 		return new Context(text, 0, text.length());
 	}
 	/**
-	 * @param arguments
+	 * @param toSum
 	 *        contexts, perhaps attached to other data, to be summed.
 	 * @return the sum of the given contexts, currently implemented as a simple
 	 *         hull of the union of their intervals.
 	 */
-	public static Context sum(List<? extends Contextualized> asList) {
-		if (asList.size() == 0) return SYNTHETIC;
-		return asList.stream().map(Contextualized::context).reduce(Context::sum)
+	public static Context sum(List<? extends Contextualized> toSum) {
+		if (toSum.size() == 0) return SYNTHETIC;
+		return toSum.stream().map(Contextualized::context).reduce(Context::sum)
 				.get();
+	}
+	/**
+	 * @param toSum
+	 *        contexts, perhaps attached to other data, to be summed.
+	 * @return the sum of the given contexts, currently implemented as a simple
+	 *         hull of the union of their intervals.
+	 */
+	public static Context sum(Contextualized... toSum) {
+		return sum(Arrays.asList(toSum));
 	}
 	private static Context sum(Context a, Context b) {
 		if (a.isSynthetic() || b.isSynthetic()) return SYNTHETIC;

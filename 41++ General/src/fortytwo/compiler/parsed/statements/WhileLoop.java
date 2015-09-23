@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
+import fortytwo.language.Resources;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.GenericType;
@@ -15,11 +16,22 @@ import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
 
+/**
+ * Represents a while loop, which contains a condition that must evaluate to
+ * {@code true}, for the statement to be executed.
+ */
 public class WhileLoop extends Statement {
-	public final Expression condition;
-	public final Statement statement;
-	public WhileLoop(Expression condition,
-			Statement ParsedStatement, Context context) {
+	/**
+	 * The {@link #statement} will be called as long as this resolves to
+	 * {@code true}
+	 */
+	private final Expression condition;
+	/**
+	 * The statement to execute as long as {@link #condition} is {@code true}
+	 */
+	private final Statement statement;
+	public WhileLoop(Expression condition, Statement ParsedStatement,
+			Context context) {
 		super(context);
 		this.condition = condition;
 		this.statement = ParsedStatement;
@@ -48,7 +60,7 @@ public class WhileLoop extends Statement {
 	}
 	@Override
 	public void clean(OrderedEnvironment environment) {
-		// forms a closure, no need to clean
+		// single scope, no need to clean
 	}
 	@Override
 	public SentenceType kind() {
@@ -56,7 +68,9 @@ public class WhileLoop extends Statement {
 	}
 	@Override
 	public String toSourceCode() {
-		return SourceCode.display(this);
+		return Resources.WHILE + " " + condition.toSourceCode()
+				+ Resources.END_OF_CONTROL_STATEMENT
+				+ SourceCode.wrapInBraces(statement);
 	}
 	@Override
 	public boolean isSimple() {

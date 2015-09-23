@@ -24,7 +24,7 @@ import fortytwo.vm.expressions.LiteralFunction;
 
 /**
  * Represents a function call expression, which contains a function signature
- * lookup along with the expressions that will be plugged in
+ * lookup along with the expressions that will be plugged into it.
  */
 public class FunctionCall extends Expression {
 	/**
