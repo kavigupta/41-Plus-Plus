@@ -1,8 +1,6 @@
 package fortytwo.compiler;
 
-import static fortytwo.language.Resources.CLOSE_PAREN;
-import static fortytwo.language.Resources.OPEN_PAREN;
-import static fortytwo.language.Resources.SPACE;
+import static fortytwo.language.Resources.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +8,7 @@ import java.util.Optional;
 
 import fortytwo.compiler.parsed.GenericToken;
 import fortytwo.compiler.parser.Tokenizer;
+import fortytwo.vm.errors.SyntaxErrors;
 
 /**
  * A class representing a literal token, which contains a string along with an
@@ -137,6 +136,45 @@ public class LiteralToken implements GenericToken {
 		if (token.charAt(0) != '\'') return this;
 		final String str = token.substring(1, token.length() - 1);
 		return new LiteralToken('\'' + Tokenizer.unescape(str) + '\'', context);
+	}
+	/**
+	 * If the given token is surrounded in parentheses, it removes the
+	 * parentheses.
+	 */
+	public LiteralToken deparenthesize() {
+		if (token.startsWith(OPEN_PAREN)) {
+			if (!token.endsWith(CLOSE_PAREN)) {
+				SyntaxErrors.matchingSymbolDNE(context, token, 0);
+				return subToken(1, token.length());
+			}
+			return subToken(1, token.length() - 1);
+		}
+		return this;
+	}
+	/**
+	 * Returns true if the given token is a token
+	 */
+	public boolean isExpression() {
+		if (token.equals(TRUE) || token.equals(FALSE)) return true;
+		final char start = token.charAt(0);
+		return start == '(' || start == '+' || start == '-' || start == '*'
+				|| start == '/' || start == '%' || Character.isDigit(start)
+				|| start == '\'' || start == '\"';
+	}
+	/**
+	 * Returns true if this token could be a valid variable identifier
+	 */
+	public boolean isValidVariableIdentifier(boolean nativeFunc) {
+		if (token == null) return false;
+		if (!nativeFunc && token.indexOf(':') >= 0) return false;
+		if (token.equals(VALUE)) return true;
+		return token.startsWith(VARIABLE_BEGIN) && token.endsWith(VARIABLE_END);
+	}
+	public boolean isFunctionToken() {
+		if (isExpression()) return false;
+		// just assume anything that isn't an expression is a function
+		// LOWPRI fix this function
+		return true;
 	}
 	public boolean doesEqual(String token) {
 		return this.token.equals(token);

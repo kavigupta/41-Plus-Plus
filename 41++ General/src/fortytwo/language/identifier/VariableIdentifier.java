@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.ExpressionType;
 import fortytwo.language.classification.SentenceType;
@@ -23,7 +22,7 @@ public class VariableIdentifier extends Expression
 	public static VariableIdentifier getInstance(LiteralToken token,
 			boolean isNativeFunc) {
 		if (token.token.equals(Resources.VALUE)) return VALUE;
-		if (!Language.isValidVariableIdentifier(token.token, isNativeFunc))
+		if (!token.isValidVariableIdentifier(isNativeFunc))
 			SyntaxErrors.invalidExpression(ExpressionType.VARIABLE,
 					Arrays.asList(token));
 		return new VariableIdentifier(token);

@@ -67,7 +67,8 @@ public class StatementParser {
 				fullContext);
 	}
 	private static Statement parseVoidFunctionCall(List<LiteralToken> list) {
-		final FunctionCall function = ConstructionParser.composeFunction(list);
+		final FunctionCall function = ConstructionParser
+				.parseFunctionCall(list);
 		if (!function.getSingleExpression().isPresent()) return function;
 		ParserErrors.expectedFunctionCall(function);
 		// should never get here
@@ -97,7 +98,7 @@ public class StatementParser {
 		if (line.size() < 5 || !Language.isArticle(line.get(1).token)
 				|| !line.get(3).token.equals(Resources.CALLED))
 			SyntaxErrors.invalidSentence(SentenceType.DEFINITION, line);
-		final LiteralToken type = Language.deparenthesize(line.get(2));
+		final LiteralToken type = line.get(2).deparenthesize();
 		if (type.token.equals(Resources.DECL_FUNCTION))
 			return ConstructionParser.parseFunctionDefinition(line);
 		if (type.token.equals(Resources.TYPE))
