@@ -45,11 +45,11 @@ public class Utilities {
 		} catch (CustomException re) {
 			// expected.
 		}
+		VirtualMachine.displayerr = old;
 		if (!VirtualMachine.errorState()) throw new AssertionError(
 				"An error was expected, but none was found.");
 		assertEquals(new Error42(type, msg, parent.subContext(start, end))
 				.toString(), VirtualMachine.popError().toString());
-		VirtualMachine.displayerr = old;
 	}
 	public static void assertParseError(ErrorType type, String msg, int start,
 			int end, String toParse) {

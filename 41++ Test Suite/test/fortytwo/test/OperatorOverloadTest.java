@@ -3,8 +3,6 @@ package fortytwo.test;
 import org.junit.Before;
 import org.junit.Test;
 
-import fortytwo.vm.environment.UnorderedEnvironment;
-
 public class OperatorOverloadTest extends EnvironmentTester {
 	public static final String TEST_FUNCTIONS = ""
 			+ "Define a function called \"x\" + \"y\" that takes a (pair of number and number) called \"x\" and a (pair of number and number) called \"y\" and outputs a pair of number and number.\n"
@@ -18,7 +16,6 @@ public class OperatorOverloadTest extends EnvironmentTester {
 			+ "	Define a number called \"prodval\" with a value of (the \"value\" of \"x\") * (the \"value\" of \"y\").\n"
 			+ "	Define a (pair of number and number) called \"prod\" with a \"key\" of \"prodkey\" and a \"value\" of \"prodval\".\n"
 			+ "	Exit the function and output \"prod\".\n";
-	UnorderedEnvironment env;
 	@Before
 	public void init() {
 		loadEnvironment(TEST_FUNCTIONS);

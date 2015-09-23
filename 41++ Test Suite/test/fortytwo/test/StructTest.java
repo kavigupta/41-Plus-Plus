@@ -1,29 +1,16 @@
 package fortytwo.test;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import fortytwo.compiler.Compiler42;
-import fortytwo.compiler.LiteralToken;
-import fortytwo.compiler.parsed.statements.Statement;
-import fortytwo.compiler.parser.ExpressionParser;
-import fortytwo.compiler.parser.Parser;
-import fortytwo.compiler.parser.Tokenizer;
-import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.UnorderedEnvironment;
-import fortytwo.vm.environment.OrderedEnvironment;
-
-public class StructTest {
+public class StructTest extends EnvironmentTester {
 	public static final String TEST_STRUCTS = "Define a type called singleton."
 			+ "Define a type called record that contains a string called \"name\" and a number called \"dateOfBirth\"."
 			+ "Define a type called triple of \"Tx\", \"Ty\", and \"Tz\" that contains a \"Tx\" called \"x\", a \"Ty\" called \"y\", and a \"Tz\" called \"z\"."
 			+ "Define a type called pair of \"k\" and \"v\" that contains a \"k\" called \"key\" and a \"v\" called \"value\".";
-	UnorderedEnvironment env;
 	@Before
 	public void init() {
-		env = Compiler42.compile(TEST_STRUCTS);
+		loadEnvironment(TEST_STRUCTS);
 	}
 	@Test
 	public void singletonTest() {
@@ -103,19 +90,5 @@ public class StructTest {
 						+ "Set the \"key\" of (the \"key\" of \"trip\") to 12345.\n"
 						+ "Tell me what (the \"key\" of \"trip\") is.\n"
 						+ "Tell me what (the \"key\" of (the \"key\" of \"trip\")) is.");
-	}
-	public void assertPrint(String result, String statement) {
-		OrderedEnvironment loc = env.minimalLocalEnvironment();
-		Parser.parse(statement).stream()
-				.forEach(x -> ((Statement) x).execute(loc));
-		assertEquals(result, VirtualMachine.popMessage());
-	}
-	public void assertEquivalence(String result, String toEvaluate) {
-		OrderedEnvironment loc = env.minimalLocalEnvironment();
-		assertEquals(result,
-				ExpressionParser
-						.parseExpression(Tokenizer
-								.tokenize(LiteralToken.entire(toEvaluate)))
-				.literalValue(loc).toSourceCode());
 	}
 }
