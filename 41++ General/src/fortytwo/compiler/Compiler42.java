@@ -25,6 +25,8 @@ public class Compiler42 {
 		return UnorderedEnvironment.interpret(Parser.parse(text));
 	}
 	/**
+	 * Runs the given text against the current Virtual Machine environment.
+	 * 
 	 * @param text
 	 *        41++ code to execute
 	 */

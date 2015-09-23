@@ -14,7 +14,7 @@ import fortytwo.vm.errors.SyntaxErrors;
  * A class representing a literal token, which contains a string along with an
  * attached context. For the purposes of comparison, all that matters is the
  * token, the context merely tags along for help in syntax highlighting and
- * error reporting, it serves no internal use.
+ * error reporting, it is semantically meaningless.
  */
 public class LiteralToken implements GenericToken {
 	/**

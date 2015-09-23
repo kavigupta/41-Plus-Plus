@@ -14,6 +14,9 @@ public class Context implements Contextualized {
 	 * a natively implemented function.
 	 */
 	public static final Context SYNTHETIC = new Context("", -1, -1);
+	/**
+	 * The original text in which this token can be found
+	 */
 	private final String in;
 	/**
 	 * The starting position within the string.
@@ -41,8 +44,11 @@ public class Context implements Contextualized {
 	public int getEndPosition(int offset) {
 		return this.end + offset;
 	}
+	/**
+	 * @return whether or not this token is synthetic.
+	 */
 	private boolean isSynthetic() {
-		return this == SYNTHETIC;
+		return this.in == SYNTHETIC.in;
 	}
 	/**
 	 * @return a context representing this token in parentheses.
@@ -77,6 +83,9 @@ public class Context implements Contextualized {
 		assert this.start + end < this.end;
 		return new Context(this.in, this.start + start, this.start + end);
 	}
+	/**
+	 * @return this context without it's last element.
+	 */
 	public Context removeLast() {
 		return end == start ? this : subContext(0, end - start - 1);
 	}
