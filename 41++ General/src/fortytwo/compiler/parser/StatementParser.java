@@ -8,12 +8,8 @@ import java.util.Optional;
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.declaration.FunctionOutput;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.Definition;
-import fortytwo.compiler.parsed.statements.FunctionCall;
-import fortytwo.compiler.parsed.statements.Redefinition;
-import fortytwo.compiler.parsed.statements.Statement;
+import fortytwo.compiler.parsed.statements.*;
 import fortytwo.language.Language;
 import fortytwo.language.Resources;
 import fortytwo.language.classification.SentenceType;
@@ -67,8 +63,8 @@ public class StatementParser {
 				fullContext);
 	}
 	private static Statement parseVoidFunctionCall(List<LiteralToken> list) {
-		final FunctionCall function = ConstructionParser
-				.parseFunctionCall(list);
+		final FunctionCall function = ConstructionParser.parseFunctionCall(list,
+				ConstructionParser.FunctionParseSituation.CALL);
 		if (!function.getSingleExpression().isPresent()) return function;
 		ParserErrors.expectedFunctionCall(function);
 		// should never get here

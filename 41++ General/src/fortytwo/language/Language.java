@@ -19,8 +19,8 @@ public class Language {
 	 *         consonant.
 	 */
 	public static String articleized(String word) {
-		if (startsWithVowel(word)) return AN + SPACE + word;
-		return A + SPACE + word;
+		if (startsWithVowel(word)) return AN + STD_SEP + word;
+		return A + STD_SEP + word;
 	}
 	/**
 	 * Returns {@code true} if the first letter in the given word is a vowel.

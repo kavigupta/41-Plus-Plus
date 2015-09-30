@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.declaration.FunctionOutput;
+import fortytwo.compiler.parsed.statements.FunctionOutput;
 import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.language.SourceCode;
 import fortytwo.language.identifier.VariableIdentifier;

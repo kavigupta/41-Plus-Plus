@@ -8,18 +8,18 @@ import fortytwo.vm.errors.ErrorType;
 public class ExitPlacementTest extends EnvironmentTester {
 	public static final String NO_EXIT_ERROR = ""//
 			+ "Define a function called the absolute value of \"x\" that takes a number called \"x\" and outputs a number.\n"
-			+ "	If \"x\" is greater than 0:\n"
-			+ "		Exit the function and output \"x\".";
+			+ "   If \"x\" is greater than 0:\n"
+			+ "      Exit the function and output \"x\".";
 	public static final String NO_EXIT_WORKS = ""//
 			+ "Define a function called the absolute value of \"x\" that takes a number called \"x\" and outputs a number.\n"
-			+ "	If \"x\" is greater than 0:\n"//
-			+ "		Exit the function and output \"x\".\n"//
-			+ "	Otherwise:\n"//
-			+ "		Exit the function and output -\"x\".";
+			+ "   If \"x\" is greater than 0:\n"//
+			+ "      Exit the function and output \"x\".\n"//
+			+ "   Otherwise:\n"//
+			+ "      Exit the function and output -\"x\".";
 	public static final String CONTROL_PAST_END = ""//
 			+ "Define a function called the absolute value of \"x\" that takes a number called \"x\" and outputs a number.\n"
-			+ "	Exit the function and output \"x\".\n"
-			+ "	Set the value of \"x\" to 2.";
+			+ "   Exit the function and output \"x\".\n"
+			+ "   Set the value of \"x\" to 2.";
 	@Test
 	public void testExitFlow() {
 		Utilities.assertError(ErrorType.TYPING,

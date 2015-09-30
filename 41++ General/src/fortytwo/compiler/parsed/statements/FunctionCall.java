@@ -1,10 +1,9 @@
 package fortytwo.compiler.parsed.statements;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Operation;
 import fortytwo.language.Resources;
@@ -15,10 +14,13 @@ import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
+import fortytwo.language.type.GenericType;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.errors.DNEErrors;
+import fortytwo.vm.errors.ParserErrors;
+import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
 
@@ -81,6 +83,31 @@ public class FunctionCall extends Expression {
 		super(signature.context());
 		this.name = signature;
 		this.arguments = arguments;
+	}
+	public Optional<Expression> getSingleExpression() {
+		if (name.function.size() == 1 && name.function.get(0).isArgument())
+			return Optional.of(arguments.get(0));
+		return Optional.empty();
+	}
+	public List<VariableIdentifier> getArgumentsAsVariables() {
+		return arguments.stream().map(x -> {
+			if (!x.identifier().isPresent())
+				ParserErrors.expectedVariableInDecl(true, x.toToken());
+			return x.identifier().get();
+		}).collect(Collectors.toList());
+	}
+	public FunctionSignature definitionSignature(
+			Map<VariableIdentifier, GenericType> varTypes,
+			GenericType outputType, List<LiteralToken> line) {
+		final List<VariableIdentifier> variables = getArgumentsAsVariables();
+		final List<GenericType> types = new ArrayList<>();
+		for (final VariableIdentifier vid : variables) {
+			final GenericType gt = varTypes.get(vid);
+			if (gt == null)
+				TypingErrors.incompleteFieldTypingInFunctionDecl(vid, line);
+			types.add(gt);
+		}
+		return new FunctionSignature(name, new FunctionType(types, outputType));
 	}
 	@Override
 	public LiteralExpression literalValue(OrderedEnvironment env) {
@@ -154,10 +181,5 @@ public class FunctionCall extends Expression {
 	@Override
 	public String toString() {
 		return toSourceCode();
-	}
-	public Optional<Expression> getSingleExpression() {
-		if (name.function.size() == 1 && name.function.get(0).isArgument())
-			return Optional.of(arguments.get(0));
-		return Optional.empty();
 	}
 }

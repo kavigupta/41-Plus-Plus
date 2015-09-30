@@ -93,7 +93,7 @@ public class LiteralToken implements GenericToken {
 		if (line.size() == 1) return line.get(0);
 		final StringBuilder s = new StringBuilder(OPEN_PAREN);
 		for (final LiteralToken l : line)
-			s.append(l.token).append(SPACE);
+			s.append(l.token).append(STD_SEP);
 		return new LiteralToken(s.append(CLOSE_PAREN).toString(),
 				Context.sum(line).inParen());
 	}
@@ -163,6 +163,9 @@ public class LiteralToken implements GenericToken {
 	}
 	/**
 	 * Returns true if this token could be a valid variable identifier
+	 * 
+	 * @param nativeFunc
+	 *        if true, then colons are allowed in this variable identifier.
 	 */
 	public boolean isValidVariableIdentifier(boolean nativeFunc) {
 		if (token == null) return false;

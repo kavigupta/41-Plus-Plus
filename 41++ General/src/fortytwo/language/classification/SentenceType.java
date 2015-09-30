@@ -14,7 +14,8 @@ public enum SentenceType {
 	PURE_EXPRESSION("pure expression", STATEMENT),
 	CONTROL_FLOW("control flow statement", DECLARATION),
 	IMPURE_EXPRESSION("impure expression", STATEMENT),
-	FUNCTION("entire function", DECLARATION);
+	FUNCTION("entire function", DECLARATION),
+	DEFINITION_ENVIRONMENT("environment definition", STATEMENT);
 	public final String description;
 	public final SentenceKind kind;
 	private SentenceType(String description, SentenceKind kind) {

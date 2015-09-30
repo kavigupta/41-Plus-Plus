@@ -3,6 +3,7 @@ package fortytwo.test;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -12,7 +13,6 @@ import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.compiler.parser.ExpressionParser;
 import fortytwo.compiler.parser.Parser;
-import fortytwo.compiler.parser.StatementParser;
 import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.errors.Error42;
@@ -55,7 +55,7 @@ public class Utilities {
 			int end, String toParse) {
 		Runnable go;
 		if (toParse.charAt(toParse.length() - 1) == '.')
-			go = () -> parseStatement(toParse);
+			go = () -> parseSentence(toParse);
 		else go = () -> parseExpr(toParse);
 		assertError(type, msg, start, end, go, Context.entire(toParse));
 	}
@@ -73,8 +73,7 @@ public class Utilities {
 		assertEquals(expr, cdLoopType(expr));
 	}
 	public static String cdLoopLine(String line) {
-		Sentence s = Parser.parse(line).get(0);
-		return s.toSourceCode() + ".";
+		return parseSentence(line).toSourceCode() + ".";
 	}
 	public static String cdLoopType(String line) {
 		return ExpressionParser.parseType(LiteralToken.entire(line))
@@ -83,12 +82,13 @@ public class Utilities {
 	public static String cdLoopExpr(String line) {
 		return parseExpr(line).toSourceCode();
 	}
+	public static Sentence parseSentence(String line) {
+		List<Sentence> s = Parser.parse(line);
+		assertEquals("Number of sentences passed", 1, s.size());
+		return s.get(0);
+	}
 	public static Expression parseExpr(String line) {
 		return ExpressionParser
 				.parseExpression(Tokenizer.tokenize(LiteralToken.entire(line)));
-	}
-	private static Sentence parseStatement(String line) {
-		return StatementParser
-				.parseStatement(Tokenizer.tokenize(LiteralToken.entire(line)));
 	}
 }

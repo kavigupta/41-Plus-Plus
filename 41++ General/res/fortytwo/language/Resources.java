@@ -1,6 +1,7 @@
 package fortytwo.language;
 
 public final class Resources {
+	public static final String STD_SEP = " ";
 	/* Redundant elements */
 	public static final String A = "a";
 	public static final String AN = "an";
@@ -15,13 +16,18 @@ public final class Resources {
 	public static final String WITH = "with";
 	public static final String OUTPUT = "output";
 	public static final String OUTPUTS = "outputs";
+	public static final String ACCESS = "access";
 	public static final String END_OF_SENTENCE = ".";
 	public static final String END_OF_CONTROL_STATEMENT = ":";
 	public static final String COMMA = ",";
 	public static final String NEWLINE = "\n";
 	public static final String INDENTATION_UNIT = "\t";
+	/* Types */
+	public static final String FUNCTION_TYPE_NAME = "function";
+	public static final String FUNCTION_PROCEDURE_TYPE_NAME = "procedure";
 	/* Names */
 	public static final String DECL_FUNCTION = "function";
+	public static final String DECL_ENVIRON = "environment";
 	public static final String VALUE = "value";
 	public static final String TYPE = "type";
 	public static final String TRUE = "true";
@@ -52,14 +58,5 @@ public final class Resources {
 	public static final String IF = "If";
 	public static final String OTHERWISE = "Otherwise";
 	public static final String WHILE = "While";
-	/* Regex */
-	public static final String SPACE = " ";
-	public static final String PAD_FIND = "(?<toreplace>(//)|\\+|-|\\*|/|%|((\\.|:|,)(?!\\d)))";
-	public static final String UNPAD_REPLACE = "${toreplace}";
-	public static final String PAD_REPLACE = SPACE + UNPAD_REPLACE + SPACE;
-	public static final String WHITESPACE = "\\s+";
-	public static final String UNPAD_FIND = SPACE + PAD_FIND + SPACE;
-	public static final Object FUNCTION_TYPE_NAME = "function";
-	public static final Object FUNCTION_PROCEDURE_TYPE_NAME = "procedure";
 	private Resources() {}
 }

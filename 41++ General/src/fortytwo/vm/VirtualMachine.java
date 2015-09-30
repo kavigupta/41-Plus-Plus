@@ -35,4 +35,8 @@ public final class VirtualMachine {
 		err = null;
 		return temp;
 	}
+	public static void clean() {
+		popMessage();
+		popError();
+	}
 }

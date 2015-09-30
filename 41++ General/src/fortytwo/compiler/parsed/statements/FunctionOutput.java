@@ -1,10 +1,9 @@
-package fortytwo.compiler.parsed.declaration;
+package fortytwo.compiler.parsed.statements;
 
 import java.util.Optional;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;

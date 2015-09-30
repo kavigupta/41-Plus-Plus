@@ -3,11 +3,10 @@ package fortytwo.library.standard;
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.expressions.Expression;
+import fortytwo.compiler.parsed.statements.FunctionCall;
 import fortytwo.language.Resources;
 import fortytwo.language.field.GenericField;
 import fortytwo.language.identifier.FunctionName;
@@ -130,24 +129,27 @@ public class StdLib42 {
 			DEFAULT_FUNCTIONS.putAll(sig.fieldFunctions());
 		}
 	}
-	public static Pair<FunctionName, List<Expression>> parseFunction(
-			List<FunctionComponent> name, List<Expression> arguments) {
+	public static FunctionCall parseFunction(List<FunctionComponent> name,
+			List<Expression> arguments) {
 		if (FunctionName.getInstance(name)
 				.equals(StdLib42.FUNC_FIELD_ACCESS_NAME_APPARENT)) {
 			Optional<VariableIdentifier> field = arguments.get(0).identifier();
 			if (!field.isPresent())
 				ParserErrors.expectedVariableInFieldAccess(arguments.get(0));
-			return Pair.of(getFieldAccess(field.get().name.token),
+			return FunctionCall.getInstance(
+					getFieldAccess(field.get().name.token),
 					Arrays.asList(arguments.get(1)));
 		} else if (FunctionName.getInstance(name)
 				.equals(StdLib42.FUNC_FIELD_MODIFICATION_NAME_APPARENT)) {
 			Optional<VariableIdentifier> field = arguments.get(0).identifier();
 			if (!field.isPresent())
 				ParserErrors.expectedVariableInFieldAccess(arguments.get(0));
-			return Pair.of(getFieldModification(field.get().name.token),
+			return FunctionCall.getInstance(
+					getFieldModification(field.get().name.token),
 					Arrays.asList(arguments.get(1), arguments.get(2)));
 		}
-		return Pair.of(FunctionName.getInstance(name), arguments);
+		return FunctionCall.getInstance(FunctionName.getInstance(name),
+				arguments);
 	}
 	public static FunctionName getFieldAccess(String name) {
 		return FunctionName.getInstance("the", name, "of", "");

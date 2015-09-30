@@ -13,7 +13,7 @@ import fortytwo.vm.VirtualMachine;
 
 public class ParserErrors {
 	public static void expectedVariableInDecl(boolean functionDecl,
-			LiteralToken problem, List<LiteralToken> line) {
+			LiteralToken problem) {
 		VirtualMachine.error(ErrorType.PARSING,
 				String.format(
 						"A %s definition must contain only name tokens and variables,"

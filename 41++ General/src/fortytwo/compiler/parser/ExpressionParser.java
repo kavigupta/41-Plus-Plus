@@ -28,8 +28,8 @@ import fortytwo.vm.expressions.LiteralString;
 
 public class ExpressionParser {
 	public static Expression parseExpression(List<LiteralToken> list) {
-		final FunctionCall function = ConstructionParser
-				.parseFunctionCall(list);
+		final FunctionCall function = ConstructionParser.parseFunctionCall(list,
+				ConstructionParser.FunctionParseSituation.CALL);
 		Optional<Expression> singleExpression = function.getSingleExpression();
 		if (singleExpression.isPresent()) return singleExpression.get();
 		return function;
@@ -253,9 +253,8 @@ public class ExpressionParser {
 				final GenericType var = parseType(tokens.get(i));
 				switch (var.kind()) {
 					case CONCRETE:
-						if (arguments == Kind.VARIABLE)
-							ParserErrors.expectedVariableInDecl(false,
-									tokens.get(i), tokens);
+						if (arguments == Kind.VARIABLE) ParserErrors
+								.expectedVariableInDecl(false, tokens.get(i));
 						arguments = Kind.CONCRETE;
 						break;
 					case VARIABLE:

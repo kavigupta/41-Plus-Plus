@@ -3,7 +3,8 @@ package fortytwo.language.classification;
 public enum ExpressionType {
 	LITERAL_NUMBER("literal number"), LITERAL_BOOL("literal bool"),
 	LITERAL_STRING("literal string"), VARIABLE("variable"),
-	ARITHMETIC("arithmetic expression"), FUNCTION_CALL("function call");
+	ARITHMETIC("arithmetic expression"), FUNCTION_CALL("function call"),
+	FUNCTION_SIGNATURE("function signature");
 	private ExpressionType(String description) {
 		this.description = description;
 	}
