@@ -6,7 +6,8 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 /**
@@ -34,7 +35,7 @@ public abstract class Statement implements Sentence {
 	 * If it is not typechecked, it typechecks it. Otherwise, it just outputs
 	 * true.
 	 */
-	public final boolean isTypeChecked(TypeEnvironment environment) {
+	public final boolean isTypeChecked(AbstractTypeEnvironment environment) {
 		if (!isTypeChecked) isTypeChecked = typeCheck(environment);
 		return isTypeChecked;
 	}
@@ -42,7 +43,7 @@ public abstract class Statement implements Sentence {
 	 * This always returns true or throws an error. The return type is just to
 	 * make the "success" condition explicit.
 	 */
-	protected abstract boolean typeCheck(TypeEnvironment environment);
+	protected abstract boolean typeCheck(AbstractTypeEnvironment environment);
 	/**
 	 * Executes this statement against the given local environment
 	 * 
@@ -62,7 +63,8 @@ public abstract class Statement implements Sentence {
 	 * Otherwise, returns {@link Optional#empty()}
 	 * 
 	 */
-	public abstract Optional<GenericType> returnType(TypeEnvironment env);
+	public abstract Optional<GenericType> returnType(
+			AbstractTypeEnvironment env);
 	@Override
 	public final Context context() {
 		return context;

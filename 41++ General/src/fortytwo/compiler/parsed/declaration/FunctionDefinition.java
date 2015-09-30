@@ -11,7 +11,7 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.constructions.FunctionImplemented;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.expressions.LiteralFunction;
 
 /**
@@ -51,7 +51,7 @@ public class FunctionDefinition implements Sentence {
 	 *        a series of declarations that define the body of the function to
 	 *        place on the given roster.
 	 */
-	public void putReference(TypeEnvironment environment,
+	public void putReference(AbstractTypeEnvironment environment,
 			HashMap<VariableIdentifier, LiteralFunction> functions,
 			List<Statement> suite) {
 		environment.putReference(sig.identifier(), sig.type);

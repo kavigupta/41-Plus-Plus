@@ -14,8 +14,8 @@ import fortytwo.language.field.TypedVariable;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.StructureRoster;
-import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.environment.VariableRoster;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 /**
@@ -45,14 +45,14 @@ public class Definition extends Statement {
 		this.fields = fields;
 	}
 	@Override
-	public boolean typeCheck(TypeEnvironment environment) {
+	public boolean typeCheck(AbstractTypeEnvironment environment) {
 		environment.addType(toCreate.name, toCreate.type);
-		return environment.structs.typeCheckConstructor(environment, toCreate,
-				fields, context());
+		return environment.typeRoster.structs.typeCheckConstructor(environment,
+				toCreate, fields, context());
 	}
 	@Override
 	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
-		final StructureRoster struct = environment.container.typeEnv.structs;
+		final StructureRoster struct = environment.container.typeEnv.typeRoster.structs;
 		environment.vars.assign(toCreate.name, struct.instance(toCreate,
 				fields.literalValue(environment), toCreate.name.context()));
 		return Optional.empty();
@@ -78,7 +78,7 @@ public class Definition extends Statement {
 		return true;
 	}
 	@Override
-	public Optional<GenericType> returnType(TypeEnvironment env) {
+	public Optional<GenericType> returnType(AbstractTypeEnvironment env) {
 		return Optional.empty();
 	}
 	@Override

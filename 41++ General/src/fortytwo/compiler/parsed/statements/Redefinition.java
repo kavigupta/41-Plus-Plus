@@ -10,7 +10,7 @@ import fortytwo.language.field.TypedVariable;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -35,7 +35,7 @@ public class Redefinition extends Statement {
 		this.value = expr;
 	}
 	@Override
-	public boolean typeCheck(TypeEnvironment env) {
+	public boolean typeCheck(AbstractTypeEnvironment env) {
 		if (name.type(env).equals(value.type(env))) return true;
 		TypingErrors.redefinitionTypeMismatch(
 				new TypedVariable(name, name.type(env)), value, env);
@@ -48,7 +48,7 @@ public class Redefinition extends Statement {
 		return Optional.empty();
 	}
 	@Override
-	public Optional<GenericType> returnType(TypeEnvironment env) {
+	public Optional<GenericType> returnType(AbstractTypeEnvironment env) {
 		return Optional.empty();
 	}
 	@Override

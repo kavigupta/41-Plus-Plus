@@ -7,7 +7,7 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class TypedVariable extends Expression {
@@ -23,7 +23,7 @@ public class TypedVariable extends Expression {
 		return env.referenceTo(this.name);
 	}
 	@Override
-	public ConcreteType findType(TypeEnvironment env) {
+	public ConcreteType findType(AbstractTypeEnvironment env) {
 		return type;
 	}
 	@Override

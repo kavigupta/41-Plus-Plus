@@ -14,6 +14,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.*;
 import fortytwo.vm.constructions.GenericStructureSignature;
 import fortytwo.vm.constructions.Structure;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralArray;
@@ -91,7 +92,8 @@ public class StructureRoster {
 		// should never happen
 		return null;
 	}
-	public boolean typeCheckConstructor(TypeEnvironment env, TypedVariable name,
+	public boolean typeCheckConstructor(AbstractTypeEnvironment env,
+			TypedVariable name,
 			VariableRoster<? extends Expression> fieldValues, Context context) {
 		Optional<? extends Expression> value = fieldValues.value();
 		if (value.isPresent()) {

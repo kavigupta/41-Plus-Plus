@@ -11,7 +11,7 @@ import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralBool;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -37,7 +37,7 @@ public class WhileLoop extends Statement {
 		this.statement = ParsedStatement;
 	}
 	@Override
-	public boolean typeCheck(TypeEnvironment env) {
+	public boolean typeCheck(AbstractTypeEnvironment env) {
 		if (!condition.type(env)
 				.equals(new PrimitiveType(PrimitiveTypeWOC.BOOL,
 						Context.SYNTHETIC)))
@@ -55,7 +55,7 @@ public class WhileLoop extends Statement {
 		return Optional.empty();
 	}
 	@Override
-	public Optional<GenericType> returnType(TypeEnvironment env) {
+	public Optional<GenericType> returnType(AbstractTypeEnvironment env) {
 		return statement.returnType(env);
 	}
 	@Override

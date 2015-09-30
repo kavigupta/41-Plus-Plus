@@ -26,7 +26,7 @@ import fortytwo.vm.expressions.LiteralFunction;
 import fortytwo.vm.expressions.LiteralFunction.FunctionImplementation;
 
 public class StdLib42 {
-	public static final StructureRoster DEF_STRUCT = new StructureRoster();
+	public static final StructureRoster DEFAULT_STRUCT = new StructureRoster();
 	public static final FunctionName FUNC_FIELD_ACCESS_NAME_APPARENT = FunctionName
 			.getInstance("the", "", "of", "");
 	public static final FunctionName FUNC_FIELD_MODIFICATION_NAME_APPARENT = FunctionName
@@ -104,7 +104,7 @@ public class StdLib42 {
 				.getInstance(LiteralToken.entire("\"k\""), false));
 		final TypeVariable _v = new TypeVariable(VariableIdentifier
 				.getInstance(LiteralToken.entire("\"v\""), false));
-		DEF_STRUCT
+		DEFAULT_STRUCT
 				.addStructure(
 						new GenericStructureSignature(
 								new GenericStructureType(
@@ -125,7 +125,7 @@ public class StdLib42 {
 																.entire("\"value\""),
 														false),
 												_v))));
-		for (GenericStructureSignature sig : DEF_STRUCT.structs) {
+		for (GenericStructureSignature sig : DEFAULT_STRUCT.structs) {
 			DEFAULT_FUNCTIONS.putAll(sig.fieldFunctions());
 		}
 	}

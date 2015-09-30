@@ -10,8 +10,8 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.Language;
 import fortytwo.language.SourceCode;
-import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class FunctionType implements ConcreteType {
@@ -74,7 +74,7 @@ public class FunctionType implements ConcreteType {
 		return true;
 	}
 	public final TypeVariableRoster typeVariables(
-			List<? extends Expression> arguments, TypeEnvironment env) {
+			List<? extends Expression> arguments, AbstractTypeEnvironment env) {
 		final TypeVariableRoster roster = new TypeVariableRoster();
 		for (int i = 0; i < this.inputTypes.size(); i++) {
 			final ConcreteType arg = arguments.get(i).type(env);

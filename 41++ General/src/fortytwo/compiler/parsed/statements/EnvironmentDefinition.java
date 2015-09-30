@@ -13,7 +13,7 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class EnvironmentDefinition extends Statement {
@@ -42,7 +42,7 @@ public class EnvironmentDefinition extends Statement {
 								.collect(Collectors.toList()));
 	}
 	@Override
-	protected boolean typeCheck(TypeEnvironment environment) {
+	protected boolean typeCheck(AbstractTypeEnvironment environment) {
 		// TODO
 		return true;
 	}
@@ -56,7 +56,7 @@ public class EnvironmentDefinition extends Statement {
 		// TODO
 	}
 	@Override
-	public Optional<GenericType> returnType(TypeEnvironment env) {
+	public Optional<GenericType> returnType(AbstractTypeEnvironment env) {
 		return Optional.empty();
 	}
 }

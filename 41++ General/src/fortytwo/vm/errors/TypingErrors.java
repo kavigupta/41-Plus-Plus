@@ -16,12 +16,13 @@ import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.constructions.Structure;
-import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.environment.VariableRoster;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 
 public class TypingErrors {
 	public static void typeError(String expressionDescription,
-			String expectedType, Expression expression, TypeEnvironment env) {
+			String expectedType, Expression expression,
+			AbstractTypeEnvironment env) {
 		/*
 		 * <Expression description> must be <expected type>, but is actually
 		 * ~<expression>~, which is <actual type>.
@@ -37,17 +38,18 @@ public class TypingErrors {
 				expression.context());
 	}
 	public static void expectedBoolInCondition(boolean ifIf,
-			Expression condition, TypeEnvironment env) {
+			Expression condition, AbstractTypeEnvironment env) {
 		typeError("The condition of " + (ifIf ? "an if" : "a while") + " loop",
 				PrimitiveTypeWOC.BOOL.toSourceCode(), condition, env);
 	}
 	public static void redefinitionTypeMismatch(TypedVariable name,
-			Expression parsedExpression, TypeEnvironment env) {
+			Expression parsedExpression, AbstractTypeEnvironment env) {
 		typeError("The value of " + name.name.toSourceCode(),
 				name.type.toSourceCode(), parsedExpression, env);
 	}
 	public static void fieldAssignmentTypeMismatch(Structure struct,
-			TypedVariable field, Expression value, TypeEnvironment env) {
+			TypedVariable field, Expression value,
+			AbstractTypeEnvironment env) {
 		typeError(
 				"The " + field.name.toSourceCode() + " of "
 						+ struct.type.toSourceCode(),

@@ -17,7 +17,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.*;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.errors.TypingErrors;
@@ -290,7 +290,7 @@ public class ExpressionParser {
 			this.operator = operator;
 		}
 		@Override
-		public ConcreteType findType(TypeEnvironment env) {
+		public ConcreteType findType(AbstractTypeEnvironment env) {
 			// should never be called
 			return null;
 		}

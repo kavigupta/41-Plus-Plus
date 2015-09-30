@@ -8,7 +8,7 @@ import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 /**
@@ -27,16 +27,16 @@ public abstract class Expression extends Statement {
 	 *        the static environment
 	 * @return the type of this expression
 	 */
-	public final ConcreteType type(TypeEnvironment env) {
+	public final ConcreteType type(AbstractTypeEnvironment env) {
 		if (type == null) type = findType(env);
 		return type;
 	}
 	@Override
-	public boolean typeCheck(TypeEnvironment environment) {
+	public boolean typeCheck(AbstractTypeEnvironment environment) {
 		type(environment);
 		return true;
 	}
-	protected abstract ConcreteType findType(TypeEnvironment env);
+	protected abstract ConcreteType findType(AbstractTypeEnvironment env);
 	/**
 	 * @return the name of this expression, if it is a variable identifier
 	 */
@@ -65,7 +65,7 @@ public abstract class Expression extends Statement {
 		return true;
 	}
 	@Override
-	public Optional<GenericType> returnType(TypeEnvironment env) {
+	public Optional<GenericType> returnType(AbstractTypeEnvironment env) {
 		return Optional.empty();
 	}
 }

@@ -12,7 +12,8 @@ import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
+import fortytwo.vm.environment.type.NonTopTypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
@@ -48,12 +49,13 @@ public class FunctionImplemented extends LiteralFunction {
 	 * @return an implemented function representing this function
 	 */
 	@Override
-	public FunctionImplemented contextualize(TypeEnvironment environment) {
+	public FunctionImplemented contextualize(
+			AbstractTypeEnvironment environment) {
 		return this;
 	}
 	@Override
-	public boolean typeCheck(TypeEnvironment env) {
-		final TypeEnvironment local = TypeEnvironment.getChild(env);
+	public boolean typeCheck(AbstractTypeEnvironment env) {
+		final NonTopTypeEnvironment local = NonTopTypeEnvironment.getChild(env);
 		registerParameters(local);
 		for (final Statement s : body) {
 			final Optional<GenericType> actual = s.returnType(local);
@@ -84,7 +86,7 @@ public class FunctionImplemented extends LiteralFunction {
 	 * Registers the function's parameters' types on the given static
 	 * environment (which incidentally should be newly minted)
 	 */
-	public void registerParameters(TypeEnvironment environment) {
+	public void registerParameters(NonTopTypeEnvironment environment) {
 		for (int i = 0; i < type.inputTypes.size(); i++)
 			environment.addType(variables.get(i), (ConcreteType)
 			// LOWPRI remove cast once generic typing is allowed

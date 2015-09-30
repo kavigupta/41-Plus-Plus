@@ -5,9 +5,9 @@ import java.util.List;
 import fortytwo.compiler.Context;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
-import fortytwo.vm.environment.TypeEnvironment;
 import fortytwo.vm.environment.TypeVariableRoster;
 import fortytwo.vm.environment.UnorderedEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 
 public abstract class LiteralFunction extends LiteralExpression {
 	public final FunctionType type;
@@ -31,7 +31,7 @@ public abstract class LiteralFunction extends LiteralExpression {
 		return implementation.apply(env, arguments,
 				type.typeVariables(arguments, env.typeEnv));
 	}
-	public LiteralFunction contextualize(TypeEnvironment environment) {
+	public LiteralFunction contextualize(AbstractTypeEnvironment environment) {
 		return this;
 	}
 	@Override

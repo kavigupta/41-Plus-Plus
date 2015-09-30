@@ -12,9 +12,9 @@ import fortytwo.compiler.parser.Tokenizer;
 import fortytwo.ide.gui.LineHistory;
 import fortytwo.language.classification.SentenceKind;
 import fortytwo.vm.VirtualMachine;
-import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
+import fortytwo.vm.environment.type.TopLevelTypeEnvironment;
 import fortytwo.vm.errors.ParserErrors;
 
 public class GUILinkedEnvironment {
@@ -26,7 +26,7 @@ public class GUILinkedEnvironment {
 		super();
 		this.history = history;
 		this.console = new OrderedEnvironment(UnorderedEnvironment
-				.getDefaultEnvironment(TypeEnvironment.getDefault()));
+				.getDefaultEnvironment(new TopLevelTypeEnvironment()));
 		VirtualMachine.displayln = history::displayln;
 		VirtualMachine.displayerr = error -> {
 			history.displayerr(error);

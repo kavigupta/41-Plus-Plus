@@ -7,7 +7,7 @@ import fortytwo.compiler.parsed.expressions.Expression;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 /**
@@ -32,7 +32,7 @@ public class FunctionOutput extends Statement {
 		this.output = output;
 	}
 	@Override
-	protected boolean typeCheck(TypeEnvironment environment) {
+	protected boolean typeCheck(AbstractTypeEnvironment environment) {
 		return output.isTypeChecked(environment);
 	}
 	@Override
@@ -58,7 +58,7 @@ public class FunctionOutput extends Statement {
 		return "Exit the function" + retVal;
 	}
 	@Override
-	public Optional<GenericType> returnType(TypeEnvironment env) {
+	public Optional<GenericType> returnType(AbstractTypeEnvironment env) {
 		return Optional.of(output.type(env));
 	}
 	@Override

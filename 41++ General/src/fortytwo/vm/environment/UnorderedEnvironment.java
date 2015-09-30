@@ -8,16 +8,18 @@ import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.declaration.FunctionConstruct;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
+import fortytwo.vm.environment.type.TopLevelTypeEnvironment;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 import fortytwo.vm.expressions.LiteralFunction;
 
 public class UnorderedEnvironment {
-	public final TypeEnvironment typeEnv;
+	public final AbstractTypeEnvironment typeEnv;
 	private final VariableRoster<LiteralExpression> globalVariables;
 	public final FunctionRoster funcs;
-	public UnorderedEnvironment(TypeEnvironment staticEnv,
+	public UnorderedEnvironment(AbstractTypeEnvironment staticEnv,
 			VariableRoster<LiteralExpression> globalVariables,
 			FunctionRoster funcs) {
 		this.typeEnv = staticEnv;
@@ -25,12 +27,12 @@ public class UnorderedEnvironment {
 		this.funcs = funcs;
 	}
 	public static UnorderedEnvironment getDefaultEnvironment(
-			TypeEnvironment staticEnv) {
+			AbstractTypeEnvironment staticEnv) {
 		return new UnorderedEnvironment(staticEnv, new VariableRoster<>(),
 				FunctionRoster.getDefault());
 	}
 	public static UnorderedEnvironment interpret(List<Sentence> sentences) {
-		final TypeEnvironment environment = TypeEnvironment.getDefault();
+		final AbstractTypeEnvironment environment = new TopLevelTypeEnvironment();
 		final UnorderedEnvironment global = UnorderedEnvironment
 				.getDefaultEnvironment(environment);
 		final HashMap<VariableIdentifier, LiteralFunction> functions = new HashMap<>();

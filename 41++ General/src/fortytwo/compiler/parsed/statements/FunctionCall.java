@@ -17,8 +17,8 @@ import fortytwo.language.type.FunctionType;
 import fortytwo.language.type.GenericType;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
-import fortytwo.vm.errors.DNEErrors;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
+import fortytwo.vm.environment.type.NonTopTypeEnvironment;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -111,12 +111,12 @@ public class FunctionCall extends Expression {
 	}
 	@Override
 	public LiteralExpression literalValue(OrderedEnvironment env) {
-		final TypeEnvironment se = env.staticEnvironment();
+		final NonTopTypeEnvironment se = env.staticEnvironment();
 		final List<ConcreteType> types = arguments.stream()
 				.map(x -> x.type(env.staticEnvironment()))
 				.collect(Collectors.toList());
 		// call get because it should have been checked already
-		final FunctionType sig = se.referenceTo(name, types).get();
+		final FunctionType sig = se.referenceTo(name, types);
 		final Optional<LiteralFunction> f = env.container.funcs
 				.get(new FunctionSignature(name, sig), types);
 		if (!f.isPresent()) {
@@ -130,16 +130,14 @@ public class FunctionCall extends Expression {
 				.map(x -> x.literalValue(env)).collect(Collectors.toList()));
 	}
 	@Override
-	public ConcreteType findType(TypeEnvironment env) {
+	public ConcreteType findType(AbstractTypeEnvironment env) {
 		final List<ConcreteType> types = arguments.stream()
 				.map(x -> x.type(env)).collect(Collectors.toList());
-		final Optional<FunctionType> sigOpt = env.referenceTo(name, types);
-		if (!sigOpt.isPresent()) DNEErrors.functionSignatureDNE(name, types);
-		return sigOpt.get().outputType
-				.resolve(sigOpt.get().typeVariables(arguments, env));
+		final FunctionType sigOpt = env.referenceTo(name, types);
+		return sigOpt.outputType.resolve(sigOpt.typeVariables(arguments, env));
 	}
 	@Override
-	public boolean typeCheck(TypeEnvironment environment) {
+	public boolean typeCheck(AbstractTypeEnvironment environment) {
 		findType(environment);
 		return true;
 	}

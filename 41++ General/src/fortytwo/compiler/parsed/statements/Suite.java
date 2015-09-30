@@ -9,7 +9,7 @@ import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
-import fortytwo.vm.environment.TypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -49,7 +49,7 @@ public class Suite extends Statement {
 		return statements.size() == 0;
 	}
 	@Override
-	public boolean typeCheck(TypeEnvironment env) {
+	public boolean typeCheck(AbstractTypeEnvironment env) {
 		statements.forEach(s -> s.isTypeChecked(env));
 		return true;
 	}
@@ -62,7 +62,7 @@ public class Suite extends Statement {
 		return Optional.empty();
 	}
 	@Override
-	public Optional<GenericType> returnType(TypeEnvironment env) {
+	public Optional<GenericType> returnType(AbstractTypeEnvironment env) {
 		Optional<GenericType> type = Optional.empty();
 		for (final Statement s : statements) {
 			final Optional<GenericType> state = s.returnType(env);
