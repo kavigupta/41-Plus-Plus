@@ -55,8 +55,8 @@ public class FunctionDefinition implements Sentence {
 			HashMap<VariableIdentifier, LiteralFunction> functions,
 			Suite suite) {
 		environment.putReference(sig.identifier(), sig.type);
-		functions.put(sig.identifier(), new FunctionImplemented(sig.type,
-				inputVariables, suite, sig.toSourceCode()));
+		functions.put(sig.identifier(), new FunctionImplemented(environment,
+				sig.type, inputVariables, suite, sig.toSourceCode()));
 	}
 	@Override
 	public SentenceType kind() {

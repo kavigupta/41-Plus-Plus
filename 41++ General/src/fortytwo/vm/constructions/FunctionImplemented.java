@@ -27,13 +27,16 @@ public class FunctionImplemented extends LiteralFunction {
 	 * The function body, which is composed of statements.
 	 */
 	private final Suite body;
-	private String debugName;
+	private final String debugName;
+	private final AbstractTypeEnvironment parentTypeFrame;
 	/**
 	 * Simple struct constructor
 	 */
-	public FunctionImplemented(FunctionType type,
-			List<VariableIdentifier> variables, Suite body, String debugName) {
+	public FunctionImplemented(AbstractTypeEnvironment parentTypeFrame,
+			FunctionType type, List<VariableIdentifier> variables, Suite body,
+			String debugName) {
 		super(Context.sum(body), type, getImplementedFunction(variables, body));
+		this.parentTypeFrame = parentTypeFrame;
 		this.variables = variables;
 		this.body = body;
 		this.debugName = debugName;
@@ -53,8 +56,8 @@ public class FunctionImplemented extends LiteralFunction {
 	}
 	@Override
 	public boolean typeCheck(AbstractTypeEnvironment env) {
-		final NonTopTypeEnvironment local = NonTopTypeEnvironment.getChild(env);
-		registerParameters(local);
+		// ignores the input environment
+		final NonTopTypeEnvironment local = this.createFrame();
 		body.isTypeChecked(local);
 		final Optional<GenericType> actual = body.returnType(local);
 		if (type.outputType.equals(PrimitiveType.SYNTH_VOID)) {
@@ -89,11 +92,14 @@ public class FunctionImplemented extends LiteralFunction {
 	 * Registers the function's parameters' types on the given static
 	 * environment (which incidentally should be newly minted)
 	 */
-	public void registerParameters(NonTopTypeEnvironment environment) {
+	public NonTopTypeEnvironment createFrame() {
+		NonTopTypeEnvironment environment = NonTopTypeEnvironment
+				.getChild(parentTypeFrame);
 		for (int i = 0; i < type.inputTypes.size(); i++)
 			environment.addType(variables.get(i), (ConcreteType)
 			// LOWPRI remove cast once generic typing is allowed
 			type.inputTypes.get(i));
+		return environment;
 	}
 	@Override
 	public String toSourceCode() {

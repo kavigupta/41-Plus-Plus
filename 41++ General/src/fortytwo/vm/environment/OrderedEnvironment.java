@@ -1,16 +1,19 @@
 package fortytwo.vm.environment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.language.type.ConcreteType;
-import fortytwo.vm.environment.type.AbstractTypeEnvironment.RequestType;
 import fortytwo.vm.environment.type.NonTopTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class OrderedEnvironment {
 	public final UnorderedEnvironment container;
+	public final List<FrameEnvironment> frames;
 	public final VariableRoster<LiteralExpression> vars;
 	public OrderedEnvironment(UnorderedEnvironment global) {
 		this.container = global;
+		frames = new ArrayList<>();
 		vars = new VariableRoster<>();
 	}
 	public OrderedEnvironment reinitialize(
@@ -25,11 +28,6 @@ public class OrderedEnvironment {
 		if (localE != null) return localE;
 		final LiteralExpression globalE = container.referenceTo(id);
 		return globalE;
-	}
-	public ConcreteType typeOf(VariableIdentifier name) {
-		final ConcreteType type = vars.referenceTo(name).resolveType();
-		if (type != null) return type;
-		return container.typeEnv.typeOf(name, RequestType.ANY);
 	}
 	public NonTopTypeEnvironment staticEnvironment() {
 		final NonTopTypeEnvironment env = NonTopTypeEnvironment

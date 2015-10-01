@@ -1,6 +1,7 @@
 package fortytwo.vm.environment.type;
 
 import java.util.List;
+import java.util.Optional;
 
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -31,5 +32,10 @@ public class FrameTypeEnvironment extends AbstractTypeEnvironment {
 			List<ConcreteType> types) {
 		return container.referenceTo(name, types,
 				RequestType.REQUIRES_UNORDERED);
+	}
+	public Optional<FunctionType> getTypeOfMemberFunction(FunctionName name,
+			List<ConcreteType> types) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
 	}
 }

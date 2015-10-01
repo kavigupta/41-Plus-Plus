@@ -1,6 +1,7 @@
 package fortytwo.compiler;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import fortytwo.compiler.parsed.statements.FunctionCall;
 import fortytwo.compiler.parser.Parser;
@@ -22,7 +23,8 @@ public class Compiler42 {
 	 * @return an environment representing the source code given
 	 */
 	public static UnorderedEnvironment compile(String text) {
-		return UnorderedEnvironment.interpret(Parser.parse(text));
+		return UnorderedEnvironment.interpret(Optional.empty(),
+				Parser.parse(text));
 	}
 	/**
 	 * Runs the given text against the current Virtual Machine environment.
@@ -31,8 +33,7 @@ public class Compiler42 {
 	 *        41++ code to execute
 	 */
 	public static void execute(String text) {
-		final UnorderedEnvironment env = UnorderedEnvironment
-				.interpret(Parser.parse(text));
+		final UnorderedEnvironment env = compile(text);
 		try {
 			final FunctionCall pfc = FunctionCall.getInstance(
 					FunctionName.getInstance("This", "first"), Arrays.asList());

@@ -13,17 +13,18 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class EnvironmentDefinition extends Statement {
 	private final List<VariableIdentifier> varIds;
-	private final List<Sentence> environment;
+	private final List<Sentence> sentences;
 	public EnvironmentDefinition(Context context,
-			List<VariableIdentifier> varIds, List<Sentence> environment) {
+			List<VariableIdentifier> varIds, List<Sentence> sentences) {
 		super(context);
 		this.varIds = varIds;
-		this.environment = environment;
+		this.sentences = sentences;
 	}
 	@Override
 	public SentenceType kind() {
@@ -43,6 +44,7 @@ public class EnvironmentDefinition extends Statement {
 	}
 	@Override
 	protected boolean typeCheck(AbstractTypeEnvironment environment) {
+		UnorderedEnvironment.interpret(Optional.of(environment), sentences);
 		// TODO
 		return true;
 	}

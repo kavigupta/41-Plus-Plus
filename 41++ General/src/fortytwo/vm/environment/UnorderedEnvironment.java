@@ -3,12 +3,14 @@ package fortytwo.vm.environment;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.declaration.FunctionConstruct;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
+import fortytwo.vm.environment.type.NonTopTypeEnvironment;
 import fortytwo.vm.environment.type.TopTypeEnvironment;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.ParserErrors;
@@ -31,8 +33,12 @@ public class UnorderedEnvironment {
 		return new UnorderedEnvironment(staticEnv, new VariableRoster<>(),
 				FunctionRoster.getDefault());
 	}
-	public static UnorderedEnvironment interpret(List<Sentence> sentences) {
-		final AbstractTypeEnvironment environment = new TopTypeEnvironment();
+	public static UnorderedEnvironment interpret(
+			Optional<AbstractTypeEnvironment> parent,
+			List<Sentence> sentences) {
+		final AbstractTypeEnvironment environment = parent.isPresent()
+				? NonTopTypeEnvironment.getChild(parent.get())
+				: new TopTypeEnvironment();
 		final UnorderedEnvironment global = UnorderedEnvironment
 				.getDefaultEnvironment(environment);
 		final HashMap<VariableIdentifier, LiteralFunction> functions = new HashMap<>();
@@ -56,8 +62,7 @@ public class UnorderedEnvironment {
 			final LiteralFunction impl = func.getValue()
 					.contextualize(environment);
 			implFunctions.put(func.getKey(), impl);
-			environment.putReference(func.getKey().identifier().get(),
-					func.getValue().type);
+			environment.putReference(func.getKey(), func.getValue().type);
 		}
 		global.funcs.functions.putAll(implFunctions);
 		return global;

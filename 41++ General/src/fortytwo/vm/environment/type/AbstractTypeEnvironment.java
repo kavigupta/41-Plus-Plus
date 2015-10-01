@@ -1,5 +1,6 @@
 package fortytwo.vm.environment.type;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,10 +18,12 @@ public abstract class AbstractTypeEnvironment {
 	}
 	public final TypeRoster typeRoster;
 	public final EnvironmentType envType;
+	public final List<FrameTypeEnvironment> frames;
 	public AbstractTypeEnvironment(TypeRoster typeRoster,
 			EnvironmentType isOrdered) {
 		this.typeRoster = typeRoster;
 		this.envType = isOrdered;
+		this.frames = new ArrayList<>();
 	}
 	public void addType(VariableIdentifier variableIdentifier,
 			ConcreteType concreteType) {
@@ -43,8 +46,12 @@ public abstract class AbstractTypeEnvironment {
 			final Optional<FunctionType> sig = typeRoster.referenceTo(name,
 					types);
 			if (sig.isPresent()) return sig.get();
+			for (FrameTypeEnvironment frame : frames) {
+				Optional<FunctionType> subsig = frame
+						.getTypeOfMemberFunction(name, types);
+				if (subsig.isPresent()) return subsig.get();
+			}
 		}
-		System.out.println(typeRoster.funcs);
 		return checkParentForTypeOf(name, types);
 	}
 	protected abstract ConcreteType checkParentForTypeOf(
