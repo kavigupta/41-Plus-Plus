@@ -13,20 +13,26 @@ public class NonTopTypeEnvironment extends AbstractTypeEnvironment {
 	private final AbstractTypeEnvironment container;
 	public static NonTopTypeEnvironment getChild(
 			AbstractTypeEnvironment environment) {
-		return new NonTopTypeEnvironment(environment);
+		return new NonTopTypeEnvironment(environment, EnvironmentType.ORDERED);
 	}
-	private NonTopTypeEnvironment(AbstractTypeEnvironment env) {
+	private NonTopTypeEnvironment(AbstractTypeEnvironment env,
+			EnvironmentType envType) {
 		super(new TypeRoster(env.typeRoster.structs,
-				new FunctionSignatureRoster(), new VariableTypeRoster()));
+				new FunctionSignatureRoster(), new VariableTypeRoster()),
+				envType);
 		this.container = env;
 	}
 	@Override
 	protected ConcreteType checkParentForTypeOf(VariableIdentifier name) {
-		return container.typeOf(name);
+		return container.typeOf(name, RequestType.ANY);
 	}
 	@Override
 	protected FunctionType checkParentForTypeOf(FunctionName name,
 			List<ConcreteType> types) {
-		return container.referenceTo(name, types);
+		return container.referenceTo(name, types, RequestType.ANY);
+	}
+	@Override
+	protected boolean allowRequest(RequestType type) {
+		return type != RequestType.REQUIRES_UNORDERED;
 	}
 }

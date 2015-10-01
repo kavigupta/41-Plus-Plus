@@ -11,6 +11,7 @@ import fortytwo.language.classification.SentenceType;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment.RequestType;
 import fortytwo.vm.errors.SyntaxErrors;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -33,7 +34,7 @@ public class VariableIdentifier extends Expression
 	}
 	@Override
 	public ConcreteType findType(AbstractTypeEnvironment env) {
-		return env.typeOf(this);
+		return env.typeOf(this, RequestType.ANY);
 	}
 	@Override
 	public LiteralExpression literalValue(OrderedEnvironment env) {

@@ -108,7 +108,8 @@ public class Parser {
 		final FunctionDefinition declaration = ConstructionParser
 				.parseFunctionDefinition(defn);
 		final List<Sentence> suite = popSeries(phrases);
-		return new FunctionConstruct(declaration, checkStatements(suite));
+		return new FunctionConstruct(declaration, new Suite(
+				checkStatements(suite), Context.sum(checkStatements(suite))));
 	}
 	public static Sentence popSentence(
 			List<Pair<Integer, List<LiteralToken>>> phrases) {

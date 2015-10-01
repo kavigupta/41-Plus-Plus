@@ -15,7 +15,7 @@ import fortytwo.vm.environment.VariableTypeRoster;
 public class TypeRoster {
 	public final StructureRoster structs;
 	public final FunctionSignatureRoster funcs;
-	private final VariableTypeRoster types;
+	public final VariableTypeRoster types;
 	public static TypeRoster getDefault(StructureRoster structs) {
 		final FunctionSignatureRoster funcs = new FunctionSignatureRoster();
 		StdLib42.defaultSignatures(funcs);
@@ -44,29 +44,8 @@ public class TypeRoster {
 		funcs.putReference(id, type);
 	}
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((funcs == null) ? 0 : funcs.hashCode());
-		result = prime * result + ((structs == null) ? 0 : structs.hashCode());
-		result = prime * result + ((types == null) ? 0 : types.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		TypeRoster other = (TypeRoster) obj;
-		if (funcs == null) {
-			if (other.funcs != null) return false;
-		} else if (!funcs.equals(other.funcs)) return false;
-		if (structs == null) {
-			if (other.structs != null) return false;
-		} else if (!structs.equals(other.structs)) return false;
-		if (types == null) {
-			if (other.types != null) return false;
-		} else if (!types.equals(other.types)) return false;
-		return true;
+	public String toString() {
+		return "TypeRoster [structs=" + structs + ", funcs=" + funcs
+				+ ", types=" + types + "]";
 	}
 }

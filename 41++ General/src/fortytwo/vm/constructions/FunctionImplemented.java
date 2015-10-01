@@ -4,13 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import fortytwo.compiler.Context;
-import fortytwo.compiler.parsed.statements.FunctionOutput;
-import fortytwo.compiler.parsed.statements.Statement;
-import fortytwo.language.SourceCode;
+import fortytwo.compiler.parsed.statements.Suite;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
 import fortytwo.language.type.GenericType;
+import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.environment.type.NonTopTypeEnvironment;
@@ -27,14 +26,13 @@ public class FunctionImplemented extends LiteralFunction {
 	/**
 	 * The function body, which is composed of statements.
 	 */
-	private final List<Statement> body;
+	private final Suite body;
 	private String debugName;
 	/**
 	 * Simple struct constructor
 	 */
 	public FunctionImplemented(FunctionType type,
-			List<VariableIdentifier> variables, List<Statement> body,
-			String debugName) {
+			List<VariableIdentifier> variables, Suite body, String debugName) {
 		super(Context.sum(body), type, getImplementedFunction(variables, body));
 		this.variables = variables;
 		this.body = body;
@@ -57,29 +55,34 @@ public class FunctionImplemented extends LiteralFunction {
 	public boolean typeCheck(AbstractTypeEnvironment env) {
 		final NonTopTypeEnvironment local = NonTopTypeEnvironment.getChild(env);
 		registerParameters(local);
-		for (final Statement s : body) {
-			final Optional<GenericType> actual = s.returnType(local);
-			s.isTypeChecked(local);
-			if (actual.isPresent()) if (!actual.get().equals(type.outputType))
+		body.isTypeChecked(local);
+		final Optional<GenericType> actual = body.returnType(local);
+		if (type.outputType.equals(PrimitiveType.SYNTH_VOID)) {
+			if (actual.isPresent()
+					&& !actual.get().equals(PrimitiveType.SYNTH_VOID)) {
 				TypingErrors.incorrectOutput(debugName, type.outputType,
-						actual.get(), (FunctionOutput) s);
+						actual.get(), body);
+			} else {
+				return true;
+			}
 		}
-		return true;
+		if (actual.isPresent()) {
+			if (!actual.get().equals(type.outputType))
+				TypingErrors.incorrectOutput(debugName, type.outputType,
+						actual.get(), body);
+		}
+		return body.isTypeChecked(local);
 	}
 	public static FunctionImplementation getImplementedFunction(
-			List<VariableIdentifier> variables, List<Statement> body) {
+			List<VariableIdentifier> variables, Suite body) {
 		return (env, inputs, roster) -> {
 			final OrderedEnvironment local = env.minimalLocalEnvironment();
 			for (int i = 0; i < variables.size(); i++)
 				local.vars.assign(variables.get(i), inputs.get(i));
-			for (final Statement s : body) {
-				final Optional<LiteralExpression> exp = s.execute(local);
-				if (exp.isPresent()) return exp.get();
-			}
 			// no need to clean the local environment, as it will be garbage
 			// collected after now.
 			// if no return, return LiteralVoid, signifying the void marker
-			return LiteralVoid.INSTANCE;
+			return body.execute(local).orElse(LiteralVoid.INSTANCE);
 		};
 	}
 	/**
@@ -94,7 +97,7 @@ public class FunctionImplemented extends LiteralFunction {
 	}
 	@Override
 	public String toSourceCode() {
-		return body.size() == 0 ? "" : SourceCode.displaySeries(body);
+		return body.toSourceCode();
 	}
 	@Override
 	public boolean typedEquals(LiteralExpression obj) {

@@ -7,7 +7,7 @@ import fortytwo.compiler.Context;
 import fortytwo.compiler.LiteralToken;
 import fortytwo.compiler.parsed.ParsedConstruct;
 import fortytwo.compiler.parsed.expressions.Expression;
-import fortytwo.compiler.parsed.statements.FunctionOutput;
+import fortytwo.compiler.parsed.statements.Statement;
 import fortytwo.language.Language;
 import fortytwo.language.SourceCode;
 import fortytwo.language.field.TypedVariable;
@@ -119,7 +119,7 @@ public class TypingErrors {
 				name.context());
 	}
 	public static void incorrectOutput(String debugName, GenericType output,
-			GenericType actual, FunctionOutput s) {
+			GenericType actual, Statement s) {
 		VirtualMachine.error(ErrorType.TYPING,
 				String.format(
 						"The function ~%s~ should output ~%s~, but the sentence ~%s~'s output is of type ~%s~",

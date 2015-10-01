@@ -1,12 +1,10 @@
 package fortytwo.compiler.parsed.declaration;
 
 import java.util.HashMap;
-import java.util.List;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.statements.Statement;
-import fortytwo.language.SourceCode;
+import fortytwo.compiler.parsed.statements.Suite;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
@@ -24,9 +22,8 @@ public class FunctionConstruct implements Sentence {
 	/**
 	 * The body of the function, in the form of a series of sentences
 	 */
-	private final List<Statement> suite;
-	public FunctionConstruct(FunctionDefinition declaration,
-			List<Statement> suite) {
+	private final Suite suite;
+	public FunctionConstruct(FunctionDefinition declaration, Suite suite) {
 		this.declaration = declaration;
 		this.suite = suite;
 	}
@@ -52,8 +49,7 @@ public class FunctionConstruct implements Sentence {
 	}
 	@Override
 	public String toSourceCode() {
-		return declaration.toSourceCode()
-				+ (suite.size() == 0 ? "" : SourceCode.displaySeries(suite));
+		return declaration.toSourceCode() + suite.toSourceCode();
 	}
 	@Override
 	public Context context() {

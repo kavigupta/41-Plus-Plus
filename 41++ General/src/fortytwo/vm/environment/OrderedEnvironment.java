@@ -2,6 +2,7 @@ package fortytwo.vm.environment;
 
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment.RequestType;
 import fortytwo.vm.environment.type.NonTopTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
@@ -28,10 +29,11 @@ public class OrderedEnvironment {
 	public ConcreteType typeOf(VariableIdentifier name) {
 		final ConcreteType type = vars.referenceTo(name).resolveType();
 		if (type != null) return type;
-		return container.typeEnv.typeOf(name);
+		return container.typeEnv.typeOf(name, RequestType.ANY);
 	}
 	public NonTopTypeEnvironment staticEnvironment() {
-		final NonTopTypeEnvironment env = NonTopTypeEnvironment.getChild(container.typeEnv);
+		final NonTopTypeEnvironment env = NonTopTypeEnvironment
+				.getChild(container.typeEnv);
 		vars.pairs
 				.forEach((name, expr) -> env.addType(name, expr.resolveType()));
 		return env;

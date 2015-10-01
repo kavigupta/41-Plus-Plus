@@ -9,9 +9,10 @@ import fortytwo.language.type.FunctionType;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.errors.DNEErrors;
 
-public class TopLevelTypeEnvironment extends AbstractTypeEnvironment {
-	public TopLevelTypeEnvironment() {
-		super(TypeRoster.getDefault(StdLib42.DEFAULT_STRUCT));
+public class TopTypeEnvironment extends AbstractTypeEnvironment {
+	public TopTypeEnvironment() {
+		super(TypeRoster.getDefault(StdLib42.DEFAULT_STRUCT),
+				EnvironmentType.UNORDERED);
 	}
 	@Override
 	protected ConcreteType checkParentForTypeOf(VariableIdentifier name) {
@@ -25,6 +26,10 @@ public class TopLevelTypeEnvironment extends AbstractTypeEnvironment {
 		DNEErrors.functionSignatureDNE(name, types);
 		// should not reach here.
 		throw new IllegalStateException();
+	}
+	@Override
+	protected boolean allowRequest(RequestType type) {
+		return true;
 	}
 	@Override
 	public boolean equals(Object obj) {

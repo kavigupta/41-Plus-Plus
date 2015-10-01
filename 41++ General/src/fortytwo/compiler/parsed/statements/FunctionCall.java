@@ -18,6 +18,7 @@ import fortytwo.language.type.GenericType;
 import fortytwo.library.standard.StdLib42;
 import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
+import fortytwo.vm.environment.type.AbstractTypeEnvironment.RequestType;
 import fortytwo.vm.environment.type.NonTopTypeEnvironment;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.TypingErrors;
@@ -116,7 +117,7 @@ public class FunctionCall extends Expression {
 				.map(x -> x.type(env.staticEnvironment()))
 				.collect(Collectors.toList());
 		// call get because it should have been checked already
-		final FunctionType sig = se.referenceTo(name, types);
+		final FunctionType sig = se.referenceTo(name, types, RequestType.ANY);
 		final Optional<LiteralFunction> f = env.container.funcs
 				.get(new FunctionSignature(name, sig), types);
 		if (!f.isPresent()) {
@@ -133,7 +134,8 @@ public class FunctionCall extends Expression {
 	public ConcreteType findType(AbstractTypeEnvironment env) {
 		final List<ConcreteType> types = arguments.stream()
 				.map(x -> x.type(env)).collect(Collectors.toList());
-		final FunctionType sigOpt = env.referenceTo(name, types);
+		final FunctionType sigOpt = env.referenceTo(name, types,
+				RequestType.ANY);
 		return sigOpt.outputType.resolve(sigOpt.typeVariables(arguments, env));
 	}
 	@Override

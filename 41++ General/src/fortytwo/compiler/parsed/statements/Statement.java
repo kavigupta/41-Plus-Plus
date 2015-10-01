@@ -7,7 +7,6 @@ import fortytwo.compiler.parsed.Sentence;
 import fortytwo.language.type.GenericType;
 import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
-import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 /**

@@ -14,7 +14,7 @@ import fortytwo.language.classification.SentenceKind;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.UnorderedEnvironment;
-import fortytwo.vm.environment.type.TopLevelTypeEnvironment;
+import fortytwo.vm.environment.type.TopTypeEnvironment;
 import fortytwo.vm.errors.ParserErrors;
 
 public class GUILinkedEnvironment {
@@ -26,7 +26,7 @@ public class GUILinkedEnvironment {
 		super();
 		this.history = history;
 		this.console = new OrderedEnvironment(UnorderedEnvironment
-				.getDefaultEnvironment(new TopLevelTypeEnvironment()));
+				.getDefaultEnvironment(new TopTypeEnvironment()));
 		VirtualMachine.displayln = history::displayln;
 		VirtualMachine.displayerr = error -> {
 			history.displayerr(error);

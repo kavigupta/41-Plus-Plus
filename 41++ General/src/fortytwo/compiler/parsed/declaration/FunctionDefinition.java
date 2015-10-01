@@ -5,7 +5,7 @@ import java.util.List;
 
 import fortytwo.compiler.Context;
 import fortytwo.compiler.parsed.Sentence;
-import fortytwo.compiler.parsed.statements.Statement;
+import fortytwo.compiler.parsed.statements.Suite;
 import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.FunctionSignature;
@@ -53,7 +53,7 @@ public class FunctionDefinition implements Sentence {
 	 */
 	public void putReference(AbstractTypeEnvironment environment,
 			HashMap<VariableIdentifier, LiteralFunction> functions,
-			List<Statement> suite) {
+			Suite suite) {
 		environment.putReference(sig.identifier(), sig.type);
 		functions.put(sig.identifier(), new FunctionImplemented(sig.type,
 				inputVariables, suite, sig.toSourceCode()));

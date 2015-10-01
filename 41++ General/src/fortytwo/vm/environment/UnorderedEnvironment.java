@@ -9,7 +9,7 @@ import fortytwo.compiler.parsed.declaration.FunctionConstruct;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
-import fortytwo.vm.environment.type.TopLevelTypeEnvironment;
+import fortytwo.vm.environment.type.TopTypeEnvironment;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -32,7 +32,7 @@ public class UnorderedEnvironment {
 				FunctionRoster.getDefault());
 	}
 	public static UnorderedEnvironment interpret(List<Sentence> sentences) {
-		final AbstractTypeEnvironment environment = new TopLevelTypeEnvironment();
+		final AbstractTypeEnvironment environment = new TopTypeEnvironment();
 		final UnorderedEnvironment global = UnorderedEnvironment
 				.getDefaultEnvironment(environment);
 		final HashMap<VariableIdentifier, LiteralFunction> functions = new HashMap<>();

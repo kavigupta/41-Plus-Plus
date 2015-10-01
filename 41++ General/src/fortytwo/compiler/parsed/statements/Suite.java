@@ -65,6 +65,7 @@ public class Suite extends Statement {
 	public Optional<GenericType> returnType(AbstractTypeEnvironment env) {
 		Optional<GenericType> type = Optional.empty();
 		for (final Statement s : statements) {
+			s.typeCheck(env);
 			final Optional<GenericType> state = s.returnType(env);
 			if (!state.isPresent()) continue;
 			if (!type.isPresent()) {
