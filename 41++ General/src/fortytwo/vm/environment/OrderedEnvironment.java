@@ -2,15 +2,19 @@ package fortytwo.vm.environment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import fortytwo.language.identifier.FunctionSignature;
 import fortytwo.language.identifier.VariableIdentifier;
+import fortytwo.language.type.ConcreteType;
 import fortytwo.vm.environment.type.NonTopTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
+import fortytwo.vm.expressions.LiteralFunction;
 
 public class OrderedEnvironment {
-	public final UnorderedEnvironment container;
+	private final UnorderedEnvironment container;
 	public final List<FrameEnvironment> frames;
-	public final VariableRoster<LiteralExpression> vars;
+	private final VariableRoster<LiteralExpression> vars;
 	public OrderedEnvironment(UnorderedEnvironment global) {
 		this.container = global;
 		frames = new ArrayList<>();
@@ -35,6 +39,23 @@ public class OrderedEnvironment {
 		vars.pairs
 				.forEach((name, expr) -> env.addType(name, expr.resolveType()));
 		return env;
+	}
+	public void assign(VariableIdentifier id, LiteralExpression value) {
+		vars.assign(id, value);
+	}
+	public void redefine(VariableIdentifier name, LiteralExpression express) {
+		vars.redefine(name, express);
+	}
+	public void deregister(VariableIdentifier name) {
+		vars.deregister(name);
+	}
+	public Optional<LiteralFunction> getFunction(FunctionSignature sig,
+			List<ConcreteType> types) {
+		for (FrameEnvironment fe : frames) {
+			Optional<LiteralFunction> inFrame = fe.getFunction(sig, types);
+			if (inFrame.isPresent()) return inFrame;
+		}
+		return container.funcs.get(sig, types);
 	}
 	@Override
 	public int hashCode() {

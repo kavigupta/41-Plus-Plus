@@ -1,6 +1,7 @@
 package fortytwo.vm.environment.type;
 
 import java.util.List;
+import java.util.Optional;
 
 import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
@@ -23,11 +24,12 @@ public class NonTopTypeEnvironment extends AbstractTypeEnvironment {
 		this.container = env;
 	}
 	@Override
-	protected ConcreteType checkParentForTypeOf(VariableIdentifier name) {
+	protected Optional<ConcreteType> checkParentForTypeOf(
+			VariableIdentifier name) {
 		return container.typeOf(name, RequestType.ANY);
 	}
 	@Override
-	protected FunctionType checkParentForTypeOf(FunctionName name,
+	protected Optional<FunctionType> checkParentForTypeOf(FunctionName name,
 			List<ConcreteType> types) {
 		return container.referenceTo(name, types, RequestType.ANY);
 	}

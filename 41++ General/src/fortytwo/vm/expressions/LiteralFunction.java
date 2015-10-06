@@ -13,8 +13,7 @@ public abstract class LiteralFunction extends LiteralExpression {
 	public final FunctionType type;
 	public final FunctionImplementation implementation;
 	public static interface FunctionImplementation {
-		public abstract LiteralExpression apply(UnorderedEnvironment env,
-				List<LiteralExpression> arguments, TypeVariableRoster roster);
+		public abstract LiteralExpression apply(List<LiteralExpression> arguments, TypeVariableRoster roster);
 	}
 	public LiteralFunction(Context context, FunctionType typeSignature,
 			FunctionImplementation implementation) {
@@ -26,10 +25,10 @@ public abstract class LiteralFunction extends LiteralExpression {
 	public final ConcreteType resolveType() {
 		return type;
 	}
-	public final LiteralExpression apply(UnorderedEnvironment env,
+	public final LiteralExpression apply(AbstractTypeEnvironment typeEnv,
 			List<LiteralExpression> arguments) {
-		return implementation.apply(env, arguments,
-				type.typeVariables(arguments, env.typeEnv));
+		return implementation.apply(arguments,
+				type.typeVariables(arguments, typeEnv));
 	}
 	public LiteralFunction contextualize(AbstractTypeEnvironment environment) {
 		return this;

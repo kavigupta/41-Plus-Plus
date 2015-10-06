@@ -20,6 +20,7 @@ import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment.RequestType;
 import fortytwo.vm.environment.type.NonTopTypeEnvironment;
+import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.ParserErrors;
 import fortytwo.vm.errors.TypingErrors;
 import fortytwo.vm.expressions.LiteralExpression;
@@ -117,25 +118,30 @@ public class FunctionCall extends Expression {
 				.map(x -> x.type(env.staticEnvironment()))
 				.collect(Collectors.toList());
 		// call get because it should have been checked already
-		final FunctionType sig = se.referenceTo(name, types, RequestType.ANY);
-		final Optional<LiteralFunction> f = env.container.funcs
-				.get(new FunctionSignature(name, sig), types);
+		final FunctionType sig = se.referenceTo(name, types, RequestType.ANY)
+				.orElseGet(() -> {
+					DNEErrors.functionSignatureDNE(name, types);
+					throw new IllegalArgumentException();
+				});
+		final Optional<LiteralFunction> f = env
+				.getFunction(new FunctionSignature(name, sig), types);
 		if (!f.isPresent()) {
 			System.out.println(name.identifier().unmangledName());
-			env.container.funcs.functions.entrySet().stream().forEach(
-					x -> System.out.println("\t" + x.getKey().unmangledName()));
 			// crash. There is no reason this point should have been reached.
 			throw new RuntimeException();
 		}
-		return f.get().apply(env.container, arguments.stream()
+		return f.get().apply(env.staticEnvironment(), arguments.stream()
 				.map(x -> x.literalValue(env)).collect(Collectors.toList()));
 	}
 	@Override
 	public ConcreteType findType(AbstractTypeEnvironment env) {
 		final List<ConcreteType> types = arguments.stream()
 				.map(x -> x.type(env)).collect(Collectors.toList());
-		final FunctionType sigOpt = env.referenceTo(name, types,
-				RequestType.ANY);
+		final FunctionType sigOpt = env
+				.referenceTo(name, types, RequestType.ANY).orElseGet(() -> {
+					DNEErrors.functionSignatureDNE(name, types);
+					throw new IllegalArgumentException();
+				});
 		return sigOpt.outputType.resolve(sigOpt.typeVariables(arguments, env));
 	}
 	@Override
