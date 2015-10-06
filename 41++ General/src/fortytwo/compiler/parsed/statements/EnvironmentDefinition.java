@@ -12,14 +12,17 @@ import fortytwo.language.SourceCode;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.GenericType;
+import fortytwo.vm.environment.FrameEnvironment;
 import fortytwo.vm.environment.OrderedEnvironment;
 import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
+import fortytwo.vm.environment.type.FrameTypeEnvironment;
 import fortytwo.vm.expressions.LiteralExpression;
 
 public class EnvironmentDefinition extends Statement {
 	private final List<VariableIdentifier> varIds;
 	private final List<Sentence> sentences;
+	private FrameEnvironment created = null;
 	public EnvironmentDefinition(Context context,
 			List<VariableIdentifier> varIds, List<Sentence> sentences) {
 		super(context);
@@ -44,18 +47,28 @@ public class EnvironmentDefinition extends Statement {
 	}
 	@Override
 	protected boolean typeCheck(AbstractTypeEnvironment environment) {
-		UnorderedEnvironment.interpret(Optional.of(environment), sentences);
-		// TODO
+		FrameTypeEnvironment env = new FrameTypeEnvironment(environment,
+				varIds);
+		AbstractTypeEnvironment child = UnorderedEnvironment
+				.interpret(Optional.of(environment), sentences).typeEnv;
+		env.initializeChild(child);
+		environment.addFrame(env);
 		return true;
 	}
 	@Override
 	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
 		// TODO
+		created = new FrameEnvironment(environment, varIds);
+		UnorderedEnvironment child = UnorderedEnvironment
+				.interpret(Optional.of(created.typeEnvironment()), sentences);
+		created.initializeChild(child);
+		environment.frames.add(created);
 		return Optional.empty();
 	}
 	@Override
 	public void clean(OrderedEnvironment environment) {
-		// TODO
+		environment.frames.remove(created);
+		created = null;
 	}
 	@Override
 	public Optional<GenericType> returnType(AbstractTypeEnvironment env) {

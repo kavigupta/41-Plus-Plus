@@ -14,11 +14,11 @@ public abstract class AbstractTypeEnvironment {
 		ORDERED, UNORDERED, FRAME
 	}
 	public static enum RequestType {
-		ANY, REQUIRES_UNORDERED
+		ANY, REQUIRES_UNORDERED, ONLY_THIS_FRAME
 	}
 	public final TypeRoster typeRoster;
 	public final EnvironmentType envType;
-	public final List<FrameTypeEnvironment> frames;
+	private final List<FrameTypeEnvironment> frames;
 	public AbstractTypeEnvironment(TypeRoster typeRoster,
 			EnvironmentType isOrdered) {
 		this.typeRoster = typeRoster;
@@ -29,35 +29,40 @@ public abstract class AbstractTypeEnvironment {
 			ConcreteType concreteType) {
 		typeRoster.addType(variableIdentifier, concreteType);
 	}
+	public void addFrame(FrameTypeEnvironment env) {
+		frames.add(env);
+	}
 	public void putReference(VariableIdentifier id, FunctionType type) {
 		typeRoster.putReference(id, type);
 	}
-	public ConcreteType typeOf(VariableIdentifier name, RequestType request) {
+	public Optional<ConcreteType> typeOf(VariableIdentifier name,
+			RequestType request) {
 		if (allowRequest(request)) {
 			final Optional<ConcreteType> type = typeRoster.typeOf(name);
-			if (type.isPresent()) return type.get();
+			if (type.isPresent()) return type;
 		}
-		System.out.println(this.typeRoster.types);
+		if (request == RequestType.ONLY_THIS_FRAME) return Optional.empty();
 		return checkParentForTypeOf(name);
 	}
-	public FunctionType referenceTo(FunctionName name, List<ConcreteType> types,
-			RequestType request) {
+	public Optional<FunctionType> referenceTo(FunctionName name,
+			List<ConcreteType> types, RequestType request) {
 		if (allowRequest(request)) {
 			final Optional<FunctionType> sig = typeRoster.referenceTo(name,
 					types);
-			if (sig.isPresent()) return sig.get();
+			if (sig.isPresent()) return sig;
 			for (FrameTypeEnvironment frame : frames) {
 				Optional<FunctionType> subsig = frame
 						.getTypeOfMemberFunction(name, types);
-				if (subsig.isPresent()) return subsig.get();
+				if (subsig.isPresent()) return subsig;
 			}
 		}
+		if (request == RequestType.ONLY_THIS_FRAME) return Optional.empty();
 		return checkParentForTypeOf(name, types);
 	}
-	protected abstract ConcreteType checkParentForTypeOf(
+	protected abstract Optional<ConcreteType> checkParentForTypeOf(
 			VariableIdentifier name);
-	protected abstract FunctionType checkParentForTypeOf(FunctionName name,
-			List<ConcreteType> types);
+	protected abstract Optional<FunctionType> checkParentForTypeOf(
+			FunctionName name, List<ConcreteType> types);
 	protected abstract boolean allowRequest(RequestType type);
 	@Override
 	public int hashCode() {

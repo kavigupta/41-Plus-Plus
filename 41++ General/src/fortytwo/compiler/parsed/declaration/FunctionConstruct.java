@@ -7,7 +7,7 @@ import fortytwo.compiler.parsed.Sentence;
 import fortytwo.compiler.parsed.statements.Suite;
 import fortytwo.language.classification.SentenceType;
 import fortytwo.language.identifier.VariableIdentifier;
-import fortytwo.vm.environment.type.AbstractTypeEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.expressions.LiteralFunction;
 
 /**
@@ -39,7 +39,7 @@ public class FunctionConstruct implements Sentence {
 	 * @param functions
 	 *        the function map to add this to.
 	 */
-	public void register(AbstractTypeEnvironment environment,
+	public void register(UnorderedEnvironment environment,
 			HashMap<VariableIdentifier, LiteralFunction> functions) {
 		declaration.putReference(environment, functions, suite);
 	}

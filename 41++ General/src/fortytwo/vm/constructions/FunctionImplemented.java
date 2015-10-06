@@ -11,6 +11,7 @@ import fortytwo.language.type.FunctionType;
 import fortytwo.language.type.GenericType;
 import fortytwo.language.type.PrimitiveType;
 import fortytwo.vm.environment.OrderedEnvironment;
+import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
 import fortytwo.vm.environment.type.NonTopTypeEnvironment;
 import fortytwo.vm.errors.TypingErrors;
@@ -32,11 +33,11 @@ public class FunctionImplemented extends LiteralFunction {
 	/**
 	 * Simple struct constructor
 	 */
-	public FunctionImplemented(AbstractTypeEnvironment parentTypeFrame,
-			FunctionType type, List<VariableIdentifier> variables, Suite body,
-			String debugName) {
-		super(Context.sum(body), type, getImplementedFunction(variables, body));
-		this.parentTypeFrame = parentTypeFrame;
+	public FunctionImplemented(UnorderedEnvironment env, FunctionType type,
+			List<VariableIdentifier> variables, Suite body, String debugName) {
+		super(Context.sum(body), type,
+				getImplementedFunction(env, variables, body));
+		this.parentTypeFrame = env.typeEnv;
 		this.variables = variables;
 		this.body = body;
 		this.debugName = debugName;
@@ -77,11 +78,12 @@ public class FunctionImplemented extends LiteralFunction {
 		return body.isTypeChecked(local);
 	}
 	public static FunctionImplementation getImplementedFunction(
-			List<VariableIdentifier> variables, Suite body) {
-		return (env, inputs, roster) -> {
+			UnorderedEnvironment env, List<VariableIdentifier> variables,
+			Suite body) {
+		return (inputs, roster) -> {
 			final OrderedEnvironment local = env.minimalLocalEnvironment();
 			for (int i = 0; i < variables.size(); i++)
-				local.vars.assign(variables.get(i), inputs.get(i));
+				local.assign(variables.get(i), inputs.get(i));
 			// no need to clean the local environment, as it will be garbage
 			// collected after now.
 			// if no return, return LiteralVoid, signifying the void marker

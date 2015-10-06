@@ -52,14 +52,15 @@ public class Definition extends Statement {
 	}
 	@Override
 	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
-		final StructureRoster struct = environment.container.typeEnv.typeRoster.structs;
-		environment.vars.assign(toCreate.name, struct.instance(toCreate,
+		final StructureRoster struct = environment
+				.staticEnvironment().typeRoster.structs;
+		environment.assign(toCreate.name, struct.instance(toCreate,
 				fields.literalValue(environment), toCreate.name.context()));
 		return Optional.empty();
 	}
 	@Override
 	public void clean(OrderedEnvironment environment) {
-		environment.vars.deregister(toCreate.name);
+		environment.deregister(toCreate.name);
 	}
 	@Override
 	public SentenceType kind() {

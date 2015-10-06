@@ -44,7 +44,7 @@ public class Redefinition extends Statement {
 	}
 	@Override
 	public Optional<LiteralExpression> execute(OrderedEnvironment environment) {
-		environment.vars.redefine(name, value.literalValue(environment));
+		environment.redefine(name, value.literalValue(environment));
 		return Optional.empty();
 	}
 	@Override

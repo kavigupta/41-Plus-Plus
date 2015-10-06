@@ -13,7 +13,6 @@ import fortytwo.language.type.PrimitiveType;
 import fortytwo.language.type.PrimitiveTypeWOC;
 import fortytwo.vm.VirtualMachine;
 import fortytwo.vm.environment.TypeVariableRoster;
-import fortytwo.vm.environment.UnorderedEnvironment;
 import fortytwo.vm.errors.RuntimeErrors;
 import fortytwo.vm.expressions.*;
 import fortytwo.vm.expressions.LiteralFunction.FunctionImplementation;
@@ -22,7 +21,7 @@ public class StdLibImplementations {
 	public static BigDecimal REAL_DIV_PRECISION = BigDecimal.TEN.pow(100);
 	public static FunctionImplementation binaryOperation(
 			BiFunction<BigDecimal, BigDecimal, BigDecimal> op) {
-		return (env, args, roster) -> {
+		return (args, roster) -> {
 			BigDecimal a = ((LiteralNumber) args.get(0)).contents;
 			BigDecimal b = ((LiteralNumber) args.get(1)).contents;
 			return new LiteralNumber(op.apply(a, b), Context.SYNTHETIC);
@@ -44,25 +43,25 @@ public class StdLibImplementations {
 			(x, y) -> x.divideAndRemainder(y)[0]);
 	public static final FunctionImplementation MOD = binaryOperation(
 			(x, y) -> x.divideAndRemainder(y)[1]);
-	public static LiteralExpression negate(UnorderedEnvironment env,
-			List<LiteralExpression> arguments, TypeVariableRoster roster) {
+	public static LiteralExpression negate(List<LiteralExpression> arguments,
+			TypeVariableRoster roster) {
 		return new LiteralNumber(
 				((LiteralNumber) arguments.get(0)).contents.negate(),
 				Context.SYNTHETIC);
 	}
-	public static LiteralExpression arrayAccess(UnorderedEnvironment env,
+	public static LiteralExpression arrayAccess(
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralArray array = (LiteralArray) arguments.get(1);
 		final LiteralNumber index = (LiteralNumber) arguments.get(0);
 		return array.get(index.contents.intValue(), Context.sum(arguments));
 	}
-	public static LiteralExpression arrayLength(UnorderedEnvironment env,
+	public static LiteralExpression arrayLength(
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		return new LiteralNumber(
 				BigDecimal.valueOf(((LiteralArray) arguments.get(0)).length()),
 				Context.SYNTHETIC);
 	}
-	public static LiteralExpression arrayModification(UnorderedEnvironment env,
+	public static LiteralExpression arrayModification(
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralArray array = (LiteralArray) arguments.get(1);
 		final LiteralNumber index = (LiteralNumber) arguments.get(0);
@@ -71,18 +70,18 @@ public class StdLibImplementations {
 		return LiteralVoid.INSTANCE;
 	}
 	public static FunctionImplementation fieldAccess(VariableIdentifier field) {
-		return (env, arguments, roster) -> ((LiteralObject) arguments.get(0))
+		return (arguments, roster) -> ((LiteralObject) arguments.get(0))
 				.valueOf(field);
 	}
 	public static FunctionImplementation fieldModification(
 			VariableIdentifier field) {
-		return (env, arguments, roster) -> {
+		return (arguments, roster) -> {
 			((LiteralObject) arguments.get(0)).redefine(field,
 					arguments.get(1));
 			return LiteralVoid.INSTANCE;
 		};
 	}
-	public static LiteralExpression letterCombine(UnorderedEnvironment env,
+	public static LiteralExpression letterCombine(
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralArray array = (LiteralArray) arguments.get(0);
 		final char[] c = new char[array.length()];
@@ -93,18 +92,18 @@ public class StdLibImplementations {
 					Context.SYNTHETIC)).contents.token.charAt(0);
 		return new LiteralString(LiteralToken.synthetic(new String(c)));
 	}
-	public static LiteralExpression print(UnorderedEnvironment env,
-			List<LiteralExpression> arguments, TypeVariableRoster roster) {
+	public static LiteralExpression print(List<LiteralExpression> arguments,
+			TypeVariableRoster roster) {
 		VirtualMachine.displayLine(arguments.get(0).toSourceCode());
 		return LiteralVoid.INSTANCE;
 	}
-	public static LiteralString stringAppend(UnorderedEnvironment env,
-			List<LiteralExpression> arguments, TypeVariableRoster roster) {
+	public static LiteralString stringAppend(List<LiteralExpression> arguments,
+			TypeVariableRoster roster) {
 		final LiteralToken a = ((LiteralString) arguments.get(0)).contents;
 		final LiteralToken b = ((LiteralString) arguments.get(1)).contents;
 		return new LiteralString(LiteralToken.append(a, b));
 	}
-	public static LiteralExpression stringSplit(UnorderedEnvironment env,
+	public static LiteralExpression stringSplit(
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		final LiteralToken token = ((LiteralString) arguments.get(0)).contents;
 		final LiteralArray array = new LiteralArray(
@@ -115,7 +114,7 @@ public class StdLibImplementations {
 					Context.sum(arguments));
 		return array;
 	}
-	public static LiteralExpression stringLength(UnorderedEnvironment env,
+	public static LiteralExpression stringLength(
 			List<LiteralExpression> arguments, TypeVariableRoster roster) {
 		return new LiteralNumber(BigDecimal.valueOf(
 				((LiteralString) arguments.get(0)).contents.token.length()),
@@ -123,7 +122,7 @@ public class StdLibImplementations {
 	}
 	public static FunctionImplementation logicalOperator(
 			Function<boolean[], Boolean> op) {
-		return (env, arguments, roster) -> {
+		return (arguments, roster) -> {
 			final boolean[] array = new boolean[arguments.size()];
 			for (int k = 0; k < arguments.size(); k++)
 				array[k] = ((LiteralBool) arguments.get(k)).contents;
@@ -132,7 +131,7 @@ public class StdLibImplementations {
 	}
 	public static FunctionImplementation comparisonOperator(boolean lt,
 			boolean eq, boolean gt) {
-		return (env, arguments, roster) -> {
+		return (arguments, roster) -> {
 			final BigDecimal a = ((LiteralNumber) arguments.get(0)).contents;
 			final BigDecimal b = ((LiteralNumber) arguments.get(1)).contents;
 			final int comp = a.compareTo(b);
@@ -143,7 +142,7 @@ public class StdLibImplementations {
 		};
 	}
 	public static FunctionImplementation equalityOperator(boolean isEqual) {
-		return (env, arguments, roster) -> {
+		return (arguments, roster) -> {
 			return LiteralBool.getInstance(
 					arguments.get(0).equals(arguments.get(1)) == isEqual,
 					Context.SYNTHETIC);

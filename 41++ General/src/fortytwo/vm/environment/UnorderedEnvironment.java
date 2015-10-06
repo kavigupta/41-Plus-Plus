@@ -10,7 +10,6 @@ import fortytwo.compiler.parsed.declaration.FunctionConstruct;
 import fortytwo.compiler.parsed.declaration.StructureDefinition;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.vm.environment.type.AbstractTypeEnvironment;
-import fortytwo.vm.environment.type.NonTopTypeEnvironment;
 import fortytwo.vm.environment.type.TopTypeEnvironment;
 import fortytwo.vm.errors.DNEErrors;
 import fortytwo.vm.errors.ParserErrors;
@@ -37,8 +36,7 @@ public class UnorderedEnvironment {
 			Optional<AbstractTypeEnvironment> parent,
 			List<Sentence> sentences) {
 		final AbstractTypeEnvironment environment = parent.isPresent()
-				? NonTopTypeEnvironment.getChild(parent.get())
-				: new TopTypeEnvironment();
+				? parent.get() : new TopTypeEnvironment();
 		final UnorderedEnvironment global = UnorderedEnvironment
 				.getDefaultEnvironment(environment);
 		final HashMap<VariableIdentifier, LiteralFunction> functions = new HashMap<>();
@@ -46,7 +44,7 @@ public class UnorderedEnvironment {
 			final Sentence s = sentences.get(i);
 			switch (s.kind()) {
 				case FUNCTION:
-					((FunctionConstruct) s).register(environment, functions);
+					((FunctionConstruct) s).register(global, functions);
 					break;
 				case DECLARATION_STRUCT:
 					((StructureDefinition) s).register(environment, functions);

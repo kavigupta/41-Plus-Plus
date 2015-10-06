@@ -7,35 +7,42 @@ import fortytwo.language.identifier.FunctionName;
 import fortytwo.language.identifier.VariableIdentifier;
 import fortytwo.language.type.ConcreteType;
 import fortytwo.language.type.FunctionType;
+import fortytwo.vm.environment.FunctionSignatureRoster;
+import fortytwo.vm.environment.StructureRoster;
+import fortytwo.vm.environment.VariableTypeRoster;
 
 public class FrameTypeEnvironment extends AbstractTypeEnvironment {
-	private final AbstractTypeEnvironment container;
+	private final AbstractTypeEnvironment parent;
 	private final List<VariableIdentifier> allowed;
-	private FrameTypeEnvironment(TypeRoster typeRoster,
-			EnvironmentType isOrdered, AbstractTypeEnvironment container,
+	private AbstractTypeEnvironment child;
+	public FrameTypeEnvironment(AbstractTypeEnvironment parent,
 			List<VariableIdentifier> allowed) {
-		super(typeRoster, isOrdered);
-		this.container = container;
+		super(new TypeRoster(new StructureRoster(),
+				new FunctionSignatureRoster(), new VariableTypeRoster()),
+				EnvironmentType.UNORDERED);
+		this.parent = parent;
 		this.allowed = allowed;
+	}
+	public void initializeChild(AbstractTypeEnvironment child) {
+		this.child = child;
 	}
 	@Override
 	protected boolean allowRequest(RequestType type) {
 		return true;
 	}
 	@Override
-	protected ConcreteType checkParentForTypeOf(VariableIdentifier name) {
-		return container.typeOf(name, allowed.contains(name) ? RequestType.ANY
+	protected Optional<ConcreteType> checkParentForTypeOf(
+			VariableIdentifier name) {
+		return parent.typeOf(name, allowed.contains(name) ? RequestType.ANY
 				: RequestType.REQUIRES_UNORDERED);
 	}
 	@Override
-	protected FunctionType checkParentForTypeOf(FunctionName name,
+	protected Optional<FunctionType> checkParentForTypeOf(FunctionName name,
 			List<ConcreteType> types) {
-		return container.referenceTo(name, types,
-				RequestType.REQUIRES_UNORDERED);
+		return parent.referenceTo(name, types, RequestType.REQUIRES_UNORDERED);
 	}
 	public Optional<FunctionType> getTypeOfMemberFunction(FunctionName name,
 			List<ConcreteType> types) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		return child.referenceTo(name, types, RequestType.ONLY_THIS_FRAME);
 	}
 }
